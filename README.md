@@ -64,7 +64,7 @@ pnpm db-push
 #### Use iOS Simulator
 
 1. Make sure you have XCode and XCommand Line Tools installed [as shown on expo docs](https://docs.expo.dev/workflow/ios-simulator/).
-2. Change the `dev` script at `apps/expo/package.json` to open the iOS simulator.
+2. Change the `dev` script at `apps/mobile/package.json` to open the iOS simulator.
 
 ```diff
 +  "dev": "expo start --ios",
@@ -75,7 +75,7 @@ pnpm db-push
 #### For Android
 
 1. Install Android Studio tools [as shown on expo docs](https://docs.expo.dev/workflow/android-studio-emulator/).
-2. Change the `dev` script at `apps/expo/package.json` to open the Android emulator.
+2. Change the `dev` script at `apps/mobile/package.json` to open the Android emulator.
 
 ```diff
 +  "dev": "expo start --android",
@@ -95,7 +95,7 @@ _We do not recommend deploying a SQLite database on serverless environments sinc
 
 Let's deploy the Next.js application to [Vercel](https://vercel.com/). If you have ever deployed a Turborepo app there, the steps are quite straightforward. You can also read the [official Turborepo guide](https://vercel.com/docs/concepts/monorepos/turborepo) on deploying to Vercel.
 
-1. Create a new project on Vercel, select the `apps/nextjs` folder as the root directory and apply the following build settings:
+1. Create a new project on Vercel, select the `apps/web` folder as the root directory and apply the following build settings:
 
 <img width="927" alt="Vercel deployment settings" src="https://user-images.githubusercontent.com/11340449/201974887-b6403a32-5570-4ce6-b146-c486c0dbd244.png">
 
@@ -119,7 +119,7 @@ Deploying your Expo application works slightly differently compared to Next.js o
    $ eas login
 
    // Configure your Expo app
-   $ cd apps/expo
+   $ cd apps/mobile
    $ eas build:configure
    ```
 
@@ -147,7 +147,7 @@ Deploying your Expo application works slightly differently compared to Next.js o
 
    ```bash
    // Add the `expo-updates` library to your Expo app
-   $ cd apps/expo
+   $ cd apps/mobile
    $ pnpm expo install expo-updates
 
    // Configure EAS Update
@@ -159,7 +159,7 @@ Deploying your Expo application works slightly differently compared to Next.js o
 7. Now that everything is ready for updates, let's create a new update for `production` builds. With the `--auto` flag, EAS Update uses your current git branch name and commit message for this update. See [How EAS Update works](https://docs.expo.dev/eas-update/how-eas-update-works/#publishing-an-update) for more information.
 
    ```bash
-   $ cd apps/expo
+   $ cd apps/mobile
    $ eas update --auto
    ```
 
