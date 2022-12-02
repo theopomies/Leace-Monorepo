@@ -1,9 +1,10 @@
 {
-  "name": "@acme/nextjs",
+  "name": "@leace/web",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "android": "next dev",
     "build": "next build",
     "clean": "rm -rf .next .turbo node_modules",
     "start": "next start",
@@ -11,10 +12,10 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@acme/api": "*",
-    "@acme/auth": "*",
-    "@acme/db": "*",
-    "@acme/tailwind-config": "*",
+    "@leace/api": "*",
+    "@leace/auth": "*",
+    "@leace/db": "*",
+    "@leace/tailwind-config": "*",
     "@tanstack/react-query": "^4.16.1",
     "@trpc/client": "^10.1.0",
     "@trpc/next": "^10.1.0",

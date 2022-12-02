@@ -49,7 +49,7 @@ jobs:
       - name: Next.js cache
         uses: actions/cache@v3
         with:
-          path: ${{ github.workspace }}apps/nextjs/.next/cache
+          path: ${{ github.workspace }}apps/web/.next/cache
           key: ${{ runner.os }}-${{ runner.node }}-${{ hashFiles('**/pnpm-lock.yaml') }}-nextjs
 
       - name: Build, lint and type-check

@@ -4,6 +4,6 @@
     "src",
     "index.ts",
     "transformer.ts",
-    "node_modules/@acme/auth/next-auth.d.ts"
+    "node_modules/@leace/auth/next-auth.d.ts"
   ]
 }
