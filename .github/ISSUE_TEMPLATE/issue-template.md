@@ -3,7 +3,7 @@ name: Issue template
 about: Use this template to open issues that adhere to the PLD standard
 title: "[scope in lowercase] short title in lowercase"
 labels: ''
-assignees: theopomies
+assignees: ''
 
 ---
 
