@@ -13,6 +13,10 @@
       "dependsOn": ["^db-generate"],
       "cache": false
     },
+    "android": {
+      "dependsOn": ["^db-generate"],
+      "cache": false
+    },
     "build": {
       "dependsOn": ["^build", "^db-generate"],
       "outputs": [".next/**", ".expo/**"]
