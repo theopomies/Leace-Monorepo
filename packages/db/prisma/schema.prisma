@@ -8,12 +8,15 @@ generator client {
 datasource db {
     provider = "postgresql"
     url      = env("DATABASE_URL")
+    // relationMode = "prisma"
 }
 
 model Post {
     id      String @id @default(cuid())
     title   String
     content String
+
+    @@map("posts")
 }
 
 // NextAuth.js Models
@@ -26,16 +29,19 @@ model Account {
     type              String
     provider          String
     providerAccountId String
-    refresh_token     String? // @db.Text
-    access_token      String? // @db.Text
+    refresh_token     String? //@db.Text
+    access_token      String? //@db.Text
     expires_at        Int?
     token_type        String?
     scope             String?
-    id_token          String? // @db.Text
+    id_token          String? //@db.Text
     session_state     String?
     user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     @@unique([provider, providerAccountId])
+    @@index([userId])
+
+    @@map("accounts")
 }
 
 model Session {
@@ -44,6 +50,10 @@ model Session {
     userId       String
     expires      DateTime
     user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@index([userId])
+
+    @@map("sessions")
 }
 
 model User {
@@ -54,6 +64,8 @@ model User {
     image         String?
     accounts      Account[]
     sessions      Session[]
+
+    @@map("users")
 }
 
 model VerificationToken {
@@ -62,4 +74,6 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+
+    @@map("verification_tokens")
 }
