@@ -58,7 +58,7 @@ const CreatePost: React.FC = () => {
   );
 };
 
-export const HomeScreen = () => {
+export const ExampleHomeScreen = () => {
   const postQuery = trpc.post.all.useQuery();
   const [showPost, setShowPost] = React.useState<string | null>(null);
 
@@ -94,6 +94,16 @@ export const HomeScreen = () => {
         />
 
         <CreatePost />
+      </View>
+    </SafeAreaView>
+  );
+};
+
+export const HomeScreen = () => {
+  return (
+    <SafeAreaView>
+      <View>
+        <Text>Leace Home</Text>
       </View>
     </SafeAreaView>
   );

@@ -1,10 +1,8 @@
-# create-t3-turbo
-
-<img width="1758" alt="turbo2" src="https://user-images.githubusercontent.com/51714798/202427720-4ec5f285-41a5-4fed-a52f-20b89c5bc1b3.png">
+# Leace Monorepo
 
 ## About
 
-Ever wondered how to migrate your T3 application into a monorepo? Stop right here! This is the perfect starter repo to get you running with the perfect stack!
+Leace does to Real Estate what Tinder did to Dating
 
 It uses [Turborepo](https://turborepo.org/) and contains:
 
@@ -15,12 +13,12 @@ It uses [Turborepo](https://turborepo.org/) and contains:
 .vscode
   └─ Recommended extensions and settings for VSCode users
 apps
-  ├─ expo
+  ├─ mobile
   |   ├─ Expo SDK 46
   |   ├─ React Native using React 18
   |   ├─ Tailwind using Nativewind
   |   └─ Typesafe API calls using tRPC
-  └─ next.js
+  └─ web
       ├─ Next.js 13
       ├─ React 18
       ├─ TailwindCSS
@@ -44,16 +42,14 @@ To get it running, follow the steps below:
 # Install dependencies
 pnpm i
 
-# In packages/db/prisma update schema.prisma provider to use sqlite
-# or use your own database provider
 - provider = "postgresql"
-+ provider = "sqlite"
++ provider = "mysql"
 
 # Configure environment variables.
 # There is an `.env.example` in the root directory you can use for reference
 cp .env.example .env
 
-# Push the Prisma schema to your database
+# Push the Prisma schema to our database
 pnpm db-push
 ```
 
@@ -89,7 +85,7 @@ pnpm db-push
 
 #### Prerequisites
 
-_We do not recommend deploying a SQLite database on serverless environments since the data wouldn't be persisted. I provisioned a quick Postgresql database on [Railway](https://railway.app), but you can of course use any other database provider. Make sure the prisma schema is updated to use the correct database._
+_We're gonna be using PlanetScale (cloud hosted & managed mysql database) with Prisma which isn't quite ready yet._
 
 #### Deploy to Vercel
 
@@ -171,4 +167,4 @@ Deploying your Expo application works slightly differently compared to Next.js o
 
 The stack originates from [create-t3-app](https://github.com/t3-oss/create-t3-app).
 
-A [blog post](https://jumr.dev/blog/t3-turbo) where I wrote how to migrate a T3 app into this.
+And [create-t3-turbo](https://github.com/t3-oss/create-t3-turbo).
