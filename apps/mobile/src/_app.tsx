@@ -1,16 +1,19 @@
 import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { KeyboardAvoidingView, Platform } from "react-native";
 import { TRPCProvider } from "./utils/trpc";
 
-import { HomeScreen } from "./screens/home";
+import Navigation from "./navigation/navigation";
 
 export const App = () => {
   return (
     <TRPCProvider>
       <SafeAreaProvider>
-        <HomeScreen />
-        <StatusBar />
+        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1 }}>
+          <Navigation />
+          <StatusBar />
+        </KeyboardAvoidingView>
       </SafeAreaProvider>
     </TRPCProvider>
   );
