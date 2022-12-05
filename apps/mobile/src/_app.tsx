@@ -4,14 +4,14 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { KeyboardAvoidingView, Platform } from "react-native";
 import { TRPCProvider } from "./utils/trpc";
 
-import Navigation from "./navigation/navigation";
+import RootNavigator from "./navigation/RootNavigator";
 
 export const App = () => {
   return (
     <TRPCProvider>
       <SafeAreaProvider>
         <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1 }}>
-          <Navigation />
+          <RootNavigator />
           <StatusBar />
         </KeyboardAvoidingView>
       </SafeAreaProvider>
