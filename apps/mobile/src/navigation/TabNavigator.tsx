@@ -1,24 +1,31 @@
-import * as React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import React, { useLayoutEffect } from "react";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-export interface AppProps {
-}
+import { ConnexionScreen } from "../screens/ConnexionScreen/ConnexionScreen";
+import ProfileScreen from "../screens/ProfileScreen/ProfileScreen";
+import { useNavigation } from "@react-navigation/native";
 
-export interface AppState {
-}
+export type TabStackParamList = {
+  Connexion: undefined;
+  Profile: { userEmail: string };
+};
 
-export default class AppComponent extends React.Component<AppProps, AppState> {
-  constructor(props: AppProps) {
-    super(props);
-    this.state = {
-    };
-  }
+const Tab = createBottomTabNavigator<TabStackParamList>();
 
-  public render() {
-    return (
-      <View>
-         <Text>App Component</Text>
-      </View>
-    );
-  }
-}
+const TabNavigator = () => {
+  const navigation = useNavigation();
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: false,
+    });
+  }, []);
+
+  return (
+    <Tab.Navigator >
+      <Tab.Screen name="Profile" component={ProfileScreen} />
+    </Tab.Navigator>
+  );
+};
+
+export default TabNavigator;

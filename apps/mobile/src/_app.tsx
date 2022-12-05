@@ -8,8 +8,8 @@ import RootNavigator from "./navigation/RootNavigator";
 
 export const App = () => {
   return (
-    <TRPCProvider>
-      <SafeAreaProvider>
+    <TRPCProvider >
+      <SafeAreaProvider >
         <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1 }}>
           <RootNavigator />
           <StatusBar />
