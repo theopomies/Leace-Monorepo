@@ -4,6 +4,7 @@ import { signIn, signOut } from "next-auth/react";
 import { trpc } from "../utils/trpc";
 import type { inferProcedureOutput } from "@trpc/server";
 import type { AppRouter } from "@leace/api";
+import Link from "next/link";
 
 const PostCard: React.FC<{
   post: inferProcedureOutput<AppRouter["post"]["all"]>[number];
@@ -31,7 +32,7 @@ const Home: NextPage = () => {
           <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
             Leace
           </h1>
-          {/* <AuthShowcase /> */}
+          <AuthShowcase />
 
           <div className="flex h-[60vh] justify-center overflow-y-scroll px-4 text-2xl">
             {postQuery.data ? (
@@ -63,17 +64,25 @@ const AuthShowcase: React.FC = () => {
   return (
     <div className="flex flex-col items-center justify-center gap-4">
       {session?.user && (
-        <p className="text-center text-2xl text-white">
+        <p className="text-center text-2xl">
           {session && <span>Logged in as {session?.user?.name}</span>}
           {secretMessage && <span> - {secretMessage}</span>}
         </p>
       )}
-      <button
-        className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
-        onClick={session ? () => signOut() : () => signIn()}
+      <a
+        className="rounded-full px-10 py-3 font-semibold no-underline transition"
+        href={"/api/auth/signin"}
+        onClick={
+          session
+            ? (e) => {
+                e.preventDefault();
+                signOut();
+              }
+            : () => {}
+        }
       >
         {session ? "Sign out" : "Sign in"}
-      </button>
+      </a>
     </div>
   );
 };
