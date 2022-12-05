@@ -7,6 +7,9 @@ import { prisma } from "@leace/db";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 
 export const authOptions: NextAuthOptions = {
+  theme: {
+    colorScheme: "light",
+  },
   // Configure one or more authentication providers
   adapter: PrismaAdapter(prisma),
   providers: [

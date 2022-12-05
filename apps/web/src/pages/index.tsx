@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import { signIn, signOut } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import { trpc } from "../utils/trpc";
 import type { inferProcedureOutput } from "@trpc/server";
 import type { AppRouter } from "@leace/api";
@@ -69,7 +69,7 @@ const AuthShowcase: React.FC = () => {
           {secretMessage && <span> - {secretMessage}</span>}
         </p>
       )}
-      <a
+      <Link
         className="rounded-full px-10 py-3 font-semibold no-underline transition"
         href={"/api/auth/signin"}
         onClick={
@@ -78,11 +78,11 @@ const AuthShowcase: React.FC = () => {
                 e.preventDefault();
                 signOut();
               }
-            : () => {}
+            : () => null
         }
       >
         {session ? "Sign out" : "Sign in"}
-      </a>
+      </Link>
     </div>
   );
 };
