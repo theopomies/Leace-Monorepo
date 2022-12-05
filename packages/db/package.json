@@ -9,7 +9,8 @@
     "with-env": "dotenv -e ../../.env --",
     "dev": "pnpm with-env prisma studio --port 5556",
     "db-push": "pnpm with-env prisma db push",
-    "db-generate": "pnpm with-env prisma generate"
+    "db-generate": "pnpm with-env prisma generate",
+    "prisma:validate": "pnpm with-env prisma validate"
   },
   "dependencies": {
     "@prisma/client": "^4.6.1"
