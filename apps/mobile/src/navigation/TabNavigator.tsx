@@ -9,6 +9,8 @@ import { StackScreen } from "../screens/StackScreen/StackScreen";
 export type TabStackParamList = {
   Connexion: undefined;
   Profile: { userEmail: string };
+  StackScreen: undefined;
+  MatchScreen: undefined;
 };
 
 const Tab = createBottomTabNavigator<TabStackParamList>();
@@ -23,10 +25,10 @@ const TabNavigator = () => {
   }, []);
 
   return (
-    <Tab.Navigator >
+    <Tab.Navigator>
       <Tab.Screen name="Profile" component={ProfileScreen} />
-      <Tab.Screen name="StackScrenn" component={StackScreen} />
-      <Tab.Screen name="MatchScrenn" component={MatchScreen} />
+      <Tab.Screen name="StackScreen" component={StackScreen} />
+      <Tab.Screen name="MatchScreen" component={MatchScreen} />
     </Tab.Navigator>
   );
 };
