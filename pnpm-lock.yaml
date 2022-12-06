@@ -32,6 +32,8 @@ importers:
       '@react-navigation/bottom-tabs': ^6.4.3
       '@react-navigation/native': ^6.0.16
       '@react-navigation/native-stack': ^6.9.4
+      '@rneui/base': 4.0.0-rc.7
+      '@rneui/themed': 4.0.0-rc.7
       '@shopify/flash-list': ^1.4.0
       '@tanstack/react-query': ^4.16.1
       '@trpc/client': ^10.1.0
@@ -61,6 +63,8 @@ importers:
       '@react-navigation/bottom-tabs': 6.4.3_cjmprdviqvfyyojjhsaggs4fpi
       '@react-navigation/native': 6.0.16_6dzswgw3yaswvbertf2cdslpzq
       '@react-navigation/native-stack': 6.9.4_cjmprdviqvfyyojjhsaggs4fpi
+      '@rneui/base': 4.0.0-rc.7_yoyfw4sxya24kwrthijxudqcmi
+      '@rneui/themed': 4.0.0-rc.7_@rneui+base@4.0.0-rc.7
       '@shopify/flash-list': 1.4.0_bznrqlx657afr3ph3snqmu46li
       '@tanstack/react-query': 4.16.1_slnhbjkuf3cktqrwdgz34rrasq
       '@trpc/client': 10.1.0_@trpc+server@10.1.0
@@ -2502,6 +2506,33 @@ packages:
     resolution: {integrity: sha512-JzMRiRRu8J0yUMC7BV8wOVzevjkHnIPONbpCTL/vH5yceTm+dSH/U3esIObgk8wYYbov+jYlVhwUQNGRb2to6g==}
     dependencies:
       nanoid: 3.3.4
+    dev: false
+
+  /@rneui/base/4.0.0-rc.7_yoyfw4sxya24kwrthijxudqcmi:
+    resolution: {integrity: sha512-dffzoYek3Qp+7wJzC42QjI/Fu1HOUNxFIR88t1laDrBV5QZQB55f+Vu5zLbC80/bh1b8fYtl63HTIWpORuA3Eg==}
+    peerDependencies:
+      react-native-safe-area-context: ^3.1.9 || ^4.0.0
+      react-native-vector-icons: '>7.0.0'
+    dependencies:
+      '@types/react-native-vector-icons': 6.4.12
+      color: 3.2.1
+      deepmerge: 4.2.2
+      hoist-non-react-statics: 3.3.2
+      react-native-ratings: 8.1.0_6dzswgw3yaswvbertf2cdslpzq
+      react-native-safe-area-context: 4.4.1_6dzswgw3yaswvbertf2cdslpzq
+      react-native-size-matters: 0.4.0_react-native@0.71.0-rc.0
+      react-native-vector-icons: 9.2.0
+    transitivePeerDependencies:
+      - react
+      - react-native
+    dev: false
+
+  /@rneui/themed/4.0.0-rc.7_@rneui+base@4.0.0-rc.7:
+    resolution: {integrity: sha512-nRF95gFTv/8JEx01L8q9p9VWKE5M/luPWPKYsWHKUQ5PHqwveQId/V5+ba9yiXsYIl9VbJJ1nLlqfHVP00u/3Q==}
+    peerDependencies:
+      '@rneui/base': 4.0.0-rc.7
+    dependencies:
+      '@rneui/base': 4.0.0-rc.7_yoyfw4sxya24kwrthijxudqcmi
     dev: false
 
   /@rushstack/eslint-patch/1.2.0:
@@ -7950,6 +7981,17 @@ packages:
       react-native: 0.71.0-rc.0_lqcevrx4tjhiunpymlqp2zoalm
     dev: false
 
+  /react-native-ratings/8.1.0_6dzswgw3yaswvbertf2cdslpzq:
+    resolution: {integrity: sha512-+QOJ4G3NjVkI1D+tk4EGx1dCvVfbD2nQdkrj9cXrcAoEiwmbep4z4bZbCKmWMpQ5h2dqbxABU8/eBnbDmvAc3g==}
+    peerDependencies:
+      react: '*'
+      react-native: '*'
+    dependencies:
+      lodash: 4.17.21
+      react: 18.2.0
+      react-native: 0.71.0-rc.0_lqcevrx4tjhiunpymlqp2zoalm
+    dev: false
+
   /react-native-safe-area-context/4.4.1_6dzswgw3yaswvbertf2cdslpzq:
     resolution: {integrity: sha512-N9XTjiuD73ZpVlejHrUWIFZc+6Z14co1K/p1IFMkImU7+avD69F3y+lhkqA2hN/+vljdZrBSiOwXPkuo43nFQA==}
     peerDependencies:
@@ -7974,6 +8016,14 @@ packages:
 
   /react-native-size-matters/0.3.1_react-native@0.71.0-rc.0:
     resolution: {integrity: sha512-mKOfBLIBFBcs9br1rlZDvxD5+mAl8Gfr5CounwJtxI6Z82rGrMO+Kgl9EIg3RMVf3G855a85YVqHJL2f5EDRlw==}
+    peerDependencies:
+      react-native: '*'
+    dependencies:
+      react-native: 0.71.0-rc.0_lqcevrx4tjhiunpymlqp2zoalm
+    dev: false
+
+  /react-native-size-matters/0.4.0_react-native@0.71.0-rc.0:
+    resolution: {integrity: sha512-8/C0htHrFWeUm9N8JegmadovUfgTWkGBkDPZ1N3YkXtDWb+98Ya2gThiKcu445r8c7YhcrBfnHz/mYsXIusaOQ==}
     peerDependencies:
       react-native: '*'
     dependencies:
