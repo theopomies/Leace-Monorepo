@@ -138,12 +138,13 @@ model Post {
   user   User?  @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   title      String
+  content String
   desc       String
   type       PostType
   price      Float
   duration   DateTime
   size       Float
-  fursnished Boolean
+  furnished Boolean
 
   images       Image[]
   documents    Document[]
