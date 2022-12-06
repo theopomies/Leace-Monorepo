@@ -4,10 +4,11 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import TabNavigator from "./TabNavigator";
 import { NavigationContainer } from "@react-navigation/native";
 import { ConnexionScreen } from "../screens/ConnexionScreen/ConnexionScreen";
+import { ProfileScreen } from "../screens/ProfileScreen/ProfileScreen"
 
 export type RootStackParamList = {
     Main : undefined;
-    Model: { userEmail: string }
+    Model: undefined;
 }
 
 const RootStack = createNativeStackNavigator();
@@ -17,9 +18,9 @@ const RootNavigator = () => {
         <NavigationContainer>
             <RootStack.Navigator screenOptions={ {headerShown: false} } >
                 <RootStack.Screen name="Connexion" component={ConnexionScreen} />
-                {/* <RootStack.Group>
+                <RootStack.Group>
                     <RootStack.Screen name="Main" component={TabNavigator} />
-                </RootStack.Group> */}
+                </RootStack.Group>
             </RootStack.Navigator>
         </NavigationContainer>
     );

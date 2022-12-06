@@ -2,11 +2,11 @@ import { View, Text, ScrollView } from 'react-native'
 import React from 'react'
 
 
-export const ProfileScreen = () => {
+export const MatchScreen = () => {
   return (
     <ScrollView>
       <View>
-        <Text>ProfilScreen</Text>
+        <Text>MatchScreen</Text>
       </View>
     </ScrollView>
   )

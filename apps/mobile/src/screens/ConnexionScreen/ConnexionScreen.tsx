@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
 import { Alert, ScrollView, Text, View} from "react-native";
 import { Button, Input } from 'react-native-elements';
@@ -6,8 +7,14 @@ import { Button, Input } from 'react-native-elements';
 
 
 export const ConnexionScreen = () => {
+  const navigation = useNavigation();
 
   const [email, setEmail] = useState<string>("");
+
+  const OnSignPressed = () => {
+    navigation.navigate("Main");
+  };
+
 
     return (
       <ScrollView>
@@ -24,7 +31,7 @@ export const ConnexionScreen = () => {
 
               <Button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded mx-9"
               title="Log In / Sign up"
-              onPress={() => Alert.alert('Email sent to {input}')}/>
+              onPress={OnSignPressed}/>
 
               <Text className="mt-7 text-center">or</Text>
             </View>
