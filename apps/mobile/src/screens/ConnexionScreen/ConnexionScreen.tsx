@@ -1,13 +1,9 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
-import { Alert, ScrollView, Text, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 import { Button, Input } from "react-native-elements";
 
 // import CustomInput from "../../components/CustomInput/CustomInput";
-
-export type NavigationParamList = {
-
-}
 
 
 export const ConnexionScreen = () => {

@@ -4,7 +4,6 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import TabNavigator from "./TabNavigator";
 import { NavigationContainer } from "@react-navigation/native";
 import { ConnexionScreen } from "../screens/ConnexionScreen/ConnexionScreen";
-import { ProfileScreen } from "../screens/ProfileScreen/ProfileScreen";
 
 export type RootStackParamList = {
   Main: undefined;
