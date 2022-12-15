@@ -12,9 +12,7 @@ datasource db {
   relationMode = "prisma"
 }
 
-enum UserType {
-  ADMIN
-  MODERATOR
+enum AccountType {
   TENANT
   OWNER
   AGENCY
@@ -44,6 +42,12 @@ enum ConversationType {
   OWNER
   AGENCY
   DONE
+}
+
+enum Roles {
+  USER
+  MODERATOR
+  ADMIN
 }
 
 enum PostType {
@@ -100,21 +104,23 @@ model VerificationToken {
 
 model User {
   id String @id @default(cuid())
-
-  accountType   UserType
+  name          String?
   email         String?    @unique
+  emailVerified DateTime?
+  image         String?
+  sessions Session[]
+  accounts Account[]
+
+  accountType   AccountType? @default(TENANT)
   firstName     String?
   lastName      String?
   phoneNumber   String?    @unique
   country       String?
   description   String?
   age           Int?
-  status        UserStatus
-  isPremium     Boolean
-  emailVerified DateTime?
-
-  sessions Session[]
-  accounts Account[]
+  status        UserStatus? @default(ACTIVE)
+  isPremium     Boolean? @default(false)
+  role          Roles? @default(USER)
 
   images        Image[]
   documents     Document[]
