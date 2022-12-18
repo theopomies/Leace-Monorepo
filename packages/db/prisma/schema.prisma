@@ -140,9 +140,9 @@ model User {
 model Post {
   id String @id @default(cuid())
 
-  userId String
-  user   User?  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User?  @relation(fields: [createdBy], references: [id], onDelete: Cascade)
 
+  createdBy String
   title      String
   content String
   desc       String
@@ -160,7 +160,7 @@ model Post {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([userId])
+  @@index([createdBy])
   @@map("posts")
 }
 

@@ -3,15 +3,10 @@ import { z } from "zod";
 import { PostType } from "@prisma/client";
 
 export const postRouter = router({
-  all: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.post.findMany();
-  }),
-  byId: publicProcedure.input(z.string()).query(({ ctx, input }) => {
-    return ctx.prisma.post.findFirst({ where: { id: input } });
-  }),
   create: publicProcedure
     .input(
       z.object({
+        createdBy: z.string(),
         title: z.string(),
         content: z.string(),
         desc: z.string(),
@@ -25,4 +20,13 @@ export const postRouter = router({
     .mutation(({ ctx, input }) => {
       return ctx.prisma.post.create({ data: input });
     }),
+  all: publicProcedure.query(({ ctx }) => {
+    return ctx.prisma.post.findMany();
+  }),
+  byId: publicProcedure.input(z.string()).query(({ ctx, input }) => {
+    return ctx.prisma.post.findFirst({ where: { id: input } });
+  }),
+  deleteById: publicProcedure.input(z.string()).query(({ ctx, input }) => {
+    return ctx.prisma.post.delete({ where: { id: input } });
+  }),
 });
