@@ -1,0 +1,32 @@
+import React from "react";
+import { View, Image, Dimensions } from "react-native";
+import CarouselComp from 'react-native-snap-carousel';
+
+const SLIDER_WIDTH = Dimensions.get('window').width + 80
+const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.7)
+
+const CarouselItem = ({ item, index }) => {
+    return (
+        <View key={index}>
+            <Image className="h-52 w-11/12 mb-5 ml-4" source={{ uri: item }}></Image>
+        </View>
+    );
+};
+
+export const Carousel = ({ value }) => {
+    const isCarousel = React.useRef(null);
+
+    return (
+        <View className="items-center" >
+            <CarouselComp
+                layout="tinder"
+                layoutCardoffset={9}
+                ref={isCarousel}
+                data={value}
+                renderItem={CarouselItem}
+                sliderWidth={SLIDER_WIDTH}
+                itemWidth={ITEM_WIDTH}
+            />
+        </View>
+    );
+};

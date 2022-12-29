@@ -1,6 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
-import { View, Text, ScrollView, SafeAreaView, Image } from 'react-native'
+import { View, Text, ScrollView, SafeAreaView } from 'react-native'
 import { Button } from 'react-native-elements'
+import { Carousel } from '../../components/Carousel/Carousel'
 
 export const AdDetailsScreen = ({ route }) => {
 
@@ -11,9 +12,7 @@ export const AdDetailsScreen = ({ route }) => {
     return (
         <SafeAreaView>
             <ScrollView>
-                {/* <Image
-                    source={}
-                /> */}
+                <Carousel value={params.images} />
                 <View className="p-4">
                     <Text className="font-bold text-lg mb-5">{params.name}, {params.email}</Text>
                     <Text className="text-base font-semibold mb-2">{params.address}</Text>
