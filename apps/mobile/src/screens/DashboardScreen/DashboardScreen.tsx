@@ -1,13 +1,12 @@
 import React from "react";
-import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from "react-native"
+import { View, Text, ScrollView, Image, TouchableOpacity } from "react-native"
 
 export const DashboardScreen = () => {
 
     return (
-        <ScrollView
-            className="mt-20">
-            <View style={styles.wrapText}>
-                <Text style={styles.textTitle}>
+        <ScrollView className="mt-20">
+            <View className="justify-center items-center p-3 pb-24 mt-10">
+                <Text className=" text-3xl font-bold text-center items-center justify-center">
                     Dashboard
                 </Text>
                 <View>
@@ -42,40 +41,3 @@ export const DashboardScreen = () => {
         </ScrollView>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-    textTitle: {
-        color: 'black',
-        fontSize: 25,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    textDesc: {
-        color: 'black',
-        textAlign: 'center',
-        fontSize: 14,
-        marginVertical: 30,
-    },
-    wrapText: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 12,
-        paddingBottom: 100,
-        marginTop: 40,
-    },
-    cardImg1: {
-        position: 'absolute',
-        zIndex: 2,
-        bottom: 30,
-    },
-    logoView: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 15,
-    },
-});
