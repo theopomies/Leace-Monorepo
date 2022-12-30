@@ -1,5 +1,5 @@
 import { router, protectedProcedure } from "../trpc";
-import { z } from "zod";
+import { date, z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { Roles } from "@prisma/client";
 import { isPossiblePhoneNumber } from "libphonenumber-js";
@@ -20,6 +20,7 @@ export const userRouter = router({
       const getUser = await ctx.prisma.user.findUnique({
         where: { id: input.id },
       });
+
       if (!getUser) throw new TRPCError({ code: "NOT_FOUND" });
       if (
         getUser.id !== ctx.session.user.id &&
@@ -28,6 +29,12 @@ export const userRouter = router({
         throw new TRPCError({ code: "FORBIDDEN" });
       if (!isPossiblePhoneNumber(input.phoneNumber, "FR"))
         throw new TRPCError({ code: "BAD_REQUEST" });
+
+      const diff_ms = Date.now() - input.birthDate.getTime();
+      const age_dt = new Date(diff_ms);
+      const age = Math.abs(age_dt.getUTCFullYear() - 1970);
+      if (age < 18 || age > 125) throw new TRPCError({ code: "BAD_REQUEST" });
+
       return ctx.prisma.user.update({
         where: { id: input.id },
         data: {
