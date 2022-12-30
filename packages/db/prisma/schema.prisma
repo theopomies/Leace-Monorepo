@@ -103,24 +103,24 @@ model VerificationToken {
 }
 
 model User {
-  id String @id @default(cuid())
+  id            String    @id @default(cuid())
   name          String?
-  email         String?    @unique
+  email         String?   @unique
   emailVerified DateTime?
   image         String?
-  sessions Session[]
-  accounts Account[]
+  sessions      Session[]
+  accounts      Account[]
 
-  accountType   AccountType? @default(TENANT)
-  firstName     String?
-  lastName      String?
-  phoneNumber   String?    @unique
-  country       String?
-  description   String?
-  age           Int?
-  status        UserStatus? @default(ACTIVE)
-  isPremium     Boolean? @default(false)
-  role          Roles? @default(USER)
+  accountType AccountType? @default(TENANT)
+  firstName   String?
+  lastName    String?
+  phoneNumber String?      @unique
+  country     String?
+  description String?
+  birthDate   DateTime?
+  status      UserStatus?  @default(ACTIVE)
+  isPremium   Boolean?     @default(false)
+  role        Roles?       @default(USER)
 
   images        Image[]
   documents     Document[]
@@ -140,16 +140,16 @@ model User {
 model Post {
   id String @id @default(cuid())
 
-  user   User?  @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  user User? @relation(fields: [createdBy], references: [id], onDelete: Cascade)
 
   createdBy String
-  title      String
-  content String
-  desc       String
-  type       PostType
-  price      Float
-  duration   DateTime
-  size       Float
+  title     String
+  content   String
+  desc      String
+  type      PostType
+  price     Float
+  duration  DateTime
+  size      Float
   furnished Boolean
 
   images       Image[]

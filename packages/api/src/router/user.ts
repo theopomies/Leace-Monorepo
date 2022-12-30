@@ -2,6 +2,7 @@ import { router, protectedProcedure } from "../trpc";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { Roles } from "@prisma/client";
+import { isPossiblePhoneNumber } from "libphonenumber-js";
 
 export const userRouter = router({
   updateUser: protectedProcedure
@@ -12,7 +13,7 @@ export const userRouter = router({
         lastName: z.string(),
         phoneNumber: z.string(),
         description: z.string(),
-        age: z.number(),
+        birthDate: z.date(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -25,6 +26,8 @@ export const userRouter = router({
         ctx.session.user.role !== Roles.ADMIN
       )
         throw new TRPCError({ code: "FORBIDDEN" });
+      if (!isPossiblePhoneNumber(input.phoneNumber, "FR"))
+        throw new TRPCError({ code: "BAD_REQUEST" });
       return ctx.prisma.user.update({
         where: { id: input.id },
         data: {
@@ -32,7 +35,7 @@ export const userRouter = router({
           lastName: input.lastName,
           phoneNumber: input.phoneNumber,
           description: input.description,
-          age: input.age,
+          birthDate: input.birthDate,
         },
       });
     }),
