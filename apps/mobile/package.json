@@ -14,6 +14,7 @@
   "dependencies": {
     "@leace/api": "*",
     "@leace/tailwind-config": "*",
+    "@react-native/normalize-color": "^2.1.0",
     "@react-navigation/bottom-tabs": "^6.4.3",
     "@react-navigation/native": "^6.0.16",
     "@react-navigation/native-stack": "^6.9.4",
@@ -32,8 +33,10 @@
     "react-dom": "18.2.0",
     "react-native": "0.71.0-rc.0",
     "react-native-elements": "^3.4.2",
+    "react-native-get-random-values": "^1.8.0",
     "react-native-safe-area-context": "4.4.1",
     "react-native-screens": "~3.18.0",
+    "react-native-svg": "^13.6.0",
     "react-native-vector-icons": "^9.2.0",
     "react-native-web": "~0.18.10"
   },
@@ -45,6 +48,7 @@
     "@types/react-native": "~0.70.6",
     "eslint": "^8.28.0",
     "postcss": "^8.4.19",
+    "react-native-svg-transformer": "^1.0.0",
     "tailwindcss": "^3.2.4",
     "typescript": "^4.9.3"
   },
