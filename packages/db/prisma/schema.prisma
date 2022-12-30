@@ -29,6 +29,7 @@ enum UserStatus {
 enum ReportReason {
   SPAM
   INAPPROPRIATE
+  SCAM
   OTHER
 }
 
@@ -48,7 +49,7 @@ enum ConversationType {
 
 enum PostType {
   RENTED
-  WAITING_FOR_RENT
+  TO_BE_RENTED
 }
 
 // NextAuth.js Models
