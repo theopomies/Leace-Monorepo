@@ -15,7 +15,7 @@ export const postRouter = router({
         title: z.string(),
         content: z.string(),
         desc: z.string(),
-        type: z.enum([PostType.RENTED, PostType.WAITING_FOR_RENT]),
+        type: z.enum([PostType.RENTED, PostType.TO_BE_RENTED]),
         price: z.number(),
         duration: z.date(),
         size: z.number(),
