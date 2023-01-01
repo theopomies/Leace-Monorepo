@@ -4,53 +4,8 @@ import { ModalPopup } from "../../components/Modal/Modal"
 import { LineChart } from "react-native-gifted-charts";
 import { Button } from "react-native-elements";
 
-const accomodations = [
-    {
-        name: "T3 210 Avenue",
-        address: '210 Avenue',
-        price: "1200€",
-        link: "link to ad",
-        id: 1,
-    },
-    {
-        name: "Studio 310 Avenue",
-        address: '310 Avenue',
-        price: "550€",
-        link: "link to ad",
-        id: 2,
-    },
-    {
-        name: "T2 410 Avenue",
-        address: '410 Avenue',
-        price: "700€",
-        link: "link to ad",
-        id: 3,
-    },
-    {
-        name: "T2 410 Avenue",
-        address: '410 Avenue',
-        price: "700€",
-        link: "link to ad",
-        id: 4,
-    },
-    {
-        name: "T2 410 Avenue",
-        address: '410 Avenue',
-        price: "700€",
-        link: "link to ad",
-        id: 5,
-    },
-    {
-        name: "T2 410 Avenue",
-        address: '410 Avenue',
-        price: "700€",
-        link: "link to ad",
-        id: 6,
-    },
-];
-
-const data = [{ value: 0, label: "J" }, { value: 10, label: "F" }, { value: 8, label: "M" }, { value: 58, label: "A" }, { value: 56, label: "M" }, { value: 78, label: "J" }, { value: 74, label: "J" }, { value: 98, label: "A" }, { value: 98, label: "S" }, { value: 98, label: "O" }, { value: 98, label: "N" }, { value: 98, label: "D" }];
-
+import { accomodations } from "./Dummy"
+import { data } from "./Dummy"
 
 const Item = ({ name, address, price, link }: { name: string, address: string, price: string, link: string }) => (
     <View className="items-center mt-5 mb-5 rounded-xl bg-gray-200 p-10">
@@ -111,7 +66,7 @@ export const DashboardScreen = () => {
                                         curved
                                         data={data}
                                         height={250}
-                                        width={400}
+                                        width={300}
                                         showVerticalLines
                                         spacing={35}
                                         initialSpacing={0}
@@ -127,10 +82,45 @@ export const DashboardScreen = () => {
                             </View>
                         </ModalPopup>
 
-                        <TouchableOpacity className="flex flex-col bg-white rounded-lg shadow-md w-full m-6 overflow-hidden sm:w-52">
+                        <TouchableOpacity className="flex flex-col bg-white rounded-lg shadow-md w-full m-6 overflow-hidden sm:w-52" onPress={() => {
+                            setIncome(true);
+                        }}>
                             <Image source={require("../../../assets/income.png")} className="h-20 w-20 m-6 ml-20 items-center justify-center" />
                             <Text className="text-center px-2 pb-5 font-bold">Income</Text>
                         </TouchableOpacity>
+                        <ModalPopup visible={income}>
+                            <View className="items-center mb-20">
+                                <TouchableOpacity onPress={() => {
+                                    setIncome(false);
+                                }}>
+                                    <Image
+                                        source={require('../../../assets/x.png')}
+                                        className="h-8 w-8 mb-5"
+                                    />
+                                </TouchableOpacity>
+                                <View className="items-center ml-5">
+                                    <Text className="mb-5 font-bold text-xl"> 3000$ </Text>
+                                    <LineChart
+                                        areaChart
+                                        isAnimated
+                                        curved
+                                        data={data}
+                                        height={250}
+                                        width={300}
+                                        showVerticalLines
+                                        spacing={35}
+                                        initialSpacing={0}
+                                        color1="orange"
+                                        textColor1="green"
+                                        dataPointsColor1="orange"
+                                        startFillColor1="orange"
+                                        startOpacity={0.8}
+                                        endOpacity={0.3}
+                                    />
+                                    <Button title="Details" className="mt-10 mx-9 rounded bg-black py-1 px-4 font-bold text-white" type="clear" titleStyle={{ color: 'white' }} />
+                                </View>
+                            </View>
+                        </ModalPopup>
 
 
                         <TouchableOpacity className="flex flex-col bg-white rounded-lg shadow-md w-full m-6 overflow-hidden sm:w-52" onPress={() => {
