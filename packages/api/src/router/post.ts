@@ -35,7 +35,7 @@ export const postRouter = router({
       });
       if (!getPost) throw new TRPCError({ code: "NOT_FOUND" });
       if (
-        getPost.createdBy !== ctx.session.user.id &&
+        getPost.createdBy !== ctx.session.user.id ||
         ctx.session.user.role !== Roles.ADMIN
       )
         throw new TRPCError({ code: "FORBIDDEN" });
