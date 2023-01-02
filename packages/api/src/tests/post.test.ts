@@ -8,7 +8,7 @@ describe("[Router][post]", () => {
   let id = "";
   const input: inferProcedureInput<AppRouter["post"]["create"]> = {
     createdBy: "",
-    type: PostType.WAITING_FOR_RENT,
+    type: PostType.TO_BE_RENTED,
     title: "NicePost",
     content: "SomeContent",
     desc: "LittleDescription",
