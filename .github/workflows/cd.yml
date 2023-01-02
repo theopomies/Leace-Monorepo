@@ -47,4 +47,4 @@ jobs:
         run: pnpm prisma:validate
 
       - name: Migrate database
-        run: pnpm db-push
+        run: pnpm db-push -- --force-reset
