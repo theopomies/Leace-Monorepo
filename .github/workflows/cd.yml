@@ -1,8 +1,6 @@
-name: CI
+name: CD
 
 on:
-  pull_request:
-    branches: ["*"]
   push:
     branches: ["main"]
 
@@ -14,7 +12,7 @@ env:
   DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
 jobs:
-  build-lint:
+  migrate-db:
     runs-on: ubuntu-latest
 
     steps:
@@ -45,17 +43,8 @@ jobs:
       - name: Install deps (with cache)
         run: pnpm install
 
-      - name: Next.js cache
-        uses: actions/cache@v3
-        with:
-          path: ${{ github.workspace }}apps/web/.next/cache
-          key: ${{ runner.os }}-${{ runner.node }}-${{ hashFiles('**/pnpm-lock.yaml') }}-nextjs
-
-      - name: Build, lint and type-check
-        run: pnpm turbo build lint type-check
-
       - name: Validate database
         run: pnpm prisma:validate
 
-      - name: Check workspaces
-        run: pnpm manypkg check
+      - name: Migrate database
+        run: pnpm db-push -- --force-reset
