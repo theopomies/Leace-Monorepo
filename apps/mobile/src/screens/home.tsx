@@ -103,7 +103,8 @@ export const HomeScreen = () => {
   return (
     <SafeAreaView>
       <View>
-        <Text>Leace Home</Text>
+        <Text className="font-semibold italic text-black">Leace Home</Text>
+        <Text className={`text-center py-5 text-xl`}>Welcome back</Text>
       </View>
     </SafeAreaView>
   );
