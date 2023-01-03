@@ -89,4 +89,7 @@ export const postRouter = router({
       if (!getPosts) throw new TRPCError({ code: "NOT_FOUND" });
       return getPosts;
     }),
+  all: protectedProcedure.query(({ ctx }) => {
+    return ctx.prisma.post.findMany();
+  }),
 });
