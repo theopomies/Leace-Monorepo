@@ -1,34 +1,26 @@
-import { ReactNode } from "react";
-import { StackElement } from "./StackElement";
+import { StackElement, StackElementProps } from "./StackElement";
 import { SwipeCard } from "./SwipeCard";
 
-const elements: ReactNode[] = [];
+export type StackProps = {
+  posts: StackElementProps[];
+  onLike: (post: StackElementProps) => void;
+  onDislike: (post: StackElementProps) => void;
+};
 
-for (let i = 0; i < 15; i++) {
-  elements.push(
-    <StackElement
-      img={"/sample_image.avif"}
-      title="Théo"
-      age={22}
-      description="Nouvel étudiant bordelais, je cherche un appartement dans la région pour la rentrée de septembre 2023."
-    />,
-  );
-}
-
-export function Stack() {
+export function Stack({ posts, onLike, onDislike }: StackProps) {
   return (
     <div className="relative">
       <div className="absolute top-0 left-0 -translate-x-1/2 ">
         <SwipeCard
-          onSwipeLeft={() => console.log("swiped left")}
-          onSwipeRight={() => console.log("swiped right")}
+          onSwipeLeft={() => onDislike(posts[0] as StackElementProps)}
+          onSwipeRight={() => onLike(posts[0] as StackElementProps)}
           onSwipingLeft={() => console.log("swiping left")}
           onSwipingRight={() => console.log("swiping right")}
         >
-          {elements[0]}
+          <StackElement {...(posts[0] as StackElementProps)} />
         </SwipeCard>
       </div>
-      {elements.slice(1, 4).map((element, index) => (
+      {posts.slice(1, 4).map((post, index) => (
         <div
           className={`absolute top-0 left-0 -translate-x-1/2`}
           style={{
@@ -40,7 +32,7 @@ export function Stack() {
           }}
           key={index}
         >
-          {element}
+          <StackElement {...post} />
         </div>
       ))}
     </div>

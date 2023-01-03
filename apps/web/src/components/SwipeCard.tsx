@@ -48,9 +48,8 @@ export function SwipeCard({
         } else if (info.offset.x < -100) {
           // Swiped left
           onSwipeLeft();
-        } else {
-          setLikeValue();
         }
+        setLikeValue(null);
       }}
     >
       {children}

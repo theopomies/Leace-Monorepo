@@ -1,6 +1,7 @@
 import { XOR } from "../utils/types";
 
 export type StackElementProps = {
+  id: string;
   img: string;
   title: string;
   description: string;
