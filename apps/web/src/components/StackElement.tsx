@@ -1,7 +1,6 @@
-import Image from "next/image";
 import { XOR } from "../utils/types";
 
-type StackElementProps = {
+export type StackElementProps = {
   img: string;
   title: string;
   description: string;

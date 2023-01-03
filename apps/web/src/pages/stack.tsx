@@ -1,14 +1,10 @@
+import { Stack } from "../components/Stack";
 import { StackElement } from "../components/StackElement";
 
-export default function Stack() {
+export default function StackPage() {
   return (
     <div className="flex w-full items-center justify-center gap-20 p-48">
-      <StackElement
-        img={"/sample_image.avif"}
-        title="Théo"
-        age={22}
-        description="Nouvel étudiant bordelais, je cherche un appartement dans la région pour la rentrée de septembre 2023."
-      />
+      <Stack />
       <br />
       <StackElement
         img={"/sample_image.avif"}
