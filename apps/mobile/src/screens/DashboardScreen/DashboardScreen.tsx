@@ -1,26 +1,11 @@
 import React, { useState } from "react";
 import { View, Text, ScrollView, Image, TouchableOpacity, FlatList } from "react-native"
 import { ModalPopup } from "../../components/Modal/Modal"
-import { LineChart } from "react-native-gifted-charts";
-import { Button } from "react-native-elements";
 
 import { accomodations } from "./Dummy"
 import { data } from "./Dummy"
-
-const Item = ({ name, address, price, link }: { name: string, address: string, price: string, link: string }) => (
-    <View className="items-center mt-5 mb-5 rounded-xl bg-gray-200 p-10">
-        <Text className="font-bold text-xl">{address}</Text>
-        <Text className="font-bold text-xl">{name}</Text>
-        <Image source={require("../../../assets/immeuble.webp")} className="h-20 w-11/12" />
-        <Text className="font-bold text-xl">{price}</Text>
-        <Text className="font-bold text-xl">{link}</Text>
-    </View >
-);
-
-const renderItem = ({ item }) => (
-    <Item name={item.name} address={item.address} price={item.price} link={item.link} />
-);
-
+import { contacts } from "./Dummy"
+import { expenses_dummy } from "./Dummy"
 
 export const DashboardScreen = () => {
 
@@ -58,27 +43,21 @@ export const DashboardScreen = () => {
                                         className="h-8 w-8 mb-5"
                                     />
                                 </TouchableOpacity>
-                                <View className="items-center ml-5">
-                                    <Text className="mb-5 font-bold text-xl"> 3000$ </Text>
-                                    <LineChart
-                                        areaChart
-                                        isAnimated
-                                        curved
-                                        data={data}
-                                        height={250}
-                                        width={300}
-                                        showVerticalLines
-                                        spacing={35}
-                                        initialSpacing={0}
-                                        color1="orange"
-                                        textColor1="green"
-                                        dataPointsColor1="orange"
-                                        startFillColor1="orange"
-                                        startOpacity={0.8}
-                                        endOpacity={0.3}
-                                    />
-                                    <Button title="Details" className="mt-10 mx-9 rounded bg-black py-1 px-4 font-bold text-white" type="clear" titleStyle={{ color: 'white' }} />
-                                </View>
+                                <FlatList
+                                    data={expenses_dummy}
+                                    showsHorizontalScrollIndicator={false}
+                                    showsVerticalScrollIndicator={false}
+                                    renderItem={({ item }) => (
+                                        <TouchableOpacity>
+                                            <View className="items-center mt-5 mb-5 rounded-xl bg-gray-200 p-10">
+                                                <Image source={require("../../../assets/immeuble.webp")} className="h-20 w-11/12" />
+                                                <Text className="font-bold text-xl">maintenance: {item.maintenance}</Text>
+                                                <Text className="font-bold text-xl">agency fees: {item.agency}</Text>
+                                                <Text className="font-bold text-xl">housing price: {item.price}</Text>
+                                            </View >
+                                        </TouchableOpacity>
+                                    )}
+                                />
                             </View>
                         </ModalPopup>
 
@@ -98,27 +77,23 @@ export const DashboardScreen = () => {
                                         className="h-8 w-8 mb-5"
                                     />
                                 </TouchableOpacity>
-                                <View className="items-center ml-5">
-                                    <Text className="mb-5 font-bold text-xl"> 3000$ </Text>
-                                    <LineChart
-                                        areaChart
-                                        isAnimated
-                                        curved
-                                        data={data}
-                                        height={250}
-                                        width={300}
-                                        showVerticalLines
-                                        spacing={35}
-                                        initialSpacing={0}
-                                        color1="orange"
-                                        textColor1="green"
-                                        dataPointsColor1="orange"
-                                        startFillColor1="orange"
-                                        startOpacity={0.8}
-                                        endOpacity={0.3}
-                                    />
-                                    <Button title="Details" className="mt-10 mx-9 rounded bg-black py-1 px-4 font-bold text-white" type="clear" titleStyle={{ color: 'white' }} />
-                                </View>
+                                <FlatList
+                                    data={data}
+                                    showsHorizontalScrollIndicator={false}
+                                    showsVerticalScrollIndicator={false}
+                                    renderItem={({ item }) => (
+                                        <TouchableOpacity>
+                                            <View className="items-center mt-5 mb-5 rounded-xl bg-gray-200 p-10">
+                                                <Image source={require("../../../assets/immeuble.webp")} className="h-20 w-11/12" />
+                                                <Text className="font-bold text-xl">consumption: {item.energy}</Text>
+                                                <Text className="font-bold text-xl">security deposit: {item.deposit}</Text>
+                                                <Text className="font-bold text-xl">rental charges: {item.charges}</Text>
+                                                <Text className="font-bold text-xl">equipment costs: {item.equipment}</Text>
+                                                <Text className="font-bold text-xl">other costs: {item.other}</Text>
+                                            </View >
+                                        </TouchableOpacity>
+                                    )}
+                                />
                             </View>
                         </ModalPopup>
 
@@ -141,10 +116,17 @@ export const DashboardScreen = () => {
                                 </TouchableOpacity>
                                 <FlatList
                                     data={accomodations}
-                                    renderItem={renderItem}
-                                    keyExtractor={item => item.id}
                                     showsHorizontalScrollIndicator={false}
                                     showsVerticalScrollIndicator={false}
+                                    renderItem={({ item }) => (
+                                        <View className="items-center mt-5 mb-5 rounded-xl bg-gray-200 p-10">
+                                            <Text className="font-bold text-xl">{item.address}</Text>
+                                            <Text className="font-bold text-xl">{item.name}</Text>
+                                            <Image source={require("../../../assets/immeuble.webp")} className="h-20 w-11/12" />
+                                            <Text className="font-bold text-xl">{item.price}</Text>
+                                            <Text className="font-bold text-xl">{item.link}</Text>
+                                        </View >
+                                    )}
                                 />
                             </View>
                         </ModalPopup>
@@ -167,18 +149,80 @@ export const DashboardScreen = () => {
                                 </TouchableOpacity>
                                 <FlatList
                                     data={accomodations}
-                                    renderItem={renderItem}
-                                    keyExtractor={item => item.id}
                                     showsHorizontalScrollIndicator={false}
                                     showsVerticalScrollIndicator={false}
+                                    renderItem={({ item }) => (
+                                        <View className="items-center mt-5 mb-5 rounded-xl bg-gray-200 p-10">
+                                            <Text className="font-bold text-xl">{item.address}</Text>
+                                            <Text className="font-bold text-xl">{item.name}</Text>
+                                            <Image source={require("../../../assets/immeuble.webp")} className="h-20 w-11/12" />
+                                            <Text className="font-bold text-xl">{item.price}</Text>
+                                            <Text className="font-bold text-xl">{item.link}</Text>
+                                        </View >
+                                    )}
                                 />
                             </View>
                         </ModalPopup>
 
-                        <TouchableOpacity className="flex flex-col bg-white rounded-lg shadow-md w-full m-6 overflow-hidden sm:w-52">
+                        <TouchableOpacity className="flex flex-col bg-white rounded-lg shadow-md w-full m-6 overflow-hidden sm:w-52" onPress={() => {
+                            setClient(true);
+                        }} >
                             <Image source={require("../../../assets/client.png")} className="h-20 w-20 m-6 ml-20 items-center justify-center" />
                             <Text className="text-center px-2 pb-5 font-bold">Clients</Text>
                         </TouchableOpacity>
+                        <ModalPopup visible={client}>
+                            <View className="items-center mb-20">
+                                <TouchableOpacity onPress={() => {
+                                    setClient(false);
+                                }}>
+                                    <Image
+                                        source={require('../../../assets/x.png')}
+                                        className="h-8 w-8 mb-14"
+                                    />
+                                </TouchableOpacity>
+                                <View className="items-center ml-5 flex-row">
+                                    <FlatList
+                                        data={contacts}
+                                        showsHorizontalScrollIndicator={false}
+                                        showsVerticalScrollIndicator={false}
+                                        renderItem={({ item }) => (
+                                            <ScrollView className="border-2 mb-2">
+                                                <View>
+                                                    <View className="items-center">
+                                                        <TouchableOpacity>
+                                                            <Image
+                                                                source={require('../../../assets/face.jpeg')}
+                                                                className="h-8 w-8 rounded-2xl mx-1.5"
+                                                            />
+                                                        </TouchableOpacity>
+                                                    </View>
+                                                    <View className="items-center">
+
+                                                        <TouchableOpacity>
+                                                            <Text className="font-bold text-2xl">{item.name}</Text>
+                                                        </TouchableOpacity>
+                                                    </View>
+
+                                                    <View className="items-center">
+
+                                                        <TouchableOpacity onPress={() => {
+                                                            setClient(false)
+                                                            setChat(true)
+                                                        }}>
+                                                            <Image
+                                                                source={require('../../../assets/chat.png')}
+                                                                className="h-8 w-8 rounded-2xl mx-1.5"
+                                                            />
+                                                        </TouchableOpacity>
+                                                    </View>
+
+
+                                                </View>
+                                            </ScrollView>
+                                        )} />
+                                </View>
+                            </View>
+                        </ModalPopup>
 
                         <TouchableOpacity className="flex flex-col bg-white rounded-lg shadow-md w-full m-6 overflow-hidden sm:w-52">
                             <Image source={require("../../../assets/chat.png")} className="h-20 w-20 m-6 ml-20 items-center justify-center" />
