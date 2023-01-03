@@ -1,3 +1,4 @@
+import { AccountType } from ".prisma/client";
 import { DefaultSession } from "next-auth";
 
 /**
@@ -12,10 +13,12 @@ declare module "next-auth" {
     user: {
       id: string;
       role?: string;
+      type?: AccountType
     } & DefaultSession["user"];
   }
 
   interface User {
     role?: string;
+    type?: AccountType;
   }
 }

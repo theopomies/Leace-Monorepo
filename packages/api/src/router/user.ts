@@ -23,7 +23,7 @@ export const userRouter = router({
 
       if (!getUser) throw new TRPCError({ code: "NOT_FOUND" });
       if (
-        getUser.id !== ctx.session.user.id ||
+        getUser.id !== ctx.session.user.id &&
         ctx.session.user.role !== Roles.ADMIN
       )
         throw new TRPCError({ code: "FORBIDDEN" });

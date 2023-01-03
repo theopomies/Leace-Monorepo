@@ -145,14 +145,14 @@ model Post {
   user User? @relation(fields: [createdBy], references: [id], onDelete: Cascade)
 
   createdBy String
-  title     String
-  content   String
-  desc      String
-  type      PostType
-  price     Float
-  duration  DateTime
-  size      Float
-  furnished Boolean
+  title     String?
+  content   String?
+  desc      String?
+  type      PostType? @default(TO_BE_RENTED)
+  price     Float?
+  duration  DateTime?
+  size      Float?
+  furnished Boolean?
 
   images       Image[]
   documents    Document[]
