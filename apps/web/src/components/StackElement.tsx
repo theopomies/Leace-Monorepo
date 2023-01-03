@@ -21,7 +21,7 @@ export function StackElement({
   const newDesc =
     splitDesc.slice(0, maxSplitLength).join(" ") + (tooLongDesc ? "..." : "");
   return (
-    <div className="flex w-96 flex-col items-center gap-4 rounded-md p-2 shadow-lg">
+    <div className="flex w-96 flex-col items-center gap-4 rounded-md bg-white p-2 shadow-lg">
       <div className="relative flex items-center justify-center overflow-hidden rounded-md bg-gray-100">
         <img src={img} alt="" className="h-auto w-full select-none" />
       </div>
