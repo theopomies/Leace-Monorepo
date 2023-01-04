@@ -6,6 +6,7 @@ import { accomodations } from "./Dummy"
 import { data } from "./Dummy"
 import { contacts } from "./Dummy"
 import { expenses_dummy } from "./Dummy"
+import { Button, Input } from "react-native-elements";
 
 export const DashboardScreen = () => {
 
@@ -15,6 +16,10 @@ export const DashboardScreen = () => {
     const [isOccupied, setIsOccupied] = useState(false);
     const [chat, setChat] = useState(false);
     const [client, setClient] = useState(false);
+
+    const [content, setContent] = useState("");
+    const [isPressed, setIsPressed] = useState(false);
+
 
     return (
         <ScrollView className="mt-20">
@@ -215,8 +220,6 @@ export const DashboardScreen = () => {
                                                             />
                                                         </TouchableOpacity>
                                                     </View>
-
-
                                                 </View>
                                             </ScrollView>
                                         )} />
@@ -224,11 +227,58 @@ export const DashboardScreen = () => {
                             </View>
                         </ModalPopup>
 
-                        <TouchableOpacity className="flex flex-col bg-white rounded-lg shadow-md w-full m-6 overflow-hidden sm:w-52">
+                        <TouchableOpacity className="flex flex-col bg-white rounded-lg shadow-md w-full m-6 overflow-hidden sm:w-52" onPress={() => {
+                            setChat(true);
+                        }}>
                             <Image source={require("../../../assets/chat.png")} className="h-20 w-20 m-6 ml-20 items-center justify-center" />
                             <Text className="text-center px-2 pb-5 font-bold">Chat</Text>
                         </TouchableOpacity>
+                        <ModalPopup visible={chat}>
+                            <View className="items-center mb-20">
+                                <TouchableOpacity onPress={() => {
+                                    setChat(false);
+                                }}>
+                                    <Image
+                                        source={require('../../../assets/x.png')}
+                                        className="h-8 w-8 mb-14"
+                                    />
+                                </TouchableOpacity>
+                                <ScrollView className="w-full flex flex-col max-h-screen">
 
+                                    <View
+                                        className="h-auto w-full sticky shadow-2xl bg-gradient-to-br from-gray-100 to-gray-300 dark:from-gray-900 dark:to-gray-900 border-l dark:border-gray-800 border-gray-200 bottom-0 min-w-full flex-1 flex flex-col lg:order-last"
+                                    >
+                                        <View>
+                                            <View className="pl-10 pt-2 relative z-0 inline-flex shadow-sm rounded-md">
+
+                                                <View className="relative inline-block text-left">
+                                                    {isPressed ? <Text>{content}</Text> : null}
+
+                                                    {/**/}
+                                                </View>
+                                            </View>
+                                            <View className="pr-10 pl-10 pb-5  h-full mt-1 flex rounded-md shadow-sm">
+                                                <View className="relative flex items-stretch flex-grow focus-within:z-10 flex-col">
+                                                    <Input
+                                                        value={content}
+                                                        onChangeText={(text) => setContent(text)}
+
+                                                        className="focus:ring-indigo-500 focus:border-indigo-500 block w-full rounded-none rounded-l-md pl-10 sm:text-sm border-gray-300"
+                                                        placeholder="Type your message..." autoCompleteType={undefined} />
+                                                    <Button
+                                                        onPress={() => (
+                                                            setIsPressed(true)
+                                                        )}
+                                                        title="Send"
+                                                        className="bg-indigo-700 relative inline-flex items-center space-x-2 px-4 py-1  dark:border-transparent text-sm font-medium rounded-r-md text-gray-700 bg-transparent hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+                                                    />
+                                                </View>
+                                            </View>
+                                        </View>
+                                    </View>
+                                </ScrollView>
+                            </View>
+                        </ModalPopup>
                     </View>
                 </View>
             </View >
