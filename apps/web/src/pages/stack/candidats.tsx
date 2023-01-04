@@ -55,7 +55,7 @@ export default function Candidats() {
 
   return (
     <LoggedLayout>
-      <div className="flex w-full items-center justify-center gap-20 p-48">
+      <div className="flex w-full items-center justify-center">
         <Stack
           posts={posts}
           onDislike={onDislike}

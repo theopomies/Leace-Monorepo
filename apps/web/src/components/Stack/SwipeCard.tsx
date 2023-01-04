@@ -1,29 +1,34 @@
 import { motion, useMotionValue, useTransform } from "framer-motion";
 import { useState } from "react";
+import { StackElement, StackElementProps } from "./StackElement";
 
 type SwipeCardProps = {
-  children: React.ReactNode;
   onSwipeLeft?: () => void;
   onSwipeRight?: () => void;
   onSwiping?: (direction: "like" | "dislike" | null) => void;
-};
+  isSelected: boolean;
+  setIsSelected: (b: boolean) => void;
+} & StackElementProps;
 
 export function SwipeCard({
-  children,
   onSwipeLeft = () => null,
   onSwipeRight = () => null,
   onSwiping = () => null,
+  isSelected,
+  setIsSelected,
+  ...cardProps
 }: SwipeCardProps) {
   const x = useMotionValue(0);
   const opacity = useTransform(x, [-200, 0, 200], [0.5, 1, 0.5]);
   const scale = useTransform(x, [-200, 0, 200], [0.8, 1, 0.8]);
   const rotate = useTransform(x, [-200, 0, 200], [-15, 0, 15]);
   const [likeValue, setLikeValue] = useState<"like" | null | "dislike">();
+  const [, setTap] = useState<boolean>(true); // Hack
 
   return (
     <motion.div
       style={{ x, opacity, scale, rotate }}
-      drag="x"
+      drag={isSelected ? false : "x"}
       dragConstraints={{ left: -200, right: 200 }}
       dragSnapToOrigin
       onDrag={(event, info) => {
@@ -49,10 +54,23 @@ export function SwipeCard({
           onSwipeLeft();
         }
         setLikeValue(null);
+        setTap(false);
+      }}
+      // DISGUSTING CODE SORRY BOUT THAT
+      onTap={() => {
+        setTap((tap) => {
+          if (!tap || isSelected) {
+            return true;
+          }
+          // Tap Logic
+          console.log("TRUE TAP!");
+          setIsSelected(true);
+          return true;
+        });
       }}
     >
-      {children}
-      {!!likeValue && (
+      <StackElement {...cardProps} isExpanded={isSelected} />
+      {!!likeValue && !isSelected && (
         <div
           className={`absolute top-8 left-8 border-2 px-1 font-bold ${
             likeValue == "like"
