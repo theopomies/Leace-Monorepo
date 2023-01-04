@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Stack } from "../../components/Stack";
-import { StackElementProps } from "../../components/StackElement";
+import { Stack } from "../../components/Stack/Stack";
+import { StackElementProps } from "../../components/Stack/StackElement";
 
 const defaultPosts: StackElementProps[] = [];
 
@@ -17,6 +17,7 @@ for (let i = 0; i < 10; i++) {
 
 export default function Candidats() {
   const [posts, setPosts] = useState(defaultPosts);
+  const [lastPost, setLastPost] = useState<StackElementProps | null>(null);
 
   const removePost = (post: StackElementProps) => {
     setPosts((posts) => {
@@ -41,11 +42,24 @@ export default function Candidats() {
   const onDislike = (post: StackElementProps) => {
     console.log("Disliked post " + post.id);
     removePost(post);
+    setLastPost(post);
+  };
+
+  const onRewind = () => {
+    if (lastPost) {
+      setPosts((posts) => [lastPost, ...posts]);
+      setLastPost(null);
+    }
   };
 
   return (
     <div className="flex w-full items-center justify-center gap-20 p-48">
-      <Stack posts={posts} onDislike={onDislike} onLike={onLike} />
+      <Stack
+        posts={posts}
+        onDislike={onDislike}
+        onLike={onLike}
+        onRewind={onRewind}
+      />
     </div>
   );
 }

@@ -5,16 +5,14 @@ type SwipeCardProps = {
   children: React.ReactNode;
   onSwipeLeft?: () => void;
   onSwipeRight?: () => void;
-  onSwipingLeft?: () => void;
-  onSwipingRight?: () => void;
+  onSwiping?: (direction: "like" | "dislike" | null) => void;
 };
 
 export function SwipeCard({
   children,
   onSwipeLeft = () => null,
   onSwipeRight = () => null,
-  onSwipingLeft = () => null,
-  onSwipingRight = () => null,
+  onSwiping = () => null,
 }: SwipeCardProps) {
   const x = useMotionValue(0);
   const opacity = useTransform(x, [-200, 0, 200], [0.5, 1, 0.5]);
@@ -31,14 +29,15 @@ export function SwipeCard({
       onDrag={(event, info) => {
         if (info.offset.x > 100) {
           // Swiping right
-          onSwipingRight();
+          onSwiping("like");
           setLikeValue("like");
         } else if (info.offset.x < -100) {
           // Swiping left
-          onSwipingLeft();
+          onSwiping("dislike");
           setLikeValue("dislike");
         } else {
           setLikeValue(null);
+          onSwiping(null);
         }
       }}
       onDragEnd={(event, info) => {
