@@ -26,6 +26,7 @@
     "@trpc/react-query": "^10.1.0",
     "@trpc/server": "^10.1.0",
     "bottom-tabs": "link:@react/navigation/bottom-tabs",
+    "deprecated-react-native-prop-types": "^4.0.0",
     "expo": "~47.0.8",
     "expo-status-bar": "~1.4.2",
     "nativewind": "^2.0.11",

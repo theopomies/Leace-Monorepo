@@ -43,6 +43,7 @@ importers:
       '@types/react': ^18.0.25
       '@types/react-native': ~0.70.6
       bottom-tabs: link:@react/navigation/bottom-tabs
+      deprecated-react-native-prop-types: ^4.0.0
       eslint: ^8.28.0
       expo: ~47.0.8
       expo-status-bar: ~1.4.2
@@ -78,6 +79,7 @@ importers:
       '@trpc/react-query': 10.1.0_6w4fappfojusde7o3jmgvyxwlu
       '@trpc/server': 10.1.0
       bottom-tabs: link:@react/navigation/bottom-tabs
+      deprecated-react-native-prop-types: 4.0.0
       expo: 47.0.8_@babel+core@7.19.3
       expo-status-bar: 1.4.2
       nativewind: 2.0.11_dpx3ezyh7vrtb4aufvxbx6obrq
@@ -2738,6 +2740,10 @@ packages:
   /@react-native/normalize-color/2.1.0:
     resolution: {integrity: sha512-Z1jQI2NpdFJCVgpY+8Dq/Bt3d+YUi1928Q+/CZm/oh66fzM0RUl54vvuXlPJKybH4pdCZey1eDTPaLHkMPNgWA==}
 
+  /@react-native/normalize-colors/0.72.0:
+    resolution: {integrity: sha512-285lfdqSXaqKuBbbtP9qL2tDrfxdOFtIMvkKadtleRQkdOxx+uzGvFr82KHmc/sSiMtfXGp7JnFYWVh4sFl7Yw==}
+    dev: false
+
   /@react-native/polyfills/2.0.0:
     resolution: {integrity: sha512-K0aGNn1TjalKj+65D7ycc1//H9roAQ51GJVk5ZJQFb2teECGmzd86bYDC0aYdbRf7gtovescq4Zt6FR0tgXiHQ==}
 
@@ -4749,6 +4755,14 @@ packages:
       '@react-native/normalize-color': 2.1.0
       invariant: 2.2.4
       prop-types: 15.8.1
+
+  /deprecated-react-native-prop-types/4.0.0:
+    resolution: {integrity: sha512-q0kk77qFPC4adlnZH7cv9lfbHALeaTkl7wT1uNERc+e0Os3KcBKKy1rVliTE8sfey6TP6OPzoIXpr9OPidvvHw==}
+    dependencies:
+      '@react-native/normalize-colors': 0.72.0
+      invariant: 2.2.4
+      prop-types: 15.8.1
+    dev: false
 
   /destroy/1.2.0:
     resolution: {integrity: sha512-2sJGJTaXIIaR1w4iJSNoN0hnMY7Gpc/n8D4qSCJw8QqFWXf7cuAgnEHxBpweaVcPevC2l3KpjYCx3NypQQgaJg==}
