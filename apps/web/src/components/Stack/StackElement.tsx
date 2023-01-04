@@ -8,6 +8,7 @@ export type StackElementProps = {
   title: string;
   description: string;
   isExpanded?: boolean;
+  onReport: () => void;
 } & XOR<{ age: number }, { price: number; region: string }>;
 
 export function StackElement({
@@ -18,6 +19,7 @@ export function StackElement({
   age,
   region,
   isExpanded = false,
+  onReport,
 }: StackElementProps) {
   const splitDesc = description.split(" ");
   const splitDescLength = splitDesc.length;
@@ -32,6 +34,16 @@ export function StackElement({
       data-isExpanded={isExpanded}
       className="relative flex w-96 flex-col items-center gap-4 rounded-md bg-white p-2 shadow-lg [&[data-isExpanded=true]]:min-h-[90vh] [&[data-isExpanded=true]]:w-[90%]"
     >
+      {isExpanded && (
+        <span className="absolute bottom-3 right-4">
+          <button
+            className="bg-red-400 px-3 py-1 text-white hover:bg-red-500"
+            onClick={onReport}
+          >
+            Report
+          </button>
+        </span>
+      )}
       <motion.div
         layout
         className="relative flex items-center justify-center overflow-hidden rounded-md bg-gray-100"

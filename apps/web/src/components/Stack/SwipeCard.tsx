@@ -8,6 +8,7 @@ type SwipeCardProps = {
   onSwiping?: (direction: "like" | "dislike" | null) => void;
   isSelected: boolean;
   setIsSelected: (b: boolean) => void;
+  onReport: () => void;
 } & StackElementProps;
 
 export function SwipeCard({
@@ -16,6 +17,7 @@ export function SwipeCard({
   onSwiping = () => null,
   isSelected,
   setIsSelected,
+  onReport,
   ...cardProps
 }: SwipeCardProps) {
   const x = useMotionValue(0);
@@ -69,7 +71,11 @@ export function SwipeCard({
         });
       }}
     >
-      <StackElement {...cardProps} isExpanded={isSelected} />
+      <StackElement
+        {...cardProps}
+        isExpanded={isSelected}
+        onReport={onReport}
+      />
       {!!likeValue && !isSelected && (
         <div
           className={`absolute top-8 left-8 border-2 px-1 font-bold ${

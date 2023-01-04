@@ -7,6 +7,7 @@ import { CrossSvg } from "./CrossSvg";
 import { RewindSvg } from "./RewindSvg";
 import { motion } from "framer-motion";
 import Overlay from "./Overlay";
+import { ReportModal } from "./ReportModal";
 
 export type StackProps = {
   posts: StackElementProps[];
@@ -18,6 +19,7 @@ export type StackProps = {
 export function Stack({ posts, onLike, onDislike, onRewind }: StackProps) {
   const [likeState, setLikeState] = useState<"dislike" | "like" | null>(null);
   const [isSelected, setIsSelected] = useState(false);
+  const [reporting, setReporting] = useState(false);
 
   const dislikeHander = () => {
     onDislike(posts[0] as StackElementProps);
@@ -35,6 +37,7 @@ export function Stack({ posts, onLike, onDislike, onRewind }: StackProps) {
       {isSelected && (
         <Overlay isSelected={isSelected} onClose={() => setIsSelected(false)} />
       )}
+      <ReportModal isOpen={reporting} setIsOpen={setReporting} />
       <div className="relative">
         <div className="relative z-10">
           <SwipeCard
@@ -46,6 +49,7 @@ export function Stack({ posts, onLike, onDislike, onRewind }: StackProps) {
             isSelected={isSelected}
             setIsSelected={setIsSelected}
             {...(posts[0] as StackElementProps)}
+            onReport={() => setReporting(true)}
           />
           <motion.div
             layout
