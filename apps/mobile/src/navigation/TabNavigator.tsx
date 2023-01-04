@@ -6,6 +6,10 @@ import { ProfileScreen } from "../screens/ProfileScreen/ProfileScreen";
 import { MatchScreen } from "../screens/MatchScreen/MatchScreen";
 import { StackScreen } from "../screens/StackScreen/StackScreen";
 import { DashboardScreen } from "../screens/DashboardScreen/DashboardScreen";
+import { CreateAdScreen } from "../screens/AdScreen/CreateAdScreen";
+import { ViewAdScreen } from "../screens/AdScreen/ViewAdScreen";
+import { AdDetailsScreen } from "../screens/AdScreen/AdDetailsScreen";
+
 
 export type TabStackParamList = {
   Connexion: undefined;
@@ -31,6 +35,9 @@ const TabNavigator = () => {
       <Tab.Screen name="StackScreen" component={StackScreen} />
       <Tab.Screen name="MatchScreen" component={MatchScreen} />
       <Tab.Screen name="DashboardScreen" component={DashboardScreen} options={{ headerShown: false }} />
+      <Tab.Screen name="CreateAdScreen" component={CreateAdScreen} options={{ tabBarButton: () => null, headerShown: false }} />
+      <Tab.Screen name="ViewAdScreen" component={ViewAdScreen} options={{ tabBarButton: () => null, headerShown: false }} />
+      <Tab.Screen name="AdDetailsScreen" component={AdDetailsScreen} options={{ tabBarButton: () => null, headerShown: false }} />
     </Tab.Navigator>
   );
 };
