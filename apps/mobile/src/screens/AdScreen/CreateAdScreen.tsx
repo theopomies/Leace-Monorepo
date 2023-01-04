@@ -60,7 +60,7 @@ export const CreateAdScreen = () => {
     }
 
     return (
-        <ScrollView className="mt-7">
+        <ScrollView className="mt-20">
             <View>
                 <Text className="font-bold text-2xl text-center">Owner/Agency</Text>
                 <TextInput className="h-10 m-3 border p-2.5" onChangeText={setName} value={name} placeholder="name" />

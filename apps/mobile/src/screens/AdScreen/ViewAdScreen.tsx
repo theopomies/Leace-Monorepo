@@ -10,7 +10,7 @@ export const ViewAdScreen = ({ route }) => {
     const params = route.params
 
     return (
-        <ScrollView>
+        <ScrollView className="mt-20">
             <View>
                 <Card>
                     <Card.Title>{params.name}</Card.Title>
