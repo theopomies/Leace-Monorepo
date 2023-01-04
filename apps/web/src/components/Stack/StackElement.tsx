@@ -1,4 +1,4 @@
-import { XOR } from "../utils/types";
+import { XOR } from "../../utils/types";
 
 export type StackElementProps = {
   id: string;
