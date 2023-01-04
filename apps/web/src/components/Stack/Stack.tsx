@@ -41,10 +41,8 @@ export function Stack({ posts, onLike, onDislike, onRewind }: StackProps) {
           <StackButton onClick={dislikeHander}>
             <div
               className={
-                "transition-colors hover:stroke-green-600 " +
-                (likeState == "dislike"
-                  ? "stroke-green-600"
-                  : "stroke-green-200")
+                "transition-colors hover:stroke-red-600 " +
+                (likeState == "dislike" ? "stroke-red-600" : "stroke-red-200")
               }
             >
               <CrossSvg />
@@ -58,8 +56,8 @@ export function Stack({ posts, onLike, onDislike, onRewind }: StackProps) {
           <StackButton onClick={likeHandler}>
             <div
               className={
-                "transition-colors hover:fill-red-600 " +
-                (likeState == "like" ? "fill-red-600" : "fill-red-200")
+                "transition-colors hover:fill-green-600 " +
+                (likeState == "like" ? "fill-green-600" : "fill-green-200")
               }
             >
               <LikeSvg />
