@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Stack } from "../../components/Stack/Stack";
 import { StackElementProps } from "../../components/Stack/StackElement";
+import LoggedLayout from "../../components/LoggedLayout";
 
 const defaultPosts: StackElementProps[] = [];
 
@@ -53,13 +54,15 @@ export default function Candidats() {
   };
 
   return (
-    <div className="flex w-full items-center justify-center gap-20 p-48">
-      <Stack
-        posts={posts}
-        onDislike={onDislike}
-        onLike={onLike}
-        onRewind={onRewind}
-      />
-    </div>
+    <LoggedLayout>
+      <div className="flex w-full items-center justify-center gap-20 p-48">
+        <Stack
+          posts={posts}
+          onDislike={onDislike}
+          onLike={onLike}
+          onRewind={onRewind}
+        />
+      </div>
+    </LoggedLayout>
   );
 }
