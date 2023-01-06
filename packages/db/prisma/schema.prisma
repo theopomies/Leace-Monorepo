@@ -159,7 +159,7 @@ model Post {
   images       Image[]
   documents    Document[]
   reports      Report[]
-  relationShip RelationShip[]
+  relationShips RelationShip[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

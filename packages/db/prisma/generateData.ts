@@ -12,6 +12,8 @@ const nbReports = 10;
 const nbUsers = 10;
 const nbPosts = 10;
 const nbImages = 20;
+const nbRelationShips = 10;
+
 export const makeUsers = () => {
   const users = new Array<Prisma.UserCreateManyInput>();
 
@@ -177,4 +179,48 @@ export const makeImages = async (prisma: PrismaClient) => {
         });
   }
   return images;
+};
+
+export const makeRelationShips = async (prisma: PrismaClient) => {
+  const relationships = new Array<Prisma.RelationShipCreateManyInput>();
+
+  for (let i = 0; i < nbRelationShips; i++) {
+    const userCount = await prisma.user.count();
+    const skipUsers = Math.floor(Math.random() * userCount);
+    const randUser = await prisma.user.findMany({
+      where: { relationShips: { none: {} } },
+      take: 1,
+      skip: skipUsers,
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    const postCount = await prisma.post.count();
+    const skipPosts = Math.floor(Math.random() * postCount);
+    const randPost = await prisma.post.findMany({
+      where: { relationShips: { none: {} } },
+      take: 1,
+      skip: skipPosts,
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    if (
+      !randUser ||
+      !randUser[0] ||
+      !randUser[0].id ||
+      !randPost ||
+      !randPost[0] ||
+      !randPost[0].id
+    ) {
+      continue;
+    }
+    const isMatch = Boolean(Math.round(Math.random()));
+    relationships.push({
+      userId: isMatch ? randUser[0].id : "",
+      postId: randPost[0].id,
+      isMatch: isMatch,
+    });
+  }
+  return relationships;
 };

@@ -7,7 +7,7 @@ export const postRouter = router({
   create: protectedProcedure
     .input(
       z.object({
-        createdBy: z.string(),
+        createdById: z.string(),
         title: z.string(),
         content: z.string(),
         desc: z.string(),
@@ -35,7 +35,7 @@ export const postRouter = router({
       });
       if (!getPost) throw new TRPCError({ code: "NOT_FOUND" });
       if (
-        getPost.createdBy !== ctx.session.user.id ||
+        getPost.createdById !== ctx.session.user.id ||
         ctx.session.user.role !== Roles.ADMIN
       )
         throw new TRPCError({ code: "FORBIDDEN" });
