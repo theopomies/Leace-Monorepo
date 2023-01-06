@@ -14,7 +14,8 @@
     "lint": "turbo lint && manypkg check",
     "type-check": "turbo type-check",
     "prisma:validate": "turbo prisma:validate",
-    "test": "turbo test"
+    "test": "turbo test",
+    "db-seed": "turbo db-seed"
   },
   "dependencies": {
     "@manypkg/cli": "^0.19.2",
