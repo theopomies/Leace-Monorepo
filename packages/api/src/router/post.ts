@@ -4,7 +4,7 @@ import { PostType, Roles } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 
 export const postRouter = router({
-  create: protectedProcedure
+  create: protectedProcedure([Roles.USER, Roles.ADMIN, Roles.MODERATOR])
     .input(
       z.object({
         createdById: z.string(),
@@ -21,13 +21,17 @@ export const postRouter = router({
     .mutation(({ ctx, input }) => {
       return ctx.prisma.post.create({ data: input });
     }),
-  all: protectedProcedure.query(({ ctx }) => {
-    return ctx.prisma.post.findMany();
-  }),
-  byId: protectedProcedure.input(z.string()).query(({ ctx, input }) => {
-    return ctx.prisma.post.findFirst({ where: { id: input } });
-  }),
-  deleteById: protectedProcedure
+  all: protectedProcedure([Roles.USER, Roles.ADMIN, Roles.MODERATOR]).query(
+    ({ ctx }) => {
+      return ctx.prisma.post.findMany();
+    },
+  ),
+  byId: protectedProcedure([Roles.USER, Roles.ADMIN, Roles.MODERATOR])
+    .input(z.string())
+    .query(({ ctx, input }) => {
+      return ctx.prisma.post.findFirst({ where: { id: input } });
+    }),
+  deleteById: protectedProcedure([Roles.USER, Roles.ADMIN, Roles.MODERATOR])
     .input(z.string())
     .query(async ({ input, ctx }) => {
       const getPost = await ctx.prisma.post.findUnique({

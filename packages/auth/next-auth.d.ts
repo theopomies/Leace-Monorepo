@@ -1,3 +1,4 @@
+import { Roles } from "@leace/db";
 import { DefaultSession } from "next-auth";
 
 /**
@@ -11,7 +12,7 @@ declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
       id: string;
-      role?: string;
+      role: Roles;
     } & DefaultSession["user"];
   }
 
