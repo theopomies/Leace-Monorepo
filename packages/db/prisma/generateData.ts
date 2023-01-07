@@ -8,9 +8,9 @@ import {
   PostType,
 } from "@prisma/client";
 
-const nbReports = 10;
 const nbUsers = 10;
 const nbPosts = 10;
+const nbReports = 10;
 const nbImages = 20;
 const nbRelationShips = 10;
 
@@ -30,8 +30,10 @@ export const makeUsers = () => {
       country: "France",
       description: "description-" + Math.random().toString(36).substring(2, 7),
       birthDate: new Date("01-01-2000"),
-      status: UserStatus.ACTIVE,
-      isPremium: false,
+      status: Boolean(Math.round(Math.random()))
+        ? UserStatus.ACTIVE
+        : UserStatus.INACTIVE,
+      isPremium: Boolean(Math.round(Math.random())) ? true : false,
       role: Roles.USER,
     });
   }
@@ -42,7 +44,9 @@ export const makePosts = async (prisma: PrismaClient) => {
   const posts = new Array<Prisma.PostCreateManyInput>();
 
   for (let i = 0; i < nbPosts; i++) {
-    const userCount = await prisma.user.count();
+    const userCount = await prisma.user.count({
+      where: { accountType: AccountType.OWNER },
+    });
     const skip = Math.floor(Math.random() * userCount);
     const createdBy = await prisma.user.findMany({
       where: { accountType: AccountType.OWNER },
@@ -85,8 +89,12 @@ export const makeReports = async (prisma: PrismaClient) => {
         createdAt: "desc",
       },
     });
-    const skipUsers = Math.floor(Math.random() * userCount);
+    const ownerCount = await prisma.user.count({
+      where: { accountType: AccountType.TENANT },
+    });
+    const skipUsers = Math.floor(Math.random() * ownerCount);
     const randUser = await prisma.user.findMany({
+      where: { accountType: AccountType.TENANT },
       take: 1,
       skip: skipUsers,
       orderBy: {
@@ -185,10 +193,12 @@ export const makeRelationShips = async (prisma: PrismaClient) => {
   const relationships = new Array<Prisma.RelationShipCreateManyInput>();
 
   for (let i = 0; i < nbRelationShips; i++) {
-    const userCount = await prisma.user.count();
+    const userCount = await prisma.user.count({
+      where: { accountType: AccountType.TENANT },
+    });
     const skipUsers = Math.floor(Math.random() * userCount);
     const randUser = await prisma.user.findMany({
-      where: { relationShips: { none: {} } },
+      where: { accountType: AccountType.TENANT },
       take: 1,
       skip: skipUsers,
       orderBy: {
@@ -198,7 +208,6 @@ export const makeRelationShips = async (prisma: PrismaClient) => {
     const postCount = await prisma.post.count();
     const skipPosts = Math.floor(Math.random() * postCount);
     const randPost = await prisma.post.findMany({
-      where: { relationShips: { none: {} } },
       take: 1,
       skip: skipPosts,
       orderBy: {
@@ -216,11 +225,17 @@ export const makeRelationShips = async (prisma: PrismaClient) => {
       continue;
     }
     const isMatch = Boolean(Math.round(Math.random()));
-    relationships.push({
-      userId: isMatch ? randUser[0].id : "",
-      postId: randPost[0].id,
-      isMatch: isMatch,
-    });
+    Boolean(Math.round(Math.random()))
+      ? relationships.push({
+          userId: isMatch ? randUser[0].id : "",
+          postId: randPost[0].id,
+          isMatch: isMatch,
+        })
+      : relationships.push({
+          userId: randUser[0].id,
+          postId: isMatch ? randPost[0].id : "",
+          isMatch: isMatch,
+        });
   }
   return relationships;
 };
