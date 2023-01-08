@@ -21,7 +21,7 @@ const Profile = (props: {
   };
 
   return (
-    <div className="flex w-full justify-center rounded-lg p-4 shadow">
+    <div className="flex h-full w-full justify-center overflow-auto rounded-lg p-4 shadow">
       <div className="space-y-2">
         <img
           src={

@@ -16,19 +16,26 @@ const ReportButton = (props: {
 }) => {
   const [selected, setSelected] = React.useState<ReportReason>();
 
-  const mutation = trpc.moderation.updateReport.useMutation();
+  const utils = trpc.useContext();
+  const mutation = trpc.moderation.updateReport.useMutation({
+    onSuccess() {
+      utils.moderation.getReportedUser.invalidate();
+    },
+  });
+
   const handleClick = async () => {
     selected
-      ? mutation.mutateAsync({
-          id: props.user.id!,
+      ? await mutation.mutateAsync({
+          id: props.user.id,
           reason: selected,
           status: ReportStatus.RESOLVED,
         })
-      : mutation.mutateAsync({
-          id: props.user.id!,
+      : await mutation.mutateAsync({
+          id: props.user.id,
           status: ReportStatus.RESOLVED,
         });
   };
+
   return (
     <div className="flex w-1/5 flex-col items-center justify-center px-10">
       <label
