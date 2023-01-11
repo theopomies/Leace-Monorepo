@@ -53,6 +53,22 @@ export const userRouter = router({
         where: {
           id: input,
         },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          emailVerified: true,
+          image: true,
+          sessions: true,
+          accounts: true,
+          accountType: true,
+          firstName: true,
+          lastName: true,
+          phoneNumber: true,
+          country: true,
+          description: true,
+          birthDate: true,
+        },
       });
     }),
 });
