@@ -1,37 +1,26 @@
 import React from "react";
-import {
-  User,
-  Image,
-  Report,
-  ReportReason,
-  ReportStatus,
-} from "@prisma/client";
+import { ReportReason, ReportStatus } from "@prisma/client";
 import { trpc } from "../utils/trpc";
 
-const ReportButton = (props: {
-  user: User & {
-    images: Image[];
-    reports: Report[];
-  };
-}) => {
+const ReportButton = (props: { reportId: string }) => {
   const [selected, setSelected] = React.useState<ReportReason>();
 
   const utils = trpc.useContext();
   const mutation = trpc.moderation.updateReport.useMutation({
     onSuccess() {
-      utils.moderation.getReportedUser.invalidate();
+      utils.moderation.getReport.invalidate();
     },
   });
 
   const handleClick = async () => {
     selected
       ? await mutation.mutateAsync({
-          id: props.user.id,
+          id: props.reportId,
           reason: selected,
-          status: ReportStatus.RESOLVED,
+          status: ReportStatus.REJECTED,
         })
       : await mutation.mutateAsync({
-          id: props.user.id,
+          id: props.reportId,
           status: ReportStatus.RESOLVED,
         });
   };

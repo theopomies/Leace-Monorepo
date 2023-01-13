@@ -4,17 +4,16 @@ import { TRPCError } from "@trpc/server";
 import { ReportReason, ReportStatus, Roles } from "@prisma/client";
 
 export const moderationRouter = router({
-  getReportedUser: protectedProcedure([Roles.ADMIN, Roles.MODERATOR]).query(
+  getReport: protectedProcedure([Roles.ADMIN, Roles.MODERATOR]).query(
     async ({ ctx }) => {
-      const getReport = await ctx.prisma.report.findFirstOrThrow({
+      return await ctx.prisma.report.findFirstOrThrow({
         orderBy: { createdAt: "desc" },
         where: { NOT: [{ userId: null }], status: ReportStatus.PENDING },
-      });
-      if (!getReport.userId) throw new TRPCError({ code: "NOT_FOUND" });
-      return await ctx.prisma.user.findFirstOrThrow({
-        orderBy: { createdAt: "desc" },
-        where: { id: getReport.userId },
-        include: { reports: true, images: true },
+        include: {
+          createdBy: {
+            include: { images: true, reports: true },
+          },
+        },
       });
     },
   ),
@@ -50,22 +49,12 @@ export const moderationRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const getUser = await ctx.prisma.user.findUnique({
+      return await ctx.prisma.report.update({
         where: { id: input.id },
-        include: { reports: true },
-      });
-      if (!getUser) throw new TRPCError({ code: "NOT_FOUND" });
-      getUser.reports.map(async (report) => {
-        if (report.status == ReportStatus.PENDING) {
-          await ctx.prisma.report.update({
-            where: { id: report.id },
-            data: {
-              reason: input.reason,
-              status: input.status,
-            },
-          });
-        }
-        return getUser;
+        data: {
+          reason: input.reason,
+          status: input.status,
+        },
       });
     }),
 });
