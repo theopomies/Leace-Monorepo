@@ -7,7 +7,7 @@ import { PostType } from "@leace/db";
 describe("[Router][post]", () => {
   let id = "";
   const input: inferProcedureInput<AppRouter["post"]["create"]> = {
-    createdBy: "",
+    createdById: "",
     type: PostType.TO_BE_RENTED,
     title: "NicePost",
     content: "SomeContent",
