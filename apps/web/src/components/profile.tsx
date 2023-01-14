@@ -25,10 +25,10 @@ const Profile = (props: {
       <div className="space-y-2">
         <img
           src={
-            props.user.image
-              ? props.user.image
-              : "https://demos.creative-tim.com/notus-js/assets/img/team-2-800x800.jpg"
+            props.user.image ||
+            "https://demos.creative-tim.com/notus-js/assets/img/team-2-800x800.jpg"
           }
+          referrerPolicy="no-referrer"
           alt="image"
           className="mx-auto h-32 rounded-full shadow-xl"
         />

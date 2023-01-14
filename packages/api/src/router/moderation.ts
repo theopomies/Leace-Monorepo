@@ -1,6 +1,5 @@
 import { router, protectedProcedure } from "../trpc";
 import { z } from "zod";
-import { TRPCError } from "@trpc/server";
 import { ReportReason, ReportStatus, Roles } from "@prisma/client";
 
 export const moderationRouter = router({
@@ -19,15 +18,13 @@ export const moderationRouter = router({
   ),
   getById: protectedProcedure([Roles.ADMIN])
     .input(z.string())
-    .query(({ ctx, input }) => {
-      const getUser = ctx.prisma.user.findFirst({
+    .query(async ({ ctx, input }) => {
+      return await ctx.prisma.user.findFirstOrThrow({
         where: {
           id: input,
         },
         include: { images: true, reports: true },
       });
-      if (!getUser) throw new TRPCError({ code: "NOT_FOUND" });
-      return getUser;
     }),
   updateReport: protectedProcedure([Roles.ADMIN, Roles.MODERATOR])
     .input(

@@ -108,6 +108,8 @@ model VerificationToken {
 
 model User {
   id            String    @id @default(cuid())
+  role        Roles       @default(USER)
+
   name          String?
   email         String?   @unique
   emailVerified DateTime?
@@ -124,7 +126,6 @@ model User {
   birthDate   DateTime?
   status      UserStatus?  @default(ACTIVE)
   isPremium   Boolean?     @default(false)
-  role        Roles?       @default(USER)
 
   posts         Post[]
   images        Image[] // Not necessary one picture look Ok for users, just post can have more than one pictures. To discuss
