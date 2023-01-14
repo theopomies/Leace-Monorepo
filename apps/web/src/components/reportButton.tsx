@@ -26,7 +26,7 @@ const ReportButton = (props: { reportId: string }) => {
   };
 
   return (
-    <div className="flex w-1/5 flex-col items-center justify-center px-10">
+    <div className="flex h-full w-full flex-col items-center justify-center px-10">
       <label
         htmlFor="countries"
         className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"

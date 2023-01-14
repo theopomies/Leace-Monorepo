@@ -86,7 +86,7 @@ const AuthShowcase: React.FC = () => {
       {(session?.user.role == "ADMIN" || session?.user.role == "MODERATOR") && (
         <Link
           className="rounded-full px-10 py-3 font-semibold no-underline transition"
-          href={"/moderation/home"}
+          href={"/moderation/moderation"}
         >
           {"Moderation"}
         </Link>

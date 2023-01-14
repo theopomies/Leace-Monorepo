@@ -9,19 +9,19 @@ const ModNavBar = () => {
             <ul className="mt-0 mr-6 flex flex-row space-x-8 text-sm font-medium">
               <li>
                 <a
-                  href="/moderation/home"
+                  href="/moderation/moderation"
                   className="text-gray-900 hover:underline dark:text-white"
                   aria-current="page"
                 >
-                  Home
+                  Modération
                 </a>
               </li>
               <li>
                 <a
-                  href="/moderation/search"
+                  href="/moderation/admin"
                   className="text-gray-900 hover:underline dark:text-white"
                 >
-                  Search
+                  Administation
                 </a>
               </li>
             </ul>

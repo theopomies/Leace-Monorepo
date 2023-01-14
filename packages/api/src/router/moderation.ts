@@ -51,10 +51,12 @@ export const moderationRouter = router({
     .mutation(async ({ ctx, input }) => {
       return await ctx.prisma.report.update({
         where: { id: input.id },
-        data: {
-          reason: input.reason,
-          status: input.status,
-        },
+        data: input.reason
+          ? {
+              reason: input.reason,
+              status: input.status,
+            }
+          : { status: input.status },
       });
     }),
 });

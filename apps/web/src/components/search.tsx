@@ -1,10 +1,11 @@
-import React from "react";
-import { trpc } from "../utils/trpc";
+import { useState } from "react";
 
-const Search = () => {
-  const [userId, setUserId] = React.useState("");
-
-  trpc.moderation.getById.useQuery(userId);
+const Search = ({
+  setUid,
+}: {
+  setUid: React.Dispatch<React.SetStateAction<string>>;
+}) => {
+  const [userId, setUserId] = useState("");
 
   return (
     <div className="flex items-center justify-center px-96">
@@ -20,7 +21,7 @@ const Search = () => {
             onChange={(e) => setUserId(e.target.value)}
             value={userId}
           />
-          <a href={`/moderation/home?uid=${userId}`} className="cursor-pointer">
+          <a onClick={() => setUid(userId)} className="cursor-pointer">
             <div className="mx-2 cursor-pointer rounded-full bg-gray-600 p-2 hover:bg-blue-400">
               <svg
                 className="h-6 w-6 text-white"
