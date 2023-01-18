@@ -1,7 +1,6 @@
 import {
   UserStatus,
   Roles,
-  AccountType,
   ReportReason,
   PrismaClient,
   Prisma,
@@ -23,9 +22,6 @@ export const makeUsers = () => {
       firstName: "firstName-" + Math.random().toString(36).substring(2, 7),
       lastName: "lastName-" + Math.random().toString(36).substring(2, 7),
       email: Math.random().toString(36).substring(2, 7) + "@prisma.io",
-      accountType: Boolean(Math.round(Math.random()))
-        ? AccountType.TENANT
-        : AccountType.OWNER,
       phoneNumber: "+336" + Math.floor(10000000 + Math.random() * 90000000),
       country: "France",
       description: "description-" + Math.random().toString(36).substring(2, 7),
@@ -34,7 +30,7 @@ export const makeUsers = () => {
         ? UserStatus.ACTIVE
         : UserStatus.INACTIVE,
       isPremium: Boolean(Math.round(Math.random())) ? true : false,
-      role: Roles.USER,
+      role: Boolean(Math.round(Math.random())) ? Roles.TENANT : Roles.OWNER,
     });
   }
   return users;
@@ -45,11 +41,11 @@ export const makePosts = async (prisma: PrismaClient) => {
 
   for (let i = 0; i < nbPosts; i++) {
     const userCount = await prisma.user.count({
-      where: { accountType: AccountType.OWNER },
+      where: { role: Roles.OWNER },
     });
     const skip = Math.floor(Math.random() * userCount);
     const createdBy = await prisma.user.findMany({
-      where: { accountType: AccountType.OWNER },
+      where: { role: Roles.OWNER },
       take: 1,
       skip: skip,
       orderBy: {
@@ -90,11 +86,11 @@ export const makeReports = async (prisma: PrismaClient) => {
       },
     });
     const ownerCount = await prisma.user.count({
-      where: { accountType: AccountType.TENANT },
+      where: { role: Roles.TENANT },
     });
     const skipUsers = Math.floor(Math.random() * ownerCount);
     const randUser = await prisma.user.findMany({
-      where: { accountType: AccountType.TENANT },
+      where: { role: Roles.TENANT },
       take: 1,
       skip: skipUsers,
       orderBy: {
@@ -194,11 +190,11 @@ export const makeRelationShips = async (prisma: PrismaClient) => {
 
   for (let i = 0; i < nbRelationShips; i++) {
     const userCount = await prisma.user.count({
-      where: { accountType: AccountType.TENANT },
+      where: { role: Roles.TENANT },
     });
     const skipUsers = Math.floor(Math.random() * userCount);
     const randUser = await prisma.user.findMany({
-      where: { accountType: AccountType.TENANT },
+      where: { role: Roles.TENANT },
       take: 1,
       skip: skipUsers,
       orderBy: {
