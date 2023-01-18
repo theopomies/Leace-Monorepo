@@ -25,6 +25,13 @@ const isAuthed = (roles?: Roles[]) =>
       });
     }
 
+    if (!roles && ctx.session.user.role == Roles.NONE) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "Not authorized",
+      });
+    }
+
     return next({
       ctx: {
         session: ctx.session,
