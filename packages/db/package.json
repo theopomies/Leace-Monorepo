@@ -10,10 +10,15 @@
     "dev": "pnpm with-env prisma studio --port 5556",
     "db-push": "pnpm with-env prisma db push",
     "db-generate": "pnpm with-env prisma generate",
-    "prisma:validate": "pnpm with-env prisma validate"
+    "prisma:validate": "pnpm with-env prisma validate",
+    "db-seed": "pnpm with-env prisma db seed"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
-    "@prisma/client": "^4.6.1"
+    "@prisma/client": "^4.6.1",
+    "tsx": "^3.12.1"
   },
   "devDependencies": {
     "dotenv-cli": "^6.0.0",

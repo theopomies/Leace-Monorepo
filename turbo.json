@@ -13,6 +13,10 @@
       "inputs": ["prisma/schema.prisma"],
       "cache": false
     },
+    "db-seed": {
+      "inputs": ["prisma/schema.prisma"],
+      "cache": false
+    },
     "test": {
       "cache": false
     },

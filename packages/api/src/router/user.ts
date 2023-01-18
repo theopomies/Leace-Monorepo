@@ -5,7 +5,7 @@ import { Roles } from "@prisma/client";
 import { isPossiblePhoneNumber } from "libphonenumber-js";
 
 export const userRouter = router({
-  updateUser: protectedProcedure
+  updateUser: protectedProcedure([Roles.USER, Roles.ADMIN, Roles.MODERATOR])
     .input(
       z.object({
         id: z.string(),
@@ -46,11 +46,29 @@ export const userRouter = router({
         },
       });
     }),
-  getById: protectedProcedure.input(z.string()).query(({ ctx, input }) => {
-    return ctx.prisma.user.findFirst({
-      where: {
-        id: input,
-      },
-    });
-  }),
+  getById: protectedProcedure([Roles.USER, Roles.ADMIN, Roles.MODERATOR])
+    .input(z.string())
+    .query(({ ctx, input }) => {
+      return ctx.prisma.user.findFirst({
+        where: {
+          id: input,
+        },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          emailVerified: true,
+          image: true,
+          sessions: true,
+          accounts: true,
+          accountType: true,
+          firstName: true,
+          lastName: true,
+          phoneNumber: true,
+          country: true,
+          description: true,
+          birthDate: true,
+        },
+      });
+    }),
 });
