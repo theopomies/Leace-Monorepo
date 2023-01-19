@@ -1,3 +1,4 @@
+import { UnBanButton, BanButton } from "../../components/banButton";
 import Loader from "../../components/loader";
 import Profile from "../../components/profile";
 import ReportButton from "../../components/reportButton";
@@ -16,12 +17,14 @@ const Moderation = () => {
   } else if (report && report.data && !report.error) {
     return (
       <div className="my-5 flex">
-        <div className="justfy-center flex w-1/5 items-center"></div>
+        <div className="flex w-1/5 items-center justify-center"></div>
         <div className="flex max-h-[calc(100vh-84px)] w-3/5 items-center justify-center">
           <Profile user={report.data.createdBy} />
         </div>
-        <div className="justfy-center flex h-[calc(100vh-84px)] w-1/5 items-center">
+        <div className="flex h-[calc(100vh-84px)] w-1/5 flex-col items-center justify-center">
           <ReportButton reportId={report.data.id} />
+          <BanButton userId={report.data.createdBy.id} />
+          <UnBanButton userId={report.data.createdBy.id} />
         </div>
       </div>
     );

@@ -26,13 +26,7 @@ const ReportButton = (props: { reportId: string }) => {
   };
 
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center px-10">
-      <label
-        htmlFor="countries"
-        className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-      >
-        Selectionner un signalement
-      </label>
+    <div className="flex w-full  items-center justify-center px-10">
       <select
         value={selected}
         onChange={(e) => {
@@ -50,7 +44,7 @@ const ReportButton = (props: { reportId: string }) => {
         )}
       </select>
       <button
-        className="mt-5 rounded-full bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700"
+        className="ml-2 rounded-full bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700"
         onClick={handleClick}
       >
         Ok
