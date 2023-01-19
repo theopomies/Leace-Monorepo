@@ -12,13 +12,6 @@ datasource db {
   relationMode = "prisma"
 }
 
-enum AccountType {
-  STAFF
-  TENANT
-  OWNER
-  AGENCY
-}
-
 enum UserStatus {
   ACTIVE
   INACTIVE
@@ -47,7 +40,10 @@ enum ConversationType {
 }
 
 enum Roles {
-  USER
+  NONE
+  TENANT
+  OWNER
+  AGENCY
   MODERATOR
   ADMIN
 }
@@ -108,7 +104,7 @@ model VerificationToken {
 
 model User {
   id            String    @id @default(cuid())
-  role        Roles       @default(USER)
+  role        Roles       @default(NONE)
 
   name          String?
   email         String?   @unique
@@ -117,7 +113,6 @@ model User {
   sessions      Session[]
   accounts      Account[]
 
-  accountType AccountType? @default(TENANT)
   firstName   String?
   lastName    String?
   phoneNumber String?      @unique
