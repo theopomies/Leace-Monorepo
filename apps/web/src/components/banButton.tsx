@@ -8,7 +8,7 @@ export const BanButton = (props: { userId: string }) => {
   const utils = trpc.useContext();
   const mutation = trpc.moderation.banUser.useMutation({
     onSuccess() {
-      path.pathname === "/moderation"
+      path.pathname === "/moderation/moderation"
         ? utils.moderation.getReport.invalidate()
         : utils.moderation.getById.invalidate(props.userId);
     },
@@ -38,7 +38,7 @@ export const UnBanButton = (props: { userId: string }) => {
   const utils = trpc.useContext();
   const mutation = trpc.moderation.banUser.useMutation({
     onSuccess() {
-      path.pathname === "/moderation"
+      path.pathname === "/moderation/moderation"
         ? utils.moderation.getReport.invalidate()
         : utils.moderation.getById.invalidate(props.userId);
     },
