@@ -1,4 +1,6 @@
+import { UserStatus } from "@prisma/client";
 import { UnBanButton, BanButton } from "../../components/banButton";
+import { DeleteAllImgButton } from "../../components/deleteImgButton";
 import Loader from "../../components/loader";
 import Profile from "../../components/profile";
 import ReportButton from "../../components/reportButton";
@@ -21,10 +23,16 @@ const Moderation = () => {
         <div className="flex max-h-[calc(100vh-84px)] w-3/5 items-center justify-center">
           <Profile user={report.data.createdBy} />
         </div>
-        <div className="flex h-[calc(100vh-84px)] w-1/5 flex-col items-center justify-center">
+        <div className="flex h-[calc(100vh-84px)] w-1/5 flex-col items-center justify-center gap-5">
           <ReportButton reportId={report.data.id} />
-          <BanButton userId={report.data.createdBy.id} />
-          <UnBanButton userId={report.data.createdBy.id} />
+          {report.data.createdBy.status == UserStatus.BANNED ? (
+            <UnBanButton userId={report.data.createdBy.id} />
+          ) : (
+            <BanButton userId={report.data.createdBy.id} />
+          )}
+          {report.data.createdBy.images.length > 0 && (
+            <DeleteAllImgButton userId={report.data.createdBy.id} />
+          )}
         </div>
       </div>
     );

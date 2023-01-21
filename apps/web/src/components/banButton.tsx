@@ -24,7 +24,7 @@ export const BanButton = (props: { userId: string }) => {
   return (
     <div className="flex w-full flex-col items-center justify-center px-10">
       <button
-        className="mt-5 rounded-full bg-red-500  py-2 px-4 font-bold text-white hover:bg-red-700"
+        className="rounded-full bg-red-500  py-2 px-4 font-bold text-white hover:bg-red-700"
         onClick={handleClick}
       >
         Bannir
@@ -54,7 +54,7 @@ export const UnBanButton = (props: { userId: string }) => {
   return (
     <div className="flex w-full flex-col items-center justify-center px-10">
       <button
-        className="mt-5 rounded-full bg-blue-500  py-2 px-4 font-bold text-white hover:bg-blue-700"
+        className="rounded-full bg-blue-500  py-2 px-4 font-bold text-white hover:bg-blue-700"
         onClick={handleClick}
       >
         Débannir

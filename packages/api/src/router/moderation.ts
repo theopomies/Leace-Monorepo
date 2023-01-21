@@ -69,4 +69,14 @@ export const moderationRouter = router({
         data: { status: input.status },
       });
     }),
+  deleteImages: protectedProcedure([Roles.ADMIN, Roles.MODERATOR])
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.prisma.image.deleteMany({ where: { userId: input.id } });
+    }),
+  deleteImage: protectedProcedure([Roles.ADMIN, Roles.MODERATOR])
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.prisma.image.deleteMany({ where: { id: input.id } });
+    }),
 });
