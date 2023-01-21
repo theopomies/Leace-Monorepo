@@ -83,6 +83,14 @@ const AuthShowcase: React.FC = () => {
       >
         {session ? "Sign out" : "Sign in"}
       </Link>
+      {(session?.user.role == "ADMIN" || session?.user.role == "MODERATOR") && (
+        <Link
+          className="rounded-full px-10 py-3 font-semibold no-underline transition"
+          href={"/moderation/moderation"}
+        >
+          {"Moderation"}
+        </Link>
+      )}
     </div>
   );
 };
