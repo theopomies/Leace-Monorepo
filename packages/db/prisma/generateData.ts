@@ -60,13 +60,9 @@ export const makePosts = async (prisma: PrismaClient) => {
       title: "title-" + Math.random().toString(36).substring(2, 7),
       content: "content-" + Math.random().toString(36).substring(2, 7),
       desc: "desc-" + Math.random().toString(36).substring(2, 7),
-      price: Math.floor(Math.random() * (5000 - 100) + 100),
       type: Boolean(Math.round(Math.random()))
         ? PostType.RENTED
         : PostType.TO_BE_RENTED,
-      rentStartDate: new Date("2023-04-02"),
-      size: Math.floor(Math.random() * (80 - 15) + 80),
-      furnished: Boolean(Math.round(Math.random())) ? true : false,
     });
   }
   return posts;
