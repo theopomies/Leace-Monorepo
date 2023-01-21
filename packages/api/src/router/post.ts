@@ -4,46 +4,45 @@ import { PostType, Roles } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 
 export const postRouter = router({
-  create: protectedProcedure([
-    Roles.AGENCY,
-    Roles.OWNER,
-    Roles.ADMIN,
-    Roles.MODERATOR,
-  ])
+  create: protectedProcedure([Roles.AGENCY, Roles.OWNER])
     .input(
       z.object({
-        createdById: z.string(),
         title: z.string(),
         content: z.string(),
         desc: z.string(),
-        type: z.enum([PostType.RENTED, PostType.TO_BE_RENTED]),
         price: z.number(),
-        duration: z.date(),
+        rentStartDate: z.date(),
         size: z.number(),
         furnished: z.boolean(),
       }),
     )
     .mutation(({ ctx, input }) => {
-      return ctx.prisma.post.create({ data: input });
+      return ctx.prisma.post.create({
+        data: {
+          createdById: ctx.session.user.id,
+          title: input.title,
+          content: input.content,
+          desc: input.desc,
+          type: PostType.TO_BE_RENTED,
+          price: input.price,
+          rentStartDate: input.rentStartDate,
+          size: input.size,
+          furnished: input.furnished,
+        },
+      });
     }),
-  updatePost: protectedProcedure([
-    Roles.AGENCY,
-    Roles.OWNER,
-    Roles.ADMIN,
-    Roles.MODERATOR,
-  ])
+  updatePost: protectedProcedure([Roles.AGENCY, Roles.OWNER])
     .input(
       z.object({
         id: z.string(),
-        createdBy: z.string(),
-        title: z.string(),
-        content: z.string(),
-        desc: z.string(),
-        type: z.enum([PostType.RENTED, PostType.TO_BE_RENTED]),
-        price: z.number(),
-        duration: z.date(),
-        size: z.number(),
-        furnished: z.boolean(),
+        title: z.string().optional(),
+        content: z.string().optional(),
+        desc: z.string().optional(),
+        type: z.enum([PostType.RENTED, PostType.TO_BE_RENTED]).optional(),
+        price: z.number().optional(),
+        rentStartDate: z.date().optional(),
+        size: z.number().optional(),
+        furnished: z.boolean().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -51,12 +50,21 @@ export const postRouter = router({
         where: { id: input.id },
       });
       if (!getPost) throw new TRPCError({ code: "NOT_FOUND" });
-      if (
-        getPost.createdById !== ctx.session.user.id &&
-        ctx.session.user.role !== Roles.ADMIN
-      )
+      if (getPost.createdById !== ctx.session.user.id)
         throw new TRPCError({ code: "FORBIDDEN" });
-      return ctx.prisma.post.delete({ where: { id: input.id } });
+      return ctx.prisma.post.update({
+        where: { id: input.id },
+        data: {
+          title: input.title,
+          content: input.content,
+          desc: input.desc,
+          type: input.type,
+          price: input.price,
+          rentStartDate: input.rentStartDate,
+          size: input.size,
+          furnished: input.furnished,
+        },
+      });
     }),
   all: protectedProcedure().query(({ ctx }) => {
     return ctx.prisma.post.findMany();
@@ -66,22 +74,14 @@ export const postRouter = router({
     .query(({ ctx, input }) => {
       return ctx.prisma.post.findFirst({ where: { id: input } });
     }),
-  deleteById: protectedProcedure([
-    Roles.AGENCY,
-    Roles.OWNER,
-    Roles.ADMIN,
-    Roles.MODERATOR,
-  ])
+  deleteById: protectedProcedure([Roles.AGENCY, Roles.OWNER])
     .input(z.string())
     .query(async ({ input, ctx }) => {
       const getPost = await ctx.prisma.post.findUnique({
         where: { id: input },
       });
       if (!getPost) throw new TRPCError({ code: "NOT_FOUND" });
-      if (
-        getPost.createdById !== ctx.session.user.id ||
-        ctx.session.user.role !== Roles.ADMIN
-      )
+      if (getPost.createdById !== ctx.session.user.id)
         throw new TRPCError({ code: "FORBIDDEN" });
       return ctx.prisma.post.delete({ where: { id: input } });
     }),

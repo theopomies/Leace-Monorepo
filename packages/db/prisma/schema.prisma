@@ -119,7 +119,7 @@ model User {
   country     String?
   description String?
   birthDate   DateTime?
-  status      UserStatus?  @default(ACTIVE)
+  status      UserStatus?  @default(INACTIVE)
   isPremium   Boolean?     @default(false)
 
   posts         Post[]
