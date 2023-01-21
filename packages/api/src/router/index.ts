@@ -3,12 +3,14 @@ import { postRouter } from "./post";
 import { authRouter } from "./auth";
 import { userRouter } from "./user";
 import { reportRouter } from "./report";
+import { attributesRouter } from "./attributes";
 
 export const appRouter = router({
   auth: authRouter,
   user: userRouter,
   post: postRouter,
   report: reportRouter,
+  attribute: attributesRouter,
 });
 
 // export type definition of API

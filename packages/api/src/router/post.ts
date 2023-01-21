@@ -10,10 +10,6 @@ export const postRouter = router({
         title: z.string(),
         content: z.string(),
         desc: z.string(),
-        price: z.number(),
-        rentStartDate: z.date(),
-        size: z.number(),
-        furnished: z.boolean(),
       }),
     )
     .mutation(({ ctx, input }) => {
@@ -24,10 +20,6 @@ export const postRouter = router({
           content: input.content,
           desc: input.desc,
           type: PostType.TO_BE_RENTED,
-          price: input.price,
-          rentStartDate: input.rentStartDate,
-          size: input.size,
-          furnished: input.furnished,
         },
       });
     }),
@@ -39,10 +31,6 @@ export const postRouter = router({
         content: z.string().optional(),
         desc: z.string().optional(),
         type: z.enum([PostType.RENTED, PostType.TO_BE_RENTED]).optional(),
-        price: z.number().optional(),
-        rentStartDate: z.date().optional(),
-        size: z.number().optional(),
-        furnished: z.boolean().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -59,10 +47,6 @@ export const postRouter = router({
           content: input.content,
           desc: input.desc,
           type: input.type,
-          price: input.price,
-          rentStartDate: input.rentStartDate,
-          size: input.size,
-          furnished: input.furnished,
         },
       });
     }),
@@ -85,7 +69,7 @@ export const postRouter = router({
         throw new TRPCError({ code: "FORBIDDEN" });
       return ctx.prisma.post.delete({ where: { id: input } });
     }),
-  activePostsByUser: protectedProcedure()
+  activePostsByOwner: protectedProcedure()
     .input(z.string())
     .query(async ({ input, ctx }) => {
       const getPosts = await ctx.prisma.post.findMany({
@@ -94,7 +78,7 @@ export const postRouter = router({
       if (!getPosts) throw new TRPCError({ code: "NOT_FOUND" });
       return getPosts;
     }),
-  inactivePostsByUser: protectedProcedure()
+  inactivePostsByOwner: protectedProcedure()
     .input(z.string())
     .query(async ({ input, ctx }) => {
       const getPosts = await ctx.prisma.post.findMany({

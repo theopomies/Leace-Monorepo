@@ -122,6 +122,8 @@ model User {
   status      UserStatus?  @default(INACTIVE)
   isPremium   Boolean?     @default(false)
 
+  attribute Attribute?
+
   posts         Post[]
   images        Image[] // Not necessary one picture look Ok for users, just post can have more than one pictures. To discuss
   documents     Document[]
@@ -147,13 +149,12 @@ model Post {
   content   String?
   desc      String?
   type      PostType? @default(TO_BE_RENTED)
-  price     Int?
-  rentStartDate  DateTime?
-  size      Int?
-  furnished Boolean?
+
+  attribute Attribute?
 
   images       Image[]
   documents    Document[]
+
   reports      Report[]
   relationShips RelationShip[]
 
@@ -162,6 +163,46 @@ model Post {
 
   @@index([createdById])
   @@map("posts")
+}
+
+model Attribute {
+  id String @id @default(cuid())
+
+  user User? @relation(fields: [userId], references: [id])
+  userId String? @unique
+
+  post Post? @relation(fields: [postId], references: [id])
+  postId String? @unique
+
+  location String?
+
+  maxPrice     Int?
+  minPrice Int?
+
+  maxSize      Int?
+  minSize Int?
+
+  rentStartDate  DateTime?
+  rentEndDate DateTime?
+
+  furnished Boolean?
+  house Boolean?
+  appartment Boolean?
+  terrace Boolean?
+  pets Boolean?
+  smoker Boolean?
+  disability Boolean?
+  garden Boolean?
+  parking Boolean?
+  elevator Boolean?
+  pool Boolean?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([postId])
+  @@map("attributes")
 }
 
 model Report {

@@ -13,7 +13,6 @@ export const userRouter = router({
   ])
     .input(
       z.object({
-        id: z.string(),
         firstName: z.string().optional(),
         lastName: z.string().optional(),
         phoneNumber: z.string().optional(),
@@ -23,7 +22,7 @@ export const userRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       const getUser = await ctx.prisma.user.findUnique({
-        where: { id: input.id },
+        where: { id: ctx.session.user.id },
       });
 
       if (!getUser) throw new TRPCError({ code: "NOT_FOUND" });
@@ -40,7 +39,7 @@ export const userRouter = router({
         const age = Math.abs(age_dt.getUTCFullYear() - 1970);
         if (age < 18 || age > 125) throw new TRPCError({ code: "BAD_REQUEST" });
         return ctx.prisma.user.update({
-          where: { id: input.id },
+          where: { id: ctx.session.user.id },
           data: {
             firstName: input.firstName,
             lastName: input.lastName,
@@ -53,7 +52,7 @@ export const userRouter = router({
       }
 
       return ctx.prisma.user.update({
-        where: { id: input.id },
+        where: { id: ctx.session.user.id },
         data: {
           firstName: input.firstName,
           lastName: input.lastName,

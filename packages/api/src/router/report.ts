@@ -1,15 +1,9 @@
 import { router, protectedProcedure } from "../trpc";
 import { z } from "zod";
 import { ReportReason, ReportStatus, Roles } from "@prisma/client";
-import { TRPCError } from "@trpc/server";
 
 export const reportRouter = router({
-  reportUser: protectedProcedure([
-    Roles.AGENCY,
-    Roles.OWNER,
-    Roles.ADMIN,
-    Roles.MODERATOR,
-  ])
+  reportUser: protectedProcedure([Roles.AGENCY, Roles.OWNER])
     .input(
       z.object({
         userId: z.string(),
