@@ -12,13 +12,6 @@ datasource db {
   relationMode = "prisma"
 }
 
-enum AccountType {
-  ADMIN
-  TENANT
-  OWNER
-  AGENCY
-}
-
 enum UserStatus {
   ACTIVE
   INACTIVE
@@ -47,7 +40,10 @@ enum ConversationType {
 }
 
 enum Roles {
-  USER
+  NONE
+  TENANT
+  OWNER
+  AGENCY
   MODERATOR
   ADMIN
 }
@@ -64,7 +60,9 @@ enum PostType {
 model Account {
   id String @id @default(cuid())
 
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId            String
+
   type              String
   provider          String
   providerAccountId String
@@ -76,7 +74,6 @@ model Account {
   id_token          String? @db.Text
   session_state     String?
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
   @@index([userId])
@@ -86,10 +83,11 @@ model Account {
 model Session {
   id String @id @default(cuid())
 
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       String
+
+  sessionToken String   @unique
+  expires      DateTime
 
   @@index([userId])
   @@map("sessions")
@@ -106,6 +104,8 @@ model VerificationToken {
 
 model User {
   id            String    @id @default(cuid())
+  role        Roles       @default(NONE)
+
   name          String?
   email         String?   @unique
   emailVerified DateTime?
@@ -113,7 +113,6 @@ model User {
   sessions      Session[]
   accounts      Account[]
 
-  accountType AccountType? @default(TENANT)
   firstName   String?
   lastName    String?
   phoneNumber String?      @unique
@@ -122,11 +121,10 @@ model User {
   birthDate   DateTime?
   status      UserStatus?  @default(ACTIVE)
   isPremium   Boolean?     @default(false)
-  role        Roles?       @default(USER)
 
-  images        Image[]
-  documents     Document[]
   posts         Post[]
+  images        Image[] // Not necessary one picture look Ok for users, just post can have more than one pictures. To discuss
+  documents     Document[]
   relationShips RelationShip[]
   messages      Message[]
 
@@ -142,44 +140,45 @@ model User {
 model Post {
   id String @id @default(cuid())
 
-  user User? @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  createdBy User @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  createdById String
 
-  createdBy String
-  title     String
-  content   String
-  desc      String
-  type      PostType
-  price     Float
-  duration  DateTime
-  size      Float
-  furnished Boolean
+  title     String?
+  content   String?
+  desc      String?
+  type      PostType? @default(TO_BE_RENTED)
+  price     Int?
+  rentStartDate  DateTime?
+  size      Int?
+  furnished Boolean?
 
   images       Image[]
   documents    Document[]
   reports      Report[]
-  relationShip RelationShip[]
+  relationShips RelationShip[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([createdBy])
+  @@index([createdById])
   @@map("posts")
 }
 
 model Report {
   id String @id @default(cuid())
 
-  userId      String?
-  postId      String?
+  createdBy User  @relation(fields: [createdById], references: [id], "reports_created", onDelete: Cascade)
   createdById String
 
   user      User? @relation(fields: [userId], references: [id], "reported", onDelete: Cascade)
-  post      Post? @relation(fields: [postId], references: [id], onDelete: Cascade)
-  createdBy User  @relation(fields: [createdById], references: [id], "reports_created", onDelete: Cascade)
+  userId      String?
 
-  reason ReportReason
-  desc   String
-  status ReportStatus
+  post      Post? @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId      String?
+
+  reason ReportReason?
+  desc   String?
+  status ReportStatus? @default(PENDING)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -193,11 +192,11 @@ model Report {
 model Document {
   id String @id @default(cuid())
 
-  userId String?
-  postId String?
-
   user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String?
+
   post Post? @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -210,11 +209,13 @@ model Document {
 model Image {
   id String @id @default(cuid())
 
-  userId String?
-  postId String?
+  url String
 
   user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String?
+
   post Post? @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -227,11 +228,11 @@ model Image {
 model RelationShip {
   id String @id @default(cuid())
 
-  userId String?
-  postId String?
-
   user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String?
+
   post Post? @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId String?
 
   isMatch      Boolean
   conversation Conversation?
@@ -247,9 +248,8 @@ model RelationShip {
 model Conversation {
   id String @id @default(cuid())
 
-  relationId String @unique
-
   rs RelationShip @relation(fields: [relationId], references: [id], onDelete: Cascade)
+  relationId String @unique
 
   type     ConversationType
   messages Message[]
@@ -264,11 +264,11 @@ model Conversation {
 model Message {
   id String @id @default(cuid())
 
-  conversationId String
-  senderId       String
-
   conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  conversationId String
+
   sender       User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  senderId       String
 
   content String
 

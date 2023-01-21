@@ -5,7 +5,7 @@ import { Roles } from "@prisma/client";
 import { isPossiblePhoneNumber } from "libphonenumber-js";
 
 export const userRouter = router({
-  updateUser: protectedProcedure
+  updateUser: protectedProcedure()
     .input(
       z.object({
         id: z.string(),
@@ -23,7 +23,7 @@ export const userRouter = router({
 
       if (!getUser) throw new TRPCError({ code: "NOT_FOUND" });
       if (
-        getUser.id !== ctx.session.user.id ||
+        getUser.id !== ctx.session.user.id &&
         ctx.session.user.role !== Roles.ADMIN
       )
         throw new TRPCError({ code: "FORBIDDEN" });
@@ -46,11 +46,28 @@ export const userRouter = router({
         },
       });
     }),
-  getById: protectedProcedure.input(z.string()).query(({ ctx, input }) => {
-    return ctx.prisma.user.findFirst({
-      where: {
-        id: input,
-      },
-    });
-  }),
+  getById: protectedProcedure()
+    .input(z.string())
+    .query(({ ctx, input }) => {
+      return ctx.prisma.user.findFirst({
+        where: {
+          id: input,
+        },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          emailVerified: true,
+          image: true,
+          sessions: true,
+          accounts: true,
+          firstName: true,
+          lastName: true,
+          phoneNumber: true,
+          country: true,
+          description: true,
+          birthDate: true,
+        },
+      });
+    }),
 });
