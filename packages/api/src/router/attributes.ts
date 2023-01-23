@@ -80,7 +80,7 @@ export const attributesRouter = router({
         },
       });
     }),
-  updatePostAtt: protectedProcedure([Roles.TENANT])
+  updatePostAtt: protectedProcedure([Roles.OWNER, Roles.AGENCY])
     .input(
       z.object({
         id: z.string(),

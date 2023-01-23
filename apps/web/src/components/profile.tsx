@@ -81,7 +81,7 @@ const Profile = (props: {
                     alt="image"
                     className="mx-auto h-32 shadow-xl"
                   />
-                  <DeleteImgButton id={image.id} />
+                  <DeleteImgButton userId={props.user.id} id={image.id} />
                 </div>
               ) : (
                 <p>Aucune image</p>
