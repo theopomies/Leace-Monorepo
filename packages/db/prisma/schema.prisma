@@ -60,8 +60,8 @@ enum PostType {
 model Account {
   id String @id @default(cuid())
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId            String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
 
   type              String
   provider          String
@@ -74,7 +74,6 @@ model Account {
   id_token          String? @db.Text
   session_state     String?
 
-
   @@unique([provider, providerAccountId])
   @@index([userId])
   @@map("accounts")
@@ -83,8 +82,8 @@ model Account {
 model Session {
   id String @id @default(cuid())
 
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId       String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
 
   sessionToken String   @unique
   expires      DateTime
@@ -103,8 +102,8 @@ model VerificationToken {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  role        Roles       @default(NONE)
+  id   String @id @default(cuid())
+  role Roles  @default(NONE)
 
   name          String?
   email         String?   @unique
@@ -115,12 +114,14 @@ model User {
 
   firstName   String?
   lastName    String?
-  phoneNumber String?      @unique
+  phoneNumber String?     @unique
   country     String?
   description String?
   birthDate   DateTime?
-  status      UserStatus?  @default(ACTIVE)
-  isPremium   Boolean?     @default(false)
+  status      UserStatus? @default(INACTIVE)
+  isPremium   Boolean?    @default(false)
+
+  attribute Attribute?
 
   posts         Post[]
   images        Image[] // Not necessary one picture look Ok for users, just post can have more than one pictures. To discuss
@@ -140,21 +141,20 @@ model User {
 model Post {
   id String @id @default(cuid())
 
-  createdBy User @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  createdBy   User   @relation(fields: [createdById], references: [id], onDelete: Cascade)
   createdById String
 
-  title     String?
-  content   String?
-  desc      String?
-  type      PostType? @default(TO_BE_RENTED)
-  price     Int?
-  rentStartDate  DateTime?
-  size      Int?
-  furnished Boolean?
+  title   String?
+  content String?
+  desc    String?
+  type    PostType? @default(TO_BE_RENTED)
 
-  images       Image[]
-  documents    Document[]
-  reports      Report[]
+  attribute Attribute?
+
+  images    Image[]
+  documents Document[]
+
+  reports       Report[]
   relationShips RelationShip[]
 
   createdAt DateTime @default(now())
@@ -164,17 +164,57 @@ model Post {
   @@map("posts")
 }
 
+model Attribute {
+  id String @id @default(cuid())
+
+  user   User?   @relation(fields: [userId], references: [id])
+  userId String? @unique
+
+  post   Post?   @relation(fields: [postId], references: [id])
+  postId String? @unique
+
+  location String?
+
+  maxPrice Int?
+  minPrice Int?
+
+  maxSize Int?
+  minSize Int?
+
+  rentStartDate DateTime?
+  rentEndDate   DateTime?
+
+  furnished  Boolean?
+  house      Boolean?
+  appartment Boolean?
+  terrace    Boolean?
+  pets       Boolean?
+  smoker     Boolean?
+  disability Boolean?
+  garden     Boolean?
+  parking    Boolean?
+  elevator   Boolean?
+  pool       Boolean?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([postId])
+  @@map("attributes")
+}
+
 model Report {
   id String @id @default(cuid())
 
-  createdBy User  @relation(fields: [createdById], references: [id], "reports_created", onDelete: Cascade)
+  createdBy   User   @relation(fields: [createdById], references: [id], "reports_created", onDelete: Cascade)
   createdById String
 
-  user      User? @relation(fields: [userId], references: [id], "reported", onDelete: Cascade)
-  userId      String?
+  user   User?   @relation(fields: [userId], references: [id], "reported", onDelete: Cascade)
+  userId String?
 
-  post      Post? @relation(fields: [postId], references: [id], onDelete: Cascade)
-  postId      String?
+  post   Post?   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId String?
 
   reason ReportReason?
   desc   String?
@@ -192,10 +232,10 @@ model Report {
 model Document {
   id String @id @default(cuid())
 
-  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String?
 
-  post Post? @relation(fields: [postId], references: [id], onDelete: Cascade)
+  post   Post?   @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId String?
 
   createdAt DateTime @default(now())
@@ -211,10 +251,10 @@ model Image {
 
   url String
 
-  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String?
 
-  post Post? @relation(fields: [postId], references: [id], onDelete: Cascade)
+  post   Post?   @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId String?
 
   createdAt DateTime @default(now())
@@ -228,10 +268,10 @@ model Image {
 model RelationShip {
   id String @id @default(cuid())
 
-  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String?
 
-  post Post? @relation(fields: [postId], references: [id], onDelete: Cascade)
+  post   Post?   @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId String?
 
   isMatch      Boolean
@@ -248,8 +288,8 @@ model RelationShip {
 model Conversation {
   id String @id @default(cuid())
 
-  rs RelationShip @relation(fields: [relationId], references: [id], onDelete: Cascade)
-  relationId String @unique
+  rs         RelationShip @relation(fields: [relationId], references: [id], onDelete: Cascade)
+  relationId String       @unique
 
   type     ConversationType
   messages Message[]
@@ -264,11 +304,11 @@ model Conversation {
 model Message {
   id String @id @default(cuid())
 
-  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
   conversationId String
 
-  sender       User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
-  senderId       String
+  sender   User   @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  senderId String
 
   content String
 

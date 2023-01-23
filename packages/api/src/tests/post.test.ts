@@ -2,20 +2,13 @@ import { type inferProcedureInput } from "@trpc/server";
 import { createContextInner } from "../context";
 import { appRouter, type AppRouter } from "../router/index";
 import { describe, expect, test } from "vitest";
-import { PostType } from "@leace/db";
 
 describe("[Router][post]", () => {
   let id = "";
   const input: inferProcedureInput<AppRouter["post"]["create"]> = {
-    createdById: "",
-    type: PostType.TO_BE_RENTED,
     title: "NicePost",
     content: "SomeContent",
     desc: "LittleDescription",
-    price: 1200,
-    duration: new Date(10),
-    size: 30,
-    furnished: true,
   };
 
   test("Create Post", async () => {

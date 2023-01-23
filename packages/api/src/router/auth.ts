@@ -1,4 +1,3 @@
-import { Roles } from "@leace/db";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
 
 export const authRouter = router({
