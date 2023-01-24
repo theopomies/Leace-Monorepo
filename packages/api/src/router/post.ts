@@ -12,8 +12,8 @@ export const postRouter = router({
         desc: z.string(),
       }),
     )
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.post.create({
+    .mutation(async ({ ctx, input }) => {
+      const getPost = await ctx.prisma.post.create({
         data: {
           createdById: ctx.session.user.id,
           title: input.title,
@@ -22,6 +22,13 @@ export const postRouter = router({
           type: PostType.TO_BE_RENTED,
         },
       });
+      const att = await ctx.prisma.attribute.create({
+        data: {
+          postId: getPost.id,
+        },
+      });
+      if (!att) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+      return getPost;
     }),
   updatePost: protectedProcedure([Roles.AGENCY, Roles.OWNER])
     .input(

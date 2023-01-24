@@ -7,7 +7,13 @@ import { isPossiblePhoneNumber } from "libphonenumber-js";
 export const userRouter = router({
   updateUserRole: protectedProcedure([Roles.NONE])
     .input(z.enum([Roles.TENANT, Roles.OWNER, Roles.AGENCY]))
-    .mutation(({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
+      const att = await ctx.prisma.attribute.create({
+        data: {
+          userId: ctx.session.user.id,
+        },
+      });
+      if (!att) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
       return ctx.prisma.user.update({
         where: { id: ctx.session.user.id },
         data: { role: input },
