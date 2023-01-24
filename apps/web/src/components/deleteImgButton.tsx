@@ -13,8 +13,8 @@ export const DeleteImgButton = (props: { userId: string; id: string }) => {
     },
   });
 
-  const handleClick = async () => {
-    await mutation.mutateAsync({ userId: props.userId, id: props.id });
+  const handleClick = () => {
+    mutation.mutate({ userId: props.userId, id: props.id });
   };
 
   return (
@@ -52,8 +52,8 @@ export const DeleteAllImgButton = (props: { userId: string }) => {
     },
   });
 
-  const handleClick = async () => {
-    await mutation.mutateAsync({ userId: props.userId });
+  const handleClick = () => {
+    mutation.mutate({ userId: props.userId });
   };
 
   return (
