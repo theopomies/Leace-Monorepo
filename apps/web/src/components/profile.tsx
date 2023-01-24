@@ -74,14 +74,13 @@ const Profile = (props: {
           <div className="mt-10 flex flex-wrap justify-center gap-4">
             {props.user.images.map((image, index) =>
               image ? (
-                <div className="relative">
+                <div key={index} className="relative">
                   <img
-                    key={index}
                     src={image.url}
                     alt="image"
                     className="mx-auto h-32 shadow-xl"
                   />
-                  <DeleteImgButton id={image.id} />
+                  <DeleteImgButton userId={props.user.id} id={image.id} />
                 </div>
               ) : (
                 <p>Aucune image</p>

@@ -7,7 +7,7 @@ import type { AppRouter } from "@leace/api";
 import Link from "next/link";
 
 const PostCard: React.FC<{
-  post: inferProcedureOutput<AppRouter["post"]["all"]>[number];
+  post: inferProcedureOutput<AppRouter["post"]["getAllPost"]>[number];
 }> = ({ post }) => {
   return (
     <div className="max-w-2xl rounded-lg border-2 border-gray-500 p-4 transition-all hover:scale-[101%]">
@@ -18,7 +18,7 @@ const PostCard: React.FC<{
 };
 
 const Home: NextPage = () => {
-  const postQuery = trpc.post.all.useQuery();
+  const postQuery = trpc.post.getAllPost.useQuery();
 
   return (
     <>

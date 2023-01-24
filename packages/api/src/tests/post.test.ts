@@ -5,7 +5,7 @@ import { describe, expect, test } from "vitest";
 
 describe("[Router][post]", () => {
   let id = "";
-  const input: inferProcedureInput<AppRouter["post"]["create"]> = {
+  const input: inferProcedureInput<AppRouter["post"]["createPost"]> = {
     title: "NicePost",
     content: "SomeContent",
     desc: "LittleDescription",
@@ -17,7 +17,7 @@ describe("[Router][post]", () => {
     });
     const caller = appRouter.createCaller(ctx);
 
-    const post = await caller.post.create(input);
+    const post = await caller.post.createPost(input);
     expect(post).toMatchObject(input);
     id = post.id;
   });
@@ -28,7 +28,7 @@ describe("[Router][post]", () => {
     });
     const caller = appRouter.createCaller(ctx);
 
-    const getbyIdPost = await caller.post.byId(id);
+    const getbyIdPost = await caller.post.getPost(id);
     expect(getbyIdPost).toMatchObject(input);
   });
 
@@ -38,7 +38,7 @@ describe("[Router][post]", () => {
     });
     const caller = appRouter.createCaller(ctx);
 
-    const deleted = await caller.post.deleteById(id);
+    const deleted = await caller.post.deletePost(id);
     expect(deleted).toMatchObject(input);
   });
 });
