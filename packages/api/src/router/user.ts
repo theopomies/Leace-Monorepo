@@ -13,12 +13,7 @@ export const userRouter = router({
         data: { role: input },
       });
     }),
-  updateUser: protectedProcedure([
-    Roles.TENANT,
-    Roles.AGENCY,
-    Roles.OWNER,
-    Roles.NONE,
-  ])
+  updateUser: protectedProcedure([Roles.TENANT, Roles.AGENCY, Roles.OWNER])
     .input(
       z.object({
         firstName: z.string().optional(),
