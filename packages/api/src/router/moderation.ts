@@ -4,8 +4,8 @@ import { ReportReason, ReportStatus, Roles, UserStatus } from "@prisma/client";
 
 export const moderationRouter = router({
   getReport: protectedProcedure([Roles.ADMIN, Roles.MODERATOR]).query(
-    async ({ ctx }) => {
-      return await ctx.prisma.report.findFirstOrThrow({
+    ({ ctx }) => {
+      return ctx.prisma.report.findFirstOrThrow({
         orderBy: { createdAt: "desc" },
         where: { NOT: [{ userId: null }], status: ReportStatus.PENDING },
         include: {
@@ -18,8 +18,8 @@ export const moderationRouter = router({
   ),
   getById: protectedProcedure([Roles.ADMIN])
     .input(z.string())
-    .query(async ({ ctx, input }) => {
-      return await ctx.prisma.user.findFirstOrThrow({
+    .query(({ ctx, input }) => {
+      return ctx.prisma.user.findFirstOrThrow({
         where: {
           id: input,
         },
@@ -45,8 +45,8 @@ export const moderationRouter = router({
         ]),
       }),
     )
-    .mutation(async ({ ctx, input }) => {
-      return await ctx.prisma.report.update({
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.report.update({
         where: { id: input.id },
         data: input.reason
           ? {
@@ -63,20 +63,20 @@ export const moderationRouter = router({
         status: z.enum([UserStatus.BANNED, UserStatus.ACTIVE]),
       }),
     )
-    .mutation(async ({ ctx, input }) => {
-      return await ctx.prisma.user.update({
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.user.update({
         where: { id: input.id },
         data: { status: input.status },
       });
     }),
-  deleteImages: protectedProcedure([Roles.ADMIN, Roles.MODERATOR])
-    .input(z.object({ id: z.string() }))
-    .mutation(async ({ ctx, input }) => {
-      return await ctx.prisma.image.deleteMany({ where: { userId: input.id } });
-    }),
   deleteImage: protectedProcedure([Roles.ADMIN, Roles.MODERATOR])
-    .input(z.object({ id: z.string() }))
-    .mutation(async ({ ctx, input }) => {
-      return await ctx.prisma.image.deleteMany({ where: { id: input.id } });
+    .input(z.object({ userId: z.string(), id: z.string().optional() }))
+    .mutation(({ ctx, input }) => {
+      if (!input.id) {
+        return ctx.prisma.image.deleteMany({ where: { userId: input.userId } });
+      }
+      return ctx.prisma.image.deleteMany({
+        where: { id: input.id, userId: input.userId },
+      });
     }),
 });

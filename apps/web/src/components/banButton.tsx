@@ -14,8 +14,8 @@ export const BanButton = (props: { userId: string }) => {
     },
   });
 
-  const handleClick = async () => {
-    await mutation.mutateAsync({
+  const handleClick = () => {
+    mutation.mutate({
       id: props.userId,
       status: UserStatus.BANNED,
     });
@@ -44,8 +44,8 @@ export const UnBanButton = (props: { userId: string }) => {
     },
   });
 
-  const handleClick = async () => {
-    await mutation.mutateAsync({
+  const handleClick = () => {
+    mutation.mutate({
       id: props.userId,
       status: UserStatus.ACTIVE,
     });

@@ -5,12 +5,21 @@ import { Roles, UserStatus } from "@prisma/client";
 import { isPossiblePhoneNumber } from "libphonenumber-js";
 
 export const userRouter = router({
-  updateUser: protectedProcedure([
-    Roles.TENANT,
-    Roles.AGENCY,
-    Roles.OWNER,
-    Roles.NONE,
-  ])
+  updateUserRole: protectedProcedure([Roles.NONE])
+    .input(z.enum([Roles.TENANT, Roles.OWNER, Roles.AGENCY]))
+    .mutation(async ({ ctx, input }) => {
+      const att = await ctx.prisma.attribute.create({
+        data: {
+          userId: ctx.session.user.id,
+        },
+      });
+      if (!att) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+      return ctx.prisma.user.update({
+        where: { id: ctx.session.user.id },
+        data: { role: input },
+      });
+    }),
+  updateUser: protectedProcedure([Roles.TENANT, Roles.AGENCY, Roles.OWNER])
     .input(
       z.object({
         firstName: z.string().optional(),
@@ -61,28 +70,25 @@ export const userRouter = router({
         },
       });
     }),
-  getById: protectedProcedure()
-    .input(z.string())
+  getUser: protectedProcedure([Roles.TENANT, Roles.AGENCY, Roles.OWNER])
+    .input(z.string().optional())
     .query(({ ctx, input }) => {
-      return ctx.prisma.user.findFirst({
+      if (!input) {
+        return ctx.prisma.user.findUniqueOrThrow({
+          where: { id: ctx.session.user.id },
+        });
+      }
+      return ctx.prisma.user.findUniqueOrThrow({
         where: {
           id: input,
         },
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          emailVerified: true,
-          image: true,
-          sessions: true,
-          accounts: true,
-          firstName: true,
-          lastName: true,
-          phoneNumber: true,
-          country: true,
-          description: true,
-          birthDate: true,
-        },
       });
     }),
+  deleteUser: protectedProcedure([
+    Roles.TENANT,
+    Roles.AGENCY,
+    Roles.OWNER,
+  ]).mutation(({ ctx }) => {
+    return ctx.prisma.user.delete({ where: { id: ctx.session.user.id } });
+  }),
 });

@@ -12,14 +12,14 @@ const ReportButton = (props: { reportId: string }) => {
     },
   });
 
-  const handleClick = async () => {
+  const handleClick = () => {
     selected
-      ? await mutation.mutateAsync({
+      ? mutation.mutate({
           id: props.reportId,
           reason: selected,
           status: ReportStatus.REJECTED,
         })
-      : await mutation.mutateAsync({
+      : mutation.mutate({
           id: props.reportId,
           status: ReportStatus.RESOLVED,
         });

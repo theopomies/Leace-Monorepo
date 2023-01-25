@@ -2,19 +2,19 @@ import { useRouter } from "next/router";
 import React from "react";
 import { trpc } from "../utils/trpc";
 
-export const DeleteImgButton = (props: { id: string }) => {
+export const DeleteImgButton = (props: { userId: string; id: string }) => {
   const path = useRouter();
   const utils = trpc.useContext();
   const mutation = trpc.moderation.deleteImage.useMutation({
     onSuccess() {
       path.pathname === "/moderation/moderation"
         ? utils.moderation.getReport.invalidate()
-        : utils.moderation.getById.invalidate(props.id);
+        : utils.moderation.getById.invalidate(props.userId);
     },
   });
 
-  const handleClick = async () => {
-    await mutation.mutateAsync({ id: props.id });
+  const handleClick = () => {
+    mutation.mutate({ userId: props.userId, id: props.id });
   };
 
   return (
@@ -31,9 +31,9 @@ export const DeleteImgButton = (props: { id: string }) => {
         aria-hidden="true"
       >
         <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
           d="M6 18L18 6M6 6l12 12"
         />
       </svg>
@@ -44,7 +44,7 @@ export const DeleteImgButton = (props: { id: string }) => {
 export const DeleteAllImgButton = (props: { userId: string }) => {
   const path = useRouter();
   const utils = trpc.useContext();
-  const mutation = trpc.moderation.deleteImages.useMutation({
+  const mutation = trpc.moderation.deleteImage.useMutation({
     onSuccess() {
       path.pathname === "/moderation/moderation"
         ? utils.moderation.getReport.invalidate()
@@ -52,8 +52,8 @@ export const DeleteAllImgButton = (props: { userId: string }) => {
     },
   });
 
-  const handleClick = async () => {
-    await mutation.mutateAsync({ id: props.userId });
+  const handleClick = () => {
+    mutation.mutate({ userId: props.userId });
   };
 
   return (

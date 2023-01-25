@@ -20,12 +20,14 @@ const Search = ({
             placeholder="Search"
             onChange={(e) => setUserId(e.target.value)}
             value={userId}
+            onKeyDown={(e) => {
+              e.key === "Enter" && setUid(userId);
+            }}
           />
-          <a onClick={() => setUid(userId)} className="cursor-pointer">
+          <button onClick={() => setUid(userId)}>
             <div className="mx-2 cursor-pointer rounded-full bg-gray-600 p-2 hover:bg-blue-400">
               <svg
                 className="h-6 w-6 text-white"
-                xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 20 20"
                 fill="currentColor"
               >
@@ -36,7 +38,7 @@ const Search = ({
                 />
               </svg>
             </div>
-          </a>
+          </button>
         </div>
       </div>
     </div>

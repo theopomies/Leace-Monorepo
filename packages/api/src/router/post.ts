@@ -4,7 +4,7 @@ import { PostType, Roles } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 
 export const postRouter = router({
-  create: protectedProcedure([Roles.AGENCY, Roles.OWNER])
+  createPost: protectedProcedure([Roles.AGENCY, Roles.OWNER])
     .input(
       z.object({
         title: z.string(),
@@ -12,8 +12,8 @@ export const postRouter = router({
         desc: z.string(),
       }),
     )
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.post.create({
+    .mutation(async ({ ctx, input }) => {
+      const getPost = await ctx.prisma.post.create({
         data: {
           createdById: ctx.session.user.id,
           title: input.title,
@@ -22,6 +22,13 @@ export const postRouter = router({
           type: PostType.TO_BE_RENTED,
         },
       });
+      const att = await ctx.prisma.attribute.create({
+        data: {
+          postId: getPost.id,
+        },
+      });
+      if (!att) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+      return getPost;
     }),
   updatePost: protectedProcedure([Roles.AGENCY, Roles.OWNER])
     .input(
@@ -50,15 +57,7 @@ export const postRouter = router({
         },
       });
     }),
-  all: protectedProcedure().query(({ ctx }) => {
-    return ctx.prisma.post.findMany();
-  }),
-  byId: protectedProcedure()
-    .input(z.string())
-    .query(({ ctx, input }) => {
-      return ctx.prisma.post.findFirst({ where: { id: input } });
-    }),
-  deleteById: protectedProcedure([Roles.AGENCY, Roles.OWNER])
+  deletePost: protectedProcedure([Roles.AGENCY, Roles.OWNER])
     .input(z.string())
     .query(async ({ input, ctx }) => {
       const getPost = await ctx.prisma.post.findUnique({
@@ -69,22 +68,24 @@ export const postRouter = router({
         throw new TRPCError({ code: "FORBIDDEN" });
       return ctx.prisma.post.delete({ where: { id: input } });
     }),
-  activePostsByOwner: protectedProcedure()
+  getAllPost: protectedProcedure().query(({ ctx }) => {
+    return ctx.prisma.post.findMany();
+  }),
+  getPost: protectedProcedure([Roles.TENANT])
     .input(z.string())
-    .query(async ({ input, ctx }) => {
-      const getPosts = await ctx.prisma.post.findMany({
-        where: { createdById: input, type: PostType.TO_BE_RENTED },
-      });
-      if (!getPosts) throw new TRPCError({ code: "NOT_FOUND" });
-      return getPosts;
+    .query(({ ctx, input }) => {
+      return ctx.prisma.post.findUniqueOrThrow({ where: { id: input } });
     }),
-  inactivePostsByOwner: protectedProcedure()
-    .input(z.string())
-    .query(async ({ input, ctx }) => {
-      const getPosts = await ctx.prisma.post.findMany({
-        where: { createdById: input, type: PostType.RENTED },
+  getMyPost: protectedProcedure([Roles.AGENCY, Roles.OWNER])
+    .input(z.enum([PostType.RENTED, PostType.TO_BE_RENTED]).optional())
+    .query(({ ctx, input }) => {
+      if (!input) {
+        return ctx.prisma.post.findMany({
+          where: { createdById: ctx.session.user.id },
+        });
+      }
+      return ctx.prisma.post.findMany({
+        where: { createdById: ctx.session.user.id, type: input },
       });
-      if (!getPosts) throw new TRPCError({ code: "NOT_FOUND" });
-      return getPosts;
     }),
 });
