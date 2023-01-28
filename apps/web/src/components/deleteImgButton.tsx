@@ -1,18 +1,14 @@
 import axios from "axios";
 import { useRouter } from "next/router";
-import React from "react";
 import { trpc } from "../utils/trpc";
 
-export const DeleteImgButton = (props: {
-  userId: string;
-  id: string;
-  refetchImages: Function;
-}) => {
+export const DeleteImgButton = (props: { userId: string; id: string }) => {
+  const utils = trpc.useContext();
   const mut = trpc.image.DeleteSignedUserUrl.useMutation();
   const onClickDelete = async () => {
     await mut.mutateAsync(props.id).then(async (url) => {
       await axios.delete(url);
-      props.refetchImages();
+      utils.image.GetSignedUserUrl.refetch();
     });
   };
 

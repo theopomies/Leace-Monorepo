@@ -10,8 +10,7 @@ const Profile = (props: {
     reports: Report[];
   };
 }) => {
-  const { data: images, refetch: refetchImages } =
-    trpc.image.GetSignedUserUrl.useQuery();
+  const { data: images } = trpc.image.GetSignedUserUrl.useQuery();
 
   const displayDate = (date: Date) => {
     return (
@@ -85,11 +84,7 @@ const Profile = (props: {
                       alt="image"
                       className="mx-auto h-32 shadow-xl"
                     />
-                    <DeleteImgButton
-                      userId={props.user.id}
-                      id={image.id}
-                      refetchImages={refetchImages}
-                    />
+                    <DeleteImgButton userId={props.user.id} id={image.id} />
                   </div>
                 ) : (
                   <p>Aucune image</p>
