@@ -35,8 +35,8 @@ export const createContext = async (opts: CreateNextContextOptions) => {
     region: "eu-west-3",
     apiVersion: "2006-03-01",
     credentials: {
-      accessKeyId: "AKIAZ6Z53GK2WND3XFFM",
-      secretAccessKey: "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",
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID || "",
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || "",
     },
   });
 
