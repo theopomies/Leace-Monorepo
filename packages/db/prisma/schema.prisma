@@ -232,6 +232,7 @@ model Report {
 model Document {
   id String @id @default(cuid())
 
+  ext String
   user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String?
 
@@ -249,7 +250,7 @@ model Document {
 model Image {
   id String @id @default(cuid())
 
-  url String
+  ext String
 
   user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String?

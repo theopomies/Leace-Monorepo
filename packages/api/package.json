@@ -11,10 +11,13 @@
     "test": "vitest run --no-threads"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.257.0",
+    "@aws-sdk/s3-request-presigner": "^3.257.0",
     "@leace/auth": "*",
     "@leace/db": "*",
     "@trpc/client": "^10.1.0",
     "@trpc/server": "^10.1.0",
+    "crypto": "^1.0.1",
     "libphonenumber-js": "^1.10.15",
     "superjson": "^1.9.1",
     "vitest": "^0.25.8",

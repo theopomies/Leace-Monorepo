@@ -22,6 +22,7 @@ export const postRouter = router({
           type: PostType.TO_BE_RENTED,
         },
       });
+      if (!getPost) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
       const att = await ctx.prisma.attribute.create({
         data: {
           postId: getPost.id,
