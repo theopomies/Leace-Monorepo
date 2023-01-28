@@ -18,12 +18,12 @@ const ModNavBar = () => {
                 </Link>
               </li>
               <li>
-                <a
+                <Link
                   href="/moderation/admin"
                   className="text-gray-900 hover:underline dark:text-white"
                 >
                   Administation
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
