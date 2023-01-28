@@ -6,7 +6,6 @@ import {
   Prisma,
   PostType,
 } from "@prisma/client";
-import { PollingWatchKind } from "typescript";
 
 const nbUsers = 10;
 const nbPosts = 10;

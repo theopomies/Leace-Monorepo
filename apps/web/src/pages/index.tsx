@@ -70,7 +70,6 @@ const AuthShowcase: React.FC = () => {
     if (!event.target.files?.[0]) return;
     const file = event.target.files[0];
     await mut.mutateAsync({ fileType: file.type }).then(async (url) => {
-      console.log(file.type);
       await axios.put(url, file);
       refetchImages();
     });

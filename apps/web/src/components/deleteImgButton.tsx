@@ -1,15 +1,16 @@
 import axios from "axios";
-import { useRouter } from "next/router";
 import { trpc } from "../utils/trpc";
 
 export const DeleteImgButton = (props: { userId: string; id: string }) => {
   const utils = trpc.useContext();
-  const mut = trpc.image.DeleteSignedUserUrl.useMutation();
+  const mut = trpc.moderation.deleteImage.useMutation();
   const onClickDelete = async () => {
-    await mut.mutateAsync(props.id).then(async (url) => {
-      await axios.delete(url);
-      utils.image.GetSignedUserUrl.refetch();
-    });
+    await mut
+      .mutateAsync({ userId: props.userId, id: props.id })
+      .then(async (url) => {
+        await axios.delete(url);
+        utils.image.GetSignedUserUrl.refetch();
+      });
   };
 
   return (
@@ -33,32 +34,5 @@ export const DeleteImgButton = (props: { userId: string; id: string }) => {
         />
       </svg>
     </button>
-  );
-};
-
-export const DeleteAllImgButton = (props: { userId: string }) => {
-  const path = useRouter();
-  const utils = trpc.useContext();
-  const mutation = trpc.moderation.deleteImage.useMutation({
-    onSuccess() {
-      path.pathname === "/moderation/moderation"
-        ? utils.moderation.getReport.invalidate()
-        : utils.moderation.getById.invalidate(props.userId);
-    },
-  });
-
-  const handleClick = () => {
-    mutation.mutate({ userId: props.userId });
-  };
-
-  return (
-    <div className="flex w-full flex-col items-center justify-center px-10">
-      <button
-        className="rounded-full bg-red-500  py-2 px-4 font-bold text-white hover:bg-red-700"
-        onClick={handleClick}
-      >
-        Supprimer toutes les images
-      </button>
-    </div>
   );
 };

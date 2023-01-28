@@ -58,7 +58,11 @@ export const imageRouter = router({
         }),
       );
     }),
-  DeleteSignedUserUrl: protectedProcedure()
+  DeleteSignedUserUrl: protectedProcedure([
+    Roles.OWNER,
+    Roles.AGENCY,
+    Roles.TENANT,
+  ])
     .input(z.string())
     .mutation(async ({ ctx, input }) => {
       const image = await ctx.prisma.image.findFirst({
