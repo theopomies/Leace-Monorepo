@@ -2,6 +2,7 @@
 import React from "react";
 import { User, Image, Report } from "@prisma/client";
 import { DeleteImgButton } from "./deleteImgButton";
+import { trpc } from "../utils/trpc";
 
 const Profile = (props: {
   user: User & {
@@ -9,6 +10,9 @@ const Profile = (props: {
     reports: Report[];
   };
 }) => {
+  const { data: images, refetch: refetchImages } =
+    trpc.image.GetSignedUserUrl.useQuery();
+
   const displayDate = (date: Date) => {
     return (
       (date.getDate() < 10 ? "0" + date.getDate() : date.getDate()) +
@@ -72,20 +76,25 @@ const Profile = (props: {
         </p>
         {props.user.images.length > 0 && (
           <div className="mt-10 flex flex-wrap justify-center gap-4">
-            {props.user.images.map((image, index) =>
-              image ? (
-                <div key={index} className="relative">
-                  <img
-                    src={image.url}
-                    alt="image"
-                    className="mx-auto h-32 shadow-xl"
-                  />
-                  <DeleteImgButton userId={props.user.id} id={image.id} />
-                </div>
-              ) : (
-                <p>Aucune image</p>
-              ),
-            )}
+            {images &&
+              images.map((image, index) =>
+                image ? (
+                  <div key={index} className="relative">
+                    <img
+                      src={image.url}
+                      alt="image"
+                      className="mx-auto h-32 shadow-xl"
+                    />
+                    <DeleteImgButton
+                      userId={props.user.id}
+                      id={image.id}
+                      refetchImages={refetchImages}
+                    />
+                  </div>
+                ) : (
+                  <p>Aucune image</p>
+                ),
+              )}
           </div>
         )}
       </div>

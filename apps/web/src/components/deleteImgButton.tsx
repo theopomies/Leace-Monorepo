@@ -1,27 +1,26 @@
+import axios from "axios";
 import { useRouter } from "next/router";
 import React from "react";
 import { trpc } from "../utils/trpc";
 
-export const DeleteImgButton = (props: { userId: string; id: string }) => {
-  const path = useRouter();
-  const utils = trpc.useContext();
-  const mutation = trpc.moderation.deleteImage.useMutation({
-    onSuccess() {
-      path.pathname === "/moderation/moderation"
-        ? utils.moderation.getReport.invalidate()
-        : utils.moderation.getById.invalidate(props.userId);
-    },
-  });
-
-  const handleClick = () => {
-    mutation.mutate({ userId: props.userId, id: props.id });
+export const DeleteImgButton = (props: {
+  userId: string;
+  id: string;
+  refetchImages: Function;
+}) => {
+  const mut = trpc.image.DeleteSignedUserUrl.useMutation();
+  const onClickDelete = async () => {
+    await mut.mutateAsync(props.id).then(async (url) => {
+      await axios.delete(url);
+      props.refetchImages();
+    });
   };
 
   return (
     <button
       type="button"
       className="absolute -right-1 -top-1 inline-flex items-center justify-center rounded-full bg-red-500 p-1 text-white hover:bg-white hover:text-red-500"
-      onClick={handleClick}
+      onClick={onClickDelete}
     >
       <svg
         className="w-3"
