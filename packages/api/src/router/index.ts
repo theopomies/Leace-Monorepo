@@ -5,6 +5,7 @@ import { userRouter } from "./user";
 import { reportRouter } from "./report";
 import { attributesRouter } from "./attributes";
 import { moderationRouter } from "./moderation";
+import { relationShipRouter } from "./relationship";
 
 export const appRouter = router({
   auth: authRouter,
@@ -13,6 +14,7 @@ export const appRouter = router({
   report: reportRouter,
   attribute: attributesRouter,
   moderation: moderationRouter,
+  relationShip: relationShipRouter,
 });
 
 // export type definition of API
