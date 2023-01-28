@@ -170,11 +170,11 @@ export const makeImages = async (prisma: PrismaClient) => {
     }
     Boolean(Math.round(Math.random()))
       ? images.push({
-          url: "https://media.istockphoto.com/id/638756792/photo/beautiful-woman-posing-against-dark-background.jpg?s=612x612&w=0&k=20&c=AanwEr0pmrS-zhkVJEgAwxHKwnx14ywNh5dmzwbpyLk=",
+          ext: "png",
           userId: randUser[0].id,
         })
       : images.push({
-          url: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2160&q=80",
+          ext: "png",
           postId: randPost[0].id,
         });
   }

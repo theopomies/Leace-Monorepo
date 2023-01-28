@@ -1,6 +1,9 @@
 import { router, protectedProcedure } from "../trpc";
 import { z } from "zod";
 import { ReportReason, ReportStatus, Roles, UserStatus } from "@prisma/client";
+import { TRPCError } from "@trpc/server";
+import { DeleteObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 export const moderationRouter = router({
   getReport: protectedProcedure([Roles.ADMIN, Roles.MODERATOR]).query(
@@ -10,7 +13,7 @@ export const moderationRouter = router({
         where: { NOT: [{ userId: null }], status: ReportStatus.PENDING },
         include: {
           createdBy: {
-            include: { images: true, reports: true },
+            include: { reports: true },
           },
         },
       });
@@ -23,7 +26,7 @@ export const moderationRouter = router({
         where: {
           id: input,
         },
-        include: { images: true, reports: true },
+        include: { reports: true },
       });
     }),
   updateReport: protectedProcedure([Roles.ADMIN, Roles.MODERATOR])
@@ -69,14 +72,25 @@ export const moderationRouter = router({
         data: { status: input.status },
       });
     }),
-  deleteImage: protectedProcedure([Roles.ADMIN, Roles.MODERATOR])
-    .input(z.object({ userId: z.string(), id: z.string().optional() }))
-    .mutation(({ ctx, input }) => {
-      if (!input.id) {
-        return ctx.prisma.image.deleteMany({ where: { userId: input.userId } });
-      }
-      return ctx.prisma.image.deleteMany({
+  deleteImage: protectedProcedure()
+    .input(z.object({ userId: z.string(), id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const image = await ctx.prisma.image.findFirst({
         where: { id: input.id, userId: input.userId },
       });
+      if (!image) throw new TRPCError({ code: "NOT_FOUND" });
+
+      const deleted = await ctx.prisma.image.delete({
+        where: { id: image.id },
+      });
+      if (!deleted) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+      const bucketParams = {
+        Bucket: "leaceawsbucket",
+        Key: `${ctx.session.user.id}/images/${image.id}.${image.ext}`,
+      };
+      const command = new DeleteObjectCommand(bucketParams);
+
+      return await getSignedUrl(ctx.s3Client, command);
     }),
 });

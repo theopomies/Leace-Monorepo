@@ -1,7 +1,6 @@
 import { UserStatus } from "@prisma/client";
 import { useState } from "react";
 import { BanButton, UnBanButton } from "../../components/banButton";
-import { DeleteAllImgButton } from "../../components/deleteImgButton";
 import Loader from "../../components/loader";
 import Profile from "../../components/profile";
 import Search from "../../components/search";
@@ -33,9 +32,6 @@ const Admin = () => {
               <UnBanButton userId={user.data.id} />
             ) : (
               <BanButton userId={user.data.id} />
-            )}
-            {user.data.images.length > 0 && (
-              <DeleteAllImgButton userId={user.data.id} />
             )}
           </div>
         </div>
