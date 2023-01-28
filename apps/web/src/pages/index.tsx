@@ -123,9 +123,9 @@ const AuthShowcase: React.FC = () => {
         className="ml-2 rounded-full bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700"
         onClick={OnclickDelete}
       />
-      {images ? (
+      {images && images[0] ? (
         <img
-          src={images[0]?.url}
+          src={images[0].url}
           referrerPolicy="no-referrer"
           alt="image"
           className="mx-auto h-32 rounded-full shadow-xl"
