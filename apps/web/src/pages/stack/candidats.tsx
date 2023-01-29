@@ -13,6 +13,7 @@ for (let i = 0; i < 10; i++) {
     age: 22,
     description:
       "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Reiciendis doloremque blanditiis modi quos a eveniet, eligendi temporibus necessitatibus, eius consequatur, provident obcaecati reprehenderit possimus aliquam totam? Praesentium inventore facilis vero.",
+    onReport: () => console.log("Reported"),
   });
 }
 
@@ -30,6 +31,7 @@ export default function Candidats() {
         age: 22,
         description:
           "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Reiciendis doloremque blanditiis modi quos a eveniet, eligendi temporibus necessitatibus, eius consequatur, provident obcaecati reprehenderit possimus aliquam totam? Praesentium inventore facilis vero.",
+        onReport: () => console.log("Reported"),
       });
       return newPosts;
     });
