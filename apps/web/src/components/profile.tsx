@@ -3,6 +3,7 @@ import React from "react";
 import { User, Report } from "@prisma/client";
 import { DeleteImgButton } from "./deleteImgButton";
 import { trpc } from "../utils/trpc";
+import DocValidation from "./docValidation";
 
 const Profile = (props: {
   user: User & {
@@ -103,6 +104,7 @@ const Profile = (props: {
           </div>
         </div>
       )}
+      <DocValidation userId={props.user.id} />
     </div>
   );
 };

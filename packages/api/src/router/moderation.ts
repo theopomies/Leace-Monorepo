@@ -93,4 +93,24 @@ export const moderationRouter = router({
 
       return await getSignedUrl(ctx.s3Client, command);
     }),
+  documentValidation: protectedProcedure([Roles.ADMIN, Roles.MODERATOR])
+    .input(
+      z.object({
+        id: z.string(),
+        valid: z.boolean(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const documents = await ctx.prisma.document.findUnique({
+        where: {
+          id: input.id,
+        },
+      });
+      if (!documents) throw new TRPCError({ code: "NOT_FOUND" });
+
+      return ctx.prisma.document.update({
+        where: { id: input.id },
+        data: { valid: input.valid },
+      });
+    }),
 });

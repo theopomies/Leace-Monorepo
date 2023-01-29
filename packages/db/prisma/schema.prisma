@@ -237,12 +237,14 @@ model Report {
 model Document {
   id String @id @default(cuid())
 
-  ext String
   user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String?
 
   post   Post?   @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId String?
+
+  valid  Boolean @default(false)
+  ext String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -23,7 +23,7 @@ const Admin = () => {
       <div>
         <Search setUid={setUid} />
         <div className="my-5 flex">
-          <div className="justfiy-center flex w-1/5 items-center "></div>
+          <div className="flex w-1/5 items-center justify-center"></div>
           <div className="flex max-h-[calc(100vh-84px)] w-3/5 items-center justify-center">
             <Profile user={user.data} />
           </div>
