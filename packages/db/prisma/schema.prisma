@@ -175,11 +175,16 @@ model Attribute {
 
   location String?
 
+  // Only Tenant
   maxPrice Int?
   minPrice Int?
 
   maxSize Int?
   minSize Int?
+
+  // Only Owner and Agency
+  price Int?
+  size Int?
 
   rentStartDate DateTime?
   rentEndDate   DateTime?
@@ -269,13 +274,13 @@ model Image {
 model RelationShip {
   id String @id @default(cuid())
 
-  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId String?
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
 
-  post   Post?   @relation(fields: [postId], references: [id], onDelete: Cascade)
-  postId String?
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId String
 
-  isMatch      Boolean
+  isMatch      Boolean? @default(false)
   conversation Conversation?
 
   createdAt DateTime @default(now())
@@ -289,10 +294,10 @@ model RelationShip {
 model Conversation {
   id String @id @default(cuid())
 
-  rs         RelationShip @relation(fields: [relationId], references: [id], onDelete: Cascade)
-  relationId String       @unique
+  rs         RelationShip? @relation(fields: [relationId], references: [id], onDelete: Cascade)
+  relationId String?       @unique
 
-  type     ConversationType
+  type     ConversationType? @default(NONE)
   messages Message[]
 
   createdAt DateTime @default(now())

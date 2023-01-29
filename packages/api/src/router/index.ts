@@ -5,6 +5,7 @@ import { postRouter } from "./post";
 import { reportRouter } from "./report";
 import { attributesRouter } from "./attributes";
 import { moderationRouter } from "./moderation";
+import { relationShipRouter } from "./relationship";
 import { documentRouter } from "./document";
 import { imageRouter } from "./image";
 
@@ -15,8 +16,9 @@ export const appRouter = router({
   report: reportRouter,
   attribute: attributesRouter,
   moderation: moderationRouter,
-  image: imageRouter,
+  relationShip: relationShipRouter,
   document: documentRouter,
+  image: imageRouter,
 });
 
 // export type definition of API
