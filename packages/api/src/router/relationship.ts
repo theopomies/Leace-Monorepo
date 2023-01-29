@@ -153,4 +153,109 @@ export const relationShipRouter = router({
 
       return { message: "You missed a match!" };
     }),
+  getMatch: protectedProcedure([Roles.TENANT, Roles.OWNER, Roles.AGENCY]).query(
+    async ({ ctx }) => {
+      if (ctx.session.user.role == Roles.TENANT) {
+        const rs = await ctx.prisma.relationShip.findMany({
+          where: { isMatch: true, userId: ctx.session.user.id },
+          include: {
+            post: {
+              include: {
+                createdBy: true,
+              },
+            },
+          },
+        });
+        if (!rs) throw new TRPCError({ code: "NOT_FOUND" });
+        return rs;
+      }
+
+      const postIds = await ctx.prisma.post.findMany({
+        where: { createdById: ctx.session.user.id },
+        select: { id: true },
+      });
+      if (!postIds) throw new TRPCError({ code: "NOT_FOUND" });
+
+      const rs = await ctx.prisma.relationShip.findMany({
+        where: {
+          isMatch: true,
+          postId: {
+            in: postIds.map((postObj) => {
+              return postObj.id;
+            }),
+          },
+        },
+        include: {
+          user: true,
+        },
+      });
+      if (!rs) throw new TRPCError({ code: "NOT_FOUND" });
+
+      return rs;
+    },
+  ),
+  deleteMatch: protectedProcedure([Roles.TENANT, Roles.OWNER, Roles.AGENCY])
+    .input(z.object({ rsId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const rs = await ctx.prisma.relationShip.findUnique({
+        where: { id: input.rsId },
+      });
+      if (!rs) throw new TRPCError({ code: "NOT_FOUND" });
+
+      return await ctx.prisma.relationShip.delete({ where: { id: rs.id } });
+    }),
+  getLike: protectedProcedure([Roles.TENANT, Roles.OWNER, Roles.AGENCY]).query(
+    async ({ ctx }) => {
+      const user = await ctx.prisma.user.findUnique({
+        where: { id: ctx.session.user.id },
+        select: { isPremium: true },
+      });
+      if (!user) throw new TRPCError({ code: "NOT_FOUND" });
+
+      if (ctx.session.user.role == Roles.TENANT) {
+        const rs = await ctx.prisma.relationShip.findMany({
+          where: { isMatch: false, userId: ctx.session.user.id },
+          include: {
+            post: {
+              include: {
+                createdBy: true,
+              },
+            },
+          },
+        });
+        if (!rs) throw new TRPCError({ code: "NOT_FOUND" });
+
+        if (!user.isPremium) {
+          return rs.length;
+        }
+        return rs;
+      }
+
+      const postIds = await ctx.prisma.post.findMany({
+        where: { createdById: ctx.session.user.id },
+        select: { id: true },
+      });
+      if (!postIds) throw new TRPCError({ code: "NOT_FOUND" });
+
+      const rs = await ctx.prisma.relationShip.findMany({
+        where: {
+          isMatch: false,
+          postId: {
+            in: postIds.map((postObj) => {
+              return postObj.id;
+            }),
+          },
+        },
+        include: {
+          user: true,
+        },
+      });
+      if (!rs) throw new TRPCError({ code: "NOT_FOUND" });
+
+      if (!user.isPremium) {
+        return rs.length;
+      }
+      return rs;
+    },
+  ),
 });

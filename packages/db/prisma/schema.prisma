@@ -175,11 +175,16 @@ model Attribute {
 
   location String?
 
+  // Only Tenant
   maxPrice Int?
   minPrice Int?
 
   maxSize Int?
   minSize Int?
+
+  // Only Owner and Agency
+  price Int?
+  size Int?
 
   rentStartDate DateTime?
   rentEndDate   DateTime?

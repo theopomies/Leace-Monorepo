@@ -75,7 +75,10 @@ export const postRouter = router({
   getPost: protectedProcedure([Roles.TENANT])
     .input(z.string())
     .query(({ ctx, input }) => {
-      return ctx.prisma.post.findUniqueOrThrow({ where: { id: input } });
+      return ctx.prisma.post.findUniqueOrThrow({
+        where: { id: input },
+        include: {},
+      });
     }),
   getMyPost: protectedProcedure([Roles.AGENCY, Roles.OWNER])
     .input(z.enum([PostType.RENTED, PostType.TO_BE_RENTED]).optional())
@@ -89,4 +92,31 @@ export const postRouter = router({
         where: { createdById: ctx.session.user.id, type: input },
       });
     }),
+  getRentIncome: protectedProcedure([Roles.AGENCY, Roles.OWNER]).query(
+    async ({ ctx }) => {
+      const posts = await ctx.prisma.post.findMany({
+        where: { createdById: ctx.session.user.id, type: PostType.RENTED },
+        include: { attribute: true },
+      });
+      if (!posts) throw new TRPCError({ code: "NOT_FOUND" });
+      let total = 0;
+      posts.map((post) => {
+        if (post.attribute && post.attribute.price)
+          total += post.attribute.price;
+      });
+      return total;
+    },
+  ),
+  getRentExpense: protectedProcedure([Roles.TENANT]).query(async ({ ctx }) => {
+    const rs = await ctx.prisma.relationShip.findMany({
+      where: { userId: ctx.session.user.id, isMatch: true },
+      include: { post: { include: { attribute: true } } },
+    });
+    let total = 0;
+    rs.map((rs) => {
+      if (rs.post && rs.post.attribute && rs.post.attribute.price)
+        total += rs.post.attribute.price;
+    });
+    return total;
+  }),
 });
