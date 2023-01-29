@@ -80,32 +80,26 @@ const DocValidationModal = (props: {
 
 const DocValidation = (props: { userId: string }) => {
   const [showModal, setShowModal] = useState(false);
-  const [document, setDocument] = useState({
-    id: "",
-    url: "",
-    valid: false,
-    ext: "",
-  });
 
   const { data: documents, refetch: refetchDocuments } =
     trpc.document.GetSignedUserUrl.useQuery(props.userId);
 
-  if (documents && documents.length > 0) console.log(documents[0]);
+  const { data: pdfLogo } = trpc.document.GetSignedAssetUrl.useQuery({
+    name: "pdfLogo.jpg",
+  });
+
   return (
     <div className="flex justify-center gap-4">
       {documents && documents.length > 0 ? (
         documents.map((doc, index) => (
           <div key={index} className="relative">
-            {doc.ext === "pdf" ? (
+            {doc.ext === "pdf" && pdfLogo ? (
               <img
-                src="https://thesoftwarepro.com/wp-content/uploads/2019/12/microsoft-office-pdf-document-953x1024.jpg"
+                src={pdfLogo}
                 referrerPolicy="no-referrer"
                 alt="document"
                 className="w-32 cursor-pointer shadow-xl"
-                onClick={() => {
-                  setDocument(doc);
-                  setShowModal(true);
-                }}
+                onClick={() => setShowModal(true)}
               />
             ) : (
               <img
@@ -113,10 +107,7 @@ const DocValidation = (props: { userId: string }) => {
                 referrerPolicy="no-referrer"
                 alt="document"
                 className="w-32 cursor-pointer shadow-xl"
-                onClick={() => {
-                  setDocument(doc);
-                  setShowModal(true);
-                }}
+                onClick={() => setShowModal(true)}
               />
             )}
             {doc.valid ? (
@@ -154,17 +145,17 @@ const DocValidation = (props: { userId: string }) => {
                 </svg>
               </div>
             )}
+            {showModal && (
+              <DocValidationModal
+                document={doc}
+                setShowModal={setShowModal}
+                refetchDocuments={refetchDocuments}
+              />
+            )}
           </div>
         ))
       ) : (
         <p>Aucun document</p>
-      )}
-      {showModal && (
-        <DocValidationModal
-          document={document}
-          setShowModal={setShowModal}
-          refetchDocuments={refetchDocuments}
-        />
       )}
     </div>
   );

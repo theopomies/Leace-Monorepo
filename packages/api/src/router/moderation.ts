@@ -100,7 +100,14 @@ export const moderationRouter = router({
         valid: z.boolean(),
       }),
     )
-    .mutation(({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
+      const documents = await ctx.prisma.document.findUnique({
+        where: {
+          id: input.id,
+        },
+      });
+      if (!documents) throw new TRPCError({ code: "NOT_FOUND" });
+
       return ctx.prisma.document.update({
         where: { id: input.id },
         data: { valid: input.valid },

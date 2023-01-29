@@ -177,4 +177,15 @@ export const documentRouter = router({
 
       return await getSignedUrl(ctx.s3Client, command);
     }),
+  GetSignedAssetUrl: protectedProcedure()
+    .input(z.object({ name: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const bucketParams = {
+        Bucket: "leaceawsbucket",
+        Key: `assets/${input.name}`,
+      };
+      const command = new GetObjectCommand(bucketParams);
+
+      return await getSignedUrl(ctx.s3Client, command);
+    }),
 });
