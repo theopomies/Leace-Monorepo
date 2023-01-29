@@ -2,12 +2,14 @@ import { getServerSession, type Session } from "@leace/auth";
 import { prisma } from "@leace/db";
 import { type inferAsyncReturnType } from "@trpc/server";
 import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
+import { S3Client } from "@aws-sdk/client-s3";
 
 /**
  * Replace this with an object if you want to pass things to createContextInner
  */
 type CreateContextOptions = {
   session: Session | null;
+  s3Client: S3Client;
 };
 
 /** Use this helper for:
@@ -19,6 +21,7 @@ export const createContextInner = async (opts: CreateContextOptions) => {
   return {
     session: opts.session,
     prisma,
+    s3Client: opts.s3Client,
   };
 };
 
@@ -28,9 +31,18 @@ export const createContextInner = async (opts: CreateContextOptions) => {
  **/
 export const createContext = async (opts: CreateNextContextOptions) => {
   const session = await getServerSession(opts);
+  const s3Client = new S3Client({
+    region: "eu-west-3",
+    apiVersion: "2006-03-01",
+    credentials: {
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID || "",
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || "",
+    },
+  });
 
   return await createContextInner({
     session,
+    s3Client,
   });
 };
 
