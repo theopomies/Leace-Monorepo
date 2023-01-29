@@ -197,8 +197,30 @@ export const relationShipRouter = router({
   deleteMatch: protectedProcedure([Roles.TENANT, Roles.OWNER, Roles.AGENCY])
     .input(z.object({ rsId: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const rs = await ctx.prisma.relationShip.findUnique({
-        where: { id: input.rsId },
+      if (ctx.session.user.role == Roles.TENANT) {
+        const rs = await ctx.prisma.relationShip.findFirst({
+          where: { id: input.rsId, userId: ctx.session.user.id, isMatch: true },
+        });
+        if (!rs) throw new TRPCError({ code: "NOT_FOUND" });
+        return await ctx.prisma.relationShip.delete({ where: { id: rs.id } });
+      }
+
+      const postIds = await ctx.prisma.post.findMany({
+        where: { createdById: ctx.session.user.id },
+        select: { id: true },
+      });
+      if (!postIds) throw new TRPCError({ code: "NOT_FOUND" });
+
+      const rs = await ctx.prisma.relationShip.findFirst({
+        where: {
+          isMatch: true,
+          id: input.rsId,
+          postId: {
+            in: postIds.map((postObj) => {
+              return postObj.id;
+            }),
+          },
+        },
       });
       if (!rs) throw new TRPCError({ code: "NOT_FOUND" });
 

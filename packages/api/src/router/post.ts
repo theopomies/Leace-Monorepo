@@ -1,6 +1,6 @@
 import { router, protectedProcedure } from "../trpc";
 import { z } from "zod";
-import { PostType, Roles } from "@prisma/client";
+import { ConversationType, PostType, Roles } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 
 export const postRouter = router({
@@ -75,10 +75,7 @@ export const postRouter = router({
   getPost: protectedProcedure([Roles.TENANT])
     .input(z.string())
     .query(({ ctx, input }) => {
-      return ctx.prisma.post.findUniqueOrThrow({
-        where: { id: input },
-        include: {},
-      });
+      return ctx.prisma.post.findUniqueOrThrow({ where: { id: input } });
     }),
   getMyPost: protectedProcedure([Roles.AGENCY, Roles.OWNER])
     .input(z.enum([PostType.RENTED, PostType.TO_BE_RENTED]).optional())
@@ -109,7 +106,12 @@ export const postRouter = router({
   ),
   getRentExpense: protectedProcedure([Roles.TENANT]).query(async ({ ctx }) => {
     const rs = await ctx.prisma.relationShip.findMany({
-      where: { userId: ctx.session.user.id, isMatch: true },
+      where: {
+        userId: ctx.session.user.id,
+        isMatch: true,
+        post: { type: PostType.RENTED },
+        conversation: { type: ConversationType.DONE },
+      },
       include: { post: { include: { attribute: true } } },
     });
     let total = 0;
