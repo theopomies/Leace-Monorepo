@@ -235,6 +235,7 @@ model Document {
   ext String
   user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String?
+  valid  Boolean @default(false)
 
   post   Post?   @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId String?

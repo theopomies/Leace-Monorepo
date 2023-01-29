@@ -36,7 +36,7 @@ export const documentRouter = router({
     }),
   GetSignedUserUrl: protectedProcedure()
     .input(z.string().optional())
-    .mutation(async ({ ctx, input }) => {
+    .query(async ({ ctx, input }) => {
       const userId = input ? input : ctx.session.user.id;
 
       const documents = await ctx.prisma.document.findMany({
@@ -54,7 +54,10 @@ export const documentRouter = router({
           };
           const command = new GetObjectCommand(bucketParams);
 
-          return await getSignedUrl(ctx.s3Client, command);
+          return {
+            ...document,
+            url: await getSignedUrl(ctx.s3Client, command),
+          };
         }),
       );
     }),
@@ -115,7 +118,7 @@ export const documentRouter = router({
     }),
   GetSignedPostUrl: protectedProcedure()
     .input(z.string())
-    .mutation(async ({ ctx, input }) => {
+    .query(async ({ ctx, input }) => {
       const getPost = await ctx.prisma.post.findUnique({
         where: { id: input },
       });
@@ -135,7 +138,10 @@ export const documentRouter = router({
             Key: `${getPost.id}/documents/${document.id}.${document.ext}`,
           };
           const command = new GetObjectCommand(bucketParams);
-          return await getSignedUrl(ctx.s3Client, command);
+          return {
+            ...document,
+            url: await getSignedUrl(ctx.s3Client, command),
+          };
         }),
       );
     }),
