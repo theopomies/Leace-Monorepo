@@ -2,22 +2,55 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-    provider        = "prisma-client-js"
-    previewFeatures = ["referentialIntegrity"] // TODO: Remove when possible ?
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"] // TODO: Remove when possible ?
 }
 
 datasource db {
-    provider     = "mysql"
-    url          = env("DATABASE_URL")
-    relationMode = "prisma"
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
-model Post {
-    id      String @id @default(cuid())
-    title   String
-    content String
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  BANNED
+}
 
-    @@map("posts")
+enum ReportReason {
+  SPAM
+  INAPPROPRIATE
+  SCAM
+  OTHER
+}
+
+enum ReportStatus {
+  PENDING
+  RESOLVED
+  REJECTED
+}
+
+enum ConversationType {
+  NONE
+  TENANT
+  OWNER
+  AGENCY
+  DONE
+}
+
+enum Roles {
+  NONE
+  TENANT
+  OWNER
+  AGENCY
+  MODERATOR
+  ADMIN
+}
+
+enum PostType {
+  RENTED
+  TO_BE_RENTED
 }
 
 // NextAuth.js Models
@@ -25,56 +58,272 @@ model Post {
 // uncomment the @db.Text annotations below
 // @see https://next-auth.js.org/schemas/models
 model Account {
-    id                String  @id @default(cuid())
-    userId            String
-    type              String
-    provider          String
-    providerAccountId String
-    refresh_token     String? @db.Text
-    access_token      String? @db.Text
-    expires_at        Int?
-    token_type        String?
-    scope             String?
-    id_token          String? @db.Text
-    session_state     String?
-    user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id String @id @default(cuid())
 
-    @@unique([provider, providerAccountId])
-    @@index([userId])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
 
-    @@map("accounts")
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+  @@map("accounts")
 }
 
 model Session {
-    id           String   @id @default(cuid())
-    sessionToken String   @unique
-    userId       String
-    expires      DateTime
-    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id String @id @default(cuid())
 
-    @@index([userId])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
 
-    @@map("sessions")
-}
+  sessionToken String   @unique
+  expires      DateTime
 
-model User {
-    id            String    @id @default(cuid())
-    name          String?
-    email         String?   @unique
-    emailVerified DateTime?
-    image         String?
-    accounts      Account[]
-    sessions      Session[]
-
-    @@map("users")
+  @@index([userId])
+  @@map("sessions")
 }
 
 model VerificationToken {
-    identifier String
-    token      String   @unique
-    expires    DateTime
+  identifier String
+  token      String   @unique
+  expires    DateTime
 
-    @@unique([identifier, token])
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
 
-    @@map("verification_tokens")
+model User {
+  id   String @id @default(cuid())
+  role Roles  @default(NONE)
+
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  sessions      Session[]
+  accounts      Account[]
+
+  firstName   String?
+  lastName    String?
+  phoneNumber String?     @unique
+  country     String?
+  description String?
+  birthDate   DateTime?
+  status      UserStatus? @default(INACTIVE)
+  isPremium   Boolean?    @default(false)
+
+  attribute Attribute?
+
+  posts         Post[]
+  images        Image[] // Not necessary one picture look Ok for users, just post can have more than one pictures. To discuss
+  documents     Document[]
+  relationShips RelationShip[]
+  messages      Message[]
+
+  reports        Report[] @relation("reported")
+  reportsCreated Report[] @relation("reports_created")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model Post {
+  id String @id @default(cuid())
+
+  createdBy   User   @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  createdById String
+
+  title   String?
+  content String?
+  desc    String?
+  type    PostType? @default(TO_BE_RENTED)
+
+  attribute Attribute?
+
+  images    Image[]
+  documents Document[]
+
+  reports       Report[]
+  relationShips RelationShip[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([createdById])
+  @@map("posts")
+}
+
+model Attribute {
+  id String @id @default(cuid())
+
+  user   User?   @relation(fields: [userId], references: [id])
+  userId String? @unique
+
+  post   Post?   @relation(fields: [postId], references: [id])
+  postId String? @unique
+
+  location String?
+
+  // Only Tenant
+  maxPrice Int?
+  minPrice Int?
+
+  maxSize Int?
+  minSize Int?
+
+  // Only Owner and Agency
+  price Int?
+  size Int?
+
+  rentStartDate DateTime?
+  rentEndDate   DateTime?
+
+  furnished  Boolean?
+  house      Boolean?
+  appartment Boolean?
+  terrace    Boolean?
+  pets       Boolean?
+  smoker     Boolean?
+  disability Boolean?
+  garden     Boolean?
+  parking    Boolean?
+  elevator   Boolean?
+  pool       Boolean?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([postId])
+  @@map("attributes")
+}
+
+model Report {
+  id String @id @default(cuid())
+
+  createdBy   User   @relation(fields: [createdById], references: [id], "reports_created", onDelete: Cascade)
+  createdById String
+
+  user   User?   @relation(fields: [userId], references: [id], "reported", onDelete: Cascade)
+  userId String?
+
+  post   Post?   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId String?
+
+  reason ReportReason?
+  desc   String?
+  status ReportStatus? @default(PENDING)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([postId])
+  @@index([createdById])
+  @@map("reports")
+}
+
+model Document {
+  id String @id @default(cuid())
+
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String?
+
+  post   Post?   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId String?
+
+  valid  Boolean @default(false)
+  ext String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([postId])
+  @@map("documents")
+}
+
+model Image {
+  id String @id @default(cuid())
+
+  ext String
+
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String?
+
+  post   Post?   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([postId])
+  @@map("pictures")
+}
+
+model RelationShip {
+  id String @id @default(cuid())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId String
+
+  isMatch      Boolean? @default(false)
+  conversation Conversation?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([postId])
+  @@map("relationships")
+}
+
+model Conversation {
+  id String @id @default(cuid())
+
+  rs         RelationShip? @relation(fields: [relationId], references: [id], onDelete: Cascade)
+  relationId String?       @unique
+
+  type     ConversationType? @default(NONE)
+  messages Message[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([relationId])
+  @@map("conversations")
+}
+
+model Message {
+  id String @id @default(cuid())
+
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  conversationId String
+
+  sender   User   @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  senderId String
+
+  content String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([conversationId])
+  @@index([senderId])
+  @@map("messages")
 }
