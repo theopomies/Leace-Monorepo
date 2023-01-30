@@ -37,6 +37,8 @@ export const conversationRouter = router({
         throw new TRPCError({ code: "BAD_REQUEST" });
 
       const type = conversation.type;
+      if (type != ConversationType.TENANT && type != ConversationType.NONE)
+        throw new TRPCError({ code: "BAD_REQUEST" });
       if (type == ConversationType.TENANT) {
         await ctx.prisma.conversation.update({
           where: { id: conversation.id },
@@ -48,21 +50,20 @@ export const conversationRouter = router({
             type: PostType.RENTED,
           },
         });
-      } else if (type == ConversationType.NONE) {
-        const userType = ctx.session.user.role;
-
-        await ctx.prisma.conversation.update({
-          where: { id: conversation.id },
-          data: {
-            type:
-              userType == Roles.AGENCY
-                ? ConversationType.AGENCY
-                : ConversationType.OWNER,
-          },
-        });
-      } else {
-        throw new TRPCError({ code: "BAD_REQUEST" });
+        return;
       }
+
+      const userType = ctx.session.user.role;
+
+      await ctx.prisma.conversation.update({
+        where: { id: conversation.id },
+        data: {
+          type:
+            userType == Roles.AGENCY
+              ? ConversationType.AGENCY
+              : ConversationType.OWNER,
+        },
+      });
     }),
   sendDealToPost: protectedProcedure([Roles.TENANT])
     .input(
@@ -97,30 +98,32 @@ export const conversationRouter = router({
         throw new TRPCError({ code: "BAD_REQUEST" });
 
       const type = conversation.type;
+      if (
+        type != ConversationType.NONE &&
+        type != ConversationType.TENANT &&
+        type != ConversationType.AGENCY
+      )
+        throw new TRPCError({ code: "BAD_REQUEST" });
+
       if (type == ConversationType.NONE) {
         await ctx.prisma.conversation.update({
           where: { id: conversation.id },
           data: { type: ConversationType.TENANT },
         });
-      } else if (
-        type == ConversationType.TENANT ||
-        type == ConversationType.AGENCY
-      ) {
-        await ctx.prisma.conversation.update({
-          where: { id: conversation.id },
-          data: {
-            type: ConversationType.DONE,
-          },
-        });
-        await ctx.prisma.post.update({
-          where: { id: relationShip.postId },
-          data: {
-            type: PostType.RENTED,
-          },
-        });
-      } else {
-        throw new TRPCError({ code: "BAD_REQUEST" });
+        return;
       }
+      await ctx.prisma.conversation.update({
+        where: { id: conversation.id },
+        data: {
+          type: ConversationType.DONE,
+        },
+      });
+      await ctx.prisma.post.update({
+        where: { id: relationShip.postId },
+        data: {
+          type: PostType.RENTED,
+        },
+      });
     }),
   cancelDeal: protectedProcedure([Roles.AGENCY, Roles.OWNER, Roles.TENANT])
     .input(z.object({ conversationId: z.string() }))
@@ -154,25 +157,27 @@ export const conversationRouter = router({
       }
 
       if (
-        (conversation.type == ConversationType.TENANT &&
-          ctx.session.user.role == Roles.TENANT) ||
-        (conversation.type == ConversationType.AGENCY &&
-          ctx.session.user.role == Roles.AGENCY) ||
-        (conversation.type == ConversationType.OWNER &&
-          ctx.session.user.role == Roles.OWNER)
-      ) {
-        await ctx.prisma.conversation.update({
-          where: { id: conversation.id },
-          data: { type: ConversationType.NONE },
-        });
-      } else if (
         conversation.type == ConversationType.DONE ||
         conversation.type == ConversationType.NONE
       ) {
         throw new TRPCError({ code: "BAD_REQUEST" });
-      } else {
+      }
+
+      if (
+        (conversation.type == ConversationType.TENANT &&
+          ctx.session.user.role != Roles.TENANT) ||
+        (conversation.type == ConversationType.AGENCY &&
+          ctx.session.user.role != Roles.AGENCY) ||
+        (conversation.type == ConversationType.OWNER &&
+          ctx.session.user.role != Roles.OWNER)
+      ) {
         throw new TRPCError({ code: "FORBIDDEN" });
       }
+
+      await ctx.prisma.conversation.update({
+        where: { id: conversation.id },
+        data: { type: ConversationType.NONE },
+      });
     }),
   sendMessage: protectedProcedure([Roles.AGENCY, Roles.OWNER, Roles.TENANT])
     .input(z.object({ conversationId: z.string(), content: z.string() }))
