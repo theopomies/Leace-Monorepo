@@ -31,8 +31,8 @@ export function StackElement({
   return (
     <motion.div
       layout
-      data-isExpanded={isExpanded}
-      className="relative flex w-96 flex-col items-center gap-4 rounded-md bg-white p-2 shadow-lg [&[data-isExpanded=true]]:min-h-[90vh] [&[data-isExpanded=true]]:w-[90%]"
+      data-isexpanded={isExpanded}
+      className="relative flex w-96 flex-col items-center gap-4 rounded-md bg-white p-2 shadow-lg [&[data-isexpanded=true]]:min-h-[90vh] [&[data-isexpanded=true]]:w-[90%]"
     >
       {isExpanded && (
         <span className="absolute bottom-3 right-4">

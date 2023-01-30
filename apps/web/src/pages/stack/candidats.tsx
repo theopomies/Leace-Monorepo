@@ -8,7 +8,7 @@ const defaultPosts: StackElementProps[] = [];
 for (let i = 0; i < 10; i++) {
   defaultPosts.push({
     id: "" + i,
-    img: "/sample_image.avif",
+    img: "/appart.jpg",
     title: "Candidat " + i,
     age: 22,
     description:
