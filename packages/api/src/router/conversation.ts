@@ -28,10 +28,12 @@ export const conversationRouter = router({
         where: { id: relationShip.postId },
       });
 
-      if (post?.createdById != ctx.session.user.id)
+      if (!post) throw new TRPCError({ code: "NOT_FOUND" });
+
+      if (post.createdById != ctx.session.user.id)
         throw new TRPCError({ code: "FORBIDDEN" });
 
-      if (post?.type != PostType.TO_BE_RENTED)
+      if (post.type != PostType.TO_BE_RENTED)
         throw new TRPCError({ code: "BAD_REQUEST" });
 
       const type = conversation.type;
@@ -88,7 +90,10 @@ export const conversationRouter = router({
       const post = await ctx.prisma.post.findUnique({
         where: { id: relationShip.postId },
       });
-      if (post?.type != PostType.TO_BE_RENTED)
+
+      if (!post) throw new TRPCError({ code: "NOT_FOUND" });
+
+      if (post.type != PostType.TO_BE_RENTED)
         throw new TRPCError({ code: "BAD_REQUEST" });
 
       const type = conversation.type;
@@ -142,7 +147,8 @@ export const conversationRouter = router({
         if (!post) throw new TRPCError({ code: "NOT_FOUND" });
         if (post.createdById != ctx.session.user.id)
           throw new TRPCError({ code: "FORBIDDEN" });
-      } else if (ctx.session.user.role == Roles.TENANT) {
+      }
+      if (ctx.session.user.role == Roles.TENANT) {
         if (relationShip.userId != ctx.session.user.id)
           throw new TRPCError({ code: "FORBIDDEN" });
       }
@@ -193,7 +199,8 @@ export const conversationRouter = router({
         if (!post) throw new TRPCError({ code: "NOT_FOUND" });
         if (post.createdById != ctx.session.user.id)
           throw new TRPCError({ code: "FORBIDDEN" });
-      } else if (ctx.session.user.role == Roles.TENANT) {
+      }
+      if (ctx.session.user.role == Roles.TENANT) {
         if (relationShip.userId != ctx.session.user.id)
           throw new TRPCError({ code: "FORBIDDEN" });
       }
@@ -231,7 +238,8 @@ export const conversationRouter = router({
         if (!post) throw new TRPCError({ code: "NOT_FOUND" });
         if (post.createdById != ctx.session.user.id)
           throw new TRPCError({ code: "FORBIDDEN" });
-      } else if (ctx.session.user.role == Roles.TENANT) {
+      }
+      if (ctx.session.user.role == Roles.TENANT) {
         if (relationShip.userId != ctx.session.user.id)
           throw new TRPCError({ code: "FORBIDDEN" });
       }
@@ -276,7 +284,8 @@ export const conversationRouter = router({
         if (!post) throw new TRPCError({ code: "NOT_FOUND" });
         if (post.createdById != ctx.session.user.id)
           throw new TRPCError({ code: "FORBIDDEN" });
-      } else if (ctx.session.user.role == Roles.TENANT) {
+      }
+      if (ctx.session.user.role == Roles.TENANT) {
         if (relationShip.userId != ctx.session.user.id)
           throw new TRPCError({ code: "FORBIDDEN" });
       }
@@ -316,7 +325,8 @@ export const conversationRouter = router({
         if (!post) throw new TRPCError({ code: "NOT_FOUND" });
         if (post.createdById != ctx.session.user.id)
           throw new TRPCError({ code: "FORBIDDEN" });
-      } else if (ctx.session.user.role == Roles.TENANT) {
+      }
+      if (ctx.session.user.role == Roles.TENANT) {
         if (relationShip.userId != ctx.session.user.id)
           throw new TRPCError({ code: "FORBIDDEN" });
       }
