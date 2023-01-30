@@ -1,14 +1,17 @@
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
-import { User, Image, Report } from "@prisma/client";
+import { User, Report } from "@prisma/client";
 import { DeleteImgButton } from "./deleteImgButton";
+import { trpc } from "../utils/trpc";
+import DocValidation from "./docValidation";
 
 const Profile = (props: {
   user: User & {
-    images: Image[];
     reports: Report[];
   };
 }) => {
+  const { data: images } = trpc.image.GetSignedUserUrl.useQuery(props.user.id);
+
   const displayDate = (date: Date) => {
     return (
       (date.getDate() < 10 ? "0" + date.getDate() : date.getDate()) +
@@ -70,23 +73,21 @@ const Profile = (props: {
             ? props.user.description
             : "Pas de description"}
         </p>
-        {props.user.images.length > 0 && (
+        {images && images.length > 0 ? (
           <div className="mt-10 flex flex-wrap justify-center gap-4">
-            {props.user.images.map((image, index) =>
-              image ? (
-                <div key={index} className="relative">
-                  <img
-                    src={image.url}
-                    alt="image"
-                    className="mx-auto h-32 shadow-xl"
-                  />
-                  <DeleteImgButton userId={props.user.id} id={image.id} />
-                </div>
-              ) : (
-                <p>Aucune image</p>
-              ),
-            )}
+            {images.map((image, index) => (
+              <div key={index} className="relative">
+                <img
+                  src={image.url}
+                  alt="image"
+                  className="mx-auto h-32 shadow-xl"
+                />
+                <DeleteImgButton userId={props.user.id} id={image.id} />
+              </div>
+            ))}
           </div>
+        ) : (
+          <p>Aucune image</p>
         )}
       </div>
       {props.user.reports.length > 0 && (
@@ -103,6 +104,7 @@ const Profile = (props: {
           </div>
         </div>
       )}
+      <DocValidation userId={props.user.id} />
     </div>
   );
 };

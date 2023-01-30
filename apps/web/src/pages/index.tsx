@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import type { NextPage } from "next";
 import Head from "next/head";
 import { signOut } from "next-auth/react";
@@ -5,6 +6,7 @@ import { trpc } from "../utils/trpc";
 import type { inferProcedureOutput } from "@trpc/server";
 import type { AppRouter } from "@leace/api";
 import Link from "next/link";
+import axios from "axios";
 
 const PostCard: React.FC<{
   post: inferProcedureOutput<AppRouter["post"]["getAllPost"]>[number];
@@ -61,6 +63,31 @@ const AuthShowcase: React.FC = () => {
     { enabled: !!session?.user },
   );
 
+  const mut = trpc.image.PutSignedUserUrl.useMutation();
+  const handleFileSelect = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    if (!event.target.files?.[0]) return;
+    const file = event.target.files[0];
+    await mut.mutateAsync({ fileType: file.type }).then(async (url) => {
+      await axios.put(url, file);
+      refetchImages();
+    });
+  };
+
+  const mut2 = trpc.image.DeleteSignedUserUrl.useMutation();
+  const OnclickDelete = async () => {
+    if (images && images[0]) {
+      await mut2.mutateAsync(images[0].id).then(async (url) => {
+        await axios.delete(url);
+        refetchImages();
+      });
+    }
+  };
+
+  const { data: images, refetch: refetchImages } =
+    trpc.image.GetSignedUserUrl.useQuery();
+
   return (
     <div className="flex flex-col items-center justify-center gap-4">
       {session?.user && (
@@ -90,6 +117,21 @@ const AuthShowcase: React.FC = () => {
         >
           {"Moderation"}
         </Link>
+      )}
+      <input type="file" onChange={handleFileSelect} />
+      <button
+        className="ml-2 rounded-full bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700"
+        onClick={OnclickDelete}
+      />
+      {images && images[0] ? (
+        <img
+          src={images[0].url}
+          referrerPolicy="no-referrer"
+          alt="image"
+          className="mx-auto h-32 rounded-full shadow-xl"
+        />
+      ) : (
+        <></>
       )}
     </div>
   );

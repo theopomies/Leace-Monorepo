@@ -1,6 +1,5 @@
 import { UserStatus } from "@prisma/client";
 import { UnBanButton, BanButton } from "../../components/banButton";
-import { DeleteAllImgButton } from "../../components/deleteImgButton";
 import Loader from "../../components/loader";
 import Profile from "../../components/profile";
 import ReportButton from "../../components/reportButton";
@@ -29,9 +28,6 @@ const Moderation = () => {
             <UnBanButton userId={report.data.createdBy.id} />
           ) : (
             <BanButton userId={report.data.createdBy.id} />
-          )}
-          {report.data.createdBy.images.length > 0 && (
-            <DeleteAllImgButton userId={report.data.createdBy.id} />
           )}
         </div>
       </div>

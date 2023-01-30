@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 
 const ModNavBar = () => {
@@ -8,21 +9,21 @@ const ModNavBar = () => {
           <div className="flex items-center">
             <ul className="mt-0 mr-6 flex flex-row space-x-8 text-sm font-medium">
               <li>
-                <a
+                <Link
                   href="/moderation/moderation"
                   className="text-gray-900 hover:underline dark:text-white"
                   aria-current="page"
                 >
                   Modération
-                </a>
+                </Link>
               </li>
               <li>
-                <a
+                <Link
                   href="/moderation/admin"
                   className="text-gray-900 hover:underline dark:text-white"
                 >
                   Administation
-                </a>
+                </Link>
               </li>
             </ul>
           </div>

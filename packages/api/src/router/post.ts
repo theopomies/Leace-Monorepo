@@ -1,6 +1,6 @@
 import { router, protectedProcedure } from "../trpc";
 import { z } from "zod";
-import { PostType, Roles } from "@prisma/client";
+import { ConversationType, PostType, Roles } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 
 export const postRouter = router({
@@ -22,6 +22,7 @@ export const postRouter = router({
           type: PostType.TO_BE_RENTED,
         },
       });
+      if (!getPost) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
       const att = await ctx.prisma.attribute.create({
         data: {
           postId: getPost.id,
@@ -88,4 +89,36 @@ export const postRouter = router({
         where: { createdById: ctx.session.user.id, type: input },
       });
     }),
+  getRentIncome: protectedProcedure([Roles.AGENCY, Roles.OWNER]).query(
+    async ({ ctx }) => {
+      const posts = await ctx.prisma.post.findMany({
+        where: { createdById: ctx.session.user.id, type: PostType.RENTED },
+        include: { attribute: true },
+      });
+      if (!posts) throw new TRPCError({ code: "NOT_FOUND" });
+      let total = 0;
+      posts.map((post) => {
+        if (post.attribute && post.attribute.price)
+          total += post.attribute.price;
+      });
+      return total;
+    },
+  ),
+  getRentExpense: protectedProcedure([Roles.TENANT]).query(async ({ ctx }) => {
+    const rs = await ctx.prisma.relationShip.findMany({
+      where: {
+        userId: ctx.session.user.id,
+        isMatch: true,
+        post: { type: PostType.RENTED },
+        conversation: { type: ConversationType.DONE },
+      },
+      include: { post: { include: { attribute: true } } },
+    });
+    let total = 0;
+    rs.map((rs) => {
+      if (rs.post && rs.post.attribute && rs.post.attribute.price)
+        total += rs.post.attribute.price;
+    });
+    return total;
+  }),
 });
