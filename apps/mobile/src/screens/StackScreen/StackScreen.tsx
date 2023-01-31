@@ -1,12 +1,15 @@
-import { View, Text, ScrollView } from 'react-native'
+import { View, ScrollView } from 'react-native'
 import React from 'react'
 
 
+import { Report } from '../../components/Report/Report'
+
 export const StackScreen = () => {
+
   return (
     <ScrollView>
       <View>
-        <Text>StackScreen</Text>
+        <Report cond={true} />
       </View>
     </ScrollView>
   )

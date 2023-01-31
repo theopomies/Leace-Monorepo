@@ -5,7 +5,7 @@ import CarouselComp from 'react-native-snap-carousel';
 const SLIDER_WIDTH = Dimensions.get('window').width + 80
 const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.7)
 
-const CarouselItem = ({ item, index }) => {
+const CarouselItem = ({ item, index }: { item: string, index: number }) => {
     return (
         <View key={index}>
             <Image className="h-52 w-11/12 mb-5 ml-4" source={{ uri: item }}></Image>
@@ -13,14 +13,14 @@ const CarouselItem = ({ item, index }) => {
     );
 };
 
-export const Carousel = ({ value }) => {
+export const Carousel = ({ value }: { value: string[] }) => {
     const isCarousel = React.useRef(null);
 
     return (
         <View className="items-center" >
             <CarouselComp
                 layout="tinder"
-                layoutCardoffset={9}
+                layoutCardOffset={9}
                 ref={isCarousel}
                 data={value}
                 renderItem={CarouselItem}
