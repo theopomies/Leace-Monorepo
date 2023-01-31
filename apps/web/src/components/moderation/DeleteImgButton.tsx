@@ -1,5 +1,5 @@
 import axios from "axios";
-import { trpc } from "../utils/trpc";
+import { trpc } from "../../utils/trpc";
 
 export const DeleteImgButton = (props: { userId: string; id: string }) => {
   const utils = trpc.useContext();

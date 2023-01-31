@@ -25,6 +25,14 @@ const ModNavBar = () => {
                   Administation
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="/moderation/support"
+                  className="text-gray-900 hover:underline dark:text-white"
+                >
+                  Support
+                </Link>
+              </li>
             </ul>
           </div>
         </div>

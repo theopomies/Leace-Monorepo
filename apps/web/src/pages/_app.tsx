@@ -3,7 +3,7 @@ import "../styles/globals.css";
 import { SessionProvider } from "next-auth/react";
 import type { Session } from "next-auth";
 import type { AppType } from "next/app";
-import ModNavBar from "../components/modNavBar";
+import ModNavBar from "../components/moderation/ModNavBar";
 import { useRouter } from "next/router";
 
 import { trpc } from "../utils/trpc";

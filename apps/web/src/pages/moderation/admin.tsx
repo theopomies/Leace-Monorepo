@@ -1,9 +1,10 @@
 import { UserStatus } from "@prisma/client";
 import { useState } from "react";
-import { BanButton, UnBanButton } from "../../components/banButton";
-import Loader from "../../components/loader";
-import Profile from "../../components/profile";
-import Search from "../../components/search";
+import { BanButton, UnBanButton } from "../../components/moderation/BanButton";
+import Loader from "../../components/moderation/Loader";
+import Profile from "../../components/moderation/Profile";
+import RelationShipsModal from "../../components/moderation/RelationShipsModal";
+import Search from "../../components/moderation/Search";
 import { trpc } from "../../utils/trpc";
 
 const Admin = () => {
@@ -33,6 +34,7 @@ const Admin = () => {
             ) : (
               <BanButton userId={user.data.id} />
             )}
+            <RelationShipsModal userId={user.data.id} />
           </div>
         </div>
       </div>

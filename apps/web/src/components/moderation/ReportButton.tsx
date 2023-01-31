@@ -1,6 +1,6 @@
 import React from "react";
 import { ReportReason, ReportStatus } from "@prisma/client";
-import { trpc } from "../utils/trpc";
+import { trpc } from "../../utils/trpc";
 
 const ReportButton = (props: { reportId: string }) => {
   const [selected, setSelected] = React.useState<ReportReason>();

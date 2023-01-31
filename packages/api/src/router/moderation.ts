@@ -113,4 +113,65 @@ export const moderationRouter = router({
         data: { valid: input.valid },
       });
     }),
+  getMatch: protectedProcedure([Roles.ADMIN, Roles.MODERATOR])
+    .input(z.object({ id: z.string() }).optional())
+    .query(async ({ ctx, input }) => {
+      const user = await ctx.prisma.user.findUnique({
+        where: { id: input && input.id ? input.id : ctx.session.user.id },
+        select: { role: true, id: true },
+      });
+      if (!user) throw new TRPCError({ code: "NOT_FOUND" });
+
+      if (user.role === Roles.AGENCY || user.role === Roles.OWNER) {
+        const postIds = await ctx.prisma.post.findMany({
+          where: { createdById: user.id },
+          select: { id: true },
+        });
+        if (!postIds) throw new TRPCError({ code: "NOT_FOUND" });
+
+        const rs = await ctx.prisma.relationShip.findMany({
+          where: {
+            isMatch: true,
+            postId: {
+              in: postIds.map((postObj) => {
+                return postObj.id;
+              }),
+            },
+          },
+          include: {
+            post: {
+              include: {
+                createdBy: true,
+              },
+            },
+            user: true,
+            conversation: {
+              include: { messages: { include: { sender: true } } },
+            },
+          },
+        });
+        if (!rs) throw new TRPCError({ code: "NOT_FOUND" });
+
+        return rs;
+      }
+      const rs = await ctx.prisma.relationShip.findMany({
+        where: {
+          isMatch: true,
+          userId: user.id,
+        },
+        include: {
+          post: {
+            include: {
+              createdBy: true,
+            },
+          },
+          user: true,
+          conversation: {
+            include: { messages: { include: { sender: true } } },
+          },
+        },
+      });
+      if (!rs) throw new TRPCError({ code: "NOT_FOUND" });
+      return rs;
+    }),
 });
