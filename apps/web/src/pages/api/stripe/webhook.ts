@@ -22,7 +22,6 @@ export default async function handler(
   let event: Stripe.Event;
 
   try {
-    console.log("SECRET: " + process.env.STRIPE_WEBHOOK_SECRET!);
     event = stripe.webhooks.constructEvent(
       body,
       signature,
@@ -36,7 +35,14 @@ export default async function handler(
   const session = event.data.object as Stripe.Checkout.Session;
 
   if (event.type === "checkout.session.completed") {
-    console.log({ session });
+    if (!session.client_reference_id) {
+      return res.status(400).send(`Error with client_reference_id: ${session}`);
+    }
+    console.log(`${session.client_reference_id} is now a premium user!`);
+    await prisma.user.update({
+      where: { id: session.client_reference_id },
+      data: { isPremium: true },
+    });
   }
 
   return res.json({});
