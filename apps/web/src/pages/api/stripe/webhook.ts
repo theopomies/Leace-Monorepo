@@ -17,7 +17,7 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   const body = await rawBody(req);
-  const signature = req.headers["stripe-signature"]!;
+  const signature = req.headers["stripe-signature"] ?? "";
 
   let event: Stripe.Event;
 
@@ -25,8 +25,9 @@ export default async function handler(
     event = stripe.webhooks.constructEvent(
       body,
       signature,
-      process.env.STRIPE_WEBHOOK_SECRET!,
+      process.env.STRIPE_WEBHOOK_SECRET ?? "",
     );
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.log(error.message);
     return res.status(400).send(`Webhook Error: ${error.message}`);
