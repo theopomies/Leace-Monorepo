@@ -56,7 +56,7 @@ export default function Candidats() {
   };
 
   return (
-    <LoggedLayout>
+    <LoggedLayout title="Stack Candidats | Leace">
       <div className="flex w-full items-center justify-center">
         <Stack
           posts={posts}

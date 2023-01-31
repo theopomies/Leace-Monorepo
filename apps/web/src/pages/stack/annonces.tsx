@@ -59,7 +59,7 @@ export default function Annonces() {
   };
 
   return (
-    <LoggedLayout>
+    <LoggedLayout title="Stack Annonces | Leace">
       <div className="flex w-full items-center justify-center">
         <Stack
           posts={posts}
