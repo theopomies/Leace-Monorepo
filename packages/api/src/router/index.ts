@@ -8,6 +8,7 @@ import { moderationRouter } from "./moderation";
 import { relationShipRouter } from "./relationship";
 import { documentRouter } from "./document";
 import { imageRouter } from "./image";
+import { conversationRouter } from "./conversation";
 
 export const appRouter = router({
   auth: authRouter,
@@ -19,6 +20,7 @@ export const appRouter = router({
   relationShip: relationShipRouter,
   document: documentRouter,
   image: imageRouter,
+  conversation: conversationRouter,
 });
 
 // export type definition of API
