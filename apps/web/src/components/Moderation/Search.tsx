@@ -7,10 +7,16 @@ export interface SearchProps {
 export const Search = ({ setUid }: SearchProps) => {
   const [userId, setUserId] = useState("");
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setUid(userId);
+  };
+
   return (
     <div className="flex items-center justify-center px-96">
       <div className="flex w-full flex-col p-2 py-6">
-        <div
+        <form
+          onSubmit={handleSubmit}
           className="sticky mb-5 flex w-full items-center justify-between rounded-full bg-white p-2 shadow-lg"
           style={{ top: "5px" }}
         >
@@ -20,11 +26,8 @@ export const Search = ({ setUid }: SearchProps) => {
             placeholder="Search"
             onChange={(e) => setUserId(e.target.value)}
             value={userId}
-            onKeyDown={(e) => {
-              e.key === "Enter" && setUid(userId);
-            }}
           />
-          <button onClick={() => setUid(userId)}>
+          <button>
             <div className="mx-2 cursor-pointer rounded-full bg-gray-600 p-2 hover:bg-blue-400">
               <svg
                 className="h-6 w-6 text-white"
@@ -39,7 +42,7 @@ export const Search = ({ setUid }: SearchProps) => {
               </svg>
             </div>
           </button>
-        </div>
+        </form>
       </div>
     </div>
   );

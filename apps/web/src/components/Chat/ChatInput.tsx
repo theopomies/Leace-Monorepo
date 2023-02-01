@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { FormEventHandler, useState } from "react";
 import { trpc } from "../../utils/trpc";
 
 export interface ChatInputProps {
@@ -26,7 +26,8 @@ export const ChatInput = ({ conversationId }: ChatInputProps) => {
         },
       });
 
-  const handleSend = () => {
+  const handleSend: FormEventHandler<HTMLFormElement> = (e) => {
+    e.preventDefault();
     if (!input) return;
     mutation.mutate({
       conversationId: conversationId,
@@ -36,7 +37,10 @@ export const ChatInput = ({ conversationId }: ChatInputProps) => {
   };
 
   return (
-    <div className="mt-3 flex h-16 w-full flex-row items-center rounded-xl bg-white px-4">
+    <form
+      onSubmit={handleSend}
+      className="mt-3 flex h-16 w-full flex-row items-center rounded-xl bg-white px-4"
+    >
       <button className="flex items-center justify-center text-gray-400 hover:text-gray-600">
         <svg
           className="h-5 w-5"
@@ -58,9 +62,6 @@ export const ChatInput = ({ conversationId }: ChatInputProps) => {
           className="flex h-10 w-full rounded-xl border pl-4 focus:border-indigo-300 focus:outline-none"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => {
-            e.key === "Enter" && handleSend();
-          }}
         />
         <button className="absolute right-0 top-0 flex h-full w-12 items-center justify-center text-gray-400 hover:text-gray-600">
           <svg
@@ -78,10 +79,7 @@ export const ChatInput = ({ conversationId }: ChatInputProps) => {
           </svg>
         </button>
       </div>
-      <button
-        className="ml-4 flex flex-shrink-0 items-center justify-center rounded-xl bg-indigo-500 px-4 py-1 text-white hover:bg-indigo-600"
-        onClick={handleSend}
-      >
+      <button className="ml-4 flex flex-shrink-0 items-center justify-center rounded-xl bg-indigo-500 px-4 py-1 text-white hover:bg-indigo-600">
         <span>Envoyer</span>
         <span className="ml-2">
           <svg
@@ -99,6 +97,6 @@ export const ChatInput = ({ conversationId }: ChatInputProps) => {
           </svg>
         </span>
       </button>
-    </div>
+    </form>
   );
 };
