@@ -6,7 +6,7 @@ const links: {
   href: string;
   label: string;
   roles: Roles[];
-  premium?: boolean;
+  hidePremium?: boolean;
 }[] = [
   {
     href: "/",
@@ -24,7 +24,7 @@ const links: {
     roles: [Roles.OWNER, Roles.AGENCY, Roles.TENANT],
   },
   {
-    href: "#",
+    href: "/users/ProfilePage",
     label: "Profile",
     roles: [Roles.OWNER, Roles.AGENCY, Roles.TENANT],
   },
@@ -35,12 +35,14 @@ const links: {
   },
   {
     href: "/moderation",
-    label: "Modération",
+    label: "Moderation",
     roles: [Roles.ADMIN],
   },
   {
     href: "/premium",
     label: "Premium",
+    roles: [Roles.OWNER, Roles.AGENCY, Roles.TENANT],
+    hidePremium: true,
   },
 ];
 

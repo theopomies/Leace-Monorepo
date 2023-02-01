@@ -58,15 +58,13 @@ export function PostStack() {
   };
 
   return (
-    <LoggedLayout title="Stack Annonces | Leace">
-      <div className="flex w-full items-center justify-center">
-        <Stack
-          posts={posts}
-          onDislike={onDislike}
-          onLike={onLike}
-          onRewind={onRewind}
-        />
-      </div>
-    </LoggedLayout>
+    <div className="flex w-full items-center justify-center">
+      <Stack
+        posts={posts}
+        onDislike={onDislike}
+        onLike={onLike}
+        onRewind={onRewind}
+      />
+    </div>
   );
 }

@@ -8,17 +8,13 @@ const MatchPage = () => {
   const match = trpc.relationShip.getMatch.useQuery();
 
   return (
-    <div className="h-full bg-slate-100">
-      <LoggedLayout>
-        <div>
-          <Header heading={"Mes Matchs"} />
-          {match.data &&
-            match.data.map((match) => (
-              <MatchBar key={match.id} match={match} />
-            ))}
-        </div>
-      </LoggedLayout>
-    </div>
+    <LoggedLayout title="Match">
+      <div>
+        <Header heading={"Mes Matchs"} />
+        {match.data &&
+          match.data.map((match) => <MatchBar key={match.id} match={match} />)}
+      </div>
+    </LoggedLayout>
   );
 };
 

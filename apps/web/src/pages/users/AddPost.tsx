@@ -82,7 +82,7 @@ const AddPost = () => {
   ) {
     return (
       <div className="h-full bg-slate-100">
-        <LoggedLayout>
+        <LoggedLayout title="ADd post">
           <Header heading={"Création d'une annonce"} />
           <div className="flex justify-center p-5">
             <div className="m-14 flex w-2/5 justify-center rounded-lg bg-white p-5 shadow">
@@ -352,7 +352,7 @@ const AddPost = () => {
     return (
       <div className="h-full bg-slate-100">
         <Header heading={"Création d'une annonce"} />
-        <LoggedLayout>
+        <LoggedLayout title="pzkpiej">
           <div className="flex h-screen flex-col items-center justify-center text-center">
             <h1 className="text-4xl font-bold text-red-500">404 Not Found</h1>
             <p className="text-xl font-medium">

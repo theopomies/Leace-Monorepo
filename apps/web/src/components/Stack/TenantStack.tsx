@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Stack } from "../../components/Stack/Stack";
 import { StackElementProps } from "../../components/Stack/StackElement";
-import LoggedLayout from "../LoggedLayout";
 
 const defaultPosts: StackElementProps[] = [];
 
@@ -56,15 +55,13 @@ export function TenantStack() {
   };
 
   return (
-    <LoggedLayout title="Stack Candidats | Leace">
-      <div className="flex w-full items-center justify-center">
-        <Stack
-          posts={posts}
-          onDislike={onDislike}
-          onLike={onLike}
-          onRewind={onRewind}
-        />
-      </div>
-    </LoggedLayout>
+    <div className="flex w-full items-center justify-center">
+      <Stack
+        posts={posts}
+        onDislike={onDislike}
+        onLike={onLike}
+        onRewind={onRewind}
+      />
+    </div>
   );
 }
