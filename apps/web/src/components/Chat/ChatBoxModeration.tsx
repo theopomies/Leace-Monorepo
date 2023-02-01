@@ -20,6 +20,7 @@ export const ChatBoxModeration = ({
       messages={messages ?? []}
       conversationId={conversationId}
       {...rest}
+      isModeration
     />
   );
 };

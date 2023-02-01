@@ -1,38 +1,16 @@
-import { useRouter } from "next/router";
 import { FormEventHandler, useState } from "react";
-import { trpc } from "../../utils/trpc";
 
 export interface ChatInputProps {
-  conversationId: string;
+  onSend: (message: string) => void;
 }
 
-export const ChatInput = ({ conversationId }: ChatInputProps) => {
-  const router = useRouter();
+export const ChatInput = ({ onSend }: ChatInputProps) => {
   const [input, setInput] = useState("");
-  const utils = trpc.useContext();
-  const mutation = router.pathname.startsWith("/moderation")
-    ? trpc.moderation.sendMessage.useMutation({
-        onSuccess() {
-          utils.moderation.getMessages.invalidate({
-            conversationId: conversationId,
-          });
-        },
-      })
-    : trpc.conversation.sendMessage.useMutation({
-        onSuccess() {
-          utils.conversation.getMessages.invalidate({
-            conversationId: conversationId,
-          });
-        },
-      });
 
   const handleSend: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
     if (!input) return;
-    mutation.mutate({
-      conversationId: conversationId,
-      content: input,
-    });
+    onSend(input);
     setInput("");
   };
 

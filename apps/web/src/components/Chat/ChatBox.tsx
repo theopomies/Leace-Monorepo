@@ -1,14 +1,16 @@
 /* eslint-disable @next/next/no-img-element */
 import { useEffect, useRef } from "react";
 import { Message, User } from "@prisma/client";
-import { ChatInput } from "./ChatInput";
 import { ChatMessage } from "./ChatMessage";
+import { ChatInputMatch } from "./ChatInputMatch";
+import { ChatInputModeration } from "./ChatInputModeration";
 
 export interface ChatBoxProps {
   conversationId: string;
   userId: string;
   chatOn: boolean | undefined;
   messages: (Message & { sender: User })[];
+  isModeration?: boolean;
 }
 
 export const ChatBox = ({
@@ -16,6 +18,7 @@ export const ChatBox = ({
   userId,
   chatOn,
   messages,
+  isModeration = false,
 }: ChatBoxProps) => {
   const msgRef = useRef<null | HTMLDivElement>(null);
 
@@ -39,8 +42,10 @@ export const ChatBox = ({
             ))}
           </div>
         </div>
-        {chatOn && conversationId && (
-          <ChatInput conversationId={conversationId} />
+        {conversationId && isModeration ? (
+          chatOn && <ChatInputModeration conversationId={conversationId} />
+        ) : (
+          <ChatInputMatch conversationId={conversationId} />
         )}
       </div>
     </div>
