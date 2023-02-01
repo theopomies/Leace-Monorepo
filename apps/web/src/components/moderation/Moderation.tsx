@@ -1,8 +1,8 @@
 import { UserStatus } from "@prisma/client";
-import { UnBanButton, BanButton } from "./BanButton";
-import { Loader } from "../Loader";
-import Profile from "./Profile";
-import ReportButton from "../Web/reportButton";
+import { UnBanButton, BanButton } from "../../components/Moderation/BanButton";
+import { Loader } from "../../components/Moderation/Loader";
+import { Profile } from "../../components/Moderation/Profile";
+import { ReportButton } from "../../components/Moderation/ReportButton";
 import { trpc } from "../../utils/trpc";
 
 export const Moderation = () => {
@@ -13,7 +13,7 @@ export const Moderation = () => {
     retry: false,
   });
 
-  if (report?.isLoading) {
+  if (report.isLoading) {
     return <Loader />;
   } else if (report && report.data && !report.error) {
     return (

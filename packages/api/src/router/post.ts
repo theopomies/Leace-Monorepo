@@ -110,7 +110,7 @@ export const postRouter = router({
     },
   ),
   getRentExpense: protectedProcedure([Roles.TENANT]).query(async ({ ctx }) => {
-    const rs = await ctx.prisma.relationShip.findMany({
+    const rs = await ctx.prisma.relationship.findMany({
       where: {
         userId: ctx.session.user.id,
         isMatch: true,

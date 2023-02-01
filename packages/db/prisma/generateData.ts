@@ -11,7 +11,7 @@ const nbUsers = 0;
 const nbPosts = 10;
 const nbReports = 10;
 const nbImages = 20;
-const nbRelationShips = 100;
+const nbRelationships = 10;
 
 export const makeUsers = () => {
   const users = new Array<Prisma.UserCreateManyInput>();
@@ -181,10 +181,10 @@ export const makeImages = async (prisma: PrismaClient) => {
   return images;
 };
 
-export const makeRelationShips = async (prisma: PrismaClient) => {
-  const relationships = new Array<Prisma.RelationShipCreateManyInput>();
+export const makeRelationships = async (prisma: PrismaClient) => {
+  const relationships = new Array<Prisma.RelationshipCreateManyInput>();
 
-  for (let i = 0; i < nbRelationShips; i++) {
+  for (let i = 0; i < nbRelationships; i++) {
     const userCount = await prisma.user.count({
       where: { role: Roles.TENANT },
     });

@@ -126,7 +126,7 @@ model User {
   posts         Post[]
   images        Image[] // Not necessary one picture look Ok for users, just post can have more than one pictures. To discuss
   documents     Document[]
-  relationShips RelationShip[]
+  relationships Relationship[]
   messages      Message[]
 
   reports        Report[] @relation("reported")
@@ -155,7 +155,7 @@ model Post {
   documents Document[]
 
   reports       Report[]
-  relationShips RelationShip[]
+  relationships Relationship[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -273,7 +273,7 @@ model Image {
   @@map("pictures")
 }
 
-model RelationShip {
+model Relationship {
   id String @id @default(cuid())
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -296,7 +296,7 @@ model RelationShip {
 model Conversation {
   id String @id @default(cuid())
 
-  rs         RelationShip? @relation(fields: [relationId], references: [id], onDelete: Cascade)
+  rs         Relationship? @relation(fields: [relationId], references: [id], onDelete: Cascade)
   relationId String?       @unique
 
   type     ConversationType? @default(NONE)
