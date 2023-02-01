@@ -1,10 +1,11 @@
 import { UserStatus } from "@prisma/client";
 import { useState } from "react";
-import { BanButton, UnBanButton } from "../../components/banButton";
-import Loader from "../../components/loader";
-import Profile from "../../components/profile";
-import Search from "../../components/search";
+import { BanButton, UnBanButton } from "../../components/Moderation/BanButton";
+import { Loader } from "../../components/Moderation/Loader";
+import { Profile } from "../../components/Moderation/Profile";
+import { Search } from "../../components/Moderation/Search";
 import { trpc } from "../../utils/trpc";
+import { ChatModal } from "../../components/Moderation/ChatModal";
 
 const Admin = () => {
   const [uid, setUid] = useState("");
@@ -17,7 +18,7 @@ const Admin = () => {
   });
 
   if (!uid) return <Search setUid={setUid} />;
-  if (user?.isLoading) return <Loader />;
+  if (user.isLoading) return <Loader />;
   if (user && user.data && !user.error) {
     return (
       <div>
@@ -33,6 +34,7 @@ const Admin = () => {
             ) : (
               <BanButton userId={user.data.id} />
             )}
+            <ChatModal userId={user.data.id} />
           </div>
         </div>
       </div>

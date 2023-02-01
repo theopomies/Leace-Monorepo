@@ -1,21 +1,27 @@
 /* eslint-disable @next/next/no-img-element */
 import { useState } from "react";
-import { trpc } from "../utils/trpc";
+import { trpc } from "../../utils/trpc";
 
-const DocValidationModal = (props: {
+export interface DocValidationModalProps {
   document: { id: string; url: string; valid: boolean; ext: string };
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
   refetchDocuments: () => void;
-}) => {
+}
+
+const DocValidationModal = ({
+  document,
+  setShowModal,
+  refetchDocuments,
+}: DocValidationModalProps) => {
   const documentValidation = trpc.moderation.documentValidation.useMutation();
 
   const handleClick = async () => {
     if (document) {
       await documentValidation
-        .mutateAsync({ id: props.document.id, valid: !props.document.valid })
+        .mutateAsync({ id: document.id, valid: !document.valid })
         .then(async () => {
-          props.refetchDocuments();
-          props.setShowModal(false);
+          refetchDocuments();
+          setShowModal(false);
         });
     }
   };
@@ -25,26 +31,24 @@ const DocValidationModal = (props: {
       <div className="px-auto fixed inset-0 z-50 flex justify-center p-5">
         <div
           className={`${
-            props.document.ext === "pdf" ? "w-full" : "h-full"
+            document.ext === "pdf" ? "w-full" : "h-full"
           } flex items-center justify-center rounded-lg bg-slate-50 shadow-lg`}
         >
-          {props.document.ext === "pdf" ? (
+          {document.ext === "pdf" ? (
             <object
-              data={props.document.url}
+              data={document.url}
               type="application/pdf"
               className="mr-10 h-full w-full rounded-tl-lg rounded-bl-lg shadow-xl"
             >
               <p>
                 It appears you don&apos;t have a PDF plugin for this browser. No
                 biggie... you can{" "}
-                <a href={props.document.url}>
-                  click here to download the PDF file.
-                </a>
+                <a href={document.url}>click here to download the PDF file.</a>
               </p>
             </object>
           ) : (
             <img
-              src={props.document.url}
+              src={document.url}
               referrerPolicy="no-referrer"
               alt="document"
               className="mr-10 h-full w-full rounded-tl-lg rounded-bl-lg shadow-xl"
@@ -55,20 +59,20 @@ const DocValidationModal = (props: {
             <button
               className="rounded-full bg-slate-400 px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none transition-all duration-150 ease-linear hover:bg-slate-500 hover:shadow-lg focus:outline-none"
               type="button"
-              onClick={() => props.setShowModal(false)}
+              onClick={() => setShowModal(false)}
             >
               Close
             </button>
             <button
               className={`${
-                props.document.valid
+                document.valid
                   ? "bg-red-500 hover:bg-red-600"
                   : "bg-emerald-500 hover:bg-emerald-600"
               } rounded-full  px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none transition-all duration-150 ease-linear  hover:shadow-lg focus:outline-none`}
               type="button"
               onClick={handleClick}
             >
-              {props.document.valid ? "Invalider" : "Valider"}
+              {document.valid ? "Invalider" : "Valider"}
             </button>
           </div>
         </div>
@@ -78,11 +82,15 @@ const DocValidationModal = (props: {
   );
 };
 
-const DocValidation = (props: { userId: string }) => {
+export interface DocValidationProps {
+  userId: string;
+}
+
+export const DocValidation = ({ userId }: DocValidationProps) => {
   const [showModal, setShowModal] = useState(false);
 
   const { data: documents, refetch: refetchDocuments } =
-    trpc.document.GetSignedUserUrl.useQuery(props.userId);
+    trpc.document.GetSignedUserUrl.useQuery(userId);
 
   const { data: pdfLogo } = trpc.document.GetSignedAssetUrl.useQuery({
     name: "pdfLogo.jpg",
@@ -160,5 +168,3 @@ const DocValidation = (props: { userId: string }) => {
     </div>
   );
 };
-
-export default DocValidation;

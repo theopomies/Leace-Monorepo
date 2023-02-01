@@ -1,22 +1,26 @@
 import { UserStatus } from "@prisma/client";
 import { useRouter } from "next/router";
 import React from "react";
-import { trpc } from "../utils/trpc";
+import { trpc } from "../../utils/trpc";
 
-export const BanButton = (props: { userId: string }) => {
+export interface BanButtonProps {
+  userId: string;
+}
+
+export const BanButton = ({ userId }: BanButtonProps) => {
   const path = useRouter();
   const utils = trpc.useContext();
   const mutation = trpc.moderation.banUser.useMutation({
     onSuccess() {
       path.pathname === "/moderation/moderation"
         ? utils.moderation.getReport.invalidate()
-        : utils.moderation.getById.invalidate(props.userId);
+        : utils.moderation.getById.invalidate(userId);
     },
   });
 
   const handleClick = () => {
     mutation.mutate({
-      id: props.userId,
+      id: userId,
       status: UserStatus.BANNED,
     });
   };
@@ -33,20 +37,20 @@ export const BanButton = (props: { userId: string }) => {
   );
 };
 
-export const UnBanButton = (props: { userId: string }) => {
+export const UnBanButton = ({ userId }: BanButtonProps) => {
   const path = useRouter();
   const utils = trpc.useContext();
   const mutation = trpc.moderation.banUser.useMutation({
     onSuccess() {
       path.pathname === "/moderation/moderation"
         ? utils.moderation.getReport.invalidate()
-        : utils.moderation.getById.invalidate(props.userId);
+        : utils.moderation.getById.invalidate(userId);
     },
   });
 
   const handleClick = () => {
     mutation.mutate({
-      id: props.userId,
+      id: userId,
       status: UserStatus.ACTIVE,
     });
   };

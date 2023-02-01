@@ -1,7 +1,6 @@
 import Link from "next/link";
-import React from "react";
 
-const ModNavBar = () => {
+export const ModNavBar = () => {
   return (
     <div>
       <nav className="bg-gray-50 dark:bg-gray-700">
@@ -25,6 +24,14 @@ const ModNavBar = () => {
                   Administation
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="/moderation/support"
+                  className="text-gray-900 hover:underline dark:text-white"
+                >
+                  Support
+                </Link>
+              </li>
             </ul>
           </div>
         </div>
@@ -32,5 +39,3 @@ const ModNavBar = () => {
     </div>
   );
 };
-
-export default ModNavBar;

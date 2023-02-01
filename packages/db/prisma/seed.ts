@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import {
   makeImages,
   makePosts,
-  makeRelationShips,
+  makeRelationships,
   makeReports,
   makeUsers,
 } from "./generateData";
@@ -29,8 +29,8 @@ async function main() {
     data: images,
   });
 
-  const relationships = await makeRelationShips(prisma);
-  await prisma.relationShip.createMany({
+  const relationships = await makeRelationships(prisma);
+  await prisma.relationship.createMany({
     data: relationships,
   });
 }
