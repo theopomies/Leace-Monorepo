@@ -7,7 +7,7 @@ import {
   PostType,
 } from "@prisma/client";
 
-const nbUsers = 10;
+const nbUsers = 0;
 const nbPosts = 10;
 const nbReports = 10;
 const nbImages = 20;
@@ -217,17 +217,11 @@ export const makeRelationships = async (prisma: PrismaClient) => {
       continue;
     }
     const isMatch = Boolean(Math.round(Math.random()));
-    Boolean(Math.round(Math.random()))
-      ? relationships.push({
-          userId: isMatch ? randUser[0].id : "",
-          postId: randPost[0].id,
-          isMatch: isMatch,
-        })
-      : relationships.push({
-          userId: randUser[0].id,
-          postId: isMatch ? randPost[0].id : "",
-          isMatch: isMatch,
-        });
+    relationships.push({
+      userId: randUser[0].id,
+      postId: randPost[0].id,
+      isMatch: isMatch,
+    });
   }
   return relationships;
 };

@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { Stack } from "../../components/Stack/Stack";
-import { StackElementProps } from "../../components/Stack/StackElement";
-import LoggedLayout from "../../components/LoggedLayout";
+import { Stack } from "./Stack";
+import { StackElementProps } from "./StackElement";
 
 const defaultPosts: StackElementProps[] = [];
 
@@ -18,7 +17,7 @@ for (let i = 0; i < 10; i++) {
   });
 }
 
-export default function Annonces() {
+export function PostStack() {
   const [posts, setPosts] = useState(defaultPosts);
   const [lastPost, setLastPost] = useState<StackElementProps | null>(null);
 
@@ -59,15 +58,13 @@ export default function Annonces() {
   };
 
   return (
-    <LoggedLayout title="Stack Annonces | Leace">
-      <div className="flex w-full items-center justify-center">
-        <Stack
-          posts={posts}
-          onDislike={onDislike}
-          onLike={onLike}
-          onRewind={onRewind}
-        />
-      </div>
-    </LoggedLayout>
+    <div className="flex w-full items-center justify-center">
+      <Stack
+        posts={posts}
+        onDislike={onDislike}
+        onLike={onLike}
+        onRewind={onRewind}
+      />
+    </div>
   );
 }

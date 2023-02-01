@@ -1,11 +1,11 @@
 import { UserStatus } from "@prisma/client";
-import { UnBanButton, BanButton } from "../../components/Moderation/BanButton";
-import { Loader } from "../../components/Moderation/Loader";
-import { Profile } from "../../components/Moderation/Profile";
-import { ReportButton } from "../../components/Moderation/ReportButton";
+import { UnBanButton, BanButton } from "./BanButton";
+import { Loader } from "./Loader";
+import { Profile } from "./Profile";
+import { ReportButton } from "./ReportButton";
 import { trpc } from "../../utils/trpc";
 
-const Moderation = () => {
+export const Moderation = () => {
   const report = trpc.moderation.getReport.useQuery(undefined, {
     refetchOnWindowFocus: false,
     refetchOnMount: false,
@@ -40,5 +40,3 @@ const Moderation = () => {
     );
   }
 };
-
-export default Moderation;

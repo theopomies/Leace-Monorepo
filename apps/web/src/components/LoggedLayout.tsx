@@ -3,7 +3,7 @@ import { NavBar } from "./NavBar";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
 
-export default function LoggedLayout({
+export function LoggedLayout({
   children,
   title,
 }: {
