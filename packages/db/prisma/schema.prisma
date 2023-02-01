@@ -319,6 +319,7 @@ model Message {
   senderId String
 
   content String
+  read    Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
