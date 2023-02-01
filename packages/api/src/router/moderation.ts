@@ -117,7 +117,7 @@ export const moderationRouter = router({
     .input(z.object({ id: z.string() }).optional())
     .query(async ({ ctx, input }) => {
       const user = await ctx.prisma.user.findUnique({
-        where: { id: input && input.id ? input.id : ctx.session.user.id },
+        where: { id: input ? input.id : ctx.session.user.id },
         select: { role: true, id: true },
       });
       if (!user) throw new TRPCError({ code: "NOT_FOUND" });
@@ -146,7 +146,7 @@ export const moderationRouter = router({
             },
             user: true,
             conversation: {
-              include: { messages: { include: { sender: true } } },
+              include: { messages: true },
             },
           },
         });
@@ -167,7 +167,7 @@ export const moderationRouter = router({
           },
           user: true,
           conversation: {
-            include: { messages: { include: { sender: true } } },
+            include: { messages: true },
           },
         },
       });

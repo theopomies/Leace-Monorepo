@@ -1,14 +1,8 @@
 import { useState } from "react";
-import { trpc } from "../../utils/trpc";
-import RelationShips from "../RelationShips";
+import Chat from "../Chat/Chat";
 
-const RelationShipsModal = (props: { userId: string }) => {
+const ChatModal = (props: { userId: string }) => {
   const [showModal, setShowModal] = useState(false);
-
-  //une procedure pour moderateur/admin
-  const { data: relationShips } = trpc.moderation.getMatch.useQuery({
-    id: props.userId,
-  });
 
   return (
     <div className="flex w-full flex-col items-center justify-center px-10">
@@ -22,12 +16,7 @@ const RelationShipsModal = (props: { userId: string }) => {
         <>
           <div className="px-auto fixed inset-0 z-50 flex justify-center p-5">
             <div className="flex w-full items-center justify-center rounded-lg bg-slate-50 shadow-lg">
-              {relationShips && (
-                <RelationShips
-                  userId={props.userId}
-                  relationShips={relationShips}
-                />
-              )}
+              <Chat userId={props.userId} />
               <div className="mr-6 flex items-center justify-center gap-4">
                 <button
                   className="rounded-full bg-slate-400 px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none transition-all duration-150 ease-linear hover:bg-slate-500 hover:shadow-lg focus:outline-none"
@@ -46,4 +35,4 @@ const RelationShipsModal = (props: { userId: string }) => {
   );
 };
 
-export default RelationShipsModal;
+export default ChatModal;

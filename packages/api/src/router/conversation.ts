@@ -179,7 +179,12 @@ export const conversationRouter = router({
         data: { type: ConversationType.NONE },
       });
     }),
-  sendMessage: protectedProcedure([Roles.AGENCY, Roles.OWNER, Roles.TENANT])
+  sendMessage: protectedProcedure([
+    Roles.AGENCY,
+    Roles.OWNER,
+    Roles.TENANT,
+    Roles.ADMIN,
+  ])
     .input(z.object({ conversationId: z.string(), content: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const conversation = await ctx.prisma.conversation.findUnique({
@@ -258,7 +263,12 @@ export const conversationRouter = router({
         data: { read: true },
       });
     }),
-  getMessages: protectedProcedure([Roles.AGENCY, Roles.OWNER, Roles.TENANT])
+  getMessages: protectedProcedure([
+    Roles.AGENCY,
+    Roles.OWNER,
+    Roles.TENANT,
+    Roles.ADMIN,
+  ])
     .input(
       z.object({
         conversationId: z.string(),
@@ -301,6 +311,7 @@ export const conversationRouter = router({
         take: input.take,
         skip: input.cursor ? 1 : 0,
         cursor: input.cursor ? { id: input.cursor } : undefined,
+        include: { sender: true },
       });
 
       return messages;

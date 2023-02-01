@@ -1,8 +1,8 @@
 import { UserStatus } from "@prisma/client";
-import { UnBanButton, BanButton } from "../../components/moderation/BanButton";
-import Loader from "../../components/moderation/Loader";
-import Profile from "../../components/moderation/Profile";
-import ReportButton from "../../components/moderation/ReportButton";
+import { UnBanButton, BanButton } from "../../components/Moderation/BanButton";
+import Loader from "../../components/Moderation/Loader";
+import Profile from "../../components/Moderation/Profile";
+import ReportButton from "../../components/Moderation/ReportButton";
 import { trpc } from "../../utils/trpc";
 
 const Moderation = () => {
