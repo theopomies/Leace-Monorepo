@@ -27,7 +27,7 @@ export const ChatInput = ({ conversationId }: ChatInputProps) => {
       });
 
   const handleSend = () => {
-    console.log(input);
+    if (!input) return;
     mutation.mutate({
       conversationId: conversationId,
       content: input,
