@@ -1,97 +1,110 @@
 import { prisma } from "../../../db/index";
+import { Attribute } from "@prisma/client";
 
 export interface LooseObject
 {
-    [key: string]: any
+    [key: string]: never
 }
 
-export type queryFunction = {(obj: LooseObject, queryObj: LooseObject): void; };
+export type queryFunction = {(obj: Attribute, queryObj: LooseObject): void; };
 export type queryTuple = [queryFunction, queryFunction];
 
 
-function SimpleComparison(name: string, attribute: LooseObject,
-                          queryObj: LooseObject): void
+function assignComparisonIfNotNull(name: string, attribute: LooseObject,
+    queryObj: LooseObject): void
 {
     let value = attribute[name];
 
-    if (value !== null && value !== undefined && value)
-        queryObj[name] = value;
+    if (value != null && value) {
+        Object.assign(queryObj, {[name]: value })
+    }
 }
 
-function LinearComparisonTenant(name: string, minName: string, maxName: string,
-                                attribute: LooseObject,
-                                queryObj: LooseObject): void
+function assignRangeComparisonIfNotNullTenant(name: string, minName: string,
+    maxName: string, attribute: LooseObject, queryObj: LooseObject): void
 {
-    let less = false;
+    let empty = true;
+    let addToQuery = {};
     let value = attribute[minName];
 
-    if (value !== null && value !== undefined)
-    {
-        queryObj[name] = { gte: value };
-        less = true;
+    if (value != null) {
+        Object.assign(addToQuery, { gte: value });
+        empty = false;
     }
 
     value = attribute[maxName];
-    if (value !== null && value !== undefined)
-        if (less)
-            queryObj[name]["lte"] = value;
-        else
-            queryObj[name] = { lte: value };
+    if (value != null && value) {
+        if (empty) {
+            Object.assign(addToQuery, { lte: value });
+            empty = false;
+        } else {
+            Object.assign(addToQuery, { lte: value });
+        }
+    }
+
+    if (empty) {
+        return;
+    }
+
+    Object.assign(queryObj, {[name] : addToQuery});
 }
 
-function LinearComparisonPost(name: string, minName: string, maxName: string,
-                              attribute: LooseObject,
-                              queryObj: LooseObject): void
+function assignRangeComparisonIfNotNullPost(name: string, minName: string,
+    maxName: string, attribute: LooseObject, queryObj: LooseObject): void
 {
     let value = attribute[name];
-    if (value !== null && value !== undefined)
-        return;
 
-    queryObj[minName] = { lte: value };
-    queryObj[maxName] = { gte: value };
+    if (value != null) {
+        return;
+    }
+
+    Object.assign(queryObj,
+                  {[minName]: { lte: value }, [maxName]: { gte: value }})
 }
 
-function SetLinearComparison(name: string): queryTuple
+function assignLinearComparison(name: string): queryTuple
 {
     let upperName = name.charAt(0).toUpperCase() + name.slice(1);
     let minName = "min" + upperName;
     let maxName = "max" + upperName;
 
-    return [(obj: LooseObject, queryObj: LooseObject): void => 
-        LinearComparisonTenant(name, minName, maxName, obj, queryObj),
-        (obj: LooseObject, queryObj: LooseObject): void => 
-        LinearComparisonPost(name, minName, maxName, obj, queryObj)];
+    return [(obj: Attribute, queryObj: LooseObject): void => 
+        assignRangeComparisonIfNotNullTenant(name, minName, maxName,
+            obj as any, queryObj),
+        (obj: Attribute, queryObj: LooseObject): void => 
+        assignRangeComparisonIfNotNullPost(name, minName, maxName,
+            obj as any, queryObj)];
 }
 
-function CreateQueryHandler(): queryTuple[]
+function createQueryHandler(): queryTuple[]
 {
     const obj = prisma._baseDmmf.typeAndModelMap["Attribute"].fields;
     const skip: string[] = ["createdAt", "user", "post"];
     let queryHandler: queryTuple[] = [];
 
-    for (let name of Object.keys(obj))
-    {
+    for (let name of Object.keys(obj)) {
         const field = obj[name];
         name = field.name;
 
         if (field.isUnique || field.isId || field.isUpdatedAt ||
-            skip.includes(field))
+            skip.includes(field)) {
             continue;
-
-        if ((field.type === "DateTime" || field.type === "Int"))
-        {
-            if (!name.startsWith("min") && !name.startsWith("max"))
-                queryHandler.push(SetLinearComparison(name));
         }
-        else
-            queryHandler.push([(obj: LooseObject, queryObj: LooseObject):void =>
-                              SimpleComparison(name, obj, queryObj),
-                              (obj: LooseObject, queryObj: LooseObject):void =>
-                              SimpleComparison(name, obj, queryObj)]);
+
+        if ((field.type === "DateTime" || field.type === "Int")) {
+            if (!name.startsWith("min") && !name.startsWith("max")) {
+                queryHandler.push(assignLinearComparison(name));
+            }
+        } else {
+            queryHandler.push([(obj: Attribute, queryObj: LooseObject):void =>
+                    assignComparisonIfNotNull(name, obj as any, queryObj),
+                (obj: Attribute, queryObj: LooseObject):void =>
+                    assignComparisonIfNotNull(name, obj as any, queryObj)]);
+        }
     }
 
     return queryHandler;
 }
 
-export const queryHandler: queryTuple[] = CreateQueryHandler();
+export const queryHandler: queryTuple[] = createQueryHandler();
 
