@@ -116,7 +116,7 @@ model User {
   lastName    String?
   phoneNumber String?     @unique
   country     String?
-  description String?
+  description String? @db.Text
   birthDate   DateTime?
   status      UserStatus? @default(INACTIVE)
   isPremium   Boolean?    @default(false)
@@ -146,7 +146,7 @@ model Post {
 
   title   String?
   content String?
-  desc    String?
+  desc    String? @db.Text
   type    PostType? @default(TO_BE_RENTED)
 
   attribute Attribute?

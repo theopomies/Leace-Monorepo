@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
 import { User, Report } from "@prisma/client";
-import { DeleteImgButton } from "../Web/deleteImgButton";
+import { DeleteImgButton } from "./DeleteImgButton";
 import { trpc } from "../../utils/trpc";
 import DocValidation from "./DocValidation";
 

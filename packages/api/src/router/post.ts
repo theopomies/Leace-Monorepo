@@ -60,7 +60,7 @@ export const postRouter = router({
     }),
   deletePost: protectedProcedure([Roles.AGENCY, Roles.OWNER])
     .input(z.string())
-    .query(async ({ input, ctx }) => {
+    .mutation(async ({ input, ctx }) => {
       const getPost = await ctx.prisma.post.findUnique({
         where: { id: input },
       });
@@ -72,10 +72,13 @@ export const postRouter = router({
   getAllPost: protectedProcedure().query(({ ctx }) => {
     return ctx.prisma.post.findMany();
   }),
-  getPost: protectedProcedure([Roles.TENANT])
+  getPost: protectedProcedure([Roles.TENANT, Roles.AGENCY, Roles.OWNER])
     .input(z.string())
     .query(({ ctx, input }) => {
-      return ctx.prisma.post.findUniqueOrThrow({ where: { id: input } });
+      return ctx.prisma.post.findUniqueOrThrow({
+        where: { id: input },
+        include: { attribute: true },
+      });
     }),
   getMyPost: protectedProcedure([Roles.AGENCY, Roles.OWNER])
     .input(z.enum([PostType.RENTED, PostType.TO_BE_RENTED]).optional())
@@ -83,10 +86,12 @@ export const postRouter = router({
       if (!input) {
         return ctx.prisma.post.findMany({
           where: { createdById: ctx.session.user.id },
+          include: { attribute: true },
         });
       }
       return ctx.prisma.post.findMany({
         where: { createdById: ctx.session.user.id, type: input },
+        include: { attribute: true },
       });
     }),
   getRentIncome: protectedProcedure([Roles.AGENCY, Roles.OWNER]).query(

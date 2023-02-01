@@ -81,8 +81,8 @@ const AddPost = () => {
     session.data?.user.role == "AGENCY"
   ) {
     return (
-      <div className="h-full bg-slate-100">
-        <LoggedLayout title="ADd post">
+      <LoggedLayout title="Profile Page | Leace">
+        <div className="w-full">
           <Header heading={"Création d'une annonce"} />
           <div className="flex justify-center p-5">
             <div className="m-14 flex w-2/5 justify-center rounded-lg bg-white p-5 shadow">
@@ -345,8 +345,8 @@ const AddPost = () => {
               </div>
             </div>
           </div>
-        </LoggedLayout>
-      </div>
+        </div>
+      </LoggedLayout>
     );
   } else {
     return (

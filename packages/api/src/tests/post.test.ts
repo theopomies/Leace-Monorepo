@@ -1,6 +1,6 @@
 import { type inferProcedureInput } from "@trpc/server";
 import { createContextInner } from "../context";
-import { appRouter, type AppRouter } from "../router/index";
+import { appRouter, type AppRouter } from "../tlo/index";
 import { describe, expect, test } from "vitest";
 import { S3Client } from "@aws-sdk/client-s3";
 

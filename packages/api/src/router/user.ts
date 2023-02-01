@@ -12,13 +12,14 @@ export const userRouter = router({
         where: { userId: ctx.session.user.id },
       });
       if (!att) {
-        const att = await ctx.prisma.attribute.create({
+        const attCreate = await ctx.prisma.attribute.create({
           data: {
             userId: ctx.session.user.id,
           },
         });
-        if (!att) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+        if (!attCreate) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
       }
+
       return ctx.prisma.user.update({
         where: { id: ctx.session.user.id },
         data: { role: input },
@@ -31,7 +32,7 @@ export const userRouter = router({
         lastName: z.string().optional(),
         phoneNumber: z.string().optional(),
         description: z.string().optional(),
-        birthDate: z.date().optional(),
+        birthDate: z.string().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -48,10 +49,11 @@ export const userRouter = router({
         throw new TRPCError({ code: "BAD_REQUEST" });
 
       if (input.birthDate) {
-        const diff_ms = Date.now() - input.birthDate.getTime();
+        const birthDate = new Date(input.birthDate);
+        const diff_ms = Date.now() - birthDate.getTime();
         const age_dt = new Date(diff_ms);
         const age = Math.abs(age_dt.getUTCFullYear() - 1970);
-        if (age < 18 || age > 125) throw new TRPCError({ code: "BAD_REQUEST" });
+        if (age < 18) throw new TRPCError({ code: "BAD_REQUEST" });
         return ctx.prisma.user.update({
           where: { id: ctx.session.user.id },
           data: {
@@ -59,7 +61,7 @@ export const userRouter = router({
             lastName: input.lastName,
             phoneNumber: input.phoneNumber,
             description: input.description,
-            birthDate: input.birthDate,
+            birthDate: birthDate,
             status: UserStatus.ACTIVE,
           },
         });
@@ -75,17 +77,29 @@ export const userRouter = router({
         },
       });
     }),
-  getUser: protectedProcedure([Roles.TENANT, Roles.AGENCY, Roles.OWNER])
+  getUser: protectedProcedure([
+    Roles.TENANT,
+    Roles.AGENCY,
+    Roles.OWNER,
+    Roles.ADMIN,
+    Roles.MODERATOR,
+  ])
     .input(z.string().optional())
     .query(({ ctx, input }) => {
       if (!input) {
         return ctx.prisma.user.findUniqueOrThrow({
           where: { id: ctx.session.user.id },
+          include: {
+            attribute: true,
+          },
         });
       }
       return ctx.prisma.user.findUniqueOrThrow({
         where: {
           id: input,
+        },
+        include: {
+          attribute: true,
         },
       });
     }),

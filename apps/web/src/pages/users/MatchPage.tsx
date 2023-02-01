@@ -1,18 +1,23 @@
 import React from "react";
 import Header from "../../components/Web/Header";
 import { trpc } from "../../utils/trpc";
-import { MatchBar } from "../../components/Web/MatchBar";
 import { LoggedLayout } from "../../components/LoggedLayout";
+import { Roles } from "@prisma/client";
+import { TenantList } from "../../components/Web/TenantList";
+import { PostList } from "../../components/Web/PostList";
 
 const MatchPage = () => {
-  const match = trpc.relationShip.getMatch.useQuery();
-
+  const { data: session } = trpc.auth.getSession.useQuery();
+  console.log(session?.user.role);
   return (
-    <LoggedLayout title="Match">
-      <div>
+    <LoggedLayout title="Mes Matchs">
+      <div className="w-full">
         <Header heading={"Mes Matchs"} />
-        {match.data &&
-          match.data.map((match) => <MatchBar key={match.id} match={match} />)}
+        {session && session.user.role != Roles.TENANT ? (
+          <TenantList />
+        ) : (
+          <PostList />
+        )}
       </div>
     </LoggedLayout>
   );

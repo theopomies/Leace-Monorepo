@@ -153,23 +153,8 @@ export const relationShipRouter = router({
 
       return { message: "You missed a match!" };
     }),
-  getMatch: protectedProcedure([Roles.TENANT, Roles.OWNER, Roles.AGENCY]).query(
+  getOwnerMatch: protectedProcedure([Roles.OWNER, Roles.AGENCY]).query(
     async ({ ctx }) => {
-      if (ctx.session.user.role == Roles.TENANT) {
-        const rs = await ctx.prisma.relationShip.findMany({
-          where: { isMatch: true, userId: ctx.session.user.id },
-          include: {
-            post: {
-              include: {
-                createdBy: true,
-              },
-            },
-          },
-        });
-        if (!rs) throw new TRPCError({ code: "NOT_FOUND" });
-        return rs;
-      }
-
       const postIds = await ctx.prisma.post.findMany({
         where: { createdById: ctx.session.user.id },
         select: { id: true },
@@ -194,6 +179,20 @@ export const relationShipRouter = router({
       return rs;
     },
   ),
+  getTenantMatch: protectedProcedure([Roles.TENANT]).query(async ({ ctx }) => {
+    const rs = await ctx.prisma.relationShip.findMany({
+      where: { isMatch: true, userId: ctx.session.user.id },
+      include: {
+        post: {
+          include: {
+            createdBy: true,
+          },
+        },
+      },
+    });
+    if (!rs) throw new TRPCError({ code: "NOT_FOUND" });
+    return rs;
+  }),
   deleteMatch: protectedProcedure([Roles.TENANT, Roles.OWNER, Roles.AGENCY])
     .input(z.object({ rsId: z.string() }))
     .mutation(async ({ ctx, input }) => {

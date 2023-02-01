@@ -1,5 +1,4 @@
 import React from "react";
-import Header from "../../components/Web/Header";
 import DisplayProperty from "../../components/Web/DisplayProperty";
 import { Post, Attribute } from "@prisma/client";
 import { useRouter } from "next/router";

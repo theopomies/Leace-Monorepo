@@ -74,9 +74,9 @@ const UpdateProfiles = () => {
     }
   }, [userProfile.data]);
   return (
-    <div className="h-full bg-slate-100">
-      <LoggedLayout>
-        <Header heading={"Profil utilisateur"} />
+    <LoggedLayout title="Profile Page | Leace">
+      <div className="w-full">
+        <Header heading={"Update Profile"} />
         <div className="flex justify-center p-5">
           <div className="m-14 flex w-3/6 justify-center rounded-lg bg-white p-5 shadow">
             <div>
@@ -151,8 +151,8 @@ const UpdateProfiles = () => {
             </div>
           </div>
         </div>
-      </LoggedLayout>
-    </div>
+      </div>
+    </LoggedLayout>
   );
 };
 

@@ -6,7 +6,7 @@ import { Loader } from "../components/Loader";
 
 export default function Moderation() {
   return (
-    <LoggedLayout>
+    <LoggedLayout title="Moderation | Leace">
       <AdminCheck />
     </LoggedLayout>
   );

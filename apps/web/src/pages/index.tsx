@@ -3,7 +3,7 @@ import { Home } from "../components/Home";
 
 const Index = () => {
   return (
-    <LoggedLayout>
+    <LoggedLayout title="Home | Leace">
       <Home />
     </LoggedLayout>
   );
