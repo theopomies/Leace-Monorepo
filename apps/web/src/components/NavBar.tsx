@@ -22,6 +22,10 @@ const links = [
     href: "#",
     label: "Notifications",
   },
+  {
+    href: "/premium",
+    label: "Premium",
+  },
 ];
 
 export function NavBar() {
