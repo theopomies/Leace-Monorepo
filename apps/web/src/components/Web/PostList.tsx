@@ -4,7 +4,7 @@ import { trpc } from "../../utils/trpc";
 import { PostBar } from "./PostBar";
 
 export const PostList = () => {
-  const { data: relationships } = trpc.relationShip.getTenantMatch.useQuery();
+  const { data: relationships } = trpc.relationship.getMatch.useQuery();
   if (relationships) {
     return (
       <>

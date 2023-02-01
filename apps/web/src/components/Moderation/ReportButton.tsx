@@ -1,8 +1,5 @@
 import { ReportReason, ReportStatus } from "@prisma/client";
-<<<<<<<< HEAD:apps/web/src/components/Web/reportButton.tsx
-========
 import { useState } from "react";
->>>>>>>> befafe6bdf33cd982a1c0706f4975c88528e7126:apps/web/src/components/Moderation/ReportButton.tsx
 import { trpc } from "../../utils/trpc";
 
 export interface ReportButtonProps {

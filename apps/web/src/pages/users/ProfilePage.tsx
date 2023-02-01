@@ -1,6 +1,4 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useState } from "react";
-import ReportForm from "../../components/Web/ReportUser";
 import Header from "../../components/Web/Header";
 import { trpc } from "../../utils/trpc";
 import { LoggedLayout } from "../../components/LoggedLayout";
@@ -10,13 +8,7 @@ import { Roles } from "@prisma/client";
 const ProfilePage = () => {
   const router = useRouter();
   const me = trpc.user.getUser.useQuery();
-  const [showReportForm, setReportForm] = useState(false);
-  const handleReportForm = () => {
-    setReportForm(!showReportForm);
-  };
-  const handleCloseContent = () => {
-    setReportForm(false);
-  };
+
   if (me.data) {
     return (
       <LoggedLayout title="Profile Page | Leace">

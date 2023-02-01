@@ -3,7 +3,7 @@ import { trpc } from "../../utils/trpc";
 import { TenantBar } from "./UserBar";
 
 export const TenantList = () => {
-  const { data: relationships } = trpc.relationShip.getOwnerMatch.useQuery();
+  const { data: relationships } = trpc.relationship.getMatch.useQuery();
   if (relationships) {
     return (
       <>

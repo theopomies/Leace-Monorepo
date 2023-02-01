@@ -2,11 +2,7 @@
 import { User, Report } from "@prisma/client";
 import { DeleteImgButton } from "./DeleteImgButton";
 import { trpc } from "../../utils/trpc";
-<<<<<<<< HEAD:apps/web/src/components/moderation/Profile.tsx
-import DocValidation from "./DocValidation";
-========
 import { DocValidation } from "./DocValidation";
->>>>>>>> befafe6bdf33cd982a1c0706f4975c88528e7126:apps/web/src/components/Moderation/Profile.tsx
 
 export interface ProfileProps {
   user: User & {

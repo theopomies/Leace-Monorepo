@@ -1,5 +1,5 @@
 import React from "react";
-import DisplayProperty from "../../components/Web/DisplayProperty";
+import { DisplayPost } from "../../components/Web/DisplayProperty";
 import { Post, Attribute } from "@prisma/client";
 import { useRouter } from "next/router";
 
@@ -29,7 +29,7 @@ const PostPage = () => {
   return (
     <div className="h-full bg-slate-100">
       {post && post.attribute && (
-        <DisplayProperty post={post} attribute={post.attribute} />
+        <DisplayPost post={post} attribute={post.attribute} />
       )}
     </div>
   );

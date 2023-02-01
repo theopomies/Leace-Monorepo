@@ -3,8 +3,8 @@ import { trpc } from "../utils/trpc";
 import { RoleSelector } from "./Web/RoleSelector";
 import { PostStack } from "./Stack/PostStack";
 import { TenantStack } from "./Stack/TenantStack";
-import { Administration } from "./moderation/Administration";
-import { Moderation } from "./moderation/Moderation";
+import { Administration } from "./Moderation/Administration";
+import { Moderation } from "./Moderation/Moderation";
 
 export const Home = () => {
   const { data: session } = trpc.auth.getSession.useQuery();

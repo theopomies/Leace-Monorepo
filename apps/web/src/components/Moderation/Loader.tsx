@@ -1,8 +1,3 @@
-<<<<<<<< HEAD:apps/web/src/components/Loader.tsx
-import React from "react";
-
-========
->>>>>>>> befafe6bdf33cd982a1c0706f4975c88528e7126:apps/web/src/components/Moderation/Loader.tsx
 export const Loader = () => {
   return (
     <div className="flex h-screen w-full items-center justify-center">

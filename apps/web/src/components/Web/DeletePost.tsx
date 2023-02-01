@@ -1,5 +1,5 @@
 import React from "react";
-import { trpc, RouterInputs } from "../../utils/trpc";
+import { trpc } from "../../utils/trpc";
 import { useRouter } from "next/router";
 
 function DeletePost(props: { post: string }) {

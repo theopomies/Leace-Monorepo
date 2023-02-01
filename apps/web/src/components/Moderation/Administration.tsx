@@ -1,11 +1,11 @@
 import { UserStatus } from "@prisma/client";
 import { useState } from "react";
-import { BanButton, UnBanButton } from "../../components/Moderation/BanButton";
-import { Loader } from "../../components/Moderation/Loader";
-import { Profile } from "../../components/Moderation/Profile";
-import { Search } from "../../components/Moderation/Search";
+import { BanButton, UnBanButton } from "./BanButton";
+import { Loader } from "./Loader";
+import { Profile } from "./Profile";
+import { Search } from "./Search";
 import { trpc } from "../../utils/trpc";
-import { ChatModal } from "../../components/Moderation/ChatModal";
+import { ChatModal } from "./ChatModal";
 
 export const Administration = () => {
   const [uid, setUid] = useState("");

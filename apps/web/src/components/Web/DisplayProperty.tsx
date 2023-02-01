@@ -7,10 +7,7 @@ import DeletePost from "./DeletePost";
 import { LoggedLayout } from "../LoggedLayout";
 import Header from "./Header";
 
-export default function displayPost(props: {
-  post: Post;
-  attribute: Attribute;
-}) {
+export function DisplayPost(props: { post: Post; attribute: Attribute }) {
   const { data: session } = trpc.auth.getSession.useQuery();
   const router = useRouter();
   return (
