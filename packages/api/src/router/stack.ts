@@ -1,8 +1,7 @@
 import { router, protectedProcedure } from "../trpc";
 import { z } from "zod";
 import { PostType, UserStatus, Roles, Attribute} from "@prisma/client";
-import { prisma } from "../../../db/index";
-import { LooseObject, queryHandler } from "../utils/stackUtils";
+import { LooseObject, queryFunction, queryHandler } from "../utils/stackUtils";
 
 export const stackRouter = router({
   getStack: protectedProcedure([Roles.AGENCY, Roles.OWNER, Roles.TENANT])
@@ -11,15 +10,14 @@ export const stackRouter = router({
         cursor: z.string().optional()
     }))
     .query(async ({ ctx, input }) => {
-        let func;
         let query;
         let index = 0;
         let attribute;
 
+
         if (input.postId !== undefined && input.postId !== null)
         {
             index = 1;
-            func = ctx.prisma.user.findMany;
             query = {status: UserStatus.ACTIVE, attribute: {}};
             attribute = await ctx.prisma.post.findUniqueOrThrow({
                 where: {
@@ -29,7 +27,6 @@ export const stackRouter = router({
         }
         else
         {
-            func = ctx.prisma.post.findMany;
             query = {type: PostType.TO_BE_RENTED, attribute: {}};
             attribute = await ctx.prisma.attribute.findUniqueOrThrow({
                     where: { userId: ctx.session.user.id}});
@@ -37,7 +34,7 @@ export const stackRouter = router({
 
         if (attribute !== null && attribute !== undefined)
             for (let tuple of queryHandler)
-                tuple[index](attribute, query.attribute);
+                (tuple[index] as queryFunction)(attribute, query.attribute);
 
         let finalQuery: LooseObject = {
             take: 10,
@@ -52,7 +49,10 @@ export const stackRouter = router({
             finalQuery.cursor = {id: input.cursor};
         }
 
-        return func(finalQuery);
+        if (input.postId !== undefined && input.postId !== null)
+            return ctx.prisma.user.findMany(finalQuery as
+                                            {[key: string]: never});
+        return ctx.prisma.post.findMany(finalQuery as {[key: string]: never});
     })
 });
 
