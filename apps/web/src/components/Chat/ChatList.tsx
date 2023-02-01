@@ -46,7 +46,7 @@ export const ChatList = ({
         <div className="flex flex-row items-center justify-between pl-2 text-xs">
           <span className="font-bold">Conversations</span>
           <span className="flex w-4 items-center justify-center rounded-full bg-gray-300">
-            {relationships?.length}
+            {relationships.length}
           </span>
         </div>
         <div className="mt-4 flex h-full w-full flex-col space-y-1">
@@ -59,41 +59,18 @@ export const ChatList = ({
                   setConversationId(relationship.conversation.id);
               }}
             >
-              {relationship.user.id === userId ? (
-                <div
-                  className={`${
-                    !relationship.post.createdBy.image && "bg-gray-200"
-                  } flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full uppercase`}
-                >
-                  {relationship.post.createdBy.image ? (
-                    <img
-                      src={relationship.post.createdBy.image}
-                      referrerPolicy="no-referrer"
-                      alt="image"
-                      className="mx-auto h-full rounded-full"
-                    />
-                  ) : (
-                    relationship.post.createdBy.firstName?.charAt(0)
-                  )}
-                </div>
-              ) : (
-                <div
-                  className={`${
-                    !relationship.user.image && "bg-gray-200"
-                  } flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full uppercase`}
-                >
-                  {relationship.user.image ? (
-                    <img
-                      src={relationship.user.image}
-                      referrerPolicy="no-referrer"
-                      alt="image"
-                      className="mx-auto h-full rounded-full"
-                    />
-                  ) : (
-                    relationship.user.firstName?.charAt(0)
-                  )}
-                </div>
-              )}
+              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full uppercase">
+                <img
+                  src={
+                    relationship.user.id === userId
+                      ? relationship.post.createdBy.image || "/defaultImage.png"
+                      : relationship.user.image || "/defaultImage.png"
+                  }
+                  referrerPolicy="no-referrer"
+                  alt="image"
+                  className="mx-auto h-full rounded-full"
+                />
+              </div>
               <div className="ml-2 text-sm font-semibold">
                 {relationship.user.id === userId
                   ? `${relationship.post.createdBy.firstName} ${relationship.post.createdBy.lastName}`

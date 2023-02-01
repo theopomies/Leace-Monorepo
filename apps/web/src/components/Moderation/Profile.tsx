@@ -28,10 +28,7 @@ export const Profile = ({ user }: ProfileProps) => {
   return (
     <div className="flex h-full w-full flex-col overflow-auto rounded-lg p-8 shadow">
       <img
-        src={
-          user.image ||
-          "https://demos.creative-tim.com/notus-js/assets/img/team-2-800x800.jpg"
-        }
+        src={user.image || "/defaultImage.png"}
         referrerPolicy="no-referrer"
         alt="image"
         className="mx-auto h-32 rounded-full shadow-xl"
