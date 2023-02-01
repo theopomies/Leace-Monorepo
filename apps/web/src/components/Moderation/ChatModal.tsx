@@ -1,7 +1,11 @@
 import { useState } from "react";
-import Chat from "../Chat/Chat";
+import { Chat } from "../Chat";
 
-const ChatModal = (props: { userId: string }) => {
+export interface ChatModalProps {
+  userId: string;
+}
+
+export const ChatModal = ({ userId }: ChatModalProps) => {
   const [showModal, setShowModal] = useState(false);
 
   return (
@@ -16,7 +20,7 @@ const ChatModal = (props: { userId: string }) => {
         <>
           <div className="px-auto fixed inset-0 z-50 flex justify-center p-5">
             <div className="flex w-full items-center justify-center rounded-lg bg-slate-50 shadow-lg">
-              <Chat userId={props.userId} />
+              <Chat userId={userId} />
               <div className="mr-6 flex items-center justify-center gap-4">
                 <button
                   className="rounded-full bg-slate-400 px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none transition-all duration-150 ease-linear hover:bg-slate-500 hover:shadow-lg focus:outline-none"
@@ -34,5 +38,3 @@ const ChatModal = (props: { userId: string }) => {
     </div>
   );
 };
-
-export default ChatModal;

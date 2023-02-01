@@ -1,16 +1,19 @@
 import axios from "axios";
 import { trpc } from "../../utils/trpc";
 
-export const DeleteImgButton = (props: { userId: string; id: string }) => {
+export interface DeleteImgButtonProps {
+  userId: string;
+  id: string;
+}
+
+export const DeleteImgButton = ({ userId, id }: DeleteImgButtonProps) => {
   const utils = trpc.useContext();
   const mut = trpc.moderation.deleteImage.useMutation();
   const onClickDelete = async () => {
-    await mut
-      .mutateAsync({ userId: props.userId, id: props.id })
-      .then(async (url) => {
-        await axios.delete(url);
-        utils.image.GetSignedUserUrl.refetch();
-      });
+    await mut.mutateAsync({ userId: userId, id: id }).then(async (url) => {
+      await axios.delete(url);
+      utils.image.GetSignedUserUrl.refetch();
+    });
   };
 
   return (

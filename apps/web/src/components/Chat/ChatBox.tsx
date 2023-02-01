@@ -1,19 +1,25 @@
 /* eslint-disable @next/next/no-img-element */
+import { useRouter } from "next/router";
 import { useEffect, useRef } from "react";
 import { trpc } from "../../utils/trpc";
-import ChatInput from "./ChatInput";
-import ChatMessage from "./ChatMessage";
+import { ChatInput } from "./ChatInput";
+import { ChatMessage } from "./ChatMessage";
 
-const ChatBox = (props: {
+export interface ChatBoxProps {
   conversationId: string;
   userId: string;
   chatOn: boolean | undefined;
-}) => {
-  const messages = trpc.conversation.getMessages.useQuery({
-    conversationId: props.conversationId,
-  });
+}
+
+export const ChatBox = ({ conversationId, userId, chatOn }: ChatBoxProps) => {
+  const router = useRouter();
+  const messages = router.pathname.startsWith("/moderation")
+    ? trpc.moderation.getMessages.useQuery({ conversationId: conversationId })
+    : trpc.conversation.getMessages.useQuery({
+        conversationId: conversationId,
+      });
   const msgRef = useRef<null | HTMLDivElement>(null);
-  console.log(messages);
+
   useEffect(() => {
     if (msgRef.current) {
       msgRef.current.scrollTo({
@@ -34,21 +40,16 @@ const ChatBox = (props: {
               messages.data.map((message) => (
                 <ChatMessage
                   key={message.id}
-                  userId={props.userId}
+                  userId={userId}
                   message={message}
                 />
               ))}
           </div>
         </div>
-        {props.chatOn && props.conversationId && (
-          <ChatInput
-            userId={props.userId}
-            conversationId={props.conversationId}
-          />
+        {chatOn && conversationId && (
+          <ChatInput conversationId={conversationId} />
         )}
       </div>
     </div>
   );
 };
-
-export default ChatBox;

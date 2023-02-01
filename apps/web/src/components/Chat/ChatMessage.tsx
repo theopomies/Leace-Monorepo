@@ -1,33 +1,35 @@
 /* eslint-disable @next/next/no-img-element */
 import { Message, User } from "@prisma/client";
 
-const ChatMessage = (props: {
+export interface ChatMessageProps {
   userId: string;
   message: Message & { sender: User };
-}) => {
+}
+
+export const ChatMessage = ({ userId, message }: ChatMessageProps) => {
   return (
-    <div key={props.message.id} className="grid grid-cols-12 gap-y-2">
-      {props.message.senderId === props.userId ? (
+    <div key={message.id} className="grid grid-cols-12 gap-y-2">
+      {message.senderId === userId ? (
         <div className="col-start-6 col-end-13 rounded-lg p-3">
           <div className="flex flex-row-reverse items-center justify-start">
             <div
               className={`${
-                !props.message.sender.image && "bg-indigo-500"
+                !message.sender.image && "bg-indigo-500"
               } flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full uppercase`}
             >
-              {props.message.sender.image ? (
+              {message.sender.image ? (
                 <img
-                  src={props.message.sender.image}
+                  src={message.sender.image}
                   referrerPolicy="no-referrer"
                   alt="image"
                   className="mx-auto h-full rounded-full"
                 />
               ) : (
-                props.message.sender.firstName?.charAt(0)
+                message.sender.firstName?.charAt(0)
               )}
             </div>
             <div className="mr-3 flex w-fit break-words rounded-xl bg-indigo-100 py-2 px-4 text-sm shadow">
-              {props.message.content}
+              {message.content}
             </div>
           </div>
         </div>
@@ -36,22 +38,22 @@ const ChatMessage = (props: {
           <div className="flex flex-row items-center">
             <div
               className={`${
-                !props.message.sender.image && "bg-indigo-500"
+                !message.sender.image && "bg-indigo-500"
               } flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full uppercase`}
             >
-              {props.message.sender.image ? (
+              {message.sender.image ? (
                 <img
-                  src={props.message.sender.image}
+                  src={message.sender.image}
                   referrerPolicy="no-referrer"
                   alt="image"
                   className="mx-auto h-full rounded-full"
                 />
               ) : (
-                props.message.sender.firstName?.charAt(0)
+                message.sender.firstName?.charAt(0)
               )}
             </div>
             <div className="ml-3 flex w-fit break-words rounded-xl bg-white py-2 px-4 text-sm shadow">
-              {props.message.content}
+              {message.content}
             </div>
           </div>
         </div>
@@ -59,5 +61,3 @@ const ChatMessage = (props: {
     </div>
   );
 };
-
-export default ChatMessage;

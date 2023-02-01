@@ -1,10 +1,10 @@
 import { useState } from "react";
 
-const Search = ({
-  setUid,
-}: {
+export interface SearchProps {
   setUid: React.Dispatch<React.SetStateAction<string>>;
-}) => {
+}
+
+export const Search = ({ setUid }: SearchProps) => {
   const [userId, setUserId] = useState("");
 
   return (
@@ -44,5 +44,3 @@ const Search = ({
     </div>
   );
 };
-
-export default Search;

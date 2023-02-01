@@ -1,4 +1,4 @@
-import { router, protectedProcedure } from "../trpc";
+import { router, protectedProcedure } from "../../trpc";
 import { z } from "zod";
 import { ReportReason, ReportStatus, Roles, UserStatus } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
@@ -129,7 +129,7 @@ export const moderationRouter = router({
         });
         if (!postIds) throw new TRPCError({ code: "NOT_FOUND" });
 
-        const rs = await ctx.prisma.relationShip.findMany({
+        const rs = await ctx.prisma.relationship.findMany({
           where: {
             isMatch: true,
             postId: {
@@ -154,7 +154,7 @@ export const moderationRouter = router({
 
         return rs;
       }
-      const rs = await ctx.prisma.relationShip.findMany({
+      const rs = await ctx.prisma.relationship.findMany({
         where: {
           isMatch: true,
           userId: user.id,
@@ -173,5 +173,92 @@ export const moderationRouter = router({
       });
       if (!rs) throw new TRPCError({ code: "NOT_FOUND" });
       return rs;
+    }),
+  getMessages: protectedProcedure([Roles.ADMIN, Roles.MODERATOR])
+    .input(
+      z.object({
+        conversationId: z.string(),
+        cursor: z.string().optional(),
+        take: z.number().default(40),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const conversation = await ctx.prisma.conversation.findUnique({
+        where: { id: input.conversationId },
+      });
+
+      if (!conversation) throw new TRPCError({ code: "NOT_FOUND" });
+      if (!conversation.relationId)
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+      const relationship = await ctx.prisma.relationship.findUnique({
+        where: { id: conversation.relationId },
+      });
+      if (!relationship) throw new TRPCError({ code: "NOT_FOUND" });
+      if (
+        ctx.session.user.role == Roles.OWNER ||
+        ctx.session.user.role == Roles.AGENCY
+      ) {
+        const post = await ctx.prisma.post.findUnique({
+          where: { id: relationship.postId },
+        });
+        if (!post) throw new TRPCError({ code: "NOT_FOUND" });
+        if (post.createdById != ctx.session.user.id)
+          throw new TRPCError({ code: "FORBIDDEN" });
+      }
+      if (ctx.session.user.role == Roles.TENANT) {
+        if (relationship.userId != ctx.session.user.id)
+          throw new TRPCError({ code: "FORBIDDEN" });
+      }
+
+      const messages = await ctx.prisma.message.findMany({
+        where: { conversationId: conversation.id },
+        orderBy: { createdAt: "asc" },
+        take: input.take,
+        skip: input.cursor ? 1 : 0,
+        cursor: input.cursor ? { id: input.cursor } : undefined,
+        include: { sender: true },
+      });
+
+      return messages;
+    }),
+  sendMessage: protectedProcedure([Roles.ADMIN, Roles.MODERATOR])
+    .input(z.object({ conversationId: z.string(), content: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const conversation = await ctx.prisma.conversation.findUnique({
+        where: { id: input.conversationId },
+      });
+
+      if (!conversation) throw new TRPCError({ code: "NOT_FOUND" });
+      if (!conversation.relationId)
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+      const relationship = await ctx.prisma.relationship.findUnique({
+        where: { id: conversation.relationId },
+      });
+      if (!relationship) throw new TRPCError({ code: "NOT_FOUND" });
+      if (
+        ctx.session.user.role == Roles.OWNER ||
+        ctx.session.user.role == Roles.AGENCY
+      ) {
+        const post = await ctx.prisma.post.findUnique({
+          where: { id: relationship.postId },
+        });
+        if (!post) throw new TRPCError({ code: "NOT_FOUND" });
+        if (post.createdById != ctx.session.user.id)
+          throw new TRPCError({ code: "FORBIDDEN" });
+      }
+      if (ctx.session.user.role == Roles.TENANT) {
+        if (relationship.userId != ctx.session.user.id)
+          throw new TRPCError({ code: "FORBIDDEN" });
+      }
+
+      await ctx.prisma.message.create({
+        data: {
+          content: input.content,
+          conversationId: conversation.id,
+          senderId: ctx.session.user.id,
+        },
+      });
     }),
 });

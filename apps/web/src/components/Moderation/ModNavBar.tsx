@@ -1,7 +1,6 @@
 import Link from "next/link";
-import React from "react";
 
-const ModNavBar = () => {
+export const ModNavBar = () => {
   return (
     <div>
       <nav className="bg-gray-50 dark:bg-gray-700">
@@ -40,5 +39,3 @@ const ModNavBar = () => {
     </div>
   );
 };
-
-export default ModNavBar;

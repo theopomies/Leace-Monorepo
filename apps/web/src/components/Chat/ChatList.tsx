@@ -3,19 +3,25 @@ import {
   Conversation,
   Message,
   Post,
-  RelationShip,
+  Relationship,
   User,
 } from "@prisma/client";
 
-const ChatList = (props: {
+export interface ChatListProps {
   userId: string;
-  relationShips: (RelationShip & {
+  relationships: (Relationship & {
     user: User;
     conversation: (Conversation & { messages: Message[] }) | null;
     post: Post & { createdBy: User };
   })[];
   setConversationId: React.Dispatch<React.SetStateAction<string>>;
-}) => {
+}
+
+export const ChatList = ({
+  userId,
+  relationships,
+  setConversationId,
+}: ChatListProps) => {
   return (
     <div className="flex h-full w-1/5 flex-shrink-0 flex-col rounded-tl-lg rounded-bl-lg bg-white pb-6">
       <div className="flex w-full flex-row items-center justify-center rounded-tl-lg bg-indigo-500 p-6">
@@ -40,61 +46,61 @@ const ChatList = (props: {
         <div className="flex flex-row items-center justify-between pl-2 text-xs">
           <span className="font-bold">Conversations</span>
           <span className="flex w-4 items-center justify-center rounded-full bg-gray-300">
-            {props.relationShips?.length}
+            {relationships?.length}
           </span>
         </div>
         <div className="mt-4 flex h-full w-full flex-col space-y-1">
-          {props.relationShips.map((relationShip) => (
+          {relationships.map((relationship) => (
             <button
-              key={relationShip.id}
+              key={relationship.id}
               className="flex flex-row items-center rounded-xl p-2 hover:bg-gray-100"
               onClick={() => {
-                if (relationShip.conversation)
-                  props.setConversationId(relationShip.conversation.id);
+                if (relationship.conversation)
+                  setConversationId(relationship.conversation.id);
               }}
             >
-              {relationShip.user.id === props.userId ? (
+              {relationship.user.id === userId ? (
                 <div
                   className={`${
-                    !relationShip.post.createdBy.image && "bg-gray-200"
+                    !relationship.post.createdBy.image && "bg-gray-200"
                   } flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full uppercase`}
                 >
-                  {relationShip.post.createdBy.image ? (
+                  {relationship.post.createdBy.image ? (
                     <img
-                      src={relationShip.post.createdBy.image}
+                      src={relationship.post.createdBy.image}
                       referrerPolicy="no-referrer"
                       alt="image"
                       className="mx-auto h-full rounded-full"
                     />
                   ) : (
-                    relationShip.post.createdBy.firstName?.charAt(0)
+                    relationship.post.createdBy.firstName?.charAt(0)
                   )}
                 </div>
               ) : (
                 <div
                   className={`${
-                    !relationShip.user.image && "bg-gray-200"
+                    !relationship.user.image && "bg-gray-200"
                   } flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full uppercase`}
                 >
-                  {relationShip.user.image ? (
+                  {relationship.user.image ? (
                     <img
-                      src={relationShip.user.image}
+                      src={relationship.user.image}
                       referrerPolicy="no-referrer"
                       alt="image"
                       className="mx-auto h-full rounded-full"
                     />
                   ) : (
-                    relationShip.user.firstName?.charAt(0)
+                    relationship.user.firstName?.charAt(0)
                   )}
                 </div>
               )}
               <div className="ml-2 text-sm font-semibold">
-                {relationShip.user.id === props.userId
-                  ? `${relationShip.post.createdBy.firstName} ${relationShip.post.createdBy.lastName}`
-                  : `${relationShip.user.firstName} ${relationShip.user.lastName}`}
+                {relationship.user.id === userId
+                  ? `${relationship.post.createdBy.firstName} ${relationship.post.createdBy.lastName}`
+                  : `${relationship.user.firstName} ${relationship.user.lastName}`}
               </div>
               <div className="ml-auto flex h-4 w-4 items-center justify-center rounded bg-red-500 text-xs leading-none text-white">
-                {relationShip.conversation?.messages?.length}
+                {relationship.conversation?.messages?.length}
               </div>
             </button>
           ))}
@@ -103,5 +109,3 @@ const ChatList = (props: {
     </div>
   );
 };
-
-export default ChatList;

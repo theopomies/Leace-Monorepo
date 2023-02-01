@@ -1,9 +1,13 @@
-import React from "react";
 import { ReportReason, ReportStatus } from "@prisma/client";
+import { useState } from "react";
 import { trpc } from "../../utils/trpc";
 
-const ReportButton = (props: { reportId: string }) => {
-  const [selected, setSelected] = React.useState<ReportReason>();
+export interface ReportButtonProps {
+  reportId: string;
+}
+
+export const ReportButton = ({ reportId }: ReportButtonProps) => {
+  const [selected, setSelected] = useState<ReportReason>();
 
   const utils = trpc.useContext();
   const mutation = trpc.moderation.updateReport.useMutation({
@@ -15,12 +19,12 @@ const ReportButton = (props: { reportId: string }) => {
   const handleClick = () => {
     selected
       ? mutation.mutate({
-          id: props.reportId,
+          id: reportId,
           reason: selected,
           status: ReportStatus.REJECTED,
         })
       : mutation.mutate({
-          id: props.reportId,
+          id: reportId,
           status: ReportStatus.RESOLVED,
         });
   };
@@ -52,5 +56,3 @@ const ReportButton = (props: { reportId: string }) => {
     </div>
   );
 };
-
-export default ReportButton;

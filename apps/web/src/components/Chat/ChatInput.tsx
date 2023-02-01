@@ -1,21 +1,35 @@
+import { useRouter } from "next/router";
 import { useState } from "react";
 import { trpc } from "../../utils/trpc";
 
-const ChatInput = (props: { userId: string; conversationId: string }) => {
+export interface ChatInputProps {
+  conversationId: string;
+}
+
+export const ChatInput = ({ conversationId }: ChatInputProps) => {
+  const router = useRouter();
   const [input, setInput] = useState("");
   const utils = trpc.useContext();
-  const mutation = trpc.conversation.sendMessage.useMutation({
-    onSuccess() {
-      utils.conversation.getMessages.invalidate({
-        conversationId: props.conversationId,
+  const mutation = router.pathname.startsWith("/moderation")
+    ? trpc.moderation.sendMessage.useMutation({
+        onSuccess() {
+          utils.moderation.getMessages.invalidate({
+            conversationId: conversationId,
+          });
+        },
+      })
+    : trpc.conversation.sendMessage.useMutation({
+        onSuccess() {
+          utils.conversation.getMessages.invalidate({
+            conversationId: conversationId,
+          });
+        },
       });
-    },
-  });
 
   const handleSend = () => {
     console.log(input);
     mutation.mutate({
-      conversationId: props.conversationId,
+      conversationId: conversationId,
       content: input,
     });
     setInput("");
@@ -88,5 +102,3 @@ const ChatInput = (props: { userId: string; conversationId: string }) => {
     </div>
   );
 };
-
-export default ChatInput;
