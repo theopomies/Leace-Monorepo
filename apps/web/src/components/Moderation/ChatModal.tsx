@@ -20,7 +20,7 @@ export const ChatModal = ({ userId }: ChatModalProps) => {
         <>
           <div className="px-auto fixed inset-0 z-50 flex justify-center p-5">
             <div className="flex w-full items-center justify-center rounded-lg bg-slate-50 shadow-lg">
-              <Chat userId={userId} />
+              <Chat userId={userId} isModeration />
               <div className="mr-6 flex items-center justify-center gap-4">
                 <button
                   className="rounded-full bg-slate-400 px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none transition-all duration-150 ease-linear hover:bg-slate-500 hover:shadow-lg focus:outline-none"

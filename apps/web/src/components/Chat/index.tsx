@@ -1,55 +1,52 @@
 /* eslint-disable @next/next/no-img-element */
-import { useRouter } from "next/router";
 import { useState } from "react";
-import { trpc } from "../../utils/trpc";
-import { Loader } from "../Moderation/Loader";
-import { ChatList } from "./ChatList";
-import { ChatBox } from "./ChatBox";
+import { ChatBoxMatch } from "./ChatBoxMatch";
+import { ChatBoxModeration } from "./ChatBoxModeration";
+import { ChatListMatch } from "./ChatListMatch";
+import { ChatListModeration } from "./ChatListModeration";
 
 export interface ChatProps {
   userId: string;
   chatOn?: boolean;
+  isModeration?: boolean;
 }
 
-export const Chat = ({ userId, chatOn }: ChatProps) => {
-  const router = useRouter();
+export const Chat = ({
+  userId,
+  chatOn = false,
+  isModeration = false,
+}: ChatProps) => {
   const [conversationId, setConversationId] = useState("");
 
-  const relationships = router.pathname.startsWith("/moderation")
-    ? trpc.moderation.getMatch.useQuery(chatOn ? undefined : { id: userId }, {
-        onSuccess(data) {
-          if (data && data[0] && data[0].conversation)
-            setConversationId(data[0].conversation.id);
-        },
-      })
-    : trpc.relationship.getMatch.useQuery(undefined, {
-        onSuccess(data) {
-          if (data && data[0] && data[0].conversation)
-            setConversationId(data[0].conversation.id);
-        },
-      });
-
-  if (relationships.isLoading) {
-    return <Loader />;
-  }
-  if (!relationships || !relationships.data || relationships.error) {
-    return <p>Aucune conversation</p>;
-  }
   return (
     <div className="flex h-full w-full text-gray-800 antialiased">
       <div className="flex h-full w-full flex-row overflow-x-hidden">
-        <ChatList
-          userId={userId}
-          relationships={relationships.data}
-          setConversationId={setConversationId}
-        />
-        {conversationId && (
-          <ChatBox
-            conversationId={conversationId}
+        {isModeration ? (
+          <ChatListModeration
             userId={userId}
+            setConversationId={setConversationId}
             chatOn={chatOn}
           />
+        ) : (
+          <ChatListMatch
+            userId={userId}
+            setConversationId={setConversationId}
+          />
         )}
+        {conversationId &&
+          (isModeration ? (
+            <ChatBoxModeration
+              conversationId={conversationId}
+              userId={userId}
+              chatOn={chatOn}
+            />
+          ) : (
+            <ChatBoxMatch
+              conversationId={conversationId}
+              userId={userId}
+              chatOn={chatOn}
+            />
+          ))}
       </div>
     </div>
   );
