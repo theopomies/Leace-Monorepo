@@ -2,6 +2,7 @@ import { useState } from 'react'
 
 import { trpc } from '../../utils/trpc';
 import { ReportReason } from '@prisma/client';
+import { useRouter } from 'next/router';
 
 
 export default function Chat() {
@@ -19,6 +20,12 @@ export default function Chat() {
   const [selectedOption, setSelectedOption] = useState(0);
   const [selectedValue, setSelectedValue] = useState<ReportReason>(ReportReason.SPAM);
 
+  const router = useRouter();
+
+  const handleClick = (e: { preventDefault: () => void; }, route: string) => {
+    e.preventDefault()
+    router.push(route)
+  }
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -28,6 +35,11 @@ export default function Chat() {
 
   return (
     <div className="h-screen w-screen flex flex-col">
+      <div className="h-84 w-84 mt-10 ml-10">
+        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 flex items-center justify-center rounded bottom-0 left-0 right-0" onClick={(e) => handleClick(e, '/dashboard')}>
+          Return
+        </button>
+      </div>
       <div className="flex-1 overflow-y-scroll p-4">
         {messages.map((message, index) => (
           <div key={index} className="p-4 bg-white">
@@ -78,22 +90,19 @@ export default function Chat() {
               <label className="text-gray-600">Lodging:</label>
               <input
                 type="text"
-                className="w-full bg-white p-2 rounded ml-4"
-              />
+                className="w-full bg-white p-2 rounded ml-4" />
             </div>
             <div className="mb-4">
               <label className="text-gray-600">Price:</label>
               <input
                 type="text"
-                className="w-full bg-white p-2 rounded ml-4"
-              />
+                className="w-full bg-white p-2 rounded ml-4" />
             </div>
             <div className="mb-4">
               <label className="text-gray-600">Duration:</label>
               <input
                 type="text"
-                className="w-full bg-white p-2 rounded ml-4"
-              />
+                className="w-full bg-white p-2 rounded ml-4" />
             </div>
             <div className="flex justify-end">
               <button
@@ -135,7 +144,7 @@ export default function Chat() {
               <button
                 className="p-2 bg-blue-500 text-white rounded mr-2"
                 onClick={() => {
-                  reportButton(selectedValue)
+                  reportButton(selectedValue);
                   setIsModalOpen(false);
                 }}
               >
@@ -161,10 +170,10 @@ export default function Chat() {
             Options
           </button>
           <input
+            placeholder="Enter message..."
             className="w-full bg-white p-2 rounded ml-4"
             value={input}
-            onChange={(event) => setInput(event.target.value)}
-          />
+            onChange={(event) => setInput(event.target.value)} />
           <button className="ml-4 p-2 bg-blue-500 text-white rounded">
             Send
           </button>

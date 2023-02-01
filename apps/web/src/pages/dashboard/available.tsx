@@ -32,7 +32,7 @@ export default function Available() {
                     <div className="text-3xl font-bold text-center items-center justify-center">No property available at the moment</div>
                 </div>
             }
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 flex items-center justify-center rounded bottom-0 left-0 right-0" onClick={(e) => handleClick(e, 'dashboard')}>
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 flex items-center justify-center rounded bottom-0 left-0 right-0" onClick={(e) => handleClick(e, '/dashboard')}>
                 Return
             </button>
         </div>

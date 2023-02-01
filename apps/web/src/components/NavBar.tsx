@@ -7,7 +7,7 @@ const links = [
     label: "Home",
   },
   {
-    href: "#",
+    href: "/dashboard",
     label: "Dashboard",
   },
   {

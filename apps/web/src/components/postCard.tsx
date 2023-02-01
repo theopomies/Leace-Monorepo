@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 export const PostCard = ({ title, desc, content, income, expenses }: { title: string | null, desc: string | null, content: string | null, income: number | undefined, expenses: number | undefined }) => {
 
     return (
