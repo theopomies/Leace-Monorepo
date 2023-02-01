@@ -1,9 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 import { useEffect, useState } from "react";
 import { trpc, RouterInputs } from "../../utils/trpc";
-import { Roles } from "@prisma/client";
 import Header from "../../components/Web/Header";
-import LoggedLayout from "../../components/LoggedLayout";
+import { LoggedLayout } from "../../components/LoggedLayout";
 import { useRouter } from "next/router";
 
 const ModifyPost = () => {

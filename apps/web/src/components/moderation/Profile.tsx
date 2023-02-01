@@ -1,9 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
 import { User, Report } from "@prisma/client";
-import { DeleteImgButton } from "./deleteImgButton";
-import { trpc } from "../utils/trpc";
-import DocValidation from "./docValidation";
+import { DeleteImgButton } from "../Web/deleteImgButton";
+import { trpc } from "../../utils/trpc";
+import DocValidation from "./DocValidation";
 
 const Profile = (props: {
   user: User & {

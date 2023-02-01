@@ -1,7 +1,7 @@
 import { UserStatus } from "@prisma/client";
 import { useRouter } from "next/router";
 import React from "react";
-import { trpc } from "../utils/trpc";
+import { trpc } from "../../utils/trpc";
 
 export const BanButton = (props: { userId: string }) => {
   const path = useRouter();

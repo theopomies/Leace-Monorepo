@@ -1,4 +1,4 @@
-import LoggedLayout from "../components/LoggedLayout";
+import { LoggedLayout } from "../components/LoggedLayout";
 import { StripePricingTable } from "../components/premium/stripeComponent";
 import { trpc } from "../utils/trpc";
 

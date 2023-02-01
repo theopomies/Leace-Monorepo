@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Stack } from "../../components/Stack/Stack";
 import { StackElementProps } from "../../components/Stack/StackElement";
-import LoggedLayout from "../../components/LoggedLayout";
+import LoggedLayout from "../LoggedLayout";
 
 const defaultPosts: StackElementProps[] = [];
 
@@ -17,7 +17,7 @@ for (let i = 0; i < 10; i++) {
   });
 }
 
-export default function Candidats() {
+export function TenantStack() {
   const [posts, setPosts] = useState(defaultPosts);
   const [lastPost, setLastPost] = useState<StackElementProps | null>(null);
 

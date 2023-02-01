@@ -1,6 +1,6 @@
 import React from "react";
 
-const Loader = () => {
+export const Loader = () => {
   return (
     <div className="flex h-screen w-full items-center justify-center">
       <svg
@@ -22,5 +22,3 @@ const Loader = () => {
     </div>
   );
 };
-
-export default Loader;

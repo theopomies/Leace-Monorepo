@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Header from "../../components/Web/Header";
 import { useRouter } from "next/router";
 import { trpc, RouterInputs } from "../../utils/trpc";
-import LoggedLayout from "../../components/LoggedLayout";
+import { LoggedLayout } from "../../components/LoggedLayout";
 
 const AddPost = () => {
   const post = trpc.post.createPost.useMutation();

@@ -1,12 +1,12 @@
 import { UserStatus } from "@prisma/client";
 import { useState } from "react";
-import { BanButton, UnBanButton } from "../../components/banButton";
-import Loader from "../../components/loader";
-import Profile from "../../components/profile";
-import Search from "../../components/search";
+import { BanButton, UnBanButton } from "./BanButton";
+import { Loader } from "../Loader";
+import Profile from "./Profile";
+import Search from "./Search";
 import { trpc } from "../../utils/trpc";
 
-const Admin = () => {
+export const Administration = () => {
   const [uid, setUid] = useState("");
 
   const user = trpc.moderation.getById.useQuery(uid.toString(), {
@@ -47,5 +47,3 @@ const Admin = () => {
     </div>
   );
 };
-
-export default Admin;

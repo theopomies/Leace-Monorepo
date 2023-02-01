@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { trpc, RouterInputs } from "../../utils/trpc";
 import { Attribute, Post, Roles } from ".prisma/client";
 import DeletePost from "./DeletePost";
-import LoggedLayout from "../LoggedLayout";
+import { LoggedLayout } from "../LoggedLayout";
 import Header from "./Header";
 
 export default function displayPost(props: {

@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import ReportForm from "../../components/Web/ReportUser";
 import Header from "../../components/Web/Header";
 import { trpc, RouterInputs } from "../../utils/trpc";
-import LoggedLayout from "../../components/LoggedLayout";
+import { LoggedLayout } from "../../components/LoggedLayout";
 import { useRouter } from "next/router";
 
 const ProfilePage = () => {

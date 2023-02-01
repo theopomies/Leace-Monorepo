@@ -1,26 +1,42 @@
+import { Roles } from "@prisma/client";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 
-const links = [
+const links: {
+  href: string;
+  label: string;
+  roles: Roles[];
+  premium?: boolean;
+}[] = [
   {
-    href: "/stack/candidats",
+    href: "/",
     label: "Home",
+    roles: [Roles.OWNER, Roles.AGENCY, Roles.TENANT],
   },
   {
     href: "#",
     label: "Dashboard",
+    roles: [Roles.OWNER, Roles.AGENCY, Roles.TENANT],
   },
   {
     href: "#",
     label: "Matches",
+    roles: [Roles.OWNER, Roles.AGENCY, Roles.TENANT],
   },
   {
     href: "#",
     label: "Profile",
+    roles: [Roles.OWNER, Roles.AGENCY, Roles.TENANT],
   },
   {
     href: "#",
     label: "Notifications",
+    roles: [Roles.OWNER, Roles.AGENCY, Roles.TENANT],
+  },
+  {
+    href: "/moderation",
+    label: "Modération",
+    roles: [Roles.ADMIN],
   },
   {
     href: "/premium",

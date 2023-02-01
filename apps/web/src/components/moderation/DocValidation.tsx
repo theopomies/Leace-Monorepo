@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { useState } from "react";
-import { trpc } from "../utils/trpc";
+import { trpc } from "../../utils/trpc";
 
 const DocValidationModal = (props: {
   document: { id: string; url: string; valid: boolean; ext: string };

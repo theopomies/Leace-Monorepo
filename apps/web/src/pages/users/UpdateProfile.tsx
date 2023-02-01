@@ -4,7 +4,7 @@ import { trpc, RouterInputs } from "../../utils/trpc";
 import { Roles } from "@prisma/client";
 import { useRouter } from "next/router";
 import Header from "../../components/Web/Header";
-import LoggedLayout from "../../components/LoggedLayout";
+import { LoggedLayout } from "../../components/LoggedLayout";
 import LocataireProfile from "../../components/Web/ModifyLocataireProfile";
 
 const UpdateProfiles = () => {

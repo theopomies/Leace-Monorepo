@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { trpc, RouterInputs } from "../../utils/trpc";
 import { Attribute } from "@prisma/client";
-import LoggedLayout from "../LoggedLayout";
+import { LoggedLayout } from "../LoggedLayout";
 
 interface Props {
   setAttData: React.Dispatch<

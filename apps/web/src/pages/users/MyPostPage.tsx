@@ -2,7 +2,7 @@ import React from "react";
 import Header from "../../components/Web/Header";
 import { trpc } from "../../utils/trpc";
 import { PostBar } from "../../components/Web/PostBar";
-import LoggedLayout from "../../components/LoggedLayout";
+import { LoggedLayout } from "../../components/LoggedLayout";
 
 const postPage = () => {
   const post = trpc.post.getMyPost.useQuery();
