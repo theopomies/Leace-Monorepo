@@ -3,16 +3,19 @@ import { LoggedLayout } from "../components/LoggedLayout";
 import { Roles } from "@prisma/client";
 import { useRouter } from "next/router";
 import { Loader } from "../components/Moderation/Loader";
+import { Moderation } from "../components/Moderation/Moderation";
 
-export default function Moderation() {
+export default function ModerationPage() {
   return (
     <LoggedLayout title="Moderation | Leace">
-      <AdminCheck />
+      <AdminCheck>
+        <Moderation />
+      </AdminCheck>
     </LoggedLayout>
   );
 }
 
-const AdminCheck = () => {
+const AdminCheck = ({ children }: { children: React.ReactNode }) => {
   const { data: session } = trpc.auth.getSession.useQuery();
   const router = useRouter();
 
@@ -21,5 +24,5 @@ const AdminCheck = () => {
     return <Loader />;
   }
 
-  return <Moderation />;
+  return <>{children}</>;
 };
