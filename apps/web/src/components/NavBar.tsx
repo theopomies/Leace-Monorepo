@@ -12,7 +12,7 @@ const links: {
   {
     href: "/",
     label: "Home",
-    roles: [Roles.OWNER, Roles.AGENCY, Roles.TENANT],
+    roles: [Roles.OWNER, Roles.AGENCY, Roles.TENANT, Roles.ADMIN],
   },
   {
     href: "#",
@@ -47,6 +47,11 @@ const links: {
   {
     href: "/moderation",
     label: "Moderation",
+    roles: [Roles.ADMIN],
+  },
+  {
+    href: "/support",
+    label: "Support",
     roles: [Roles.ADMIN],
   },
   {

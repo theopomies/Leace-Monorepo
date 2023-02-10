@@ -26,7 +26,7 @@ export const Profile = ({ user }: ProfileProps) => {
   };
 
   return (
-    <div className="flex h-full w-full flex-col overflow-auto rounded-lg p-8 shadow">
+    <div className="flex w-full flex-col overflow-auto rounded-lg bg-white p-8 shadow">
       <img
         src={user.image || "/defaultImage.png"}
         referrerPolicy="no-referrer"

@@ -1,18 +1,18 @@
 import { Chat } from "../../components/Chat";
 import { trpc } from "../../utils/trpc";
+import { Loader } from "./Loader";
 
-const Support = () => {
+export const Support = () => {
   const session = trpc.auth.getSession.useQuery();
 
-  if (session.data) {
+  if (session.data && !session.error) {
     return (
-      <div className="flex h-[calc(100vh-44px)] justify-center p-6">
+      <div className="flex h-screen w-full justify-center p-4">
         <div className="flex w-full items-center justify-center rounded-lg bg-slate-50 shadow-lg">
           <Chat userId={session.data.user.id} chatOn isModeration />
         </div>
       </div>
     );
   }
+  return <Loader />;
 };
-
-export default Support;
