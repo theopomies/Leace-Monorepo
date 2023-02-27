@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { NavBar } from "./NavBar";
-import { useSession } from "next-auth/react";
 import Head from "next/head";
+import { useSession } from "@clerk/nextjs";
 
 export function LoggedLayout({
   children,
@@ -10,15 +10,15 @@ export function LoggedLayout({
   children: React.ReactNode;
   title: string;
 }) {
-  const { status } = useSession();
+  const session = useSession();
   const router = useRouter();
 
-  if (status === "loading") {
+  if (!session.isLoaded) {
     return <p>Loading...</p>;
   }
 
-  if (status === "unauthenticated") {
-    router.push("/api/auth/signin");
+  if (!session.isSignedIn) {
+    router.push("/sign-in");
     return null;
   }
 

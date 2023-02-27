@@ -1,15 +1,20 @@
-import { getServerSession, type Session } from "@leace/auth";
-import { prisma } from "@leace/db";
+import { prisma, Roles } from "@leace/db";
 import { type inferAsyncReturnType } from "@trpc/server";
 import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
 import { S3Client } from "@aws-sdk/client-s3";
+import { getAuth } from "@clerk/nextjs/server";
+import type {
+  SignedInAuthObject,
+  SignedOutAuthObject,
+} from "@clerk/nextjs/dist/api";
 
 /**
  * Replace this with an object if you want to pass things to createContextInner
  */
-type CreateContextOptions = {
-  session: Session | null;
+type AuthContextProps = {
+  auth: SignedInAuthObject | SignedOutAuthObject;
   s3Client: S3Client;
+  role: Roles | undefined;
 };
 
 /** Use this helper for:
@@ -17,11 +22,16 @@ type CreateContextOptions = {
  *  - trpc's `createSSGHelpers` where we don't have req/res
  * @see https://beta.create.t3.gg/en/usage/trpc#-servertrpccontextts
  */
-export const createContextInner = async (opts: CreateContextOptions) => {
+export const createContextInner = async ({
+  auth,
+  s3Client,
+  role,
+}: AuthContextProps) => {
   return {
-    session: opts.session,
+    auth,
     prisma,
-    s3Client: opts.s3Client,
+    s3Client: s3Client,
+    role,
   };
 };
 
@@ -30,7 +40,7 @@ export const createContextInner = async (opts: CreateContextOptions) => {
  * @link https://trpc.io/docs/context
  **/
 export const createContext = async (opts: CreateNextContextOptions) => {
-  const session = await getServerSession(opts);
+  const auth = getAuth(opts.req);
   const s3Client = new S3Client({
     region: "eu-west-3",
     apiVersion: "2006-03-01",
@@ -39,10 +49,20 @@ export const createContext = async (opts: CreateNextContextOptions) => {
       secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || "",
     },
   });
+  let role: Roles | undefined;
+
+  if (auth.userId) {
+    const user = await prisma.user.findFirst({
+      where: { id: auth.userId },
+      select: { role: true },
+    });
+    role = user?.role;
+  }
 
   return await createContextInner({
-    session,
+    auth,
     s3Client,
+    role,
   });
 };
 

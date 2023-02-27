@@ -13,6 +13,7 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@clerk/nextjs": "^4.11.1",
     "@leace/api": "*",
     "@leace/auth": "*",
     "@leace/db": "*",

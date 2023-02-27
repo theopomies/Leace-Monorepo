@@ -13,6 +13,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.257.0",
     "@aws-sdk/s3-request-presigner": "^3.257.0",
+    "@clerk/nextjs": "^4.11.1",
     "@leace/auth": "*",
     "@leace/db": "*",
     "@trpc/client": "^10.1.0",

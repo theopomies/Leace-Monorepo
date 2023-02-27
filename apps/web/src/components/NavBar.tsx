@@ -1,5 +1,5 @@
 import { Roles } from "@prisma/client";
-import { signOut } from "next-auth/react";
+import { useClerk } from "@clerk/clerk-react";
 import Link from "next/link";
 import { trpc } from "../utils/trpc";
 
@@ -59,7 +59,7 @@ const links: {
 
 export function NavBar() {
   const { data: me } = trpc.user.getUser.useQuery();
-
+  const { signOut } = useClerk();
   const handleLink = ({
     href,
     label,
