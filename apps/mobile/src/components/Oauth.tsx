@@ -1,22 +1,28 @@
 import { useSignUp, useSignIn } from "@clerk/clerk-expo";
 import React from "react";
-import { Button, View } from "react-native";
+import { Image, Pressable, View, Text } from "react-native";
 
 import * as AuthSession from "expo-auth-session";
 
-const SignInWithOAuth = () => {
+interface OAuthProps extends React.HTMLAttributes<HTMLDivElement> {
+  provider: "oauth_facebook" | "oauth_google";
+  title: string;
+  icon: any;
+}
+
+const OAuth = ({ provider, title, icon }: OAuthProps) => {
   const { isLoaded, signIn, setSession } = useSignIn();
   const { signUp } = useSignUp();
   if (!isLoaded) return null;
 
-  const handleSignInWithGooglePress = async () => {
+  const handleOAuth = async (provider: "oauth_facebook" | "oauth_google") => {
     try {
       const redirectUrl = AuthSession.makeRedirectUri({
         path: "/oauth-native-callback",
       });
 
       await signIn.create({
-        strategy: "oauth_google",
+        strategy: provider,
         redirectUrl,
       });
 
@@ -75,13 +81,16 @@ const SignInWithOAuth = () => {
   };
 
   return (
-    <View className="rounded-lg border-2 border-gray-500 p-4">
-      <Button
-        title="Sign in with Google"
-        onPress={handleSignInWithGooglePress}
-      />
-    </View>
+    <Pressable
+      className="flex flex-row rounded-md border-2 border-gray-300 py-3"
+      onPress={() => handleOAuth(provider)}
+    >
+      <View className="mx-10 flex flex-row items-center justify-center">
+        <Image source={icon} alt={title} className="mr-2 h-6 w-6" />
+        <Text className="text-black">{title}</Text>
+      </View>
+    </Pressable>
   );
 };
 
-export default SignInWithOAuth;
+export default OAuth;

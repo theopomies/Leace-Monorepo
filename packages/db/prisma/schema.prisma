@@ -57,7 +57,6 @@ model User {
   id   String @id @default(cuid())
   role Roles  @default(NONE)
 
-  name          String?
   email         String?   @unique
   emailVerified DateTime?
   image         String?
