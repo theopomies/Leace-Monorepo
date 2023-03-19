@@ -9,10 +9,6 @@ export default function AuthScreen() {
     <SafeAreaView className="flex-1 items-center justify-center bg-slate-50">
       <Image source={require("../../assets/logo.png")} alt="leace" />
       <View className="w-full p-8">
-        <Text className="mb-6 text-4xl font-bold tracking-[.5em] text-[#313131]">
-          Login
-        </Text>
-
         <View className="mb-4">
           <OAuth
             icon={require("../../assets/facebook.png")}
