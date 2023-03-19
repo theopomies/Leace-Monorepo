@@ -19,6 +19,7 @@ const isAuthorized = (roles?: Roles[]) =>
     }
 
     // role should not be null if the user follow a normal flow.
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     if (roles && !roles.includes(ctx.role!)) {
       throw new TRPCError({
         code: "UNAUTHORIZED",

@@ -1,6 +1,6 @@
 import { useSignUp, useSignIn } from "@clerk/clerk-expo";
 import React, { useState } from "react";
-import { Text, Button, View, TextInput, Pressable } from "react-native";
+import { Text, View, TextInput, Pressable } from "react-native";
 
 import * as AuthSession from "expo-auth-session";
 
@@ -36,6 +36,7 @@ const MagicLink = () => {
       }
     }
     if (errors === "form_identifier_exists") {
+      if (!signIn) return null;
       const si = await signIn.create({ identifier: emailAddress });
 
       const { emailAddressId } = si.supportedFirstFactors.find(
@@ -66,7 +67,7 @@ const MagicLink = () => {
         className="h-12 w-full items-center justify-center rounded-md bg-blue-900 py-2 px-4"
         onPress={handleSignUp}
       >
-        <Text className="tracking-[.5em] text-white">Send me a link</Text>
+        <Text className="text-white">Send me a link</Text>
       </Pressable>
     </View>
   );

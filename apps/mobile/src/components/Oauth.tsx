@@ -1,13 +1,19 @@
 import { useSignUp, useSignIn } from "@clerk/clerk-expo";
 import React from "react";
-import { Image, Pressable, View, Text } from "react-native";
+import {
+  Image,
+  Pressable,
+  View,
+  Text,
+  ImageSourcePropType,
+} from "react-native";
 
 import * as AuthSession from "expo-auth-session";
 
 interface OAuthProps extends React.HTMLAttributes<HTMLDivElement> {
   provider: "oauth_facebook" | "oauth_google";
   title: string;
-  icon: any;
+  icon: ImageSourcePropType;
 }
 
 const OAuth = ({ provider, title, icon }: OAuthProps) => {
