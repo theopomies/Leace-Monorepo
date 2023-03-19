@@ -8,12 +8,12 @@ import { PostList } from "../../components/Web/PostList";
 
 const MatchPage = () => {
   const { data: session } = trpc.auth.getSession.useQuery();
-  console.log(session?.user.role);
+  console.log(session?.role);
   return (
     <LoggedLayout title="Mes Matchs">
       <div className="w-full">
         <Header heading={"Mes Matchs"} />
-        {session && session.user.role != Roles.TENANT ? (
+        {session && session.role != Roles.TENANT ? (
           <TenantList />
         ) : (
           <PostList />

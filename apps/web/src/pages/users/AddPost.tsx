@@ -76,10 +76,7 @@ const AddPost = () => {
     updatePost.mutate(attData);
     router.push("ProfilePage");
   };
-  if (
-    session.data?.user.role == "OWNER" ||
-    session.data?.user.role == "AGENCY"
-  ) {
+  if (session.data?.role == "OWNER" || session.data?.role == "AGENCY") {
     return (
       <LoggedLayout title="Profile Page | Leace">
         <div className="w-full">

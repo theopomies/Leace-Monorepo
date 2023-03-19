@@ -91,7 +91,7 @@ export const Profile = ({ user }: ProfileProps) => {
             {user.reports.map((report, index) => (
               <p key={index} className="text-lg">
                 Le {displayDate(report.createdAt)}, {report.createdById} a
-                signalé {user.firstName || user.name} pour {report.reason}
+                signalé {user.firstName || user.firstName} pour {report.reason}
               </p>
             ))}
           </div>

@@ -16,7 +16,7 @@ export function DisplayPost(props: { post: Post; attribute: Attribute }) {
         <Header heading={"Annonce"} />
         <div className="flex justify-center p-5">
           <div>
-            {session?.user.role != Roles.TENANT && (
+            {session?.role != Roles.TENANT && (
               <DeletePost post={props.post.id} />
             )}
           </div>
