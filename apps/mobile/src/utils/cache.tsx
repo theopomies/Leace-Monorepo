@@ -2,13 +2,11 @@ import * as SecureStore from "expo-secure-store";
 import { Platform } from "react-native";
 
 export async function saveToken(key: string, value: string) {
-  // console.log("Save token", key, value);
   await SecureStore.setItemAsync(key, value);
 }
 
 export async function getToken(key: string) {
-  const value = await SecureStore.getItemAsync(key);
-  return value;
+  return await SecureStore.getItemAsync(key);
 }
 
 // SecureStore is not supported on the web

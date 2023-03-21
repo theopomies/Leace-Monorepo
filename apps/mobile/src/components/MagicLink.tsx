@@ -13,7 +13,7 @@ const MagicLink = () => {
 
   const handleSignUp = async () => {
     const redirectUrl = AuthSession.makeRedirectUri({
-      path: "exp://192.168.12.149:19000/--/signin",
+      path: "/oauth-native-callback",
     });
 
     await signUp.create({ emailAddress }).catch((err) => {
@@ -21,7 +21,6 @@ const MagicLink = () => {
         errors = err.errors[0].code;
       }
     });
-    console.log(errors);
     if (!errors) {
       const { startMagicLinkFlow } = signUp.createMagicLinkFlow();
       //this hold on while we wait for the user to open it.

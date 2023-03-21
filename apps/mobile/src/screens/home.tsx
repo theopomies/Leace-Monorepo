@@ -34,7 +34,7 @@ const PostCard: React.FC<{
   );
 };
 
-const CreatePost: React.FC = () => {
+const CreatePost = () => {
   const utils = trpc.useContext();
   const { mutate } = trpc.post.createPost.useMutation({
     async onSuccess() {

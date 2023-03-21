@@ -10,7 +10,7 @@ import { tokenCache } from "./utils/cache";
 export const App = () => {
   return (
     <ClerkProvider
-      publishableKey={"pk_test_Y2VydGFpbi1jcmFiLTU0LmNsZXJrLmFjY291bnRzLmRldiQ"}
+      publishableKey="pk_test_Y2VydGFpbi1jcmFiLTU0LmNsZXJrLmFjY291bnRzLmRldiQ"
       tokenCache={tokenCache}
     >
       <SignedIn>
