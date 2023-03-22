@@ -2,10 +2,11 @@ import { prisma, Roles } from "@leace/db";
 import { type inferAsyncReturnType } from "@trpc/server";
 import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
 import { S3Client } from "@aws-sdk/client-s3";
-import { getAuth } from "@clerk/nextjs/server";
-import type {
+import { getAuth, createClerkClient } from "@clerk/nextjs/server";
+import {
   SignedInAuthObject,
   SignedOutAuthObject,
+  clerkClient,
 } from "@clerk/nextjs/dist/api";
 
 /**
@@ -15,6 +16,7 @@ type AuthContextProps = {
   auth: SignedInAuthObject | SignedOutAuthObject;
   s3Client: S3Client;
   role: Roles | undefined;
+  clerkClient: typeof clerkClient;
 };
 
 /** Use this helper for:
@@ -26,12 +28,14 @@ export const createContextInner = async ({
   auth,
   s3Client,
   role,
+  clerkClient,
 }: AuthContextProps) => {
   return {
     auth,
     prisma,
     s3Client: s3Client,
     role,
+    clerkClient,
   };
 };
 
@@ -41,6 +45,10 @@ export const createContextInner = async ({
  **/
 export const createContext = async (opts: CreateNextContextOptions) => {
   const auth = getAuth(opts.req);
+  const clerkClient = createClerkClient({
+    apiKey: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
+    secretKey: process.env.CLERK_SECRET_KEY,
+  });
   const s3Client = new S3Client({
     region: "eu-west-3",
     apiVersion: "2006-03-01",
@@ -63,6 +71,7 @@ export const createContext = async (opts: CreateNextContextOptions) => {
     auth,
     s3Client,
     role,
+    clerkClient,
   });
 };
 

@@ -12,15 +12,16 @@ export const userRouter = router({
         where: { id: ctx.auth.userId },
       });
       if (!user) {
+        const user = await ctx.clerkClient.users.getUser(ctx.auth.userId);
         const newAccount = await ctx.prisma.user.create({
           data: {
             id: ctx.auth.userId,
-            image: ctx.auth.user?.profileImageUrl,
-            email: ctx.auth.user?.primaryEmailAddressId,
-            firstName: ctx.auth.user?.firstName,
-            lastName: ctx.auth.user?.lastName,
-            phoneNumber: ctx.auth.user?.primaryPhoneNumberId,
-            birthDate: ctx.auth.user?.birthday,
+            image: user.profileImageUrl,
+            email: user.emailAddresses[0]?.emailAddress,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            phoneNumber: user.primaryPhoneNumberId,
+            role: input,
           },
         });
         if (!newAccount) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });

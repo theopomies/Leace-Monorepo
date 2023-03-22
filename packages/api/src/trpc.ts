@@ -27,13 +27,6 @@ const isAuthorized = (roles?: Roles[]) =>
       });
     }
 
-    if (!roles && ctx.role == Roles.NONE) {
-      throw new TRPCError({
-        code: "UNAUTHORIZED",
-        message: "Not authorized",
-      });
-    }
-
     return next({
       ctx: {
         auth: ctx.auth,
