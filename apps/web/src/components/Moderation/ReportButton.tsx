@@ -30,7 +30,7 @@ export const ReportButton = ({ reportId }: ReportButtonProps) => {
   };
 
   return (
-    <div className="flex w-full  items-center justify-center px-10">
+    <div className="flex w-full items-center justify-center">
       <select
         value={selected}
         onChange={(e) => {

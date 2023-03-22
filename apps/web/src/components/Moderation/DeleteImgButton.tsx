@@ -1,16 +1,17 @@
 import axios from "axios";
 import { trpc } from "../../utils/trpc";
+import { Cross } from "./Icons";
 
 export interface DeleteImgButtonProps {
-  userId: string;
+  postId: string;
   id: string;
 }
 
-export const DeleteImgButton = ({ userId, id }: DeleteImgButtonProps) => {
+export const DeleteImgButton = ({ postId, id }: DeleteImgButtonProps) => {
   const utils = trpc.useContext();
-  const mut = trpc.moderation.deleteImage.useMutation();
+  const mut = trpc.moderation.deletePostImage.useMutation();
   const onClickDelete = async () => {
-    await mut.mutateAsync({ userId: userId, id: id }).then(async (url) => {
+    await mut.mutateAsync({ postId: postId, id: id }).then(async (url) => {
       await axios.delete(url);
       utils.image.GetSignedUserUrl.refetch();
     });
@@ -22,20 +23,7 @@ export const DeleteImgButton = ({ userId, id }: DeleteImgButtonProps) => {
       className="absolute -right-1 -top-1 inline-flex items-center justify-center rounded-full bg-red-500 p-1 text-white hover:bg-white hover:text-red-500"
       onClick={onClickDelete}
     >
-      <svg
-        className="w-3"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-        aria-hidden="true"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="2"
-          d="M6 18L18 6M6 6l12 12"
-        />
-      </svg>
+      <Cross />
     </button>
   );
 };

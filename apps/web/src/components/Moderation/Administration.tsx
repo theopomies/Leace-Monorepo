@@ -1,18 +1,23 @@
-import { UserStatus } from "@prisma/client";
 import { useState } from "react";
 import { Loader } from "./Loader";
-import { Profile } from "./Profile";
 import { Search } from "./Search";
 import { trpc } from "../../utils/trpc";
-import { ChatModal } from "./ChatModal";
 import { useRouter } from "next/router";
-import { BanButtonAdmin } from "./BanButton/BanButtonAdmin";
+import { User } from "./User";
+import { Post } from "./Post";
 
 export const Administration = () => {
   const router = useRouter();
   const [uid, setUid] = useState((router.query.id as string) || "");
 
-  const user = trpc.moderation.getById.useQuery(uid.toString(), {
+  const user = trpc.moderation.getUserById.useQuery(uid.toString(), {
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    retry: false,
+  });
+
+  const post = trpc.moderation.getPostById.useQuery(uid.toString(), {
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     refetchOnReconnect: false,
@@ -27,22 +32,20 @@ export const Administration = () => {
         </div>
       </div>
     );
-  if (user.isLoading) return <Loader />;
-  if (user && user.data && !user.error) {
+  if (user.isLoading || post.isLoading) return <Loader />;
+  if (
+    (user && user.data && !user.error) ||
+    (post && post.data && !post.error)
+  ) {
     return (
       <div className="flex w-full">
         <div className="flex w-1/5 items-center justify-center"></div>
-        <div className="w-3/5">
+        <div className="w-3/5 py-5">
           <Search setUid={setUid} />
-          <Profile user={user.data} />
+          {user.data && <User userId={user.data.id} />}
+          {post.data && <Post postId={post.data.id} />}
         </div>
-        <div className="flex w-1/5 flex-col items-center justify-center gap-5">
-          <BanButtonAdmin
-            userId={user.data.id}
-            isBanned={user.data.status === UserStatus.BANNED}
-          />
-          <ChatModal userId={user.data.id} />
-        </div>
+        <div className="flex h-screen w-1/5 flex-col items-center justify-center gap-5 px-10"></div>
       </div>
     );
   }

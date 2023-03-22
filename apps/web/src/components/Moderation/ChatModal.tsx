@@ -9,7 +9,7 @@ export const ChatModal = ({ userId }: ChatModalProps) => {
   const [showModal, setShowModal] = useState(false);
 
   return (
-    <div className="flex w-full flex-col items-center justify-center px-10">
+    <div className="flex w-full flex-col items-center justify-center">
       <button
         className="rounded-full bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700"
         onClick={() => setShowModal(true)}
