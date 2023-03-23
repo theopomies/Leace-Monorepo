@@ -19,7 +19,7 @@ export const reportRouter = router({
     .mutation(({ ctx, input }) => {
       return ctx.prisma.report.create({
         data: {
-          createdById: ctx.session.user.id,
+          createdById: ctx.auth.userId,
           userId: input.userId,
           desc: input.desc,
           status: ReportStatus.PENDING,
@@ -43,7 +43,7 @@ export const reportRouter = router({
     .mutation(({ ctx, input }) => {
       return ctx.prisma.report.create({
         data: {
-          createdById: ctx.session.user.id,
+          createdById: ctx.auth.userId,
           postId: input.postId,
           desc: input.desc,
           status: ReportStatus.PENDING,

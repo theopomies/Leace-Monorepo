@@ -3,18 +3,29 @@ import React from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { KeyboardAvoidingView, Platform } from "react-native";
 import { TRPCProvider } from "./utils/trpc";
-
+import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-expo";
 import RootNavigator from "./navigation/RootNavigator";
+import { tokenCache } from "./utils/cache";
+import AuthScreen from "./screens/auth";
+import { HomeScreen } from "./screens/home";
 
 export const App = () => {
   return (
-    <TRPCProvider >
-      <SafeAreaProvider >
-        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1 }}>
-          <RootNavigator />
-          <StatusBar />
-        </KeyboardAvoidingView>
-      </SafeAreaProvider>
-    </TRPCProvider>
+    <ClerkProvider
+      publishableKey="pk_test_Y2VydGFpbi1jcmFiLTU0LmNsZXJrLmFjY291bnRzLmRldiQ"
+      tokenCache={tokenCache}
+    >
+      <SignedIn>
+        <TRPCProvider>
+          <SafeAreaProvider>
+            <HomeScreen />
+            <StatusBar />
+          </SafeAreaProvider>
+        </TRPCProvider>
+      </SignedIn>
+      <SignedOut>
+        <AuthScreen />
+      </SignedOut>
+    </ClerkProvider>
   );
 };

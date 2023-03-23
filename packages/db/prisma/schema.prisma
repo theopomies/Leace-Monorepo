@@ -40,7 +40,6 @@ enum ConversationType {
 }
 
 enum Roles {
-  NONE
   TENANT
   OWNER
   AGENCY
@@ -53,70 +52,18 @@ enum PostType {
   TO_BE_RENTED
 }
 
-// NextAuth.js Models
-// NOTE: When using postgresql, mysql or sqlserver, 
-// uncomment the @db.Text annotations below
-// @see https://next-auth.js.org/schemas/models
-model Account {
-  id String @id @default(cuid())
-
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId String
-
-  type              String
-  provider          String
-  providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String? @db.Text
-  session_state     String?
-
-  @@unique([provider, providerAccountId])
-  @@index([userId])
-  @@map("accounts")
-}
-
-model Session {
-  id String @id @default(cuid())
-
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId String
-
-  sessionToken String   @unique
-  expires      DateTime
-
-  @@index([userId])
-  @@map("sessions")
-}
-
-model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
-
-  @@unique([identifier, token])
-  @@map("verification_tokens")
-}
-
 model User {
   id   String @id @default(cuid())
-  role Roles  @default(NONE)
+  role Roles
 
-  name          String?
   email         String?   @unique
   emailVerified DateTime?
   image         String?
-  sessions      Session[]
-  accounts      Account[]
-
   firstName   String?
   lastName    String?
   phoneNumber String?     @unique
   country     String?
-  description String?
+  description String? @db.Text
   birthDate   DateTime?
   status      UserStatus? @default(INACTIVE)
   isPremium   Boolean?    @default(false)
@@ -126,7 +73,7 @@ model User {
   posts         Post[]
   images        Image[] // Not necessary one picture look Ok for users, just post can have more than one pictures. To discuss
   documents     Document[]
-  relationShips RelationShip[]
+  relationships Relationship[]
   messages      Message[]
 
   reports        Report[] @relation("reported")
@@ -146,7 +93,7 @@ model Post {
 
   title   String?
   content String?
-  desc    String?
+  desc    String? @db.Text
   type    PostType? @default(TO_BE_RENTED)
 
   attribute Attribute?
@@ -155,7 +102,7 @@ model Post {
   documents Document[]
 
   reports       Report[]
-  relationShips RelationShip[]
+  relationships Relationship[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -273,7 +220,7 @@ model Image {
   @@map("pictures")
 }
 
-model RelationShip {
+model Relationship {
   id String @id @default(cuid())
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -296,7 +243,7 @@ model RelationShip {
 model Conversation {
   id String @id @default(cuid())
 
-  rs         RelationShip? @relation(fields: [relationId], references: [id], onDelete: Cascade)
+  rs         Relationship? @relation(fields: [relationId], references: [id], onDelete: Cascade)
   relationId String?       @unique
 
   type     ConversationType? @default(NONE)

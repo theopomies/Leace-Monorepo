@@ -51,6 +51,7 @@ export function StackElement({
         {isExpanded ? (
           <SlideShow images={[img, img, img]} />
         ) : (
+          // eslint-disable-next-line @next/next/no-img-element
           <img src={img} alt="" className="h-auto w-full select-none" />
         )}
       </motion.div>

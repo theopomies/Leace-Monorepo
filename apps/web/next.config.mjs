@@ -11,7 +11,7 @@ const config = {
   swcMinify: true,
   experimental: {
     // Enables hot-reload and easy integration for local packages
-    transpilePackages: ["@leace/api", "@leace/auth", "@leace/db"],
+    transpilePackages: ["@leace/api", "@leace/db"],
   },
   // We already do linting on GH actions
   eslint: {

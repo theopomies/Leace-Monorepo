@@ -7,18 +7,17 @@ import {
   PostType,
 } from "@prisma/client";
 
-const nbUsers = 10;
+const nbUsers = 0;
 const nbPosts = 10;
 const nbReports = 10;
 const nbImages = 20;
-const nbRelationShips = 10;
+const nbRelationships = 10;
 
 export const makeUsers = () => {
   const users = new Array<Prisma.UserCreateManyInput>();
 
   for (let i = 0; i < nbUsers; i++) {
     users.push({
-      name: "name-" + Math.random().toString(36).substring(2, 7),
       firstName: "firstName-" + Math.random().toString(36).substring(2, 7),
       lastName: "lastName-" + Math.random().toString(36).substring(2, 7),
       email: Math.random().toString(36).substring(2, 7) + "@prisma.io",
@@ -181,10 +180,10 @@ export const makeImages = async (prisma: PrismaClient) => {
   return images;
 };
 
-export const makeRelationShips = async (prisma: PrismaClient) => {
-  const relationships = new Array<Prisma.RelationShipCreateManyInput>();
+export const makeRelationships = async (prisma: PrismaClient) => {
+  const relationships = new Array<Prisma.RelationshipCreateManyInput>();
 
-  for (let i = 0; i < nbRelationShips; i++) {
+  for (let i = 0; i < nbRelationships; i++) {
     const userCount = await prisma.user.count({
       where: { role: Roles.TENANT },
     });
@@ -217,17 +216,11 @@ export const makeRelationShips = async (prisma: PrismaClient) => {
       continue;
     }
     const isMatch = Boolean(Math.round(Math.random()));
-    Boolean(Math.round(Math.random()))
-      ? relationships.push({
-          userId: isMatch ? randUser[0].id : "",
-          postId: randPost[0].id,
-          isMatch: isMatch,
-        })
-      : relationships.push({
-          userId: randUser[0].id,
-          postId: isMatch ? randPost[0].id : "",
-          isMatch: isMatch,
-        });
+    relationships.push({
+      userId: randUser[0].id,
+      postId: randPost[0].id,
+      isMatch: isMatch,
+    });
   }
   return relationships;
 };
