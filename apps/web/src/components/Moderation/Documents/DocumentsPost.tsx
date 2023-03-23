@@ -9,12 +9,12 @@ export const DocumentsPost = ({ postId }: DocumentsPostProps) => {
   const { data: documents, refetch: refetchDocuments } =
     trpc.document.GetSignedPostUrl.useQuery(postId);
 
-  if (documents && refetchDocuments)
+  if (documents && documents.length > 0 && refetchDocuments)
     return (
       <DocumentsList
         documents={documents}
         refetchDocuments={refetchDocuments}
       />
     );
-  return <p>No documents</p>;
+  return <p className="text-center">No document</p>;
 };

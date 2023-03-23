@@ -9,12 +9,12 @@ export const DocumentsUser = ({ userId }: DocumentsUserProps) => {
   const { data: documents, refetch: refetchDocuments } =
     trpc.document.GetSignedUserUrl.useQuery(userId);
 
-  if (documents && refetchDocuments)
+  if (documents && documents.length > 0 && refetchDocuments)
     return (
       <DocumentsList
         documents={documents}
         refetchDocuments={refetchDocuments}
       />
     );
-  return <p>No documents</p>;
+  return <p className="text-center">No document</p>;
 };

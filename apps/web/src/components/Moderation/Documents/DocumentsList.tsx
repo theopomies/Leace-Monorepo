@@ -26,47 +26,43 @@ export const DocumentsList = ({
 
   return (
     <div className="flex justify-center gap-4">
-      {documents && documents.length > 0 ? (
-        documents.map((doc, index) => (
-          <div key={index} className="relative">
-            {doc.ext === "pdf" && pdfLogo ? (
-              <img
-                src={pdfLogo}
-                referrerPolicy="no-referrer"
-                alt="document"
-                className="w-32 cursor-pointer shadow-xl"
-                onClick={() => setShowModal(true)}
-              />
-            ) : (
-              <img
-                src={doc.url}
-                referrerPolicy="no-referrer"
-                alt="document"
-                className="w-32 cursor-pointer shadow-xl"
-                onClick={() => setShowModal(true)}
-              />
-            )}
-            {doc.valid ? (
-              <div className="absolute -right-1 -top-1 inline-flex items-center justify-center rounded-full bg-green-500 p-1 text-white">
-                <Check />
-              </div>
-            ) : (
-              <div className="absolute -right-1 -top-1 inline-flex items-center justify-center rounded-full bg-red-500 p-1 text-white">
-                <Cross />
-              </div>
-            )}
-            {showModal && (
-              <DocumentModal
-                document={doc}
-                setShowModal={setShowModal}
-                refetchDocuments={refetchDocuments}
-              />
-            )}
-          </div>
-        ))
-      ) : (
-        <p>Aucun document</p>
-      )}
+      {documents.map((doc, index) => (
+        <div key={index} className="relative">
+          {doc.ext === "pdf" && pdfLogo ? (
+            <img
+              src={pdfLogo}
+              referrerPolicy="no-referrer"
+              alt="document"
+              className="w-32 cursor-pointer shadow-xl"
+              onClick={() => setShowModal(true)}
+            />
+          ) : (
+            <img
+              src={doc.url}
+              referrerPolicy="no-referrer"
+              alt="document"
+              className="w-32 cursor-pointer shadow-xl"
+              onClick={() => setShowModal(true)}
+            />
+          )}
+          {doc.valid ? (
+            <div className="absolute -right-1 -top-1 inline-flex items-center justify-center rounded-full bg-green-500 p-1 text-white">
+              <Check />
+            </div>
+          ) : (
+            <div className="absolute -right-1 -top-1 inline-flex items-center justify-center rounded-full bg-red-500 p-1 text-white">
+              <Cross />
+            </div>
+          )}
+          {showModal && (
+            <DocumentModal
+              document={doc}
+              setShowModal={setShowModal}
+              refetchDocuments={refetchDocuments}
+            />
+          )}
+        </div>
+      ))}
     </div>
   );
 };
