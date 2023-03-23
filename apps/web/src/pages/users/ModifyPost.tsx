@@ -112,10 +112,7 @@ const ModifyPost = () => {
     }
   }, [getPost.data]);
 
-  if (
-    session.data?.user.role == "OWNER" ||
-    session.data?.user.role == "AGENCY"
-  ) {
+  if (session.data?.role == "OWNER" || session.data?.role == "AGENCY") {
     return (
       <LoggedLayout title="Update Post | Leace">
         <div className="w-full">

@@ -131,7 +131,7 @@ const UpdateProfiles = () => {
               {session &&
                 userProfile.data &&
                 userProfile.data.attribute &&
-                session.user.role === Roles.TENANT && (
+                session.role === Roles.TENANT && (
                   <LocataireProfile
                     attData={attData}
                     setAttData={setAttData}

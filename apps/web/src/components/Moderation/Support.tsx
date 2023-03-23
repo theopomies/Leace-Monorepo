@@ -9,7 +9,7 @@ export const Support = () => {
     return (
       <div className="flex h-screen w-full justify-center p-4">
         <div className="flex w-full items-center justify-center rounded-lg bg-slate-50 shadow-lg">
-          <Chat userId={session.data.user.id} chatOn isModeration />
+          <Chat userId={session.data.userId} chatOn isModeration />
         </div>
       </div>
     );

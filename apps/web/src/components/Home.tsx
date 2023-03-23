@@ -11,9 +11,9 @@ export const Home = () => {
 
   if (!session) return <div>Unreachable</div>;
 
-  const role = session.user.role;
+  const role = session.role;
 
-  if (role == Roles.NONE) return <RoleSelector />;
+  if (role == undefined) return <RoleSelector />;
 
   if (role == Roles.ADMIN) return <Administration />;
 

@@ -1,11 +1,11 @@
-import { protectedProcedure, publicProcedure, router } from "../trpc";
+import { TRPCError } from "@trpc/server";
+import { publicProcedure, router } from "../trpc";
 
 export const authRouter = router({
   getSession: publicProcedure.query(({ ctx }) => {
-    return ctx.session;
-  }),
-  getSecretMessage: protectedProcedure().query(() => {
-    // testing type validation of overridden next-auth Session in @leace/auth package
-    return "you can see this secret message!";
+    if (!ctx.auth || !ctx.auth.userId) {
+      throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+    }
+    return { auth: ctx.auth, userId: ctx.auth.userId, role: ctx.role };
   }),
 });

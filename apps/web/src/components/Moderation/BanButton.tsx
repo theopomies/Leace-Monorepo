@@ -1,11 +1,11 @@
 import { UserStatus } from "@prisma/client";
 import { trpc } from "../../utils/trpc";
 
-export interface BanButtonModerationProps {
+export interface BanButtonProps {
   userId: string;
 }
 
-export const BanButton = ({ userId }: BanButtonModerationProps) => {
+export const BanButton = ({ userId }: BanButtonProps) => {
   const { data: user } = trpc.moderation.getUser.useQuery({ userId: userId });
   const utils = trpc.useContext();
   const mutation = trpc.moderation.updateStatus.useMutation({

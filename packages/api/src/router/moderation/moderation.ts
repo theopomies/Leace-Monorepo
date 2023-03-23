@@ -125,7 +125,7 @@ export const moderationRouter = router({
 
       const bucketParams = {
         Bucket: "leaceawsbucket",
-        Key: `${ctx.session.user.id}/images/${image.id}.${image.ext}`,
+        Key: `${ctx.auth.userId}/images/${image.id}.${image.ext}`,
       };
       const command = new DeleteObjectCommand(bucketParams);
 
@@ -155,7 +155,7 @@ export const moderationRouter = router({
     .input(z.object({ id: z.string() }).optional())
     .query(async ({ ctx, input }) => {
       const user = await ctx.prisma.user.findUnique({
-        where: { id: input ? input.id : ctx.session.user.id },
+        where: { id: input ? input.id : ctx.auth.userId },
         select: { role: true, id: true },
       });
       if (!user) throw new TRPCError({ code: "NOT_FOUND" });
@@ -233,19 +233,16 @@ export const moderationRouter = router({
         where: { id: conversation.relationId },
       });
       if (!relationship) throw new TRPCError({ code: "NOT_FOUND" });
-      if (
-        ctx.session.user.role == Roles.OWNER ||
-        ctx.session.user.role == Roles.AGENCY
-      ) {
+      if (ctx.role == Roles.OWNER || ctx.role == Roles.AGENCY) {
         const post = await ctx.prisma.post.findUnique({
           where: { id: relationship.postId },
         });
         if (!post) throw new TRPCError({ code: "NOT_FOUND" });
-        if (post.createdById != ctx.session.user.id)
+        if (post.createdById != ctx.auth.userId)
           throw new TRPCError({ code: "FORBIDDEN" });
       }
-      if (ctx.session.user.role == Roles.TENANT) {
-        if (relationship.userId != ctx.session.user.id)
+      if (ctx.role == Roles.TENANT) {
+        if (relationship.userId != ctx.auth.userId)
           throw new TRPCError({ code: "FORBIDDEN" });
       }
 
@@ -275,19 +272,16 @@ export const moderationRouter = router({
         where: { id: conversation.relationId },
       });
       if (!relationship) throw new TRPCError({ code: "NOT_FOUND" });
-      if (
-        ctx.session.user.role == Roles.OWNER ||
-        ctx.session.user.role == Roles.AGENCY
-      ) {
+      if (ctx.role == Roles.OWNER || ctx.role == Roles.AGENCY) {
         const post = await ctx.prisma.post.findUnique({
           where: { id: relationship.postId },
         });
         if (!post) throw new TRPCError({ code: "NOT_FOUND" });
-        if (post.createdById != ctx.session.user.id)
+        if (post.createdById != ctx.auth.userId)
           throw new TRPCError({ code: "FORBIDDEN" });
       }
-      if (ctx.session.user.role == Roles.TENANT) {
-        if (relationship.userId != ctx.session.user.id)
+      if (ctx.role == Roles.TENANT) {
+        if (relationship.userId != ctx.auth.userId)
           throw new TRPCError({ code: "FORBIDDEN" });
       }
 
@@ -295,7 +289,7 @@ export const moderationRouter = router({
         data: {
           content: input.content,
           conversationId: conversation.id,
-          senderId: ctx.session.user.id,
+          senderId: ctx.auth.userId,
         },
       });
     }),

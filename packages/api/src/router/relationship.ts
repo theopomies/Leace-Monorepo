@@ -23,7 +23,7 @@ export const relationshipRouter = router({
         where: { id: input.postId },
       });
       if (!post) throw new TRPCError({ code: "NOT_FOUND" });
-      if (post.createdById != ctx.session.user.id)
+      if (post.createdById != ctx.auth.userId)
         throw new TRPCError({ code: "FORBIDDEN" });
 
       const rs = await ctx.prisma.relationship.findFirst({
@@ -71,7 +71,7 @@ export const relationshipRouter = router({
         where: { id: input.postId },
       });
       if (!post) throw new TRPCError({ code: "NOT_FOUND" });
-      if (post.createdById != ctx.session.user.id)
+      if (post.createdById != ctx.auth.userId)
         throw new TRPCError({ code: "FORBIDDEN" });
 
       const rs = await ctx.prisma.relationship.findFirst({
@@ -101,12 +101,12 @@ export const relationshipRouter = router({
       if (!post) throw new TRPCError({ code: "NOT_FOUND" });
 
       const rs = await ctx.prisma.relationship.findFirst({
-        where: { postId: post.id, userId: ctx.session.user.id },
+        where: { postId: post.id, userId: ctx.auth.userId },
       });
       if (!rs) {
         const created = await ctx.prisma.relationship.create({
           data: {
-            userId: ctx.session.user.id,
+            userId: ctx.auth.userId,
             postId: post.id,
           },
         });
@@ -140,7 +140,7 @@ export const relationshipRouter = router({
       if (!post) throw new TRPCError({ code: "NOT_FOUND" });
 
       const rs = await ctx.prisma.relationship.findFirst({
-        where: { postId: post.id, userId: ctx.session.user.id },
+        where: { postId: post.id, userId: ctx.auth.userId },
       });
       if (!rs) {
         return { message: "No relationship to delete" };
@@ -156,9 +156,9 @@ export const relationshipRouter = router({
   getMatch: protectedProcedure([Roles.TENANT, Roles.OWNER, Roles.AGENCY])
     .input(z.object({}).optional())
     .query(async ({ ctx }) => {
-      if (ctx.session.user.role == Roles.TENANT) {
+      if (ctx.role == Roles.TENANT) {
         const rs = await ctx.prisma.relationship.findMany({
-          where: { isMatch: true, userId: ctx.session.user.id },
+          where: { isMatch: true, userId: ctx.auth.userId },
           include: {
             post: {
               include: {
@@ -176,7 +176,7 @@ export const relationshipRouter = router({
       }
 
       const postIds = await ctx.prisma.post.findMany({
-        where: { createdById: ctx.session.user.id },
+        where: { createdById: ctx.auth.userId },
         select: { id: true },
       });
       if (!postIds) throw new TRPCError({ code: "NOT_FOUND" });
@@ -209,16 +209,16 @@ export const relationshipRouter = router({
   deleteMatch: protectedProcedure([Roles.TENANT, Roles.OWNER, Roles.AGENCY])
     .input(z.object({ rsId: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      if (ctx.session.user.role == Roles.TENANT) {
+      if (ctx.role == Roles.TENANT) {
         const rs = await ctx.prisma.relationship.findFirst({
-          where: { id: input.rsId, userId: ctx.session.user.id, isMatch: true },
+          where: { id: input.rsId, userId: ctx.auth.userId, isMatch: true },
         });
         if (!rs) throw new TRPCError({ code: "NOT_FOUND" });
         return await ctx.prisma.relationship.delete({ where: { id: rs.id } });
       }
 
       const postIds = await ctx.prisma.post.findMany({
-        where: { createdById: ctx.session.user.id },
+        where: { createdById: ctx.auth.userId },
         select: { id: true },
       });
       if (!postIds) throw new TRPCError({ code: "NOT_FOUND" });
@@ -241,14 +241,14 @@ export const relationshipRouter = router({
   getLike: protectedProcedure([Roles.TENANT, Roles.OWNER, Roles.AGENCY]).query(
     async ({ ctx }) => {
       const user = await ctx.prisma.user.findUnique({
-        where: { id: ctx.session.user.id },
+        where: { id: ctx.auth.userId },
         select: { isPremium: true },
       });
       if (!user) throw new TRPCError({ code: "NOT_FOUND" });
 
-      if (ctx.session.user.role == Roles.TENANT) {
+      if (ctx.role == Roles.TENANT) {
         const rs = await ctx.prisma.relationship.findMany({
-          where: { isMatch: false, userId: ctx.session.user.id },
+          where: { isMatch: false, userId: ctx.auth.userId },
           include: {
             post: {
               include: {
@@ -266,7 +266,7 @@ export const relationshipRouter = router({
       }
 
       const postIds = await ctx.prisma.post.findMany({
-        where: { createdById: ctx.session.user.id },
+        where: { createdById: ctx.auth.userId },
         select: { id: true },
       });
       if (!postIds) throw new TRPCError({ code: "NOT_FOUND" });

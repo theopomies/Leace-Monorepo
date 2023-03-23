@@ -1,7 +1,7 @@
 import { initTRPC, TRPCError } from "@trpc/server";
 import { type Context } from "./context";
-import superjson from "superjson";
 import { Roles } from "@leace/db";
+import superjson from "superjson";
 const t = initTRPC.context<Context>().create({
   transformer: superjson,
   errorFormatter({ shape }) {
@@ -9,23 +9,18 @@ const t = initTRPC.context<Context>().create({
   },
 });
 
-const isAuthed = (roles?: Roles[]) =>
-  t.middleware(({ ctx, next }) => {
-    if (!ctx.session) {
+const isAuthorized = (roles?: Roles[]) =>
+  t.middleware(async ({ ctx, next }) => {
+    if (!ctx.auth.userId) {
       throw new TRPCError({
         code: "UNAUTHORIZED",
         message: "Not authenticated",
       });
     }
 
-    if (roles && !roles.includes(ctx.session.user.role)) {
-      throw new TRPCError({
-        code: "UNAUTHORIZED",
-        message: "Not authorized",
-      });
-    }
-
-    if (!roles && ctx.session.user.role == Roles.NONE) {
+    // role should not be null if the user follow a normal flow.
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    if (roles && !roles.includes(ctx.role!)) {
       throw new TRPCError({
         code: "UNAUTHORIZED",
         message: "Not authorized",
@@ -34,12 +29,24 @@ const isAuthed = (roles?: Roles[]) =>
 
     return next({
       ctx: {
-        session: ctx.session,
+        auth: ctx.auth,
       },
     });
   });
 
+const isAuthed = t.middleware(({ next, ctx }) => {
+  if (!ctx.auth.userId) {
+    throw new TRPCError({ code: "UNAUTHORIZED", message: "Not authenticated" });
+  }
+  return next({
+    ctx: {
+      auth: ctx.auth,
+    },
+  });
+});
+
 export const router = t.router;
 export const publicProcedure = t.procedure;
 export const protectedProcedure = (roles?: Roles[]) =>
-  t.procedure.use(isAuthed(roles));
+  t.procedure.use(isAuthorized(roles));
+export const isAuthedProcedure = t.procedure.use(isAuthed);
