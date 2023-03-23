@@ -4,8 +4,8 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { TRPCProvider } from "./utils/trpc";
 import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-expo";
 import { HomeScreen } from "./screens/home";
-import AuthScreen from "./screens/auth";
 import { tokenCache } from "./utils/cache";
+import AuthScreen from "./screens/auth";
 
 export const App = () => {
   return (
