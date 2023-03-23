@@ -1,4 +1,4 @@
-import { Document, Image, Roles } from "@prisma/client";
+import { Document, Roles } from "@prisma/client";
 import { protectedProcedure, router } from "../trpc";
 import { z } from "zod";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";

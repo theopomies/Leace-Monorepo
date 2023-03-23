@@ -33,7 +33,7 @@ export const moderationRouter = router({
     .query(({ ctx, input }) => {
       if (!input) {
         return ctx.prisma.user.findUniqueOrThrow({
-          where: { id: ctx.session.user.id },
+          where: { id: ctx.auth.userId },
           include: {
             attribute: true,
             reports: true,
