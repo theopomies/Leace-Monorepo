@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import { useState } from "react";
 
 export interface SearchProps {
@@ -5,15 +6,18 @@ export interface SearchProps {
 }
 
 export const Search = ({ setUid }: SearchProps) => {
+  const router = useRouter();
   const [userId, setUserId] = useState("");
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!userId) return;
     setUid(userId);
+    router.push(`?id=${userId}`);
   };
 
   return (
-    <div className="flex items-center justify-center px-96">
+    <div className="flex w-full items-center justify-center">
       <div className="flex w-full flex-col p-2 py-6">
         <form
           onSubmit={handleSubmit}

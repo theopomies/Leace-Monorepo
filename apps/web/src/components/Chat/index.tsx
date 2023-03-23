@@ -20,7 +20,7 @@ export const Chat = ({
 
   return (
     <div className="flex h-full w-full text-gray-800 antialiased">
-      <div className="flex h-full w-full flex-row overflow-x-hidden">
+      <div className="flex w-full flex-row overflow-x-hidden">
         {isModeration ? (
           <ChatListModeration
             userId={userId}
