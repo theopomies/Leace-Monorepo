@@ -19,7 +19,7 @@ const AdminCheck = ({ children }: { children: React.ReactNode }) => {
   const { data: session } = trpc.auth.getSession.useQuery();
   const router = useRouter();
 
-  if (!session || session.user.role != Roles.ADMIN) {
+  if (!session || session.role != Roles.ADMIN) {
     router.push("/");
     return <Loader />;
   }

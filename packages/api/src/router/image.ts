@@ -21,11 +21,11 @@ export const imageRouter = router({
         throw new TRPCError({ code: "BAD_REQUEST" });
 
       const created = await ctx.prisma.image.create({
-        data: { id: id, userId: ctx.session.user.id, ext: ext },
+        data: { id: id, userId: ctx.auth.userId, ext: ext },
       });
       if (!created) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
 
-      const key = `${ctx.session.user.id}/images/${id}.${ext}`;
+      const key = `${ctx.auth.userId}/images/${id}.${ext}`;
       const bucketParams = {
         Bucket: "leaceawsbucket",
         Key: key,
@@ -37,7 +37,7 @@ export const imageRouter = router({
   GetSignedUserUrl: protectedProcedure()
     .input(z.string().optional())
     .query(async ({ ctx, input }) => {
-      const userId = input ? input : ctx.session.user.id;
+      const userId = input ? input : ctx.auth.userId;
 
       const images = await ctx.prisma.image.findMany({
         where: {
@@ -62,7 +62,7 @@ export const imageRouter = router({
     .input(z.string())
     .mutation(async ({ ctx, input }) => {
       const image = await ctx.prisma.image.findFirst({
-        where: { id: input, userId: ctx.session.user.id },
+        where: { id: input, userId: ctx.auth.userId },
       });
       if (!image) throw new TRPCError({ code: "NOT_FOUND" });
 
@@ -73,7 +73,7 @@ export const imageRouter = router({
 
       const bucketParams = {
         Bucket: "leaceawsbucket",
-        Key: `${ctx.session.user.id}/images/${image.id}.${image.ext}`,
+        Key: `${ctx.auth.userId}/images/${image.id}.${image.ext}`,
       };
       const command = new DeleteObjectCommand(bucketParams);
 
@@ -153,7 +153,7 @@ export const imageRouter = router({
       if (!image || !image.postId) throw new TRPCError({ code: "NOT_FOUND" });
 
       const getPost = await ctx.prisma.post.findFirst({
-        where: { id: image.postId, createdById: ctx.session.user.id },
+        where: { id: image.postId, createdById: ctx.auth.userId },
       });
       if (!getPost) throw new TRPCError({ code: "NOT_FOUND" });
 
@@ -164,7 +164,7 @@ export const imageRouter = router({
 
       const bucketParams = {
         Bucket: "leaceawsbucket",
-        Key: `${ctx.session.user.id}/images/${image.id}.${image.ext}`,
+        Key: `${ctx.auth.userId}/images/${image.id}.${image.ext}`,
       };
       const command = new DeleteObjectCommand(bucketParams);
 

@@ -18,7 +18,6 @@ export const makeUsers = () => {
 
   for (let i = 0; i < nbUsers; i++) {
     users.push({
-      name: "name-" + Math.random().toString(36).substring(2, 7),
       firstName: "firstName-" + Math.random().toString(36).substring(2, 7),
       lastName: "lastName-" + Math.random().toString(36).substring(2, 7),
       email: Math.random().toString(36).substring(2, 7) + "@prisma.io",

@@ -21,11 +21,11 @@ export const documentRouter = router({
         throw new TRPCError({ code: "BAD_REQUEST" });
 
       const created = await ctx.prisma.document.create({
-        data: { id: id, userId: ctx.session.user.id, ext: ext },
+        data: { id: id, userId: ctx.auth.userId, ext: ext },
       });
       if (!created) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
 
-      const key = `${ctx.session.user.id}/documents/${id}.${ext}`;
+      const key = `${ctx.auth.userId}/documents/${id}.${ext}`;
       const bucketParams = {
         Bucket: "leaceawsbucket",
         Key: key,
@@ -37,7 +37,7 @@ export const documentRouter = router({
   GetSignedUserUrl: protectedProcedure()
     .input(z.string().optional())
     .query(async ({ ctx, input }) => {
-      const userId = input ? input : ctx.session.user.id;
+      const userId = input ? input : ctx.auth.userId;
 
       const documents = await ctx.prisma.document.findMany({
         where: {
@@ -65,7 +65,7 @@ export const documentRouter = router({
     .input(z.string())
     .mutation(async ({ ctx, input }) => {
       const document = await ctx.prisma.document.findFirst({
-        where: { id: input, userId: ctx.session.user.id },
+        where: { id: input, userId: ctx.auth.userId },
       });
       if (!document) throw new TRPCError({ code: "NOT_FOUND" });
 
@@ -76,7 +76,7 @@ export const documentRouter = router({
 
       const bucketParams = {
         Bucket: "leaceawsbucket",
-        Key: `${ctx.session.user.id}/documents/${document.id}.${document.ext}`,
+        Key: `${ctx.auth.userId}/documents/${document.id}.${document.ext}`,
       };
       const command = new DeleteObjectCommand(bucketParams);
 
@@ -160,7 +160,7 @@ export const documentRouter = router({
         throw new TRPCError({ code: "NOT_FOUND" });
 
       const getPost = await ctx.prisma.post.findFirst({
-        where: { id: document.postId, createdById: ctx.session.user.id },
+        where: { id: document.postId, createdById: ctx.auth.userId },
       });
       if (!getPost) throw new TRPCError({ code: "NOT_FOUND" });
 
@@ -171,7 +171,7 @@ export const documentRouter = router({
 
       const bucketParams = {
         Bucket: "leaceawsbucket",
-        Key: `${ctx.session.user.id}/documents/${document.id}.${document.ext}`,
+        Key: `${ctx.auth.userId}/documents/${document.id}.${document.ext}`,
       };
       const command = new DeleteObjectCommand(bucketParams);
 

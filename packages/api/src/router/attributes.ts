@@ -29,7 +29,7 @@ export const attributesRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       const att = await ctx.prisma.attribute.findUnique({
-        where: { userId: ctx.session.user.id },
+        where: { userId: ctx.auth.userId },
       });
       if (!att) throw new TRPCError({ code: "NOT_FOUND" });
       return ctx.prisma.attribute.update({

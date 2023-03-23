@@ -15,7 +15,7 @@ export const postRouter = router({
     .mutation(async ({ ctx, input }) => {
       const getPost = await ctx.prisma.post.create({
         data: {
-          createdById: ctx.session.user.id,
+          createdById: ctx.auth.userId,
           title: input.title,
           content: input.content,
           desc: input.desc,
@@ -46,7 +46,7 @@ export const postRouter = router({
         where: { id: input.id },
       });
       if (!getPost) throw new TRPCError({ code: "NOT_FOUND" });
-      if (getPost.createdById !== ctx.session.user.id)
+      if (getPost.createdById !== ctx.auth.userId)
         throw new TRPCError({ code: "FORBIDDEN" });
       return ctx.prisma.post.update({
         where: { id: input.id },
@@ -65,7 +65,7 @@ export const postRouter = router({
         where: { id: input },
       });
       if (!getPost) throw new TRPCError({ code: "NOT_FOUND" });
-      if (getPost.createdById !== ctx.session.user.id)
+      if (getPost.createdById !== ctx.auth.userId)
         throw new TRPCError({ code: "FORBIDDEN" });
       return ctx.prisma.post.delete({ where: { id: input } });
     }),
@@ -85,19 +85,19 @@ export const postRouter = router({
     .query(({ ctx, input }) => {
       if (!input) {
         return ctx.prisma.post.findMany({
-          where: { createdById: ctx.session.user.id },
+          where: { createdById: ctx.auth.userId },
           include: { attribute: true },
         });
       }
       return ctx.prisma.post.findMany({
-        where: { createdById: ctx.session.user.id, type: input },
+        where: { createdById: ctx.auth.userId, type: input },
         include: { attribute: true },
       });
     }),
   getRentIncome: protectedProcedure([Roles.AGENCY, Roles.OWNER]).query(
     async ({ ctx }) => {
       const posts = await ctx.prisma.post.findMany({
-        where: { createdById: ctx.session.user.id, type: PostType.RENTED },
+        where: { createdById: ctx.auth.userId, type: PostType.RENTED },
         include: { attribute: true },
       });
       if (!posts) throw new TRPCError({ code: "NOT_FOUND" });
@@ -112,7 +112,7 @@ export const postRouter = router({
   getRentExpense: protectedProcedure([Roles.TENANT]).query(async ({ ctx }) => {
     const rs = await ctx.prisma.relationship.findMany({
       where: {
-        userId: ctx.session.user.id,
+        userId: ctx.auth.userId,
         isMatch: true,
         post: { type: PostType.RENTED },
         conversation: { type: ConversationType.DONE },

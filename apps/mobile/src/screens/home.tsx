@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
-
+import { Button, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { useAuth } from "@clerk/clerk-expo";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FlashList } from "@shopify/flash-list";
 import type { inferProcedureOutput } from "@trpc/server";
@@ -9,8 +9,22 @@ import type { AppRouter } from "@leace/api";
 
 import { trpc } from "../utils/trpc";
 
+const SignOut = () => {
+  const { signOut } = useAuth();
+  return (
+    <View className="rounded-lg border-2 border-gray-500 p-4">
+      <Button
+        title="Sign Out"
+        onPress={() => {
+          signOut();
+        }}
+      />
+    </View>
+  );
+};
+
 const PostCard: React.FC<{
-  post: inferProcedureOutput<AppRouter["post"]["all"]>[number];
+  post: inferProcedureOutput<AppRouter["post"]["getAllPost"]>[number];
 }> = ({ post }) => {
   return (
     <View className="rounded-lg border-2 border-gray-500 p-4">
@@ -20,16 +34,17 @@ const PostCard: React.FC<{
   );
 };
 
-const CreatePost: React.FC = () => {
+const CreatePost = () => {
   const utils = trpc.useContext();
-  const { mutate } = trpc.post.create.useMutation({
+  const { mutate } = trpc.post.createPost.useMutation({
     async onSuccess() {
-      await utils.post.all.invalidate();
+      await utils.post.getAllPost.invalidate();
     },
   });
 
   const [title, onChangeTitle] = React.useState("");
   const [content, onChangeContent] = React.useState("");
+  const [desc, onChangeDesc] = React.useState("");
 
   return (
     <View className="flex flex-col border-t-2 border-gray-500 p-4">
@@ -43,12 +58,18 @@ const CreatePost: React.FC = () => {
         onChangeText={onChangeContent}
         placeholder="Content"
       />
+      <TextInput
+        className="mb-2 rounded border-2 border-gray-500 p-2 text-white"
+        onChangeText={onChangeDesc}
+        placeholder="Content"
+      />
       <TouchableOpacity
         className="rounded bg-[#cc66ff] p-2"
         onPress={() => {
           mutate({
             title,
             content,
+            desc,
           });
         }}
       >
@@ -58,8 +79,8 @@ const CreatePost: React.FC = () => {
   );
 };
 
-export const ExampleHomeScreen = () => {
-  const postQuery = trpc.post.all.useQuery();
+export const HomeScreen = () => {
+  const postQuery = trpc.post.getAllPost.useQuery();
   const [showPost, setShowPost] = React.useState<string | null>(null);
 
   return (
@@ -81,7 +102,6 @@ export const ExampleHomeScreen = () => {
             </Text>
           )}
         </View>
-
         <FlashList
           data={postQuery.data}
           estimatedItemSize={20}
@@ -94,16 +114,7 @@ export const ExampleHomeScreen = () => {
         />
 
         <CreatePost />
-      </View>
-    </SafeAreaView>
-  );
-};
-
-export const HomeScreen = () => {
-  return (
-    <SafeAreaView>
-      <View>
-        <Text>Leace Home</Text>
+        <SignOut />
       </View>
     </SafeAreaView>
   );
