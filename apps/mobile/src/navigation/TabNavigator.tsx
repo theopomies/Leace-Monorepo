@@ -19,10 +19,12 @@ import { IncomeScreen } from "../screens/DashboardScreen/IncomeScreen";
 import { OccupiedScreen } from "../screens/DashboardScreen/OccupiedScreen";
 
 import { MatchChatScreen } from "../screens/MatchScreen/MatchChatScreen";
+import { Icon } from "react-native-elements";
+import { View } from "react-native";
 
 export type TabStackParamList = {
   Connexion: undefined;
-  Profile: { userEmail: string };
+  Profile: undefined;
   Stack: undefined;
   Match: undefined;
   Dashboard: undefined;
@@ -55,18 +57,98 @@ const TabNavigator = () => {
 
   return (
     <Tab.Navigator>
-      <Tab.Screen name="Stack" component={StackScreen} />
-      <Tab.Screen name="Profile" component={ProfileScreen} />
-      <Tab.Screen name="Match" component={MatchScreen} />
-      <Tab.Screen name="Dashboard" component={DashboardScreen} options={{ headerShown: false }} />
+      <Tab.Screen name="Stack" component={StackScreen} options={{
+        tabBarIcon: ({ focused }) => {
+          const icon = focused ? 'favorite' : 'favorite-border';
+
+          return (
+            <View>
+              <Icon name={icon} color="#002642" tvParallaxProperties={undefined} />
+            </View>
+          );
+        },
+        tabBarLabel: '',
+        headerShown: false,
+      }}
+      />
+      <Tab.Screen name="Match" component={MatchScreen} options={{
+        tabBarIcon: ({ focused }) => {
+          const icon = focused ? 'chat' : 'chat-bubble-outline'
+
+          return (
+            <View>
+              {focused ?
+                <Icon name={icon} type="material" tvParallaxProperties={undefined} />
+                :
+                <Icon name={icon} type="material" tvParallaxProperties={undefined} />
+              }
+            </View>
+          );
+        },
+        tabBarLabel: '',
+        headerShown: false
+      }} />
 
       <Tab.Screen name="MatchChat" component={MatchChatScreen} options={{ tabBarButton: () => null, headerShown: false }} />
 
-      <Tab.Screen name="CreatePost" component={CreatePostScreen} options={{ tabBarButton: () => null, headerShown: false }} />
+
+      <Tab.Screen name="CreatePost" component={CreatePostScreen} options={{
+        tabBarIcon: ({ focused }) => {
+          const icon = focused ? 'plus-square' : 'plus-square-o'
+
+          return (
+            <View>
+              {focused ?
+                <Icon name={icon} color="#002642" type="font-awesome" tvParallaxProperties={undefined} />
+                :
+                <Icon name={icon} color="#002642" type="font-awesome" tvParallaxProperties={undefined} />
+              }
+            </View>
+          );
+        },
+        tabBarLabel: '',
+        headerShown: false,
+      }} />
+
       <Tab.Screen name="CreatePostAttributes" component={CreatePostAttributesScreen} options={{ tabBarButton: () => null, headerShown: false }} />
       <Tab.Screen name="ViewPost" component={ViewPostScreen} options={{ tabBarButton: () => null, headerShown: false }} />
       <Tab.Screen name="PostDetails" component={PostDetailsScreen} options={{ tabBarButton: () => null, headerShown: false }} />
 
+      <Tab.Screen name="Profile" component={ProfileScreen} options={{
+        tabBarIcon: ({ focused }) => {
+          const icon = focused ? 'user-circle' : 'user-circle-o'
+
+          return (
+            <View>
+              {focused ?
+                <Icon name={icon} color="#002642" type="font-awesome" tvParallaxProperties={undefined} />
+                :
+                <Icon name={icon} color="#002642" type="font-awesome" tvParallaxProperties={undefined} />
+              }
+            </View>
+          );
+        },
+        tabBarLabel: '',
+        headerShown: false
+      }} />
+
+      <Tab.Screen name="Dashboard" component={DashboardScreen} options={{
+        tabBarIcon: ({ focused }) => {
+          const icon = focused ? 'view-dashboard' : 'view-dashboard-outline'
+
+          return (
+            <View>
+              {focused ?
+                <Icon name={icon} color="#002642" type="material-community" tvParallaxProperties={undefined} />
+                :
+                <Icon name={icon} color="#002642" type="material-community" tvParallaxProperties={undefined} />
+              }
+            </View>
+          );
+        },
+        tabBarLabel: '',
+        headerShown: false
+      }} />
       <Tab.Screen name="Expenses" component={ExpensesScreen} options={{ tabBarButton: () => null, headerShown: false }} />
       <Tab.Screen name="Income" component={IncomeScreen} options={{ tabBarButton: () => null, headerShown: false }} />
       <Tab.Screen name="Clients" component={ClientsScreen} options={{ tabBarButton: () => null, headerShown: false }} />

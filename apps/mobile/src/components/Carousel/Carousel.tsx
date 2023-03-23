@@ -8,7 +8,7 @@ const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.7)
 const CarouselItem = ({ item, index }: { item: string, index: number }) => {
     return (
         <View key={index}>
-            <Image className="h-52 w-11/12 mb-5 ml-4" source={{ uri: item }}></Image>
+            <Image className="h-52 w-11/12 mb-5 ml-4 rounded" source={{ uri: item }} />
         </View>
     );
 };
@@ -19,7 +19,7 @@ export const Carousel = ({ value }: { value: string[] }) => {
     return (
         <View className="items-center" >
             <CarouselComp
-                layout="tinder"
+                layout="default"
                 layoutCardOffset={9}
                 ref={isCarousel}
                 data={value}

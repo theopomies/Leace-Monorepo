@@ -10,7 +10,7 @@ export const AvailableScreen = () => {
     const available = trpc.post.getMyPost.useQuery(Type.TO_BE_RENTED)
 
     return (
-        <ScrollView className="mb-20 mt-20 mx-5">
+        <ScrollView className="mb-20 mt-20 mx-5" showsVerticalScrollIndicator={false}>
             {available.data && available.data.length > 0 ?
                 available.data.map(item => {
                     return (

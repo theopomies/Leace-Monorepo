@@ -1,15 +1,10 @@
-import { useNavigation } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { View, Image, Text, TouchableWithoutFeedback } from "react-native";
-import { Button, CheckBox } from "react-native-elements"
-import { TabStackParamList } from "../../navigation/TabNavigator";
-// import { Carousel } from '../../components/Carousel/Carousel'
-
+import { View, Text, TouchableOpacity } from 'react-native';
+import { Icon } from "react-native-elements"
+import { Carousel } from '../../components/Carousel/Carousel'
 
 export const PostAttributeCard = ({
     title,
     desc,
-    content,
     location,
     price,
     size,
@@ -27,9 +22,9 @@ export const PostAttributeCard = ({
     elevator,
     pool
 }: {
-    title: string | undefined,
-    desc: string | undefined,
-    content: string | undefined,
+    title: string | null,
+    desc: string | null,
+    content: string | null,
     location: string | undefined,
     price: number | undefined,
     size: number | undefined,
@@ -48,54 +43,175 @@ export const PostAttributeCard = ({
     pool: boolean | undefined
 }) => {
 
-    const navigation = useNavigation<NativeStackNavigationProp<TabStackParamList>>();
+    const data = [
+        "/Users/david/Work/Epitech/Leace-Monorepo/apps/mobile/assets/image 2.png",
+        "/Users/david/Work/Epitech/Leace-Monorepo/apps/mobile/assets/image 2.png",
+        "/Users/david/Work/Epitech/Leace-Monorepo/apps/mobile/assets/image 2.png",
+    ]
 
     return (
-
-        <View className="bg-gray-300 max-w-sm rounded-lg overflow-hidden border-2 mx-2">
-            {/* <Carousel value={params.images} /> */}
-            <Image source={require('../../../assets/immeuble.webp')} className="max-w-sm h-80" />
-            <View className="ml-5 mt-5">
-                <Text className="font-bold text-xl mb-2">{title}</Text>
-                <Text className="text-gray-700 text-base mb-0.5">
-                    {desc}
-                </Text>
-                <Text className="text-gray-700 text-base">
-                    {content}
-                </Text>
-                <Text className="text-gray-700 text-base">
+        <View className="max-w-sm rounded-2xl overflow-hidden border border-gray-300 mx-2">
+            <Text className="font-bold text-center mt-1 text-xl ">{title}</Text>
+            <View className="mt-2">
+                <Carousel value={data} />
+            </View>
+            <View className="ml-5">
+                <Text className="text-custom text-base">
                     {location}
                 </Text>
-                <Text className="text-gray-700 text-base">
-                    {price}
+                <Text className="text-custom text-base">
+                    {price}$
                 </Text>
-                <Text className="text-gray-700 text-base">
-                    {size}
+                <Text className="text-custom text-base mb-0.5">
+                    {desc}
                 </Text>
-                <Text className="text-gray-700 text-base">
-                    {rentStartDate?.toDateString()}
-                </Text>
-                <Text className="text-gray-700 text-base">
-                    {rentEndDate?.toDateString()}
-                </Text>
-                {furnished ? <CheckBox Component={TouchableWithoutFeedback} title="furnished" checked={furnished} /> : <CheckBox Component={TouchableWithoutFeedback} title="furnished" checked={false} />}
-                {house ? <CheckBox Component={TouchableWithoutFeedback} title="house" checked={house} /> : <CheckBox Component={TouchableWithoutFeedback} title="house" checked={false} />}
-                {appartment ? <CheckBox Component={TouchableWithoutFeedback} title="appartment" checked={appartment} /> : <CheckBox Component={TouchableWithoutFeedback} title="appartment" checked={false} />}
-                {terrace ? <CheckBox Component={TouchableWithoutFeedback} title="terrace" checked={terrace} /> : <CheckBox Component={TouchableWithoutFeedback} title="terrace" checked={false} />}
-                {pets ? <CheckBox Component={TouchableWithoutFeedback} title="pets" checked={pets} /> : <CheckBox Component={TouchableWithoutFeedback} title="pets" checked={false} />}
-                {smoker ? <CheckBox Component={TouchableWithoutFeedback} title="smoker" checked={smoker} /> : <CheckBox Component={TouchableWithoutFeedback} title="smoker" checked={false} />}
-                {disability ? <CheckBox Component={TouchableWithoutFeedback} title="disability" checked={disability} /> : <CheckBox Component={TouchableWithoutFeedback} title="disability" checked={false} />}
-                {garden ? <CheckBox Component={TouchableWithoutFeedback} title="garden" checked={garden} /> : <CheckBox Component={TouchableWithoutFeedback} title="garden" checked={false} />}
-                {parking ? <CheckBox Component={TouchableWithoutFeedback} title="parking" checked={parking} /> : <CheckBox Component={TouchableWithoutFeedback} title="parking" checked={false} />}
-                {elevator ? <CheckBox Component={TouchableWithoutFeedback} title="elevator" checked={elevator} /> : <CheckBox Component={TouchableWithoutFeedback} title="elevator" checked={false} />}
-                {pool ? <CheckBox Component={TouchableWithoutFeedback} title="pool" checked={pool} /> : <CheckBox Component={TouchableWithoutFeedback} title="pool" checked={false} />}
+                <View className="flex-row mb-2 mt-2">
+                    <View
+                        className="mx-3  bg-custom rounded text-white font-semibold w-20 h-12 flex justify-center items-center">
+                        <Text className="font-semibold text-xs text-white">{rentStartDate?.toISOString().split('T')[0]}</Text>
+                    </View>
+                    <View
+                        className="mx-3  bg-custom rounded text-white font-semibold w-20 h-12 flex justify-center items-center"
+                    >
+                        <Text className="font-semibold text-xs text-white">{rentEndDate?.toISOString().split('T')[0]}</Text>
+                    </View>
+                    <View
+                        className="mx-3 bg-custom rounded text-white font-semibold w-20 h-12 flex justify-center items-center"
+                    >
+                        <Text className="font-semibold text-center text-sm text-white">{size?.toString()} m²</Text>
+                    </View>
+                </View>
+
+                <View className="flex-row flex-wrap justify-center mb-10">
+                    <View className="flex-row items-center">
+                        {furnished ?
+                            <View className="bg-transparent border rounded-full border-custom h-8 w-24 mr-1 mb-1 flex-row items-center" >
+                                <Icon name="table-furniture" type="material-community" color="#002642" style={{ marginLeft: 8 }} size={15} tvParallaxProperties={undefined} />
+                                <Text className="text-custom font-bold text-xs text-center ml-0.5">furnished</Text>
+                            </View>
+                            :
+                            null
+                        }
+                    </View>
+                    <View className="flex-row items-center">
+                        {house ?
+                            <View className="bg-transparent border rounded-full border-custom h-8 w-24 mr-1 mb-1 flex-row items-center" >
+                                <Icon name="house" color="#002642" style={{ marginLeft: 16 }} size={15} tvParallaxProperties={undefined} />
+                                <Text className="text-custom font-bold text-xs text-center ml-0.5">house</Text>
+                            </View>
+                            :
+                            null
+                        }
+                    </View>
+
+                    <View className="flex-row items-center">
+                        {appartment ? (
+                            <View className="bg-transparent border rounded-full border-custom h-8 w-24 mr-1 mb-1 flex-row items-center">
+                                <Icon name="building" type="font-awesome" style={{ marginLeft: 4 }} color="#002642" size={15} tvParallaxProperties={undefined} />
+                                <Text className="text-custom font-bold text-xs text-center ml-0.5">appartment</Text>
+                            </View>
+                        ) : null}
+                    </View>
+
+                    <View className="flex-row items-center">
+                        {terrace ?
+                            <View className="bg-transparent border rounded-full border-custom h-8 w-24 mr-1 mb-1 flex-row items-center">
+                                <Icon name="balcony" type="material-community" color="#002642" style={{ marginLeft: 8 }} size={15} tvParallaxProperties={undefined} />
+                                <Text className="text-custom font-bold text-xs text-center ml-0.5">terrace</Text>
+                            </View>
+                            :
+                            null
+                        }
+                    </View>
+
+                    <View className="flex-row items-center">
+                        {pets ?
+                            <View className="bg-transparent border rounded-full border-custom h-8 w-24 mr-1 mb-1 flex-row items-center">
+                                <Icon name="pets" color="#002642" style={{ marginLeft: 20 }} size={15} tvParallaxProperties={undefined} />
+                                <Text className="text-custom font-bold text-xs text-center ml-0.5">pets</Text>
+                            </View>
+                            :
+                            null
+                        }
+                    </View>
+
+                    <View className="flex-row items-center">
+                        {smoker ?
+                            <View className="bg-transparent border rounded-full border-custom h-8 w-24 mr-1 mb-1 flex-row items-center">
+                                <Icon name="smoking-rooms" color="#002642" style={{ marginLeft: 16 }} size={15} tvParallaxProperties={undefined} />
+                                <Text className="text-custom font-bold text-xs text-center ml-0.5">smoker</Text>
+                            </View>
+                            :
+                            null
+                        }
+                    </View>
+
+                    <View className="flex-row items-center">
+                        {disability ?
+                            <View className="bg-transparent border rounded-full border-custom h-8 w-24 mr-1 mb-1 flex-row items-center">
+                                <Icon name="paralysis-disability" type="fontisto" color="#002642" style={{ marginLeft: 16 }} size={15} tvParallaxProperties={undefined} />
+                                <Text className="text-custom font-bold text-xs text-center ml-0.5">disability</Text>
+                            </View>
+                            :
+                            null
+                        }
+                    </View>
+
+                    <View className="flex-row items-center">
+                        {garden ?
+                            <View className="bg-transparent border rounded-full border-custom h-8 w-24 mr-1 mb-1 flex-row items-center">
+                                <Icon name="nature-people" color="#002642" style={{ marginLeft: 16 }} size={15} tvParallaxProperties={undefined} />
+                                <Text className="text-custom font-bold text-xs text-center ml-0.5">garden</Text>
+                            </View>
+                            :
+                            null
+                        }
+                    </View>
+
+                    <View className="flex-row items-center">
+                        {parking ?
+                            <View className="bg-transparent border rounded-full border-custom h-8 w-24 mr-1 mb-1 flex-row items-center">
+                                <Icon name="local-parking" color="#002642" style={{ marginLeft: 16 }} size={15} tvParallaxProperties={undefined} />
+                                <Text className="text-custom font-bold text-xs text-center ml-0.5">parking</Text>
+                            </View>
+                            :
+                            null
+                        }
+                    </View>
+
+                    <View className="flex-row items-center">
+                        {elevator ?
+                            <View className="bg-transparent border rounded-full border-custom h-8 w-24 mr-1 mb-1 flex-row items-center">
+                                <Icon name="elevator" color="#002642" style={{ marginLeft: 16 }} size={15} tvParallaxProperties={undefined} />
+                                <Text className="text-custom font-bold text-xs text-center ml-0.5">elevator</Text>
+                            </View>
+                            :
+                            null
+                        }
+                    </View>
+
+                    {pool ?
+                        <View className="bg-transparent border rounded-full border-custom h-8 w-24 mr-1 mb-1 flex-row items-center" >
+                            <Icon name="pool" color="#002642" style={{ marginLeft: 16 }} size={15} tvParallaxProperties={undefined} />
+                            <Text className="text-custom font-bold text-xs text-center ml-0.5">pool</Text>
+                        </View>
+                        :
+                        null
+                    }
+                </View>
             </View>
-            <View className="pt-6 pb-4 px-6">
-                <Button
-                    onPress={() => {
-                        navigation.navigate("ViewPost");
-                    }}
-                    title="Return to ads" />
+
+            <View className="flex-row justify-center mb-10">
+                <TouchableOpacity
+                    className="mx-3 py-4 px-10 bg-red-600 rounded text-white font-semibold mr-10 w-32 h-12 flex justify-center items-center"
+                >
+                    <Text className="font-semibold text-white">Delete</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    className="mx-3 py-4 px-10 bg-custom rounded text-white font-semibold w-32 h-12 flex justify-center items-center"
+                >
+                    <Text className="font-semibold text-white">Edit</Text>
+                </TouchableOpacity>
             </View>
         </View>
     )

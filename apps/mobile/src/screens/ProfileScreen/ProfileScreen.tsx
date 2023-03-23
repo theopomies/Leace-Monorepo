@@ -11,7 +11,7 @@ export const ProfileScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<TabStackParamList>>();
 
   return (
-    <ScrollView>
+    <ScrollView className='mt-20'>
       <View>
         <Button title="Create Post" className="mx-9 mt-5 rounded bg-blue-500  text-white hover:bg-blue-700" onPress={() => {
           navigation.navigate("CreatePost")

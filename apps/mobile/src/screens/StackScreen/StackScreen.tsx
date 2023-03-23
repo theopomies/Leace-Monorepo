@@ -7,7 +7,7 @@ import { Report } from '../../components/Report/Report'
 export const StackScreen = () => {
 
   return (
-    <ScrollView>
+    <ScrollView className='mt-20'>
       <View>
         <Report cond={true} />
       </View>

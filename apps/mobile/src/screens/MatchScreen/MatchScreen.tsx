@@ -11,7 +11,7 @@ export const MatchScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<TabStackParamList>>();
 
   return (
-    <View>
+    <View className="mt-20">
       <Button title="Chat" className="mx-9 mt-5 rounded bg-blue-500  text-white hover:bg-blue-700" onPress={() => {
         navigation.navigate("MatchChat")
       }} />
