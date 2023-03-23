@@ -31,15 +31,6 @@ export const moderationRouter = router({
   getUser: protectedProcedure([Roles.ADMIN, Roles.MODERATOR])
     .input(z.object({ userId: z.string() }))
     .query(({ ctx, input }) => {
-      if (!input) {
-        return ctx.prisma.user.findUniqueOrThrow({
-          where: { id: ctx.auth.userId },
-          include: {
-            attribute: true,
-            reports: true,
-          },
-        });
-      }
       return ctx.prisma.user.findUniqueOrThrow({
         where: {
           id: input.userId,
