@@ -83,7 +83,7 @@ export const UserCard = ({ userId }: UserCardProps) => {
               {user.reports.map((report, index) => (
                 <p key={index} className="text-lg">
                   Le {displayDate(report.createdAt)}, {report.createdById} a
-                  signalé {user.firstName || user.name} pour {report.reason}
+                  signalé {user.firstName || user.lastName} pour {report.reason}
                 </p>
               ))}
             </div>
