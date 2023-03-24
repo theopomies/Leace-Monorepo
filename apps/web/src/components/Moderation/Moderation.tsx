@@ -11,7 +11,6 @@ export const Moderation = () => {
     refetchOnReconnect: false,
     retry: false,
   });
-  console.log(report);
 
   if (report.isLoading) {
     return <Loader />;
