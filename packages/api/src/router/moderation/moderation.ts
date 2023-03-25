@@ -10,23 +10,52 @@ export const moderationRouter = router({
     ({ ctx }) => {
       return ctx.prisma.report.findFirstOrThrow({
         orderBy: { createdAt: "desc" },
-        where: { NOT: [{ userId: null }], status: ReportStatus.PENDING },
-        include: {
-          createdBy: {
-            include: { reports: true },
-          },
-        },
+        where: { status: ReportStatus.PENDING },
       });
     },
   ),
-  getById: protectedProcedure([Roles.ADMIN])
+  getUserById: protectedProcedure([Roles.ADMIN])
     .input(z.string())
     .query(({ ctx, input }) => {
       return ctx.prisma.user.findFirstOrThrow({
+        where: { id: input },
+      });
+    }),
+  getPostById: protectedProcedure([Roles.ADMIN, Roles.MODERATOR])
+    .input(z.string())
+    .query(({ ctx, input }) => {
+      return ctx.prisma.post.findFirstOrThrow({
+        where: { id: input },
+      });
+    }),
+  getUser: protectedProcedure([Roles.ADMIN, Roles.MODERATOR])
+    .input(z.object({ userId: z.string() }))
+    .query(({ ctx, input }) => {
+      return ctx.prisma.user.findUniqueOrThrow({
         where: {
-          id: input,
+          id: input.userId,
         },
-        include: { reports: true },
+        include: {
+          attribute: true,
+          reports: true,
+        },
+      });
+    }),
+  getPosts: protectedProcedure([Roles.ADMIN, Roles.MODERATOR])
+    .input(z.object({ userId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const posts = await ctx.prisma.post.findMany({
+        where: { createdById: input.userId },
+      });
+      if (!posts) throw new TRPCError({ code: "NOT_FOUND" });
+      return posts;
+    }),
+  getPost: protectedProcedure([Roles.ADMIN, Roles.MODERATOR])
+    .input(z.object({ postId: z.string() }))
+    .query(({ ctx, input }) => {
+      return ctx.prisma.post.findUniqueOrThrow({
+        where: { id: input.postId },
+        include: { attribute: true, reports: true },
       });
     }),
   updateReport: protectedProcedure([Roles.ADMIN, Roles.MODERATOR])
@@ -59,7 +88,7 @@ export const moderationRouter = router({
           : { status: input.status },
       });
     }),
-  banUser: protectedProcedure([Roles.ADMIN, Roles.MODERATOR])
+  updateStatus: protectedProcedure([Roles.ADMIN, Roles.MODERATOR])
     .input(
       z.object({
         id: z.string(),
@@ -72,11 +101,11 @@ export const moderationRouter = router({
         data: { status: input.status },
       });
     }),
-  deleteImage: protectedProcedure()
-    .input(z.object({ userId: z.string(), id: z.string() }))
+  deletePostImage: protectedProcedure()
+    .input(z.object({ postId: z.string(), id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const image = await ctx.prisma.image.findFirst({
-        where: { id: input.id, userId: input.userId },
+        where: { id: input.id, postId: input.postId },
       });
       if (!image) throw new TRPCError({ code: "NOT_FOUND" });
 

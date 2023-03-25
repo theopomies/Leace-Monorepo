@@ -1,4 +1,4 @@
-import { Document, Image, Roles } from "@prisma/client";
+import { Document, Roles } from "@prisma/client";
 import { protectedProcedure, router } from "../trpc";
 import { z } from "zod";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
@@ -132,7 +132,7 @@ export const documentRouter = router({
       if (!documents) throw new TRPCError({ code: "NOT_FOUND" });
 
       return await Promise.all(
-        documents.map(async (document: Image) => {
+        documents.map(async (document: Document) => {
           const bucketParams = {
             Bucket: "leaceawsbucket",
             Key: `${getPost.id}/documents/${document.id}.${document.ext}`,
