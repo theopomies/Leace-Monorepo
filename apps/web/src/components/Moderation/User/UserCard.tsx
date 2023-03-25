@@ -4,6 +4,7 @@ import { BanButton } from "../BanButton";
 import { Loader } from "../Loader";
 import { Documents } from "../Documents";
 import { ChatModal } from "../ChatModal";
+import { displayDate } from "../../../utils/displayDate";
 
 export interface UserCardProps {
   userId: string;
@@ -11,18 +12,6 @@ export interface UserCardProps {
 
 export const UserCard = ({ userId }: UserCardProps) => {
   const { data: user } = trpc.moderation.getUser.useQuery({ userId: userId });
-
-  const displayDate = (date: Date) => {
-    return (
-      (date.getDate() < 10 ? "0" + date.getDate() : date.getDate()) +
-      "-" +
-      (date.getMonth() + 1 < 10
-        ? "0" + (date.getMonth() + 1)
-        : date.getMonth() + 1) +
-      "-" +
-      date.getFullYear()
-    );
-  };
 
   if (user)
     return (

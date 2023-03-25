@@ -5,23 +5,9 @@ import { SlideShow } from "../../Stack/SlideShow";
 import { motion } from "framer-motion";
 import { useEffect } from "react";
 import { Documents } from "../Documents";
-import { Check, Cross } from "../Icons";
-
-const GreenCheck = () => {
-  return (
-    <div className="mr-2 inline-flex items-center justify-center rounded-full border border-black p-1">
-      <Check />
-    </div>
-  );
-};
-
-const RedUnCheck = () => {
-  return (
-    <div className="mr-2 inline-flex items-center justify-center rounded-full bg-red-500 p-1 text-white">
-      <Cross />
-    </div>
-  );
-};
+import { GreenCheck } from "./GreenCheck";
+import { RedUnCheck } from "./RedUnCheck";
+import { displayDate } from "../../../utils/displayDate";
 
 export interface PostProps {
   postId: string;
@@ -31,18 +17,6 @@ export interface PostProps {
 export const PostCard = ({ postId, setUserId }: PostProps) => {
   const { data: post } = trpc.moderation.getPost.useQuery({ postId: postId });
   const { data: images } = trpc.image.GetSignedPostUrl.useQuery(postId);
-
-  const displayDate = (date: Date) => {
-    return (
-      (date.getDate() < 10 ? "0" + date.getDate() : date.getDate()) +
-      "-" +
-      (date.getMonth() + 1 < 10
-        ? "0" + (date.getMonth() + 1)
-        : date.getMonth() + 1) +
-      "-" +
-      date.getFullYear()
-    );
-  };
 
   useEffect(() => {
     if (post && setUserId) setUserId(post.createdById);
