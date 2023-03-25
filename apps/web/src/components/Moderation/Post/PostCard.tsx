@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { useEffect } from "react";
 import { Documents } from "../Documents";
 import { GreenCheck } from "./GreenCheck";
-import { RedUnCheck } from "./RedUnCheck";
+import { RedUncheck } from "./RedUncheck";
 import { displayDate } from "../../../utils/displayDate";
 
 export interface PostProps {
@@ -68,14 +68,14 @@ export const PostCard = ({ postId, setUserId }: PostProps) => {
                 </p>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="text-l">
-                    {post.attribute.terrace ? <GreenCheck /> : <RedUnCheck />}
+                    {post.attribute.terrace ? <GreenCheck /> : <RedUncheck />}
                     Terrace
                   </div>
                   <p className="text-l">
                     Elevator: {post.attribute.elevator ? "Yes" : "No"}
                   </p>
                   <div className="text-l">
-                    {post.attribute.smoker ? <GreenCheck /> : <RedUnCheck />}
+                    {post.attribute.smoker ? <GreenCheck /> : <RedUncheck />}
                     Smoker
                   </div>
                   <p className="text-l">
