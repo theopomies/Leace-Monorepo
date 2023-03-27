@@ -27,10 +27,10 @@ export const Dropdown = ({ data, onSelect = (item: { item: string }) => { item }
             <TouchableOpacity onPress={() => { setShowOptions(!showOptions); setCaret(!caret) }}>
                 {caret ?
                     <View className="">
-                        <Icon size={25} name='caret-down' type='font-awesome' color="#1461b4fa" tvParallaxProperties={undefined} />
+                        <Icon size={25} name='caret-down' type='font-awesome' color="#1461b4fa" />
                     </View> :
                     <View className="">
-                        <Icon size={25} name='caret-up' type='font-awesome' color="#1461b4fa" tvParallaxProperties={undefined} />
+                        <Icon size={25} name='caret-up' type='font-awesome' color="#1461b4fa" />
                     </View>
                 }
             </TouchableOpacity>

@@ -1,4 +1,4 @@
-import { PostType, ReportReason } from "@prisma/client";
+import { PostType, ReportReason, Roles } from "@prisma/client";
 
 type Enum<T extends string> = Record<T, T>;
 
@@ -17,3 +17,28 @@ export const Reason: Enum<ReportReason> = {
 }
 
 export type Reason = ReportReason
+
+export const Role: Enum<Roles> = {
+    NONE: "NONE",
+    TENANT: "TENANT",
+    OWNER: "OWNER",
+    AGENCY: "AGENCY",
+    MODERATOR: "MODERATOR",
+    ADMIN: "ADMIN",
+}
+
+type AllowedRole = "TENANT" | "OWNER" | "AGENCY";
+
+export const UserRole: { [key in AllowedRole]: key } = {
+    TENANT: "TENANT",
+    OWNER: "OWNER",
+    AGENCY: "AGENCY",
+};
+
+type UserRole = Record<AllowedRole, AllowedRole>;
+
+export const UserRoles: UserRole = {
+    TENANT: "TENANT",
+    OWNER: "OWNER",
+    AGENCY: "AGENCY",
+};

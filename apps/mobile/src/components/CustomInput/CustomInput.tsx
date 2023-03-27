@@ -1,12 +1,21 @@
-import React from "react";
-import { View, TextInput, TextInputProps } from "react-native";
+import React from 'react';
+import { Text, TextInput, View } from 'react-native';
 
-export type CustomInputProps = TextInputProps;
-
-const CustomInput: React.FC<CustomInputProps> = ({ value, onChange }) => {
+const CustomInput = ({ label, category, value, onChangeAttributesHandler, placeholder, multiline }: { label: string, category: string, value: string | undefined, onChangeAttributesHandler: (name: string, value: number | string) => void, placeholder: string, multiline: boolean }) => {
   return (
-    <View >
-      <TextInput className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-4 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" placeholder="value"/>
+    <View>
+      <Text className='text-custom font-semibold ml-3'>{label}</Text>
+      <TextInput
+        className="h-12 m-3 mb-5 border rounded p-2.5"
+
+        onChangeText={(text) => {
+          const newValue = Number.isInteger(parseInt(text)) ? parseInt(text) : text;
+          onChangeAttributesHandler(category, newValue)
+        }}
+        value={value}
+        multiline={multiline}
+        placeholder={placeholder}
+      />
     </View>
   );
 };

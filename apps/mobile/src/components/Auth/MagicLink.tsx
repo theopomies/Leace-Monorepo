@@ -5,6 +5,7 @@ import { Text, View, TextInput, Pressable } from "react-native";
 import * as AuthSession from "expo-auth-session";
 
 const MagicLink = () => {
+
   const [emailAddress, setEmail] = useState("");
   const { isLoaded, setActive, signUp } = useSignUp();
   const { signIn } = useSignIn();
@@ -49,6 +50,7 @@ const MagicLink = () => {
 
       if (si.status === "complete") {
         setActive({ session: si.createdSessionId });
+
         return;
       }
     }
@@ -63,7 +65,7 @@ const MagicLink = () => {
         onChangeText={(emailAddress) => setEmail(emailAddress)}
       />
       <Pressable
-        className="h-12 w-full items-center justify-center rounded-md bg-blue-900 py-2 px-4"
+        className="h-12 w-full items-center justify-center rounded-md bg-custom py-2 px-4"
         onPress={handleSignUp}
       >
         <Text className="text-white">Send me a link</Text>

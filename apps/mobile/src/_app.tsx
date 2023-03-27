@@ -1,13 +1,11 @@
 import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { KeyboardAvoidingView, Platform } from "react-native";
 import { TRPCProvider } from "./utils/trpc";
 import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-expo";
 import RootNavigator from "./navigation/RootNavigator";
 import { tokenCache } from "./utils/cache";
 import AuthScreen from "./screens/auth";
-import { HomeScreen } from "./screens/home";
 
 export const App = () => {
   return (
@@ -18,7 +16,7 @@ export const App = () => {
       <SignedIn>
         <TRPCProvider>
           <SafeAreaProvider>
-            <HomeScreen />
+            <RootNavigator />
             <StatusBar />
           </SafeAreaProvider>
         </TRPCProvider>

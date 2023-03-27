@@ -3,7 +3,7 @@ import { View, Image, Text, TouchableOpacity } from "react-native";
 import { TabStackParamList } from '../../navigation/TabNavigator';
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
-export const PostCard = ({ title, desc, content, postId, income, expenses }: { title: string | null, desc: string | null, content: string | null, postId: string, income: number | undefined, expenses: number | undefined }) => {
+const PostCard = ({ title, desc, content, postId, income, expenses }: { title: string | null, desc: string | null, content: string | null, postId: string, income: number | undefined, expenses: number | undefined }) => {
 
     const navigation = useNavigation<NativeStackNavigationProp<TabStackParamList>>();
 
@@ -24,3 +24,5 @@ export const PostCard = ({ title, desc, content, postId, income, expenses }: { t
     )
 };
 
+
+export default PostCard

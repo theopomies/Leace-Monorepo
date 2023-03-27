@@ -1,7 +1,7 @@
 import React from "react";
 import { Animated, Modal, View } from "react-native";
 
-export const ModalPopup = ({ visible, children, aspect }: { visible: boolean, children: React.ReactNode, aspect: boolean }) => {
+const ModalPopup = ({ visible, children, aspect }: { visible: boolean, children: React.ReactNode, aspect: boolean }) => {
     const [showModal, setShowModal] = React.useState(visible);
     const [modalAspect, setModalAspect] = React.useState(visible);
     const scaleValue = React.useRef(new Animated.Value(0)).current;
@@ -44,3 +44,5 @@ export const ModalPopup = ({ visible, children, aspect }: { visible: boolean, ch
         </Modal>
     );
 };
+
+export default ModalPopup

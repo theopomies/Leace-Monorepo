@@ -3,7 +3,8 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import TabNavigator from "./TabNavigator";
 import { NavigationContainer } from "@react-navigation/native";
-import { ConnexionScreen } from "../screens/ConnexionScreen/ConnexionScreen";
+import AuthScreen from "../screens/auth";
+import { ClerkLoaded, useUser } from "@clerk/clerk-expo"
 
 export type RootStackParamList = {
   Main: undefined;
@@ -12,15 +13,28 @@ export type RootStackParamList = {
 
 const RootStack = createNativeStackNavigator();
 
+const StackNav = () => {
+  const { isSignedIn: signedIn } = useUser();
+
+  return (
+    <RootStack.Navigator>
+      {signedIn ? (
+        <RootStack.Screen name="App" component={TabNavigator} />
+      ) : (
+        <>
+          <RootStack.Screen name="Welcome" component={AuthScreen} />
+        </>
+      )}
+    </RootStack.Navigator>
+  );
+};
+
 const RootNavigator = () => {
   return (
     <NavigationContainer>
-      <RootStack.Navigator screenOptions={{ headerShown: false }}>
-        <RootStack.Screen name="Connexion" component={ConnexionScreen} />
-        <RootStack.Group>
-          <RootStack.Screen name="Main" component={TabNavigator} />
-        </RootStack.Group>
-      </RootStack.Navigator>
+      <ClerkLoaded>
+        <StackNav />
+      </ClerkLoaded>
     </NavigationContainer>
   );
 };

@@ -5,7 +5,6 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { TabStackParamList } from '../../navigation/TabNavigator';
 
-
 export const ProfileScreen = () => {
 
   const navigation = useNavigation<NativeStackNavigationProp<TabStackParamList>>();
