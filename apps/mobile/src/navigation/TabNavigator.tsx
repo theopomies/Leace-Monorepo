@@ -2,17 +2,17 @@ import React, { useLayoutEffect } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useNavigation } from "@react-navigation/native";
 
-import { ProfileScreen } from "../screens/ProfileScreen/ProfileScreen";
-import { MatchScreen } from "../screens/MatchScreen/MatchScreen";
+import { Profile } from "../screens/Profile/profile";
+
+import { Match, MatchChat } from "../screens/Match";
 
 import { CreatePost, CreateAttributes, ViewPost, ViewDetails } from "../screens/Post";
 
 import { Available, Chat, Clients, Dashboard, Expenses, Income, Occupied } from "../screens/Dashboard";
 
-import { MatchChatScreen } from "../screens/MatchScreen/MatchChatScreen";
 import { Icon } from "react-native-elements";
 import { View } from "react-native";
-import { StackScreen } from '../screens/StackScreen/StackScreen';
+import { Stack } from '../screens/Stack/stack';
 
 export type TabStackParamList = {
   Role: undefined;
@@ -49,7 +49,7 @@ const TabNavigator = () => {
 
   return (
     <Tab.Navigator>
-      <Tab.Screen name="Stack" component={StackScreen}
+      <Tab.Screen name="Stack" component={Stack}
         options={{
           tabBarIcon: ({ focused }) => {
             const icon = focused ? 'favorite' : 'favorite-border';
@@ -63,7 +63,7 @@ const TabNavigator = () => {
           headerShown: false,
         }}
       />
-      <Tab.Screen name="Match" component={MatchScreen} options={{
+      <Tab.Screen name="Match" component={Match} options={{
         tabBarIcon: ({ focused }) => {
           const icon = focused ? 'chat' : 'chat-bubble-outline'
 
@@ -81,7 +81,7 @@ const TabNavigator = () => {
         headerShown: false
       }} />
 
-      <Tab.Screen name="MatchChat" component={MatchChatScreen} options={{ tabBarButton: () => null, headerShown: false }} />
+      <Tab.Screen name="MatchChat" component={MatchChat} options={{ tabBarButton: () => null, headerShown: false }} />
 
 
       <Tab.Screen name="CreatePost" component={CreatePost} options={{
@@ -106,7 +106,7 @@ const TabNavigator = () => {
       <Tab.Screen name="ViewPost" component={ViewPost} options={{ tabBarButton: () => null, headerShown: false }} />
       <Tab.Screen name="PostDetails" component={ViewDetails} options={{ tabBarButton: () => null, headerShown: false }} />
 
-      <Tab.Screen name="Profile" component={ProfileScreen} options={{
+      <Tab.Screen name="Profile" component={Profile} options={{
         tabBarIcon: ({ focused }) => {
           const icon = focused ? 'user-circle' : 'user-circle-o'
 

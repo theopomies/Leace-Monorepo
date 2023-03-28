@@ -6,7 +6,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { TabStackParamList } from '../../navigation/TabNavigator';
 
 
-export const MatchScreen = () => {
+export const Match = () => {
 
   const navigation = useNavigation<NativeStackNavigationProp<TabStackParamList>>();
 

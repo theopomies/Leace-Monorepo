@@ -20,7 +20,7 @@ const SignOut = () => {
   );
 };
 
-export const StackScreen = () => {
+export const Stack = () => {
 
   return (
     <ScrollView className='mt-20'>
