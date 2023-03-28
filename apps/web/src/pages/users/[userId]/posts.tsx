@@ -1,11 +1,11 @@
 import React from "react";
-import Header from "../../components/Web/Header";
-import { trpc } from "../../utils/trpc";
-import { PostBar } from "../../components/Web/PostBar";
-import { LoggedLayout } from "../../components/LoggedLayout";
+import Header from "../../../components/Web/Header";
+import { trpc } from "../../../utils/trpc";
+import { PostBar } from "../../../components/Web/PostBar";
+import { LoggedLayout } from "../../../components/LoggedLayout";
 import { PostType } from "@prisma/client";
 
-const postPage = () => {
+const Posts = () => {
   const { data: post } = trpc.post.getMyPost.useQuery();
 
   return (
@@ -17,9 +17,9 @@ const postPage = () => {
             <PostBar
               key={post.id}
               postId={post.id}
-              title={post.title ? post.title : ""}
-              desc={post.desc ? post.desc : ""}
-              type={post.type ? post.type : PostType.TO_BE_RENTED}
+              title={post.title ?? "Title"}
+              desc={post.desc ?? "Description"}
+              type={post.type ?? PostType.TO_BE_RENTED}
             />
           ))}
       </div>
@@ -27,4 +27,4 @@ const postPage = () => {
   );
 };
 
-export default postPage;
+export default Posts;

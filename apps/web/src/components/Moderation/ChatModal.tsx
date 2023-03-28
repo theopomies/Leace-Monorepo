@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Chat } from "../Chat";
+import { Chat } from "../shared/chat";
 
 export interface ChatModalProps {
   userId: string;

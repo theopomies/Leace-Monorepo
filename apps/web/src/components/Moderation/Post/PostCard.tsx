@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { DeleteImgButton } from "../DeleteImgButton";
 import { trpc } from "../../../utils/trpc";
-import { SlideShow } from "../../Stack/SlideShow";
+import { SlideShow } from "../../stack/SlideShow";
 import { motion } from "framer-motion";
 import { useEffect } from "react";
 import { Documents } from "../Documents";

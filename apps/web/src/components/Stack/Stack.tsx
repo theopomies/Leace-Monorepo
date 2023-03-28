@@ -1,13 +1,13 @@
 import { useState } from "react";
-import { LikeSvg } from "./LikeSvg";
 import { StackButton } from "./StackButton";
 import { StackElement, StackElementProps } from "./StackElement";
 import { SwipeCard } from "./SwipeCard";
-import { CrossSvg } from "./CrossSvg";
-import { RewindSvg } from "./RewindSvg";
+import { CrossSvg } from "../shared/icons/CrossSvg";
 import { motion } from "framer-motion";
 import Overlay from "./Overlay";
 import { ReportModal } from "./ReportModal";
+import { LikeSvg } from "../shared/icons/LikeSvg";
+import { RewindSvg } from "../shared/icons/RewindSvg";
 
 export type StackProps = {
   posts: StackElementProps[];

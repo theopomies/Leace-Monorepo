@@ -1,9 +1,9 @@
 import { Roles } from "@prisma/client";
 import { useRouter } from "next/router";
 import { LoggedLayout } from "../components/LoggedLayout";
-import { Loader } from "../components/Moderation/Loader";
-import { Support } from "../components/Moderation/Support";
 import { trpc } from "../utils/trpc";
+import { Support } from "../components/moderation/Support";
+import { Loader } from "../components/moderation/Loader";
 
 export default function SupportPage() {
   return (

@@ -1,9 +1,9 @@
 import React from "react";
-import { DisplayPost } from "../../components/Web/DisplayProperty";
+import { DisplayPost } from "../../../components/Web/DisplayProperty";
 import { Post, Attribute } from "@prisma/client";
 import { useRouter } from "next/router";
 
-const PostPage = () => {
+const Index = () => {
   const router = useRouter();
   const [post, setPost] = React.useState<
     Post & { attribute: Attribute | null }
@@ -35,4 +35,4 @@ const PostPage = () => {
   );
 };
 
-export default PostPage;
+export default Index;

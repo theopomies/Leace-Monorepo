@@ -1,11 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 import { useEffect, useState } from "react";
-import { trpc, RouterInputs } from "../../utils/trpc";
-import Header from "../../components/Web/Header";
-import { LoggedLayout } from "../../components/LoggedLayout";
+import { trpc, RouterInputs } from "../../../utils/trpc";
+import Header from "../../../components/Web/Header";
+import { LoggedLayout } from "../../../components/LoggedLayout";
 import { useRouter } from "next/router";
 
-const ModifyPost = () => {
+const Update = () => {
   const router = useRouter();
   const post = trpc.post.createPost.useMutation();
   const session = trpc.auth.getSession.useQuery();
@@ -398,4 +398,4 @@ const ModifyPost = () => {
   }
 };
 
-export default ModifyPost;
+export default Update;

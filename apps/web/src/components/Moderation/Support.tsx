@@ -1,5 +1,5 @@
-import { Chat } from "../../components/Chat";
 import { trpc } from "../../utils/trpc";
+import { Chat } from "../shared/chat";
 import { Loader } from "./Loader";
 
 export const Support = () => {

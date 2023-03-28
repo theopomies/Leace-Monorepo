@@ -20,7 +20,7 @@ const links: {
     roles: [Roles.OWNER, Roles.AGENCY],
   },
   {
-    href: "/users/MatchPage",
+    href: "/users/me/matches",
     label: "Matches",
     roles: [Roles.OWNER, Roles.AGENCY, Roles.TENANT],
   },

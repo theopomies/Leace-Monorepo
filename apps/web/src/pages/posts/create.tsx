@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { trpc, RouterInputs } from "../../utils/trpc";
 import { LoggedLayout } from "../../components/LoggedLayout";
 
-const AddPost = () => {
+const Create = () => {
   const post = trpc.post.createPost.useMutation();
   const session = trpc.auth.getSession.useQuery();
   const [postData, setPostData] = useState<RouterInputs["post"]["createPost"]>({
@@ -362,4 +362,4 @@ const AddPost = () => {
   }
 };
 
-export default AddPost;
+export default Create;

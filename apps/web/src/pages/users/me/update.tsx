@@ -1,13 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
 import { useEffect, useState } from "react";
-import { trpc, RouterInputs } from "../../utils/trpc";
+import { trpc, RouterInputs } from "../../../utils/trpc";
 import { Roles } from "@prisma/client";
 import { useRouter } from "next/router";
-import Header from "../../components/Web/Header";
-import { LoggedLayout } from "../../components/LoggedLayout";
-import LocataireProfile from "../../components/Web/ModifyLocataireProfile";
+import Header from "../../../components/Web/Header";
+import { LoggedLayout } from "../../../components/LoggedLayout";
+import LocataireProfile from "../../../components/Web/ModifyLocataireProfile";
 
-const UpdateProfiles = () => {
+const Update = () => {
   const { data: session } = trpc.auth.getSession.useQuery();
   const userProfile = trpc.user.getUser.useQuery();
   const updateUser = trpc.user.updateUser.useMutation();
@@ -59,17 +59,17 @@ const UpdateProfiles = () => {
       return null;
     }
     updateAtt.mutate(attData);
-    router.push("ProfilePage");
+    router.push("/users/me");
   };
 
   useEffect(() => {
     if (userProfile.data) {
       setUserData({
-        birthDate: userProfile.data.birthDate?.toDateString() || "",
-        firstName: userProfile.data.firstName || "",
-        lastName: userProfile.data.lastName || "",
-        phoneNumber: userProfile.data.phoneNumber || "",
-        description: userProfile.data.description || "",
+        birthDate: userProfile.data.birthDate?.toDateString() ?? "",
+        firstName: userProfile.data.firstName ?? "",
+        lastName: userProfile.data.lastName ?? "",
+        phoneNumber: userProfile.data.phoneNumber ?? "",
+        description: userProfile.data.description ?? "",
       });
     }
   }, [userProfile.data]);
@@ -109,7 +109,7 @@ const UpdateProfiles = () => {
                     <input
                       type="date"
                       className="rounded-lg border-2 border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-600 focus:outline-none"
-                      value={userData.birthDate?.toString()}
+                      value={userData.birthDate}
                       onChange={handleChange("birthDate")}
                     />
                     <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
@@ -156,4 +156,4 @@ const UpdateProfiles = () => {
   );
 };
 
-export default UpdateProfiles;
+export default Update;

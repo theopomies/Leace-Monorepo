@@ -1,18 +1,20 @@
 import { Dispatch, SetStateAction } from "react";
-import { trpc } from "../../utils/trpc";
+import { trpc } from "../../../utils/trpc";
 import { ChatList } from "./ChatList";
 
-export interface ChatListMatchProps {
+export interface ChatListModerationProps {
   userId: string;
+  chatOn?: boolean;
   setConversationId: Dispatch<SetStateAction<string>>;
 }
 
-export const ChatListMatch = ({
+export const ChatListModeration = ({
   userId,
+  chatOn, // TODO CHANGER CETTE MERDE
   setConversationId,
-}: ChatListMatchProps) => {
-  const { data: relationships } = trpc.relationship.getMatch.useQuery(
-    undefined,
+}: ChatListModerationProps) => {
+  const { data: relationships } = trpc.moderation.getMatch.useQuery(
+    chatOn ? undefined : { id: userId },
     {
       onSuccess(data) {
         if (data && data[0] && data[0].conversation)

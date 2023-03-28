@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Stack } from "../../components/Stack/Stack";
-import { StackElementProps } from "../../components/Stack/StackElement";
+import { Stack } from "./Stack";
+import { StackElementProps } from "./StackElement";
 
 const defaultPosts: StackElementProps[] = [];
 
