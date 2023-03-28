@@ -29,17 +29,17 @@ const ShowSelectedAttributes = ({
     elevator,
     pool
 }: {
-    furnished: boolean | undefined,
-    house: boolean | undefined,
-    apartment: boolean | undefined,
-    terrace: boolean | undefined,
-    pets: boolean | undefined,
-    smoker: boolean | undefined,
-    disability: boolean | undefined,
-    garden: boolean | undefined,
-    parking: boolean | undefined,
-    elevator: boolean | undefined,
-    pool: boolean | undefined
+    furnished: boolean | null | undefined,
+    house: boolean | null | undefined,
+    apartment: boolean | null | undefined,
+    terrace: boolean | null | undefined,
+    pets: boolean | null | undefined,
+    smoker: boolean | null | undefined,
+    disability: boolean | null | undefined,
+    garden: boolean | null | undefined,
+    parking: boolean | null | undefined,
+    elevator: boolean | null | undefined,
+    pool: boolean | null | undefined
 }) => {
     return (
         <View className="flex-row flex-wrap justify-center mb-10">

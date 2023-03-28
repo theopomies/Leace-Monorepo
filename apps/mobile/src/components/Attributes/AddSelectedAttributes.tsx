@@ -15,23 +15,22 @@ type CheckboxGroupProps = {
 
 const AddSelectedAttributes = ({ data, onChangeAttributesHandler }: CheckboxGroupProps) => {
     return (
-        <>
-            {data.map((item) => (
-                <View key={item.label} className="flex-row justify-between items-center">
-                    <View className=" flex-1 flex items-end">
-                        <CheckBox
-                            title={item.label}
-                            onPress={() => onChangeAttributesHandler(item.name, !item.checked)}
-                            checked={item.checked}
-                            containerStyle={{ backgroundColor: 'transparent', borderWidth: 0 }}
-                            checkedColor="#002642"
-                            iconRight
-                            textStyle={{ color: '#002642' }}
-                        />
-                    </View>
+        <View className="flex-wrap flex-row space-between">
+            {data.map((item, index) => (
+                <View key={item.label} className="w-2/4">
+                    <CheckBox
+                        title={item.label}
+                        onPress={() => onChangeAttributesHandler(item.name, !item.checked)}
+                        checked={item.checked}
+                        containerStyle={{ backgroundColor: 'transparent', borderWidth: 0, alignItems: index % 2 === 0 ? 'flex-end' : 'flex-start' }}
+                        checkedColor="#002642"
+                        iconRight={index % 2 === 0}
+                        textStyle={{ color: '#002642' }}
+                    />
                 </View>
             ))}
-        </>
+        </View>
+
     );
 };
 

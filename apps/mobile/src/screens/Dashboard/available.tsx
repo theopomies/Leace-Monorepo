@@ -4,6 +4,7 @@ import React from 'react'
 import { trpc } from "../../utils/trpc";
 import { Type } from '../../utils/enum';
 import { PostCard } from '../../components/Card';
+import ShowProfile from '../../components/ShowProfile';
 
 const Available = () => {
 
@@ -11,6 +12,10 @@ const Available = () => {
 
     return (
         <ScrollView className="mb-20 mt-20 mx-5" showsVerticalScrollIndicator={false}>
+            <View className="flex-row justify-center items-center ml-10">
+                <Text className="text-center font-p font-bold text-3xl	text-custom mx-auto mb-10">AVAILABLE</Text>
+                <ShowProfile path={require("../../../assets/blank.png")} />
+            </View>
             {available.data && available.data.length > 0 ?
                 available.data.map(item => {
                     return (

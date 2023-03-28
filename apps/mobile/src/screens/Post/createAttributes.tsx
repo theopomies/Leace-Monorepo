@@ -89,7 +89,8 @@ const CreateAttributes = ({ route }: { route: RouteProp<TabStackParamList, "Crea
                     multiline={false}
                     placeholder="Enter size..." />
             </View>
-            <DatePicker startLabel={"Start Date"} endLabel={"End date"} onChangeAttributesHandler={onChangeAttributesHandler} /><AddSelectedAttributes
+            <DatePicker startLabel={"Start Date"} endLabel={"End date"} onChangeAttributesHandler={onChangeAttributesHandler} />
+            <AddSelectedAttributes
                 data={[
                     { name: 'furnished', label: 'Furnished', checked: data.furnished },
                     { name: 'house', label: 'House', checked: data.house },

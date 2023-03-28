@@ -27,22 +27,22 @@ const PostAttributeCard = ({
     title: string | null,
     desc: string | null,
     content: string | null,
-    location: string | undefined,
-    price: number | undefined,
-    size: number | undefined,
-    rentStartDate: Date | undefined,
-    rentEndDate: Date | undefined,
-    furnished: boolean | undefined,
-    house: boolean | undefined,
-    appartment: boolean | undefined,
-    terrace: boolean | undefined,
-    pets: boolean | undefined,
-    smoker: boolean | undefined,
-    disability: boolean | undefined,
-    garden: boolean | undefined,
-    parking: boolean | undefined,
-    elevator: boolean | undefined,
-    pool: boolean | undefined
+    location: string | null | undefined,
+    price: number | null | undefined,
+    size: number | null | undefined,
+    rentStartDate: Date | null | undefined,
+    rentEndDate: Date | null | undefined,
+    furnished: boolean | null | undefined,
+    house: boolean | null | undefined,
+    appartment: boolean | null | undefined,
+    terrace: boolean | null | undefined,
+    pets: boolean | null | undefined,
+    smoker: boolean | null | undefined,
+    disability: boolean | null | undefined,
+    garden: boolean | null | undefined,
+    parking: boolean | null | undefined,
+    elevator: boolean | null | undefined,
+    pool: boolean | null | undefined
 }) => {
 
     const data = [
@@ -70,7 +70,7 @@ const PostAttributeCard = ({
 
             <View className="flex-row space-x-10 justify-center mb-10">
                 <Button title={'Edit'} color={'custom'} />
-                <Button title={'Delete'} color={'red-200'} />
+                <Button title={'Delete'} color={'red-500'} />
             </View>
         </View>
     )

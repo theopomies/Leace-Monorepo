@@ -2,7 +2,7 @@ import React from 'react'
 import { View, Text } from 'react-native'
 import { Icon } from 'react-native-elements'
 
-const Attribute = ({ title, name, type }: { title: string, name: string, type: string }) => {
+const ShowAttribute = ({ title, name, type }: { title: string, name: string, type: string }) => {
     return (
         <View className="bg-transparent border rounded-full border-custom h-8 w-24 mr-1 mb-1 flex-row items-center">
             <Icon name={name} type={type} color="#002642" style={{ marginLeft: 16 }} size={15} />
@@ -11,4 +11,4 @@ const Attribute = ({ title, name, type }: { title: string, name: string, type: s
     )
 }
 
-export default Attribute
+export default ShowAttribute

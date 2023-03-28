@@ -13,7 +13,7 @@ const Expenses = () => {
 
 
     return (
-        <ScrollView className="mt-20 mx-5">
+        <ScrollView className="mt-20 mx-5" showsVerticalScrollIndicator={false}>
             <View>
                 <View className="flex-row justify-center items-center ml-10">
                     <Text className="text-center font-p font-bold text-3xl	text-custom mx-auto mb-10">EXPENSES</Text>

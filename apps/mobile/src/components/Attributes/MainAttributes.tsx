@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text } from 'react-native'
 
-const MainAttributes = ({ location, price, desc, rentStartDate, rentEndDate, size }: { location: string | undefined, price: number | undefined, desc: string | null, rentStartDate: Date | undefined, rentEndDate: Date | undefined, size: number | undefined }) => {
+const MainAttributes = ({ location, price, desc, rentStartDate, rentEndDate, size }: { location: string | null | undefined, price: number | null | undefined, desc: string | null | undefined, rentStartDate: Date | null | undefined, rentEndDate: Date | null | undefined, size: number | null | undefined }) => {
     return (
         <>
             <Text className="text-custom text-base">

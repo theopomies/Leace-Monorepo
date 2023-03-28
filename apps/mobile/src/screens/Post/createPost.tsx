@@ -51,10 +51,10 @@ const CreatePost = () => {
                     <CustomInput
                         label="Title"
                         value={post.title}
-                        category="location"
+                        category="title"
                         onChangeAttributesHandler={onChangePostHandler}
                         multiline={true}
-                        placeholder="Enter location..." />
+                        placeholder="Enter title..." />
                     <CustomInput
                         label="Description"
                         category="desc"
