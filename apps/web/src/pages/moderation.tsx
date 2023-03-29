@@ -1,5 +1,5 @@
 import { trpc } from "../utils/trpc";
-import { LoggedLayout } from "../components/LoggedLayout";
+import { LoggedLayout } from "../components/shared/layout/LoggedLayout";
 import { Roles } from "@prisma/client";
 import { useRouter } from "next/router";
 import { Loader } from "../components/moderation/Loader";

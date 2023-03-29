@@ -2,7 +2,7 @@
 import { trpc } from "../../../utils/trpc";
 import { BanButton } from "../BanButton";
 import { Loader } from "../Loader";
-import { Documents } from "../Documents";
+import { Documents } from "../documents";
 import { ChatModal } from "../ChatModal";
 import { displayDate } from "../../../utils/displayDate";
 

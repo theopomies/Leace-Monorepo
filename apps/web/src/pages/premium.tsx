@@ -1,5 +1,5 @@
-import { LoggedLayout } from "../components/LoggedLayout";
-import { StripePricingTable } from "../components/premium/stripeComponent";
+import { LoggedLayout } from "../components/shared/layout/LoggedLayout";
+import { StripePricingTable } from "../components/premium/StripePricingTable";
 import { trpc } from "../utils/trpc";
 
 const Premium = () => {

@@ -1,5 +1,5 @@
 import React from "react";
-import { DisplayPost } from "../../../components/Web/DisplayProperty";
+import { DisplayPost } from "../../../components/users/DisplayProperty";
 import { Post, Attribute } from "@prisma/client";
 import { useRouter } from "next/router";
 

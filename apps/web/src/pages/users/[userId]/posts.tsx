@@ -1,8 +1,8 @@
 import React from "react";
-import Header from "../../../components/Web/Header";
+import Header from "../../../components/users/Header";
 import { trpc } from "../../../utils/trpc";
-import { PostBar } from "../../../components/Web/PostBar";
-import { LoggedLayout } from "../../../components/LoggedLayout";
+import { PostBar } from "../../../components/users/PostBar";
+import { LoggedLayout } from "../../../components/shared/layout/LoggedLayout";
 import { PostType } from "@prisma/client";
 
 const Posts = () => {

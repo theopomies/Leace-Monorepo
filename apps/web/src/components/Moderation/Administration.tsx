@@ -3,8 +3,8 @@ import { Loader } from "./Loader";
 import { Search } from "./Search";
 import { trpc } from "../../utils/trpc";
 import { useRouter } from "next/router";
-import { User } from "./User";
-import { Post } from "./Post";
+import { User } from "./user";
+import { Post } from "./post";
 
 export const Administration = () => {
   const router = useRouter();

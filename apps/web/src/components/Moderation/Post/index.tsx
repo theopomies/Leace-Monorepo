@@ -1,4 +1,4 @@
-import { UserCard } from "../User/UserCard";
+import { UserCard } from "../user/UserCard";
 import { PostCard } from "./PostCard";
 import { useState } from "react";
 

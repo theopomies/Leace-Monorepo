@@ -1,8 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 import { useEffect, useState } from "react";
 import { trpc, RouterInputs } from "../../../utils/trpc";
-import Header from "../../../components/Web/Header";
-import { LoggedLayout } from "../../../components/LoggedLayout";
+import Header from "../../../components/users/Header";
+import { LoggedLayout } from "../../../components/shared/layout/LoggedLayout";
 import { useRouter } from "next/router";
 
 const Update = () => {

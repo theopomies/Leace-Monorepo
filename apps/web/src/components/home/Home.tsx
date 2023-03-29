@@ -1,10 +1,10 @@
 import { Roles } from "@prisma/client";
-import { trpc } from "../utils/trpc";
-import { RoleSelector } from "./Web/RoleSelector";
-import { PostStack } from "./stack/PostStack";
-import { TenantStack } from "./stack/TenantStack";
-import { Administration } from "./moderation/Administration";
-import { Moderation } from "./moderation/Moderation";
+import { trpc } from "../../utils/trpc";
+import { RoleSelector } from "../users/RoleSelector";
+import { PostStack } from "../stack/PostStack";
+import { TenantStack } from "../stack/TenantStack";
+import { Administration } from "../moderation/Administration";
+import { Moderation } from "../moderation/Moderation";
 
 export const Home = () => {
   const { data: session } = trpc.auth.getSession.useQuery();

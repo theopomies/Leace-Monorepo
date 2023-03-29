@@ -1,6 +1,6 @@
 import { Roles } from "@prisma/client";
 import { useRouter } from "next/router";
-import { LoggedLayout } from "../components/LoggedLayout";
+import { LoggedLayout } from "../components/shared/layout/LoggedLayout";
 import { trpc } from "../utils/trpc";
 import { Support } from "../components/moderation/Support";
 import { Loader } from "../components/moderation/Loader";

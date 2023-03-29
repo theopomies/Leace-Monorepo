@@ -1,8 +1,8 @@
 import { Roles } from "@prisma/client";
 import { useState } from "react";
 import { trpc } from "../../../utils/trpc";
-import { PostCard } from "../Post/PostCard";
-import { PostList } from "../Post/PostList";
+import { PostCard } from "../post/PostCard";
+import { PostList } from "../post/PostList";
 import { UserCard } from "./UserCard";
 
 export interface PostProps {

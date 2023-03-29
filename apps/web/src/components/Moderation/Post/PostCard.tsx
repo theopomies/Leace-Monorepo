@@ -4,7 +4,7 @@ import { trpc } from "../../../utils/trpc";
 import { SlideShow } from "../../stack/SlideShow";
 import { motion } from "framer-motion";
 import { useEffect } from "react";
-import { Documents } from "../Documents";
+import { Documents } from "../documents";
 import { GreenCheck } from "./GreenCheck";
 import { RedUncheck } from "./RedUncheck";
 import { displayDate } from "../../../utils/displayDate";

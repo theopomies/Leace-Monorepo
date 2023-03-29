@@ -3,9 +3,9 @@ import { useEffect, useState } from "react";
 import { trpc, RouterInputs } from "../../../utils/trpc";
 import { Roles } from "@prisma/client";
 import { useRouter } from "next/router";
-import Header from "../../../components/Web/Header";
-import { LoggedLayout } from "../../../components/LoggedLayout";
-import LocataireProfile from "../../../components/Web/ModifyLocataireProfile";
+import Header from "../../../components/users/Header";
+import { LoggedLayout } from "../../../components/shared/layout/LoggedLayout";
+import LocataireProfile from "../../../components/users/ModifyLocataireProfile";
 
 const Update = () => {
   const { data: session } = trpc.auth.getSession.useQuery();

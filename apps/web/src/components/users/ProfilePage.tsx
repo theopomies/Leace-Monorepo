@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import Header from "../Web/Header";
+import Header from "../users/Header";
 import { trpc } from "../../utils/trpc";
 import { useRouter } from "next/router";
 import { Roles } from "@prisma/client";

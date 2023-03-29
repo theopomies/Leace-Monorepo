@@ -1,8 +1,8 @@
 import { Loader } from "./Loader";
 import { ReportButton } from "./ReportButton";
 import { trpc } from "../../utils/trpc";
-import { Post } from "./Post";
-import { User } from "./User";
+import { Post } from "./post";
+import { User } from "./user";
 
 export const Moderation = () => {
   const report = trpc.moderation.getReport.useQuery(undefined, {

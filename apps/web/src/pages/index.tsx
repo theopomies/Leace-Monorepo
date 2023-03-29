@@ -1,5 +1,5 @@
-import { LoggedLayout } from "../components/LoggedLayout";
-import { Home } from "../components/Home";
+import { LoggedLayout } from "../components/shared/layout/LoggedLayout";
+import { Home } from "../components/home/Home";
 
 const Index = () => {
   return (

@@ -1,10 +1,10 @@
 import React from "react";
-import Header from "../../../components/Web/Header";
+import Header from "../../../components/users/Header";
 import { trpc } from "../../../utils/trpc";
-import { LoggedLayout } from "../../../components/LoggedLayout";
+import { LoggedLayout } from "../../../components/shared/layout/LoggedLayout";
 import { Roles } from "@prisma/client";
-import { TenantList } from "../../../components/Web/TenantList";
-import { PostList } from "../../../components/Web/PostList";
+import { TenantList } from "../../../components/users/TenantList";
+import { PostList } from "../../../components/users/PostList";
 
 const Matches = () => {
   const { data: session } = trpc.auth.getSession.useQuery();

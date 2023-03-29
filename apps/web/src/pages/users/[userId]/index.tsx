@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { LoggedLayout } from "../../../components/LoggedLayout";
+import { LoggedLayout } from "../../../components/shared/layout/LoggedLayout";
 import ProfilePage from "../../../components/users/ProfilePage";
 
 const Index = () => {
