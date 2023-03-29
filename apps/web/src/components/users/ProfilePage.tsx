@@ -1,15 +1,14 @@
 /* eslint-disable @next/next/no-img-element */
 import Header from "../users/Header";
 import { trpc } from "../../utils/trpc";
-import { useRouter } from "next/router";
 import { Roles } from "@prisma/client";
+import Link from "next/link";
 
 export interface ProfilePageProps {
   userId?: string;
 }
 
 const ProfilePage = ({ userId }: ProfilePageProps) => {
-  const router = useRouter();
   const { data: user, isLoading } = trpc.user.getUser.useQuery(userId);
 
   if (isLoading) {
@@ -26,15 +25,12 @@ const ProfilePage = ({ userId }: ProfilePageProps) => {
       <div className="flex w-full justify-center p-5">
         {!userId && (
           <div>
-            <button
+            <Link
               className="rounded bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700"
-              onClick={(e) => {
-                e.preventDefault();
-                router.push("/users/me/update");
-              }}
+              href={"/users/me/update"}
             >
               Modifier
-            </button>
+            </Link>
           </div>
         )}
         <div className="m-14 flex w-2/5 justify-center rounded-lg bg-white p-5 shadow">

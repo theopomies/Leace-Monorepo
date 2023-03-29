@@ -81,7 +81,7 @@ const Update = () => {
 
     attData.id = postUser.id;
     updatePostAtt.mutate(attData);
-    router.push("ProfilePage");
+    router.push("/users/me");
   };
   useEffect(() => {
     if (getPost.data && getPost.data.attribute) {

@@ -74,7 +74,7 @@ const Create = () => {
     }
     attData.id = postUser.id;
     updatePost.mutate(attData);
-    router.push("ProfilePage");
+    router.push("/users/me");
   };
   if (session.data?.role == "OWNER" || session.data?.role == "AGENCY") {
     return (

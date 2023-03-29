@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import Link from "next/link";
 import { trpc } from "../../../utils/trpc";
 
 export interface DocumentModalProps {
@@ -42,7 +43,9 @@ export const DocumentModal = ({
               <p>
                 It appears you don&apos;t have a PDF plugin for this browser. No
                 biggie... you can{" "}
-                <a href={document.url}>click here to download the PDF file.</a>
+                <Link href={document.url}>
+                  click here to download the PDF file.
+                </Link>
               </p>
             </object>
           ) : (

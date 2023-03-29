@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { NavBar } from "./NavBar";
+import { NavBar } from "./navbar/NavBar";
 import Head from "next/head";
 import { useSession } from "@clerk/nextjs";
 

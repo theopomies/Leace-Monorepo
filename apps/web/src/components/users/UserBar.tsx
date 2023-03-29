@@ -1,5 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 
+import Link from "next/link";
+
 export interface TenantBarProps {
   img: string;
   desc: string;
@@ -27,12 +29,12 @@ export const TenantBar = ({
           <div className="text-sm font-semibold uppercase tracking-wide text-indigo-500">
             {firstname}
           </div>
-          <a
+          <Link
             href="#"
             className="mt-1 block text-lg font-medium leading-tight text-black hover:underline"
           >
             {lastName}
-          </a>
+          </Link>
           <p className="mt-2 text-slate-500">{desc}</p>
         </div>
       </div>

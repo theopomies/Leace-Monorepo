@@ -12,7 +12,7 @@ function DeletePost(props: { post: string }) {
   });
   const onClickDelete = () => {
     delPost.mutate(props.post);
-    router.push("ProfilePage");
+    router.push("/users/me");
   };
 
   return (

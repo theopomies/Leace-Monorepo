@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 
+import Link from "next/link";
 import { trpc } from "../../utils/trpc";
 
 export interface PostBarProps {
@@ -31,12 +32,12 @@ export const PostBar = ({ postId, title, desc, type }: PostBarProps) => {
           <div className="text-sm font-semibold uppercase tracking-wide text-indigo-500">
             {title}
           </div>
-          <a
+          <Link
             href="#"
             className="mt-1 block text-lg font-medium leading-tight text-black hover:underline"
           >
             {desc}
-          </a>
+          </Link>
           <p className="mt-2 text-slate-500">{type}</p>
         </div>
       </div>

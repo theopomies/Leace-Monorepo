@@ -38,7 +38,7 @@ function ReportForm({
     if (!report) {
       return null;
     }
-    router.push("MainPage");
+    router.push("/");
   };
   return (
     <div className="fixed inset-x-0 bottom-0 px-4 pb-6 sm:inset-0 sm:flex sm:items-center sm:justify-center sm:p-0">

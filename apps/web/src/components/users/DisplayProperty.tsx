@@ -1,15 +1,14 @@
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
-import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
 import { Attribute, Post, Roles } from ".prisma/client";
 import DeletePost from "./DeletePost";
 import { LoggedLayout } from "../shared/layout/LoggedLayout";
 import Header from "./Header";
+import Link from "next/link";
 
 export function DisplayPost(props: { post: Post; attribute: Attribute }) {
   const { data: session } = trpc.auth.getSession.useQuery();
-  const router = useRouter();
   return (
     <LoggedLayout title="Profile Page | Leace">
       <div className="w-full">
@@ -21,15 +20,12 @@ export function DisplayPost(props: { post: Post; attribute: Attribute }) {
             )}
           </div>
           <div>
-            <button
+            <Link
               className="rounded bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700"
-              onClick={(e) => {
-                e.preventDefault();
-                router.push(`/users/ModifyPost?id=${props.post.id}`);
-              }} //handleReportForm}
+              href={`/posts/${props.post.id}`}
             >
               Modifier
-            </button>
+            </Link>
             {/* {showReportForm && (
                 <ReportForm
                   onClose={handleCloseContent}
@@ -113,11 +109,6 @@ export function DisplayPost(props: { post: Post; attribute: Attribute }) {
                 <img src="/photos1.jpeg" alt="Pic1" className="m-4" />
                 <img src="/photos3.jpeg" alt="Pic3" className="m-4" />
               </div>
-              {/*           <div className="flex justify-center pt-16">
-            <button className="w-1/2 rounded-lg bg-blue-500 py-2 px-4 text-white hover:bg-blue-600">
-              <b>Modify</b>
-            </button>
-          </div> */}
             </div>
           </div>
         </div>
