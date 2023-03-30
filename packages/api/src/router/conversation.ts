@@ -1,10 +1,10 @@
-import { ConversationType, PostType, Roles } from "@leace/db";
+import { ConversationType, PostType, Role } from "@leace/db";
 import { protectedProcedure, router } from "../trpc";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 
 export const conversationRouter = router({
-  sendDealToUser: protectedProcedure([Roles.AGENCY, Roles.OWNER])
+  sendDealToUser: protectedProcedure([Role.AGENCY, Role.OWNER])
     .input(
       z.object({
         conversationId: z.string(),
@@ -59,13 +59,13 @@ export const conversationRouter = router({
         where: { id: conversation.id },
         data: {
           type:
-            userType == Roles.AGENCY
+            userType == Role.AGENCY
               ? ConversationType.AGENCY
               : ConversationType.OWNER,
         },
       });
     }),
-  sendDealToPost: protectedProcedure([Roles.TENANT])
+  sendDealToPost: protectedProcedure([Role.TENANT])
     .input(
       z.object({
         conversationId: z.string(),
@@ -125,7 +125,7 @@ export const conversationRouter = router({
         },
       });
     }),
-  cancelDeal: protectedProcedure([Roles.AGENCY, Roles.OWNER, Roles.TENANT])
+  cancelDeal: protectedProcedure([Role.AGENCY, Role.OWNER, Role.TENANT])
     .input(z.object({ conversationId: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const conversation = await ctx.prisma.conversation.findUnique({
@@ -140,7 +140,7 @@ export const conversationRouter = router({
         where: { id: conversation.relationId },
       });
       if (!relationship) throw new TRPCError({ code: "NOT_FOUND" });
-      if (ctx.role == Roles.OWNER || ctx.role == Roles.AGENCY) {
+      if (ctx.role == Role.OWNER || ctx.role == Role.AGENCY) {
         const post = await ctx.prisma.post.findUnique({
           where: { id: relationship.postId },
         });
@@ -148,7 +148,7 @@ export const conversationRouter = router({
         if (post.createdById != ctx.auth.userId)
           throw new TRPCError({ code: "FORBIDDEN" });
       }
-      if (ctx.role == Roles.TENANT) {
+      if (ctx.role == Role.TENANT) {
         if (relationship.userId != ctx.auth.userId)
           throw new TRPCError({ code: "FORBIDDEN" });
       }
@@ -162,10 +162,10 @@ export const conversationRouter = router({
 
       if (
         (conversation.type == ConversationType.TENANT &&
-          ctx.role != Roles.TENANT) ||
+          ctx.role != Role.TENANT) ||
         (conversation.type == ConversationType.AGENCY &&
-          ctx.role != Roles.AGENCY) ||
-        (conversation.type == ConversationType.OWNER && ctx.role != Roles.OWNER)
+          ctx.role != Role.AGENCY) ||
+        (conversation.type == ConversationType.OWNER && ctx.role != Role.OWNER)
       ) {
         throw new TRPCError({ code: "FORBIDDEN" });
       }
@@ -175,7 +175,7 @@ export const conversationRouter = router({
         data: { type: ConversationType.NONE },
       });
     }),
-  sendMessage: protectedProcedure([Roles.AGENCY, Roles.OWNER, Roles.TENANT])
+  sendMessage: protectedProcedure([Role.AGENCY, Role.OWNER, Role.TENANT])
     .input(z.object({ conversationId: z.string(), content: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const conversation = await ctx.prisma.conversation.findUnique({
@@ -190,7 +190,7 @@ export const conversationRouter = router({
         where: { id: conversation.relationId },
       });
       if (!relationship) throw new TRPCError({ code: "NOT_FOUND" });
-      if (ctx.role == Roles.OWNER || ctx.role == Roles.AGENCY) {
+      if (ctx.role == Role.OWNER || ctx.role == Role.AGENCY) {
         const post = await ctx.prisma.post.findUnique({
           where: { id: relationship.postId },
         });
@@ -198,7 +198,7 @@ export const conversationRouter = router({
         if (post.createdById != ctx.auth.userId)
           throw new TRPCError({ code: "FORBIDDEN" });
       }
-      if (ctx.role == Roles.TENANT) {
+      if (ctx.role == Role.TENANT) {
         if (relationship.userId != ctx.auth.userId)
           throw new TRPCError({ code: "FORBIDDEN" });
       }
@@ -211,7 +211,7 @@ export const conversationRouter = router({
         },
       });
     }),
-  readAllMessages: protectedProcedure([Roles.AGENCY, Roles.OWNER, Roles.TENANT])
+  readAllMessages: protectedProcedure([Role.AGENCY, Role.OWNER, Role.TENANT])
     .input(z.object({ conversationId: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const conversation = await ctx.prisma.conversation.findUnique({
@@ -226,7 +226,7 @@ export const conversationRouter = router({
         where: { id: conversation.relationId },
       });
       if (!relationship) throw new TRPCError({ code: "NOT_FOUND" });
-      if (ctx.role == Roles.OWNER || ctx.role == Roles.AGENCY) {
+      if (ctx.role == Role.OWNER || ctx.role == Role.AGENCY) {
         const post = await ctx.prisma.post.findUnique({
           where: { id: relationship.postId },
         });
@@ -234,7 +234,7 @@ export const conversationRouter = router({
         if (post.createdById != ctx.auth.userId)
           throw new TRPCError({ code: "FORBIDDEN" });
       }
-      if (ctx.role == Roles.TENANT) {
+      if (ctx.role == Role.TENANT) {
         if (relationship.userId != ctx.auth.userId)
           throw new TRPCError({ code: "FORBIDDEN" });
       }
@@ -248,7 +248,7 @@ export const conversationRouter = router({
         data: { read: true },
       });
     }),
-  getMessages: protectedProcedure([Roles.AGENCY, Roles.OWNER, Roles.TENANT])
+  getMessages: protectedProcedure([Role.AGENCY, Role.OWNER, Role.TENANT])
     .input(
       z.object({
         conversationId: z.string(),
@@ -269,7 +269,7 @@ export const conversationRouter = router({
         where: { id: conversation.relationId },
       });
       if (!relationship) throw new TRPCError({ code: "NOT_FOUND" });
-      if (ctx.role == Roles.OWNER || ctx.role == Roles.AGENCY) {
+      if (ctx.role == Role.OWNER || ctx.role == Role.AGENCY) {
         const post = await ctx.prisma.post.findUnique({
           where: { id: relationship.postId },
         });
@@ -277,7 +277,7 @@ export const conversationRouter = router({
         if (post.createdById != ctx.auth.userId)
           throw new TRPCError({ code: "FORBIDDEN" });
       }
-      if (ctx.role == Roles.TENANT) {
+      if (ctx.role == Role.TENANT) {
         if (relationship.userId != ctx.auth.userId)
           throw new TRPCError({ code: "FORBIDDEN" });
       }
@@ -293,7 +293,7 @@ export const conversationRouter = router({
 
       return messages;
     }),
-  countUnreads: protectedProcedure([Roles.AGENCY, Roles.OWNER, Roles.TENANT])
+  countUnreads: protectedProcedure([Role.AGENCY, Role.OWNER, Role.TENANT])
     .input(z.object({ conversationId: z.string() }))
     .query(async ({ ctx, input }) => {
       const conversation = await ctx.prisma.conversation.findUnique({
@@ -308,7 +308,7 @@ export const conversationRouter = router({
         where: { id: conversation.relationId },
       });
       if (!relationship) throw new TRPCError({ code: "NOT_FOUND" });
-      if (ctx.role == Roles.OWNER || ctx.role == Roles.AGENCY) {
+      if (ctx.role == Role.OWNER || ctx.role == Role.AGENCY) {
         const post = await ctx.prisma.post.findUnique({
           where: { id: relationship.postId },
         });
@@ -316,7 +316,7 @@ export const conversationRouter = router({
         if (post.createdById != ctx.auth.userId)
           throw new TRPCError({ code: "FORBIDDEN" });
       }
-      if (ctx.role == Roles.TENANT) {
+      if (ctx.role == Role.TENANT) {
         if (relationship.userId != ctx.auth.userId)
           throw new TRPCError({ code: "FORBIDDEN" });
       }

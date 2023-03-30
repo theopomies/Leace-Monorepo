@@ -1,33 +1,44 @@
 import { router, protectedProcedure } from "../trpc";
 import { z } from "zod";
-import { ReportReason, ReportStatus, Roles } from "@prisma/client";
+import { ReportReason, ReportStatus, Role } from "@prisma/client";
+import { TRPCError } from "@trpc/server";
 
 export const reportRouter = router({
-  reportUser: protectedProcedure([Roles.AGENCY, Roles.OWNER])
+  reportUserById: protectedProcedure([Role.AGENCY, Role.OWNER])
     .input(
       z.object({
         userId: z.string(),
         reason: z.enum([
-          ReportReason.INAPPROPRIATE,
-          ReportReason.OTHER,
           ReportReason.SCAM,
           ReportReason.SPAM,
+          ReportReason.INAPPROPRIATE,
+          ReportReason.OTHER,
         ]),
         desc: z.string().optional(),
       }),
     )
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.report.create({
+    .mutation(async ({ ctx, input }) => {
+      const userId = input.userId;
+      const createdById = ctx.auth.userId;
+
+      const user = await ctx.prisma.user.findUnique({ where: { id: userId } });
+
+      if (!user) throw new TRPCError({ code: "NOT_FOUND" });
+
+      const updated = await ctx.prisma.report.create({
         data: {
-          createdById: ctx.auth.userId,
-          userId: input.userId,
+          createdById,
+          userId,
           desc: input.desc,
           status: ReportStatus.PENDING,
           reason: input.reason,
         },
       });
+
+      if (!updated) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
     }),
-  reportPost: protectedProcedure([Roles.TENANT])
+
+  reportPostById: protectedProcedure([Role.TENANT])
     .input(
       z.object({
         postId: z.string(),
@@ -40,15 +51,24 @@ export const reportRouter = router({
         desc: z.string().optional(),
       }),
     )
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.report.create({
+    .mutation(async ({ ctx, input }) => {
+      const postId = input.postId;
+      const createdById = ctx.auth.userId;
+
+      const post = await ctx.prisma.post.findUnique({ where: { id: postId } });
+
+      if (!post) throw new TRPCError({ code: "NOT_FOUND" });
+
+      const report = await ctx.prisma.report.create({
         data: {
-          createdById: ctx.auth.userId,
-          postId: input.postId,
+          createdById,
+          postId,
           desc: input.desc,
           status: ReportStatus.PENDING,
           reason: input.reason,
         },
       });
+
+      if (!report) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
     }),
 });
