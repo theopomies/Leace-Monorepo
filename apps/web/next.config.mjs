@@ -9,7 +9,10 @@
 const config = {
   reactStrictMode: true,
   swcMinify: true,
-  transpilePackages: ["@leace/api", "@leace/db"],
+  experimental: {
+    // Enables hot-reload and easy integration for local packages
+    transpilePackages: ["@leace/api", "@leace/db"],
+  },
   // We already do linting on GH actions
   eslint: {
     ignoreDuringBuilds: !!process.env.CI,
