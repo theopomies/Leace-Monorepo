@@ -2,10 +2,15 @@ import { Role } from "@prisma/client";
 import { useClerk } from "@clerk/clerk-react";
 import Link from "next/link";
 import { trpc } from "../../../../utils/trpc";
-import { links } from "./links";
+import { getLinks } from "./links";
 
-export function NavBar() {
-  const { data: me } = trpc.user.getUser.useQuery();
+export interface NavBarProps {
+  userId: string;
+}
+
+export function NavBar({ userId }: NavBarProps) {
+  const links = getLinks(userId);
+  const { data: me } = trpc.user.getUserById.useQuery({ userId });
   const { signOut } = useClerk();
   const handleLink = ({
     href,
@@ -21,6 +26,7 @@ export function NavBar() {
     if (me) {
       if (
         ((hidePremium && !me.isPremium) || !hidePremium) &&
+        me.role &&
         roles.includes(me.role)
       ) {
         return (

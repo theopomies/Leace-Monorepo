@@ -58,8 +58,9 @@ export const postRouter = router({
       if (!post) throw new TRPCError({ code: "NOT_FOUND" });
 
       if (
-        post.createdById != ctx.auth.userId ||
-        (ctx.role != Role.ADMIN && ctx.role != Role.MODERATOR)
+        post.createdById != ctx.auth.userId &&
+        ctx.role != Role.ADMIN &&
+        ctx.role != Role.MODERATOR
       )
         throw new TRPCError({
           code: "FORBIDDEN",
@@ -87,8 +88,9 @@ export const postRouter = router({
 
       if (!post) throw new TRPCError({ code: "NOT_FOUND" });
       if (
-        post.createdById != ctx.auth.userId ||
-        (ctx.role != Role.ADMIN && ctx.role != Role.MODERATOR)
+        post.createdById != ctx.auth.userId &&
+        ctx.role != Role.ADMIN &&
+        ctx.role != Role.MODERATOR
       )
         throw new TRPCError({
           code: "FORBIDDEN",
@@ -110,6 +112,8 @@ export const postRouter = router({
       });
 
       if (!post) throw new TRPCError({ code: "NOT_FOUND" });
+
+      return post;
     }),
   getPostsByUserId: protectedProcedure([Role.AGENCY, Role.OWNER])
     .input(
@@ -125,11 +129,12 @@ export const postRouter = router({
 
       if (!user) throw new TRPCError({ code: "NOT_FOUND" });
 
-      if (user.role != Role.AGENCY && user.role != Role.OWNER)
+      if (user.role != Role.AGENCY && user.role != Role.OWNER) {
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "User provided is cannot create post",
         });
+      }
 
       if (!input.postType) {
         const posts = await ctx.prisma.post.findMany({
@@ -138,6 +143,8 @@ export const postRouter = router({
         });
 
         if (!posts) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+        return posts;
       }
 
       const posts = await ctx.prisma.post.findMany({

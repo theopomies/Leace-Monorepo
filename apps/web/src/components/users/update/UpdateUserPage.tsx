@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { RouterInputs, trpc } from "../../../utils/trpc";
 import { Role } from "@prisma/client";
-import { Header } from "../../../components/users/Header";
+import { Header } from "../Header";
 import { LocataireProfile } from "./ModifyLocataireProfile";
 import { useRouter } from "next/router";
 

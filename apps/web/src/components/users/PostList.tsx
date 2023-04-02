@@ -3,9 +3,14 @@ import { PostType } from "@prisma/client";
 import { trpc } from "../../utils/trpc";
 import { PostBar } from "./PostBar";
 
-export const PostList = () => {
-  const { data: relationships } =
-    trpc.relationship.getMatchesForOwner.useQuery();
+export interface PostListProps {
+  userId: string;
+}
+
+export const PostList = ({ userId }: PostListProps) => {
+  const { data: relationships } = trpc.relationship.getMatchesForOwner.useQuery(
+    { userId },
+  );
   if (relationships) {
     return (
       <>

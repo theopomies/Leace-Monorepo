@@ -278,6 +278,7 @@ export const relationshipRouter = router({
         },
         include: {
           user: true,
+          post: true,
         },
       });
 

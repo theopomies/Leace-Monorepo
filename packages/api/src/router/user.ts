@@ -16,8 +16,9 @@ export const userRouter = router({
       where: { id: ctx.auth.userId },
     });
 
-    if (user)
+    if (user) {
       throw new TRPCError({ code: "FORBIDDEN", message: "User already exist" });
+    }
 
     const clerkUser = await ctx.clerkClient.users.getUser(ctx.auth.userId);
 

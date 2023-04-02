@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { useRouter } from "next/router";
 import { LoggedLayout } from "../../../components/shared/layout/LoggedLayout";
-import { UpdateUserPage } from "../../../components/users/update/UpdatePage";
+import { UpdateUserPage } from "../../../components/users/update/UpdateUserPage";
 
 const Update = () => {
   const router = useRouter();

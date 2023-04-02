@@ -13,7 +13,11 @@ const Matches = () => {
     <LoggedLayout title="Mes Matchs">
       <div className="w-full">
         <Header heading={"Mes Matchs"} />
-        {session && session.role != Role.TENANT ? <TenantList /> : <PostList />}
+        {session && session.role != Role.TENANT ? (
+          <TenantList userId={session.userId} />
+        ) : session ? (
+          <PostList userId={session.userId} />
+        ) : null}
       </div>
     </LoggedLayout>
   );

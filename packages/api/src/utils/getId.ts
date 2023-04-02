@@ -12,7 +12,8 @@ export const getId = ({ ctx, userId }: getIdProps) => {
     ctx.role != Role.MODERATOR &&
     ctx.role != Role.ADMIN &&
     ctx.auth.userId != userId
-  )
+  ) {
     throw new TRPCError({ code: "FORBIDDEN" });
+  }
   return userId;
 };

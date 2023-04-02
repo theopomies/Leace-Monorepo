@@ -127,8 +127,9 @@ export const attributesRouter = router({
       if (!post) throw new TRPCError({ code: "NOT_FOUND" });
 
       if (
-        post.createdById != ctx.auth.userId ||
-        (ctx.role != Role.ADMIN && ctx.role != Role.MODERATOR)
+        post.createdById != ctx.auth.userId &&
+        ctx.role != Role.ADMIN &&
+        ctx.role != Role.MODERATOR
       )
         throw new TRPCError({
           code: "FORBIDDEN",

@@ -33,7 +33,7 @@ export const PostBar = ({ postId, title, desc, type }: PostBarProps) => {
             {title}
           </div>
           <Link
-            href="#"
+            href={`/posts/${postId}`}
             className="mt-1 block text-lg font-medium leading-tight text-black hover:underline"
           >
             {desc}

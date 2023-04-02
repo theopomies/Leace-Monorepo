@@ -10,6 +10,7 @@ export interface ProfilePageProps {
 
 export const ProfilePage = ({ userId }: ProfilePageProps) => {
   const { data: user, isLoading } = trpc.user.getUserById.useQuery({ userId });
+  const { data: session } = trpc.auth.getSession.useQuery();
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -23,7 +24,7 @@ export const ProfilePage = ({ userId }: ProfilePageProps) => {
     <div className="w-full">
       <Header heading={"Profile"} />
       <div className="flex w-full justify-center p-5">
-        {!userId && (
+        {session && userId == session.userId && (
           <div>
             <Link
               className="rounded bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700"
