@@ -1,6 +1,6 @@
 import { trpc } from "../../utils/trpc";
 import { Chat } from "../shared/chat";
-import { Loader } from "./Loader";
+import { Loader } from "../shared/Loader";
 
 export const Support = () => {
   const session = trpc.auth.getSession.useQuery();

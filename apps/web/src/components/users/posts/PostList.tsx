@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { PostType } from "@prisma/client";
-import { trpc } from "../../utils/trpc";
+import { trpc } from "../../../utils/trpc";
 import { PostBar } from "./PostBar";
 
 export interface PostListProps {

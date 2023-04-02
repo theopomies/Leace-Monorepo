@@ -11,12 +11,12 @@ interface Props {
   userAtt: Attribute;
 }
 
-export const LocataireProfile: React.FC<Props> = ({
+export const UpdateTenantProfile: React.FC<Props> = ({
   setAttData,
   attData,
   userAtt,
 }) => {
-  const handleChange = () => (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     let value: string | number | boolean;
 
     if (event.target.type === "checkbox") {
@@ -67,7 +67,7 @@ export const LocataireProfile: React.FC<Props> = ({
             type="text"
             placeholder="Search"
             name="location"
-            onChange={handleChange()}
+            onChange={handleChange}
             value={attData.location}
           />
           <div className="mx-2 cursor-pointer rounded-full bg-gray-600 p-2 hover:bg-blue-400">
@@ -94,7 +94,7 @@ export const LocataireProfile: React.FC<Props> = ({
                 type="checkbox"
                 className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
                 name="house"
-                onChange={handleChange()}
+                onChange={handleChange}
                 checked={attData.house}
               />
             </div>
@@ -106,7 +106,7 @@ export const LocataireProfile: React.FC<Props> = ({
                 type="checkbox"
                 className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
                 name="appartment"
-                onChange={handleChange()}
+                onChange={handleChange}
                 checked={attData.appartment}
               />
             </div>
@@ -121,7 +121,7 @@ export const LocataireProfile: React.FC<Props> = ({
                 type="checkbox"
                 className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
                 name="terrace"
-                onChange={handleChange()}
+                onChange={handleChange}
                 checked={attData.terrace}
               />
             </div>
@@ -133,7 +133,7 @@ export const LocataireProfile: React.FC<Props> = ({
                 type="checkbox"
                 className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
                 name="pets"
-                onChange={handleChange()}
+                onChange={handleChange}
                 checked={attData.pets}
               />
             </div>
@@ -145,7 +145,7 @@ export const LocataireProfile: React.FC<Props> = ({
                 type="checkbox"
                 className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
                 name="smoker"
-                onChange={handleChange()}
+                onChange={handleChange}
                 checked={attData.smoker}
               />
             </div>
@@ -157,7 +157,7 @@ export const LocataireProfile: React.FC<Props> = ({
                 type="checkbox"
                 className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
                 name="disability"
-                onChange={handleChange()}
+                onChange={handleChange}
                 checked={attData.disability}
               />
             </div>
@@ -169,7 +169,7 @@ export const LocataireProfile: React.FC<Props> = ({
                 type="checkbox"
                 className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
                 name="garden"
-                onChange={handleChange()}
+                onChange={handleChange}
                 checked={attData.garden}
               />
             </div>
@@ -181,7 +181,7 @@ export const LocataireProfile: React.FC<Props> = ({
                 type="checkbox"
                 className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
                 name="parking"
-                onChange={handleChange()}
+                onChange={handleChange}
                 checked={attData.parking}
               />
             </div>
@@ -193,7 +193,7 @@ export const LocataireProfile: React.FC<Props> = ({
                 type="checkbox"
                 className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
                 name="elevator"
-                onChange={handleChange()}
+                onChange={handleChange}
                 checked={attData.elevator}
               />
             </div>
@@ -205,7 +205,7 @@ export const LocataireProfile: React.FC<Props> = ({
                 type="checkbox"
                 className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
                 name="pool"
-                onChange={handleChange()}
+                onChange={handleChange}
                 checked={attData.pool}
               />
             </div>
@@ -219,7 +219,7 @@ export const LocataireProfile: React.FC<Props> = ({
                 type="number"
                 placeholder="30000"
                 name="minPrice"
-                onChange={handleChange()}
+                onChange={handleChange}
                 value={attData.minPrice}
               />
               <label className="pl-3">Budget min</label>
@@ -230,7 +230,7 @@ export const LocataireProfile: React.FC<Props> = ({
                 type="number"
                 placeholder="50000"
                 name="maxPrice"
-                onChange={handleChange()}
+                onChange={handleChange}
                 value={attData.maxPrice}
               />
               <label className="pl-3">Budget max</label>
@@ -244,7 +244,7 @@ export const LocataireProfile: React.FC<Props> = ({
                 type="number"
                 placeholder="30000"
                 name="minSize"
-                onChange={handleChange()}
+                onChange={handleChange}
                 value={attData.minSize}
               />
               <label className="pl-3">Surface min</label>
@@ -255,7 +255,7 @@ export const LocataireProfile: React.FC<Props> = ({
                 type="number"
                 placeholder="50000"
                 name="maxSize"
-                onChange={handleChange()}
+                onChange={handleChange}
                 value={attData.maxSize}
               />
               <label className="pl-3">Surface max</label>

@@ -3,6 +3,7 @@ import { NavBar } from "./navbar/NavBar";
 import Head from "next/head";
 import { Role } from "@prisma/client";
 import { trpc } from "../../../utils/trpc";
+import { Loader } from "../Loader";
 
 export interface LoggedLayoutProps {
   children: React.ReactNode;
@@ -19,10 +20,10 @@ export function LoggedLayout({
   const router = useRouter();
 
   if (isLoading) {
-    return <p>Loading...</p>;
+    return <Loader />;
   }
 
-  if (!session) {
+  if (!session && !isLoading) {
     router.push("/sign-in");
     return null;
   }

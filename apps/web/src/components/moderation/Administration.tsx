@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Loader } from "./Loader";
+import { Loader } from "../shared/Loader";
 import { Search } from "./Search";
 import { trpc } from "../../utils/trpc";
 import { useRouter } from "next/router";

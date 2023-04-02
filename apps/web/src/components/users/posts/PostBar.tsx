@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 
 import Link from "next/link";
-import { trpc } from "../../utils/trpc";
+import { trpc } from "../../../utils/trpc";
 
 export interface PostBarProps {
   postId: string;

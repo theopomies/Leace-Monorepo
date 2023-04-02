@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { RouterInputs, trpc } from "../../../utils/trpc";
 import { Role } from "@prisma/client";
 import { Header } from "../Header";
-import { LocataireProfile } from "./ModifyLocataireProfile";
+import { UpdateTenantProfile } from "./UpdateTenantProfile";
 import { useRouter } from "next/router";
 
 export interface UpdateUserPageProps {
@@ -136,7 +136,7 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
               userProfile &&
               userProfile.attribute &&
               session.role === Role.TENANT && (
-                <LocataireProfile
+                <UpdateTenantProfile
                   attData={attData}
                   setAttData={setAttData}
                   userAtt={userProfile.attribute}

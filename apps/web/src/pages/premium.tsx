@@ -1,4 +1,5 @@
 import { PremiumPage as PremiumPageRaw } from "../components/premium/PremiumPage";
+import { Loader } from "../components/shared/Loader";
 import { LoggedLayout } from "../components/shared/layout/LoggedLayout";
 import { trpc } from "../utils/trpc";
 
@@ -16,7 +17,7 @@ const PremiumPage = () => {
   const { data: session, isLoading } = trpc.auth.getSession.useQuery();
 
   if (isLoading) {
-    return <div>loading...</div>;
+    return <Loader />;
   }
 
   if (!session) {

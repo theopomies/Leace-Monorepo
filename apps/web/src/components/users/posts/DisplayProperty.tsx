@@ -1,9 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
-import { trpc } from "../../utils/trpc";
+import { trpc } from "../../../utils/trpc";
 import { Attribute, Post, Role } from ".prisma/client";
 import { DeletePostButton } from "./DeletePostButton";
-import { Header } from "./Header";
+import { Header } from "../Header";
 import Link from "next/link";
 
 export function DisplayPost(props: { post: Post; attribute: Attribute }) {

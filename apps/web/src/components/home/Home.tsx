@@ -1,8 +1,8 @@
 import { Role } from "@prisma/client";
 import { trpc } from "../../utils/trpc";
 import { RoleSelector } from "../users/RoleSelector";
-import { PostStack } from "../stack/PostStack";
-import { TenantStack } from "../stack/TenantStack";
+import { PostStack } from "./stack/PostStack";
+import { TenantStack } from "./stack/TenantStack";
 import { Administration } from "../moderation/Administration";
 import { Moderation } from "../moderation/Moderation";
 

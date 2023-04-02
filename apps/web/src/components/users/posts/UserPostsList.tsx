@@ -1,6 +1,6 @@
 import { trpc } from "../../../utils/trpc";
 import { Header } from "../Header";
-import { PostBar } from "../PostBar";
+import { PostBar } from "./PostBar";
 import { PostType } from "@prisma/client";
 
 export interface UserPostsListProps {

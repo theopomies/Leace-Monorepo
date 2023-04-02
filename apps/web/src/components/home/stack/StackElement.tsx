@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { XOR } from "../../utils/types";
+import { XOR } from "../../../utils/types";
 import { SlideShow } from "./SlideShow";
 
 export type StackElementProps = {

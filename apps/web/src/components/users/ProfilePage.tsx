@@ -3,6 +3,7 @@ import { Header } from "../users/Header";
 import { trpc } from "../../utils/trpc";
 import { Role } from "@prisma/client";
 import Link from "next/link";
+import { Loader } from "../shared/Loader";
 
 export interface ProfilePageProps {
   userId: string;
@@ -13,7 +14,7 @@ export const ProfilePage = ({ userId }: ProfilePageProps) => {
   const { data: session } = trpc.auth.getSession.useQuery();
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Loader />;
   }
 
   if (!user) {

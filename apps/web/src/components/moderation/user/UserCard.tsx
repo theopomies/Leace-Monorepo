@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { trpc } from "../../../utils/trpc";
 import { BanButton } from "../BanButton";
-import { Loader } from "../Loader";
+import { Loader } from "../../shared/Loader";
 import { Documents } from "../documents";
 import { ChatModal } from "../ChatModal";
 import { displayDate } from "../../../utils/displayDate";

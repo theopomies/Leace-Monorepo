@@ -1,4 +1,4 @@
-import { Loader } from "./Loader";
+import { Loader } from "../shared/Loader";
 import { ReportButton } from "./ReportButton";
 import { trpc } from "../../utils/trpc";
 import { Post } from "./post";

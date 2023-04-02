@@ -1,4 +1,5 @@
 import { trpc } from "../../utils/trpc";
+import { Loader } from "../shared/Loader";
 import { StripePricingTable } from "./StripePricingTable";
 
 export interface PremiumPageProps {
@@ -11,7 +12,7 @@ export const PremiumPage = ({ userId }: PremiumPageProps) => {
   });
 
   if (isLoading || !user) {
-    return <div>loading...</div>;
+    return <Loader />;
   }
 
   if (user.isPremium) {
