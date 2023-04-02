@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { MouseEventHandler, useState } from "react";
 import { trpc, RouterInputs } from "../../utils/trpc";
 import { ReportReason } from ".prisma/client";
 import { useRouter } from "next/router";
@@ -10,10 +10,10 @@ function ReportForm({
   onClose: () => void;
   userId: string;
 }) {
-  const reportUser = trpc.report.reportUser.useMutation();
+  const reportUser = trpc.report.reportUserById.useMutation();
   const router = useRouter();
   const [ReportForm, setReportForm] = useState<
-    RouterInputs["report"]["reportUser"]
+    RouterInputs["report"]["reportUserById"]
   >({
     userId: userId,
     desc: "",
@@ -32,12 +32,9 @@ function ReportForm({
       });
     };
 
-  const handleSubmit = async (e: { preventDefault: () => void }) => {
+  const handleSubmit: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.preventDefault();
-    const report = await reportUser.mutateAsync(ReportForm);
-    if (!report) {
-      return null;
-    }
+    reportUser.mutate(ReportForm);
     router.push("/");
   };
   return (

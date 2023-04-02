@@ -1,24 +1,25 @@
-import React from "react";
-import { Header } from "../../../components/users/Header";
-import { trpc } from "../../../utils/trpc";
 import { LoggedLayout } from "../../../components/shared/layout/LoggedLayout";
 import { Role } from "@prisma/client";
-import { TenantList } from "../../../components/users/TenantList";
-import { PostList } from "../../../components/users/PostList";
+import { MatchesPage } from "../../../components/users/matches/MatchesPage";
+import { useRouter } from "next/router";
 
 const Matches = () => {
-  const { data: session } = trpc.auth.getSession.useQuery();
+  const router = useRouter();
+  const { userId } = router.query;
+
+  const children =
+    userId && typeof userId == "string" ? (
+      <MatchesPage userId={userId} />
+    ) : (
+      <>UserId is required</>
+    );
 
   return (
-    <LoggedLayout title="Mes Matchs">
-      <div className="w-full">
-        <Header heading={"Mes Matchs"} />
-        {session && session.role != Role.TENANT ? (
-          <TenantList userId={session.userId} />
-        ) : session ? (
-          <PostList userId={session.userId} />
-        ) : null}
-      </div>
+    <LoggedLayout
+      title="Mes Matchs"
+      roles={[Role.AGENCY, Role.OWNER, Role.TENANT, Role.ADMIN]}
+    >
+      {children}
     </LoggedLayout>
   );
 };

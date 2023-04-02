@@ -1,20 +1,25 @@
-import { RouterInputs, trpc } from "../../utils/trpc";
+import { MouseEventHandler } from "react";
+import { trpc } from "../../utils/trpc";
 import { Role } from "@prisma/client";
 
-export const RoleSelector = () => {
+export interface RoleSelectorProps {
+  userId: string;
+}
+
+export const RoleSelector = ({ userId }: RoleSelectorProps) => {
   const utils = trpc.useContext();
-  const userRole = trpc.user.updateUserRole.useMutation({
+  const userRole = trpc.user.updateUserRoleById.useMutation({
     onSuccess() {
       utils.auth.getSession.invalidate();
     },
   });
 
-  const handleClick = async (
-    e: { preventDefault: () => void },
-    role: RouterInputs["user"]["updateUserRole"],
-  ) => {
+  const handleClick: (
+    role: "TENANT" | "OWNER" | "AGENCY",
+  ) => MouseEventHandler<HTMLButtonElement> = (role) => (e) => {
     e.preventDefault();
-    userRole.mutate(role);
+    if (!(role in Role)) return;
+    userRole.mutate({ role, userId });
   };
 
   return (
@@ -27,19 +32,19 @@ export const RoleSelector = () => {
         <div className="flex justify-center">
           <button
             className="m-2 rounded-lg bg-blue-500 py-2 px-4 font-medium text-white hover:bg-blue-700"
-            onClick={(e) => handleClick(e, Role.TENANT)}
+            onClick={handleClick(Role.TENANT)}
           >
             Tenant
           </button>
           <button
             className="m-2 rounded-lg bg-blue-500 py-2 px-4 font-medium text-white hover:bg-blue-700"
-            onClick={(e) => handleClick(e, Role.OWNER)}
+            onClick={handleClick(Role.OWNER)}
           >
             Owner
           </button>
           <button
             className="m-2 rounded-lg bg-blue-500 py-2 px-4 font-medium text-white hover:bg-blue-700"
-            onClick={(e) => handleClick(e, Role.AGENCY)}
+            onClick={handleClick(Role.AGENCY)}
           >
             Agency
           </button>

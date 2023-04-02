@@ -236,7 +236,9 @@ export const relationshipRouter = router({
       const relationShips = await ctx.prisma.relationship.findMany({
         where: { isMatch: true, userId: userId },
         include: {
-          post: true,
+          post: { include: { createdBy: true } },
+          conversation: { include: { messages: true } },
+          user: true,
         },
       });
 
@@ -277,8 +279,9 @@ export const relationshipRouter = router({
           },
         },
         include: {
+          post: { include: { createdBy: true } },
+          conversation: { include: { messages: true } },
           user: true,
-          post: true,
         },
       });
 

@@ -20,7 +20,7 @@ export const DocumentsList = ({
 }: DocumentsListProps) => {
   const [showModal, setShowModal] = useState(false);
 
-  const { data: pdfLogo } = trpc.document.GetSignedAssetUrl.useQuery({
+  const { data: pdfLogo } = trpc.document.getSignedAssetUrl.useQuery({
     name: "pdfLogo.jpg",
   });
 

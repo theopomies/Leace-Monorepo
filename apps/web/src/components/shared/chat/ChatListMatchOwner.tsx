@@ -2,17 +2,17 @@ import { Dispatch, SetStateAction } from "react";
 import { trpc } from "../../../utils/trpc";
 import { ChatList } from "./ChatList";
 
-export interface ChatListMatchProps {
+export interface ChatListMatchOwnerProps {
   userId: string;
   setConversationId: Dispatch<SetStateAction<string>>;
 }
 
-export const ChatListMatch = ({
+export const ChatListMatchOwner = ({
   userId,
   setConversationId,
-}: ChatListMatchProps) => {
-  const { data: relationships } = trpc.relationship.getMatch.useQuery(
-    undefined,
+}: ChatListMatchOwnerProps) => {
+  const { data: relationships } = trpc.relationship.getMatchesForOwner.useQuery(
+    { userId },
     {
       onSuccess(data) {
         if (data && data[0] && data[0].conversation)

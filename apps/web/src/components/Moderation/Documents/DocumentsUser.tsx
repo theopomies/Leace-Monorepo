@@ -7,7 +7,7 @@ export interface DocumentsUserProps {
 
 export const DocumentsUser = ({ userId }: DocumentsUserProps) => {
   const { data: documents, refetch: refetchDocuments } =
-    trpc.document.GetSignedUserUrl.useQuery(userId);
+    trpc.document.getSignedUserUrl.useQuery(userId);
 
   if (documents && documents.length > 0 && refetchDocuments)
     return (

@@ -13,7 +13,7 @@ export const DeleteImgButton = ({ postId, id }: DeleteImgButtonProps) => {
   const onClickDelete = async () => {
     await mut.mutateAsync({ postId: postId, id: id }).then(async (url) => {
       await axios.delete(url);
-      utils.image.GetSignedUserUrl.refetch();
+      utils.image.getSignedUserUrl.refetch();
     });
   };
 

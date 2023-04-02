@@ -2,17 +2,19 @@
 import { useState } from "react";
 import { ChatBoxMatch } from "./ChatBoxMatch";
 import { ChatBoxModeration } from "./ChatBoxModeration";
-import { ChatListMatch } from "./ChatListMatch";
+import { ChatListMatchOwner } from "./ChatListMatchOwner";
+import { ChatListMatchTenant } from "./ChatListMatchTenant";
 import { ChatListModeration } from "./ChatListModeration";
+import { XOR } from "../../../utils/types";
 
-export interface ChatProps {
+export type ChatProps = {
   userId: string;
   chatOn?: boolean;
-  isModeration?: boolean;
-}
+} & XOR<{ isModeration?: boolean }, { isTenant: boolean }>;
 
 export const Chat = ({
   userId,
+  isTenant,
   chatOn = false,
   isModeration = false,
 }: ChatProps) => {
@@ -27,8 +29,13 @@ export const Chat = ({
             setConversationId={setConversationId}
             chatOn={chatOn}
           />
+        ) : isTenant ? (
+          <ChatListMatchTenant
+            userId={userId}
+            setConversationId={setConversationId}
+          />
         ) : (
-          <ChatListMatch
+          <ChatListMatchOwner
             userId={userId}
             setConversationId={setConversationId}
           />

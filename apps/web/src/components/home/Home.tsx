@@ -13,7 +13,7 @@ export const Home = () => {
 
   const role = session.role;
 
-  if (role == undefined) return <RoleSelector />;
+  if (role == undefined) return <RoleSelector userId={session.userId} />;
 
   if (role == Role.ADMIN) return <Administration />;
 

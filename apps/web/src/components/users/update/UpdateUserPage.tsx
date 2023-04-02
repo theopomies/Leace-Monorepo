@@ -84,6 +84,7 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
         <div className="m-14 flex w-3/6 justify-center rounded-lg bg-white p-5 shadow">
           <div>
             <div>
+              {/* eslint-disable-next-line @next/next/no-img-element*/}
               <img
                 src={
                   //userData.image ||
