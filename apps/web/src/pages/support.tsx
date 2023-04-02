@@ -1,4 +1,4 @@
-import { Roles } from "@prisma/client";
+import { Role } from "@prisma/client";
 import { useRouter } from "next/router";
 import { LoggedLayout } from "../components/shared/layout/LoggedLayout";
 import { trpc } from "../utils/trpc";
@@ -19,7 +19,7 @@ const AdminCheck = ({ children }: { children: React.ReactNode }) => {
   const { data: session } = trpc.auth.getSession.useQuery();
   const router = useRouter();
 
-  if (!session || session.role != Roles.ADMIN) {
+  if (!session || session.role != Role.ADMIN) {
     router.push("/");
     return <Loader />;
   }

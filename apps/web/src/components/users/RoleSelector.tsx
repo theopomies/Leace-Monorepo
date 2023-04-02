@@ -1,5 +1,5 @@
 import { RouterInputs, trpc } from "../../utils/trpc";
-import { Roles } from "@prisma/client";
+import { Role } from "@prisma/client";
 
 export const RoleSelector = () => {
   const utils = trpc.useContext();
@@ -27,19 +27,19 @@ export const RoleSelector = () => {
         <div className="flex justify-center">
           <button
             className="m-2 rounded-lg bg-blue-500 py-2 px-4 font-medium text-white hover:bg-blue-700"
-            onClick={(e) => handleClick(e, Roles.TENANT)}
+            onClick={(e) => handleClick(e, Role.TENANT)}
           >
             Tenant
           </button>
           <button
             className="m-2 rounded-lg bg-blue-500 py-2 px-4 font-medium text-white hover:bg-blue-700"
-            onClick={(e) => handleClick(e, Roles.OWNER)}
+            onClick={(e) => handleClick(e, Role.OWNER)}
           >
             Owner
           </button>
           <button
             className="m-2 rounded-lg bg-blue-500 py-2 px-4 font-medium text-white hover:bg-blue-700"
-            onClick={(e) => handleClick(e, Roles.AGENCY)}
+            onClick={(e) => handleClick(e, Role.AGENCY)}
           >
             Agency
           </button>

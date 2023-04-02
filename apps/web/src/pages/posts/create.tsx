@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Header from "../../components/users/Header";
+import { Header } from "../../components/users/Header";
 import { useRouter } from "next/router";
 import { trpc, RouterInputs } from "../../utils/trpc";
 import { LoggedLayout } from "../../components/shared/layout/LoggedLayout";
@@ -13,11 +13,11 @@ const Create = () => {
     desc: "",
   });
 
-  const updatePost = trpc.attribute.updatePostAtt.useMutation();
-  const [attData, setAttData] = useState<
-    RouterInputs["attribute"]["updatePostAtt"]
+  const updatePost = trpc.attribute.updatePostAttributes.useMutation();
+  const [attributeData, setAttributeData] = useState<
+    RouterInputs["attribute"]["updatePostAttributes"]
   >({
-    id: "",
+    postId: "",
     location: "",
     price: 0,
     size: 0,
@@ -59,8 +59,8 @@ const Create = () => {
       ...postData,
       [event.target.name]: value,
     });
-    setAttData({
-      ...attData,
+    setAttributeData({
+      ...attributeData,
       [event.target.name]: value,
     });
   };
@@ -72,8 +72,8 @@ const Create = () => {
     if (!postUser) {
       return null;
     }
-    attData.id = postUser.id;
-    updatePost.mutate(attData);
+    attributeData.postId = postUser.id;
+    updatePost.mutate(attributeData);
     router.push("/users/me");
   };
   if (session.data?.role == "OWNER" || session.data?.role == "AGENCY") {
@@ -101,7 +101,7 @@ const Create = () => {
                     placeholder="Dans quelle ville?"
                     name="location"
                     onChange={handleChange}
-                    value={attData.location}
+                    value={attributeData.location}
                   />
                 </div>
                 <div className="m-4">
@@ -114,7 +114,7 @@ const Create = () => {
                       className="form-checkbox"
                       name="house"
                       onChange={handleChange}
-                      checked={attData.house}
+                      checked={attributeData.house}
                     />
                     <span className="ml-2">Maison</span>
                   </label>
@@ -124,7 +124,7 @@ const Create = () => {
                       className="form-checkbox"
                       name="appartment"
                       onChange={handleChange}
-                      checked={attData.appartment}
+                      checked={attributeData.appartment}
                     />
                     <span className="ml-2">Appartement</span>
                   </label>
@@ -140,7 +140,7 @@ const Create = () => {
                         className="form-checkbox"
                         name="furnished"
                         onChange={handleChange}
-                        checked={attData.furnished}
+                        checked={attributeData.furnished}
                       />
                       <span className="ml-2">Fournis</span>
                     </label>
@@ -150,7 +150,7 @@ const Create = () => {
                         className="form-checkbox"
                         name="pool"
                         onChange={handleChange}
-                        checked={attData.pool}
+                        checked={attributeData.pool}
                       />
                       <span className="ml-2">Piscine</span>
                     </label>
@@ -160,7 +160,7 @@ const Create = () => {
                         className="form-checkbox"
                         name="smoker"
                         onChange={handleChange}
-                        checked={attData.smoker}
+                        checked={attributeData.smoker}
                       />
                       <span className="ml-2">Fumer</span>
                     </label>
@@ -170,7 +170,7 @@ const Create = () => {
                         className="form-checkbox"
                         name="terrace"
                         onChange={handleChange}
-                        checked={attData.terrace}
+                        checked={attributeData.terrace}
                       />
                       <span className="ml-2">Terasse</span>
                     </label>
@@ -180,7 +180,7 @@ const Create = () => {
                         className="form-checkbox"
                         name="elevator"
                         onChange={handleChange}
-                        checked={attData.elevator}
+                        checked={attributeData.elevator}
                       />
                       <span className="ml-2">Ascenseur</span>
                     </label>
@@ -190,7 +190,7 @@ const Create = () => {
                         className="form-checkbox"
                         name="parking"
                         onChange={handleChange}
-                        checked={attData.parking}
+                        checked={attributeData.parking}
                       />
                       <span className="ml-2">Parking</span>
                     </label>
@@ -200,7 +200,7 @@ const Create = () => {
                         className="form-checkbox"
                         name="garden"
                         onChange={handleChange}
-                        checked={attData.garden}
+                        checked={attributeData.garden}
                       />
                       <span className="ml-2">Jardin</span>
                     </label>
@@ -210,7 +210,7 @@ const Create = () => {
                         className="form-checkbox"
                         name="pets"
                         onChange={handleChange}
-                        checked={attData.pets}
+                        checked={attributeData.pets}
                       />
                       <span className="ml-2">Animaux</span>
                     </label>
@@ -237,7 +237,7 @@ const Create = () => {
                           aria-describedby="amount-prefix"
                           name="size"
                           onChange={handleChange}
-                          value={attData.size}
+                          value={attributeData.size}
                         />
                         <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                           <span className="text-gray-500 sm:text-sm sm:leading-5">
@@ -259,7 +259,7 @@ const Create = () => {
                         aria-describedby="amount-prefix"
                         name="price"
                         onChange={handleChange}
-                        value={attData.price}
+                        value={attributeData.price}
                       />
                       <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                         <span className="text-gray-500 sm:text-sm sm:leading-5">
@@ -276,7 +276,7 @@ const Create = () => {
                         aria-describedby="amount-prefix"
                         name="maxPrice"
                         //onChange={handleChange}
-                        //value={attData.maxPrice}
+                        //value={attributeData.maxPrice}
                       />
                       <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                         <span className="text-gray-500 sm:text-sm sm:leading-5">

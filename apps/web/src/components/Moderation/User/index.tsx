@@ -1,4 +1,4 @@
-import { Roles } from "@prisma/client";
+import { Role } from "@prisma/client";
 import { useState } from "react";
 import { trpc } from "../../../utils/trpc";
 import { PostCard } from "../post/PostCard";
@@ -17,7 +17,7 @@ export const User = ({ userId }: PostProps) => {
 
   return (
     <div className="flex w-full flex-col">
-      {user && (user.role === Roles.AGENCY || user.role === Roles.OWNER) && (
+      {user && (user.role === Role.AGENCY || user.role === Role.OWNER) && (
         <button
           className="z-10 mb-2 rounded-full bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700"
           onClick={() => setViewProfile(!viewProfile)}

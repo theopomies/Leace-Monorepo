@@ -5,9 +5,9 @@ import { SlideShow } from "../../stack/SlideShow";
 import { motion } from "framer-motion";
 import { useEffect } from "react";
 import { Documents } from "../documents";
+import { displayDate } from "../../../utils/displayDate";
 import { GreenCheck } from "./GreenCheck";
 import { RedUncheck } from "./RedUncheck";
-import { displayDate } from "../../../utils/displayDate";
 
 export interface PostProps {
   postId: string;
@@ -16,7 +16,7 @@ export interface PostProps {
 
 export const PostCard = ({ postId, setUserId }: PostProps) => {
   const { data: post } = trpc.moderation.getPost.useQuery({ postId: postId });
-  const { data: images } = trpc.image.GetSignedPostUrl.useQuery(postId);
+  const { data: images } = trpc.image.getSignedPostUrl.useQuery(postId);
 
   useEffect(() => {
     if (post && setUserId) setUserId(post.createdById);

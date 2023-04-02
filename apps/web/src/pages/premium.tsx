@@ -3,7 +3,7 @@ import { StripePricingTable } from "../components/premium/StripePricingTable";
 import { trpc } from "../utils/trpc";
 
 const Premium = () => {
-  const { data: user, isLoading } = trpc.user.getUser.useQuery();
+  const { data: user, isLoading } = trpc.user.getUserById.useQuery();
 
   console.log(user);
 

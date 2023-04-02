@@ -9,7 +9,7 @@ export interface PostBarProps {
 }
 
 export const PostBar = ({ postId, title, desc, type }: PostBarProps) => {
-  const { data: img } = trpc.image.GetSignedPostUrl.useQuery(postId);
+  const { data: img } = trpc.image.getSignedPostUrl.useQuery(postId);
 
   return (
     <div className="flex w-full overflow-hidden rounded-xl bg-white shadow-md">

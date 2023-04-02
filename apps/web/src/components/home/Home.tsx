@@ -1,4 +1,4 @@
-import { Roles } from "@prisma/client";
+import { Role } from "@prisma/client";
 import { trpc } from "../../utils/trpc";
 import { RoleSelector } from "../users/RoleSelector";
 import { PostStack } from "../stack/PostStack";
@@ -15,11 +15,11 @@ export const Home = () => {
 
   if (role == undefined) return <RoleSelector />;
 
-  if (role == Roles.ADMIN) return <Administration />;
+  if (role == Role.ADMIN) return <Administration />;
 
-  if (role == Roles.MODERATOR) return <Moderation />;
+  if (role == Role.MODERATOR) return <Moderation />;
 
-  if (role == Roles.TENANT) return <PostStack />;
+  if (role == Role.TENANT) return <PostStack />;
 
   return <TenantStack />;
 };

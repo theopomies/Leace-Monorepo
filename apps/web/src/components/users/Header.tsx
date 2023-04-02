@@ -1,6 +1,6 @@
 import React from "react";
 
-function Header({ heading }: { heading: string }) {
+export function Header({ heading }: { heading: string }) {
   return (
     <header className="h-20">
       <br />
@@ -13,5 +13,3 @@ function Header({ heading }: { heading: string }) {
     </header>
   );
 }
-
-export default Header;

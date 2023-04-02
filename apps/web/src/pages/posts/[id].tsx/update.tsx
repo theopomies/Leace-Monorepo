@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { useEffect, useState } from "react";
 import { trpc, RouterInputs } from "../../../utils/trpc";
-import Header from "../../../components/users/Header";
+import { Header } from "../../../components/users/Header";
 import { LoggedLayout } from "../../../components/shared/layout/LoggedLayout";
 import { useRouter } from "next/router";
 
@@ -17,9 +17,10 @@ const Update = () => {
     desc: "",
   });
 
-  const updatePostAtt = trpc.attribute.updatePostAtt.useMutation();
+  const updatePostAttributes =
+    trpc.attribute.updatePostAttributes.useMutation();
   const [attData, setAttData] = useState<
-    RouterInputs["attribute"]["updatePostAtt"]
+    RouterInputs["attribute"]["updatePostAttributes"]
   >({
     id: "",
     location: "",
@@ -80,7 +81,7 @@ const Update = () => {
     } else postUser = await post.mutateAsync(postData);
 
     attData.id = postUser.id;
-    updatePostAtt.mutate(attData);
+    updatePostAttributes.mutate(attData);
     router.push("/users/me");
   };
   useEffect(() => {

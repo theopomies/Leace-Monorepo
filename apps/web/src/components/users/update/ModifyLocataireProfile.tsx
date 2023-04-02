@@ -1,17 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from "react";
-import { RouterInputs } from "../../utils/trpc";
+import { RouterInputs } from "../../../utils/trpc";
 import { Attribute } from "@prisma/client";
 
 interface Props {
   setAttData: React.Dispatch<
-    React.SetStateAction<RouterInputs["attribute"]["updateUserAtt"]>
+    React.SetStateAction<RouterInputs["attribute"]["updateUserAttributes"]>
   >;
-  attData: RouterInputs["attribute"]["updateUserAtt"];
+  attData: RouterInputs["attribute"]["updateUserAttributes"];
   userAtt: Attribute;
 }
 
-const LocataireProfile: React.FC<Props> = ({
+export const LocataireProfile: React.FC<Props> = ({
   setAttData,
   attData,
   userAtt,
@@ -266,5 +266,3 @@ const LocataireProfile: React.FC<Props> = ({
     </div>
   );
 };
-
-export default LocataireProfile;

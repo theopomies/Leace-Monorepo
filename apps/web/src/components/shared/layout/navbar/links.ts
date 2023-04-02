@@ -1,60 +1,60 @@
-import { Roles } from "@prisma/client";
+import { Role } from "@prisma/client";
 
 export const links: {
   href: string;
   label: string;
-  roles: Roles[];
+  roles: Role[];
   hidePremium?: boolean;
 }[] = [
   {
     href: "/",
     label: "Home",
-    roles: [Roles.OWNER, Roles.AGENCY, Roles.TENANT, Roles.ADMIN],
+    roles: [Role.OWNER, Role.AGENCY, Role.TENANT, Role.ADMIN],
   },
   {
     href: "#",
     label: "Dashboard",
-    roles: [Roles.OWNER, Roles.AGENCY],
+    roles: [Role.OWNER, Role.AGENCY],
   },
   {
     href: "/users/me/matches",
     label: "Matches",
-    roles: [Roles.OWNER, Roles.AGENCY, Roles.TENANT],
+    roles: [Role.OWNER, Role.AGENCY, Role.TENANT],
   },
   {
     href: "/users/me",
     label: "Profile",
-    roles: [Roles.OWNER, Roles.AGENCY, Roles.TENANT],
+    roles: [Role.OWNER, Role.AGENCY, Role.TENANT],
   },
   {
     href: "/users/me/posts",
     label: "My Post",
-    roles: [Roles.OWNER, Roles.AGENCY],
+    roles: [Role.OWNER, Role.AGENCY],
   },
   {
     href: "/posts/create",
     label: "Add Post",
-    roles: [Roles.OWNER, Roles.AGENCY],
+    roles: [Role.OWNER, Role.AGENCY],
   },
   {
     href: "#",
     label: "Notifications",
-    roles: [Roles.OWNER, Roles.AGENCY, Roles.TENANT],
+    roles: [Role.OWNER, Role.AGENCY, Role.TENANT],
   },
   {
     href: "/moderation",
     label: "Moderation",
-    roles: [Roles.ADMIN],
+    roles: [Role.ADMIN],
   },
   {
     href: "/support",
     label: "Support",
-    roles: [Roles.ADMIN],
+    roles: [Role.ADMIN],
   },
   {
     href: "/premium",
     label: "Premium",
-    roles: [Roles.OWNER, Roles.AGENCY, Roles.TENANT],
+    roles: [Role.OWNER, Role.AGENCY, Role.TENANT],
     hidePremium: true,
   },
 ];

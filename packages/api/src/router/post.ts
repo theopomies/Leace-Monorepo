@@ -8,14 +8,13 @@ export const postRouter = router({
   createPost: protectedProcedure([Role.AGENCY, Role.OWNER])
     .input(
       z.object({
-        userId: z.string(),
         title: z.string(),
         content: z.string(),
         desc: z.string(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const userId = getId({ ctx, userId: input.userId });
+      const userId = ctx.auth.userId;
 
       const user = await ctx.prisma.user.findUnique({ where: { id: userId } });
 
@@ -147,6 +146,8 @@ export const postRouter = router({
       });
 
       if (!posts) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+      return posts;
     }),
   getRentIncomeByUserId: protectedProcedure([Role.AGENCY, Role.OWNER])
     .input(z.object({ userId: z.string() }))

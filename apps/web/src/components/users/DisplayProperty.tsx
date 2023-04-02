@@ -1,10 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
 import { trpc } from "../../utils/trpc";
-import { Attribute, Post, Roles } from ".prisma/client";
+import { Attribute, Post, Role } from ".prisma/client";
 import DeletePost from "./DeletePost";
 import { LoggedLayout } from "../shared/layout/LoggedLayout";
-import Header from "./Header";
+import { Header } from "./Header";
 import Link from "next/link";
 
 export function DisplayPost(props: { post: Post; attribute: Attribute }) {
@@ -15,7 +15,7 @@ export function DisplayPost(props: { post: Post; attribute: Attribute }) {
         <Header heading={"Annonce"} />
         <div className="flex justify-center p-5">
           <div>
-            {session?.role != Roles.TENANT && (
+            {session?.role != Role.TENANT && (
               <DeletePost post={props.post.id} />
             )}
           </div>

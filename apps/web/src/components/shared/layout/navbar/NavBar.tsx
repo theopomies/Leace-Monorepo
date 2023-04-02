@@ -1,4 +1,4 @@
-import { Roles } from "@prisma/client";
+import { Role } from "@prisma/client";
 import { useClerk } from "@clerk/clerk-react";
 import Link from "next/link";
 import { trpc } from "../../../../utils/trpc";
@@ -15,7 +15,7 @@ export function NavBar() {
   }: {
     href: string;
     label: string;
-    roles: Roles[];
+    roles: Role[];
     hidePremium?: boolean;
   }) => {
     if (me) {

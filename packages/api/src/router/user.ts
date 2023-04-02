@@ -137,6 +137,7 @@ export const userRouter = router({
       });
 
       if (!user) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+      return user;
     }),
   /** Delete one user with the given id. */
   deleteUserById: protectedProcedure([Role.TENANT, Role.OWNER, Role.AGENCY])

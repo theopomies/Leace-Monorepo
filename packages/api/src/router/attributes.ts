@@ -97,7 +97,7 @@ export const attributesRouter = router({
 
       if (!updated) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
     }),
-  updatePostAtttributes: protectedProcedure([Role.OWNER, Role.AGENCY])
+  updatePostAttributes: protectedProcedure([Role.OWNER, Role.AGENCY])
     .input(
       z.object({
         postId: z.string(),

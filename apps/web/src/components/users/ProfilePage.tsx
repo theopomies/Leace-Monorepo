@@ -1,15 +1,15 @@
 /* eslint-disable @next/next/no-img-element */
-import Header from "../users/Header";
+import { Header } from "../users/Header";
 import { trpc } from "../../utils/trpc";
-import { Roles } from "@prisma/client";
+import { Role } from "@prisma/client";
 import Link from "next/link";
 
 export interface ProfilePageProps {
-  userId?: string;
+  userId: string;
 }
 
-const ProfilePage = ({ userId }: ProfilePageProps) => {
-  const { data: user, isLoading } = trpc.user.getUser.useQuery(userId);
+export const ProfilePage = ({ userId }: ProfilePageProps) => {
+  const { data: user, isLoading } = trpc.user.getUserById.useQuery({ userId });
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -72,7 +72,7 @@ const ProfilePage = ({ userId }: ProfilePageProps) => {
                   </div>
                 </div>
                 <hr className="my-4" />
-                {user.role == Roles.TENANT && user.attribute ? (
+                {user.role == Role.TENANT && user.attribute ? (
                   <div>
                     <div className="m-4 flex h-full justify-center">
                       <div className="pr-20 pt-4 pb-2">
@@ -210,5 +210,3 @@ const ProfilePage = ({ userId }: ProfilePageProps) => {
     </div>
   );
 };
-
-export default ProfilePage;
