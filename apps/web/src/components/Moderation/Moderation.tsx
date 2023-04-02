@@ -1,8 +1,8 @@
 import { Loader } from "./Loader";
-import { ReportButton } from "./ReportButton";
 import { trpc } from "../../utils/trpc";
 import { Post } from "./Post";
 import { User } from "./User";
+import { Ban } from "./Ban";
 
 export const Moderation = () => {
   const report = trpc.moderation.getReport.useQuery(undefined, {
@@ -23,7 +23,8 @@ export const Moderation = () => {
           {report.data.postId && <Post postId={report.data.postId} />}
         </div>
         <div className="flex h-screen w-1/5 flex-col items-center justify-center gap-5 px-10">
-          <ReportButton reportId={report.data.id} />
+          {report.data.userId && <Ban userId={report.data.userId} />}
+          {report.data.postId && <Ban postId={report.data.postId} />}
         </div>
       </div>
     );

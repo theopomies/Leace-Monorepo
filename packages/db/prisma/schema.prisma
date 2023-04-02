@@ -76,6 +76,9 @@ model User {
   relationships Relationship[]
   messages      Message[]
 
+  bans           Ban[] @relation("banned")
+  bansCreated    Ban[] @relation("bans_created")
+
   reports        Report[] @relation("reported")
   reportsCreated Report[] @relation("reports_created")
 
@@ -156,6 +159,29 @@ model Attribute {
   @@map("attributes")
 }
 
+model Ban {
+  id String @id @default(cuid())
+
+  createdBy   User @relation(fields: [createdById], references: [id], "bans_created", onDelete: Cascade)
+  createdById String @unique
+
+  user   User   @relation(fields: [userId], references: [id], "banned", onDelete: Cascade)
+  userId String @unique
+
+  reports Report[]
+
+  reason ReportReason?
+  until  DateTime
+  comment String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([createdById])
+  @@index([userId])
+  @@map("bans")
+}
+
 model Report {
   id String @id @default(cuid())
 
@@ -168,6 +194,9 @@ model Report {
   post   Post?   @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId String?
 
+  ban Ban? @relation(fields: [banId], references: [id], onDelete: Cascade)
+  banId String?
+
   reason ReportReason?
   desc   String?
   status ReportStatus? @default(PENDING)
@@ -175,9 +204,10 @@ model Report {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@index([createdById])
   @@index([userId])
   @@index([postId])
-  @@index([createdById])
+  @@index([banId])
   @@map("reports")
 }
 

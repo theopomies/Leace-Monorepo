@@ -14,6 +14,13 @@ export const moderationRouter = router({
       });
     },
   ),
+  getReportsByUserId: protectedProcedure([Roles.ADMIN, Roles.MODERATOR])
+    .input(z.object({ userId: z.string() }))
+    .query(({ ctx, input }) => {
+      return ctx.prisma.report.findMany({
+        where: { userId: input.userId, status: ReportStatus.PENDING },
+      });
+    }),
   getUserById: protectedProcedure([Roles.ADMIN])
     .input(z.string())
     .query(({ ctx, input }) => {
@@ -58,36 +65,6 @@ export const moderationRouter = router({
         include: { attribute: true, reports: true },
       });
     }),
-  updateReport: protectedProcedure([Roles.ADMIN, Roles.MODERATOR])
-    .input(
-      z.object({
-        id: z.string(),
-        reason: z
-          .enum([
-            ReportReason.SCAM,
-            ReportReason.SPAM,
-            ReportReason.INAPPROPRIATE,
-            ReportReason.OTHER,
-          ])
-          .optional(),
-        status: z.enum([
-          ReportStatus.PENDING,
-          ReportStatus.REJECTED,
-          ReportStatus.RESOLVED,
-        ]),
-      }),
-    )
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.report.update({
-        where: { id: input.id },
-        data: input.reason
-          ? {
-              reason: input.reason,
-              status: input.status,
-            }
-          : { status: input.status },
-      });
-    }),
   updateStatus: protectedProcedure([Roles.ADMIN, Roles.MODERATOR])
     .input(
       z.object({
@@ -99,6 +76,142 @@ export const moderationRouter = router({
       return ctx.prisma.user.update({
         where: { id: input.id },
         data: { status: input.status },
+      });
+    }),
+  createBanUser: protectedProcedure([Roles.ADMIN, Roles.MODERATOR])
+    .input(
+      z.object({
+        userId: z.string(),
+        reportIds: z.array(z.string()).optional(),
+        reason: z.enum([
+          ReportReason.SCAM,
+          ReportReason.SPAM,
+          ReportReason.INAPPROPRIATE,
+          ReportReason.OTHER,
+        ]),
+        comment: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      console.log(input);
+      const user = await ctx.prisma.user.findUnique({
+        where: { id: input.userId },
+        include: { bans: true },
+      });
+      if (!user) throw new TRPCError({ code: "NOT_FOUND" });
+
+      const lastBan = await ctx.prisma.ban.findFirst({
+        where: { userId: input.userId },
+        orderBy: { createdAt: "desc" },
+      });
+      if (lastBan && lastBan.until > new Date()) {
+        throw new TRPCError({ code: "CONFLICT", message: "Already Banned" });
+      }
+
+      // update reports to resolved
+      if (input.reportIds) {
+        input.reportIds.forEach(async (id) => {
+          await ctx.prisma.report.update({
+            where: { id },
+            data: { status: ReportStatus.RESOLVED },
+          });
+        });
+      }
+
+      switch (input.reason) {
+        case "SCAM":
+          return ctx.prisma.ban.create({
+            data: {
+              createdById: ctx.auth.userId,
+              userId: input.userId,
+              reports: { connect: input.reportIds?.map((id) => ({ id })) },
+              reason: input.reason,
+              until: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365), // 365 days
+              comment: input.comment,
+            },
+          });
+        case "SPAM":
+          return ctx.prisma.ban.create({
+            data: {
+              createdById: ctx.auth.userId,
+              userId: input.userId,
+              reports: { connect: input.reportIds?.map((id) => ({ id })) },
+              reason: input.reason,
+              until: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30), // 30 days
+              comment: input.comment,
+            },
+          });
+        case "INAPPROPRIATE":
+          return ctx.prisma.ban.create({
+            data: {
+              createdById: ctx.auth.userId,
+              userId: input.userId,
+              reports: { connect: input.reportIds?.map((id) => ({ id })) },
+              reason: input.reason,
+              until: new Date(Date.now() + 1000 * 60 * 60 * 24 * 15), // 15 days
+              comment: input.comment,
+            },
+          });
+        case "OTHER":
+          return ctx.prisma.ban.create({
+            data: {
+              createdById: ctx.auth.userId,
+              userId: input.userId,
+              reports: { connect: input.reportIds?.map((id) => ({ id })) },
+              reason: input.reason,
+              until: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7), // 7 days
+              comment: input.comment,
+            },
+          });
+      }
+    }),
+  rejectUserReports: protectedProcedure([Roles.ADMIN, Roles.MODERATOR])
+    .input(z.object({ userId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const user = await ctx.prisma.user.findUnique({
+        where: { id: input.userId },
+      });
+      if (!user) throw new TRPCError({ code: "NOT_FOUND" });
+
+      const reports = await ctx.prisma.report.findMany({
+        where: { userId: input.userId, status: ReportStatus.PENDING },
+      });
+      if (reports.length === 0) {
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: "No reports to reject",
+        });
+      }
+
+      reports.forEach(async (report) => {
+        await ctx.prisma.report.update({
+          where: { id: report.id },
+          data: { status: ReportStatus.REJECTED },
+        });
+      });
+    }),
+  rejectPostReports: protectedProcedure([Roles.ADMIN, Roles.MODERATOR])
+    .input(z.object({ postId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const post = await ctx.prisma.post.findUnique({
+        where: { id: input.postId },
+      });
+      if (!post) throw new TRPCError({ code: "NOT_FOUND" });
+
+      const reports = await ctx.prisma.report.findMany({
+        where: { postId: input.postId, status: ReportStatus.PENDING },
+      });
+      if (reports.length === 0) {
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: "No reports to reject",
+        });
+      }
+      reports.forEach(async (report) => {
+        await ctx.prisma.report.update({
+          where: { id: report.id },
+          data: { status: ReportStatus.REJECTED },
+        });
       });
     }),
   deletePostImage: protectedProcedure()
