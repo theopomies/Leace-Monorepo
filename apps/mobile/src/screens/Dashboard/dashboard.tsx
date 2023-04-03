@@ -13,7 +13,7 @@ const Dashboard = () => {
         <ScrollView className="mt-20">
             <View className="justify-center items-center p-3 pb-24 mt-10">
 
-                <Text className="text-center font-p font-bold text-3xl	text-custom mx-auto mb-10">DASHBOARD</Text>
+                <Text className="text-center font-poppins text-3xl text-custom mx-auto">DASHBOARD</Text>
 
                 <View>
                     <View className="flex flex-wrap justify-center items-center p-3 pb-24 mt-10">

@@ -20,7 +20,7 @@ const ReportModal = ({ cond, visible }: { cond: boolean, visible: boolean }) => 
 
     return (
         <View>
-            {cond ? <Button title="Report" className="mx-9 mt-5 rounded bg-blue-500  text-white hover:bg-blue-700" onPress={() => {
+            {cond ? <Button title="Report" buttonStyle={{ backgroundColor: "#002642" }} className="mx-9 mt-5 rounded bg-blue-500  text-white hover:bg-blue-700" onPress={() => {
                 setIsOpened(true);
             }} /> : <></>}
             {isOpened && visible ?

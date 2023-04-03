@@ -19,7 +19,6 @@ export const Reason: Enum<ReportReason> = {
 export type Reason = ReportReason
 
 export const Role: Enum<Roles> = {
-    NONE: "NONE",
     TENANT: "TENANT",
     OWNER: "OWNER",
     AGENCY: "AGENCY",

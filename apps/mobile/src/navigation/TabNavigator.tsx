@@ -1,18 +1,11 @@
-import React, { useLayoutEffect } from "react";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 
-import { Profile } from "../screens/Profile/profile";
+import { UserRoles } from '../utils/enum';
 
-import { Match, MatchChat } from "../screens/Match";
-
-import { CreatePost, CreateAttributes, ViewPost, ViewDetails } from "../screens/Post";
-
-import { Available, Chat, Clients, Dashboard, Expenses, Income, Occupied } from "../screens/Dashboard";
-
-import { Icon } from "react-native-elements";
-import { View } from "react-native";
-import { Stack } from '../screens/Stack/stack';
+import { trpc } from "../utils/trpc";
+import { Tenant, Provider } from "../components/Navigation";
+import { View, ActivityIndicator } from "react-native";
 
 export type TabStackParamList = {
   Role: undefined;
@@ -20,6 +13,8 @@ export type TabStackParamList = {
   Stack: undefined;
   Match: undefined;
   Dashboard: undefined;
+
+  Notifications: undefined;
 
   MatchChat: undefined;
 
@@ -36,10 +31,12 @@ export type TabStackParamList = {
   Chat: undefined;
 };
 
-const Tab = createBottomTabNavigator<TabStackParamList>();
-
 const TabNavigator = () => {
   const navigation = useNavigation();
+
+  const [role, setRole] = useState<keyof typeof UserRoles | null>(null);
+
+  const { data: session } = trpc.auth.getSession.useQuery();
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -47,108 +44,26 @@ const TabNavigator = () => {
     });
   }, []);
 
-  return (
-    <Tab.Navigator>
-      <Tab.Screen name="Stack" component={Stack}
-        options={{
-          tabBarIcon: ({ focused }) => {
-            const icon = focused ? 'favorite' : 'favorite-border';
-            return (
-              <View>
-                <Icon name={icon} color="#002642" />
-              </View>
-            );
-          },
-          tabBarLabel: '',
-          headerShown: false,
-        }}
-      />
-      <Tab.Screen name="Match" component={Match} options={{
-        tabBarIcon: ({ focused }) => {
-          const icon = focused ? 'chat' : 'chat-bubble-outline'
+  useEffect(() => {
+    const getSession = async () => {
+      setRole(session?.role as keyof typeof UserRoles);
 
-          return (
-            <View>
-              {focused ?
-                <Icon name={icon} type="material" />
-                :
-                <Icon name={icon} type="material" />
-              }
-            </View>
-          );
-        },
-        tabBarLabel: '',
-        headerShown: false
-      }} />
+    };
 
-      <Tab.Screen name="MatchChat" component={MatchChat} options={{ tabBarButton: () => null, headerShown: false }} />
+    getSession();
+  }, [session]);
 
+  if (!session && !role) {
+    return <View className="flex-1 justify-center items-center">
+      <ActivityIndicator size="large" color={"#002642"} />
+    </View>;
+  }
 
-      <Tab.Screen name="CreatePost" component={CreatePost} options={{
-        tabBarIcon: ({ focused }) => {
-          const icon = focused ? 'plus-square' : 'plus-square-o'
+  if (role === UserRoles.TENANT) {
+    return <Tenant role={role} />
+  }
 
-          return (
-            <View>
-              {focused ?
-                <Icon name={icon} color="#002642" type="font-awesome" />
-                :
-                <Icon name={icon} color="#002642" type="font-awesome" />
-              }
-            </View>
-          );
-        },
-        tabBarLabel: '',
-        headerShown: false,
-      }} />
-
-      <Tab.Screen name="CreatePostAttributes" component={CreateAttributes} options={{ tabBarButton: () => null, headerShown: false }} />
-      <Tab.Screen name="ViewPost" component={ViewPost} options={{ tabBarButton: () => null, headerShown: false }} />
-      <Tab.Screen name="PostDetails" component={ViewDetails} options={{ tabBarButton: () => null, headerShown: false }} />
-
-      <Tab.Screen name="Profile" component={Profile} options={{
-        tabBarIcon: ({ focused }) => {
-          const icon = focused ? 'user-circle' : 'user-circle-o'
-
-          return (
-            <View>
-              {focused ?
-                <Icon name={icon} color="#002642" type="font-awesome" />
-                :
-                <Icon name={icon} color="#002642" type="font-awesome" />
-              }
-            </View>
-          );
-        },
-        tabBarLabel: '',
-        headerShown: false
-      }} />
-
-      <Tab.Screen name="Dashboard" component={Dashboard} options={{
-        tabBarIcon: ({ focused }) => {
-          const icon = focused ? 'view-dashboard' : 'view-dashboard-outline'
-
-          return (
-            <View>
-              {focused ?
-                <Icon name={icon} color="#002642" type="material-community" />
-                :
-                <Icon name={icon} color="#002642" type="material-community" />
-              }
-            </View>
-          );
-        },
-        tabBarLabel: '',
-        headerShown: false
-      }} />
-      <Tab.Screen name="Expenses" component={Expenses} options={{ tabBarButton: () => null, headerShown: false }} />
-      <Tab.Screen name="Income" component={Income} options={{ tabBarButton: () => null, headerShown: false }} />
-      <Tab.Screen name="Clients" component={Clients} options={{ tabBarButton: () => null, headerShown: false }} />
-      <Tab.Screen name="Occupied" component={Occupied} options={{ tabBarButton: () => null, headerShown: false }} />
-      <Tab.Screen name="Available" component={Available} options={{ tabBarButton: () => null, headerShown: false }} />
-      <Tab.Screen name="Chat" component={Chat} options={{ tabBarButton: () => null, headerShown: false }} />
-    </Tab.Navigator>
-  );
+  return <Provider role={role} />
 };
 
 export default TabNavigator;

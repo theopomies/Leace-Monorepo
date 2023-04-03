@@ -13,7 +13,7 @@ const ViewPost = () => {
         <ScrollView className="mt-20 mx-5">
             <View>
                 <View className="flex-row justify-center items-center ml-10">
-                    <Text className="text-center font-p font-bold text-3xl	text-custom mx-auto mb-10">PROPERTIES</Text>
+                    <Text className="text-center font-poppins text-3xl	text-custom mx-auto mb-10">PROPERTIES</Text>
                     <ShowProfile path={require("../../../assets/blank.png")} />
                 </View>
                 {posts.data ?

@@ -12,9 +12,11 @@ export const Match = () => {
 
   return (
     <View className="mt-20">
-      <Button title="Chat" className="mx-9 mt-5 rounded bg-blue-500  text-white hover:bg-blue-700" onPress={() => {
-        navigation.navigate("MatchChat")
-      }} />
+      <Button title="Chat"
+        buttonStyle={{ backgroundColor: "#002642" }}
+        className="mx-9 mt-5 rounded bg-blue-500  text-white hover:bg-blue-700" onPress={() => {
+          navigation.navigate("MatchChat")
+        }} />
     </View>
   )
 }

@@ -64,7 +64,7 @@ const CreateAttributes = ({ route }: { route: RouteProp<TabStackParamList, "Crea
         <ScrollView className="mt-20">
             <View>
                 <View className="flex-row justify-center items-center ml-10">
-                    <Text className="text-center font-p font-bold text-3xl	text-custom mx-auto mb-10">ATTRIBUTES</Text>
+                    <Text className="text-center font-poppins text-3xl text-custom mx-auto mb-10">ATTRIBUTES</Text>
                     <ShowProfile path={require("../../../assets/blank.png")} />
                 </View>
                 <CustomInput

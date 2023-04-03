@@ -42,9 +42,9 @@ const CreatePost = () => {
 
     return (
         <View className='mt-20'>
-            <View className="flex flex-col h-full justify-between">
+            <View className="flex flex-col h-full space-y-16">
                 <View className="flex-row justify-center items-center ml-10">
-                    <Text className="text-center font-p font-bold text-3xl	text-custom mx-auto">POST</Text>
+                    <Text className="text-center font-poppins text-3xl	text-custom mx-auto">POST</Text>
                     <ShowProfile path={require("../../../assets/blank.png")} />
                 </View>
                 <View>

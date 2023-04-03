@@ -17,7 +17,7 @@ const ViewDetails = ({ route }: { route: RouteProp<TabStackParamList, "PostDetai
         <ScrollView className="mt-10" showsVerticalScrollIndicator={false}>
             <View className="p-4">
                 <View className="flex-row justify-center items-center ml-10">
-                    <Text className="text-center font-p font-bold text-3xl text-custom mx-auto">DETAILS</Text>
+                    <Text className="text-center font-poppins text-3xl text-custom mx-auto">DETAILS</Text>
                     <ShowProfile path={require("../../../assets/blank.png")} />
                 </View>
                 {posts.data ?
