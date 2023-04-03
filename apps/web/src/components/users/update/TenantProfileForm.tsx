@@ -120,33 +120,37 @@ export function TenantProfileForm({ ...attributes }: TenantProfileFormProps) {
           <h2 className="pb-2 pt-4 text-xl font-bold text-gray-700">
             What are you looking for ?
           </h2>
-          <Checkbox
-            name="house"
-            onChange={attributes.handleHouseChange}
-            checked={attributes.house}
-          >
-            House
-          </Checkbox>
-          <Checkbox
-            name="appartment"
-            onChange={attributes.handleAppartmentChange}
-            checked={attributes.appartment}
-          >
-            Appartment
-          </Checkbox>
+          <div className="flex w-full justify-center gap-1">
+            <Checkbox
+              name="house"
+              onChange={attributes.handleHouseChange}
+              checked={attributes.house}
+            >
+              House
+            </Checkbox>
+            <Checkbox
+              name="appartment"
+              onChange={attributes.handleAppartmentChange}
+              checked={attributes.appartment}
+            >
+              Appartment
+            </Checkbox>
+          </div>
           <h2 className="pb-2 pt-4 text-xl font-bold text-gray-700">
             Additionnal filters
           </h2>
-          {attributesList.map((att) => (
-            <Checkbox
-              key={att.name}
-              name={att.name}
-              onChange={att.handleChange}
-              checked={!!attributes[att.name as keyof typeof attributes]}
-            >
-              {att.label}
-            </Checkbox>
-          ))}
+          <div className="flex w-full justify-center gap-1">
+            {attributesList.map((att) => (
+              <Checkbox
+                key={att.name}
+                name={att.name}
+                onChange={att.handleChange}
+                checked={!!attributes[att.name as keyof typeof attributes]}
+              >
+                {att.label}
+              </Checkbox>
+            ))}
+          </div>
         </div>
       </div>
     </div>

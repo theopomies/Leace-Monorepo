@@ -197,7 +197,7 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
       <Header heading="Update Profile" />
       <div className="flex justify-center p-5">
         <form
-          className="m-14 flex w-3/6 justify-center rounded-lg bg-white p-5 shadow"
+          className="mx-40 mt-14 flex w-full justify-center rounded-lg bg-white p-12 shadow"
           onSubmit={handleSubmit}
         >
           <div>
@@ -242,7 +242,7 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
               <TenantProfileForm {...attributesStates} />
             )}
             {
-              <div className=" flex justify-center pt-4">
+              <div className=" mt-4 flex justify-center pt-4">
                 <button className="rounded-md bg-indigo-500 p-3 text-white ">
                   Update
                 </button>
