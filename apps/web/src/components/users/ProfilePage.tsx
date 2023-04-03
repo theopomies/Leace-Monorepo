@@ -29,7 +29,7 @@ export const ProfilePage = ({ userId }: ProfilePageProps) => {
           <div>
             <Link
               className="rounded bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700"
-              href={"/users/me/update"}
+              href={`/users/${userId}/update`}
             >
               Modifier
             </Link>
@@ -69,7 +69,13 @@ export const ProfilePage = ({ userId }: ProfilePageProps) => {
                       Birthdate:
                     </h2>
                     <p>
-                      <b>{user.birthDate?.toDateString()}</b>
+                      <b>
+                        {user.birthDate
+                          ?.toUTCString()
+                          .split(" ")
+                          .slice(0, 4)
+                          .join(" ")}
+                      </b>
                     </p>
                   </div>
                 </div>
@@ -92,7 +98,7 @@ export const ProfilePage = ({ userId }: ProfilePageProps) => {
                         <div>
                           <b>
                             {user.attribute.house === true ? (
-                              <p>Home</p>
+                              <p>House</p>
                             ) : (
                               <p>Appartment</p>
                             )}
@@ -130,43 +136,43 @@ export const ProfilePage = ({ userId }: ProfilePageProps) => {
                           <div className="flex justify-between">
                             Fumeur :
                             {user.attribute.smoker === true ? (
-                              <p>Oui</p>
+                              <p>Yes</p>
                             ) : (
-                              <p>Non</p>
+                              <p>No</p>
                             )}
                             Animal :
                             {user.attribute.pets === true ? (
-                              <p>Oui</p>
+                              <p>Yes</p>
                             ) : (
-                              <p>Non</p>
+                              <p>No</p>
                             )}
                           </div>
                           <div className="flex justify-between">
                             Handicap :
                             {user.attribute.disability === true ? (
-                              <p>Oui</p>
+                              <p>Yes</p>
                             ) : (
-                              <p>Non</p>
+                              <p>No</p>
                             )}
                             Garage :
                             {user.attribute.parking === true ? (
-                              <p>Oui</p>
+                              <p>Yes</p>
                             ) : (
-                              <p>Non</p>
+                              <p>No</p>
                             )}
                           </div>
                           <div className="flex justify-between">
                             Ascenseur :
                             {user.attribute.elevator === true ? (
-                              <p>Oui</p>
+                              <p>Yes</p>
                             ) : (
-                              <p>Non</p>
+                              <p>No</p>
                             )}
                             Jardin :
                             {user.attribute.garden === true ? (
-                              <p>Oui</p>
+                              <p>Yes</p>
                             ) : (
-                              <p>Non</p>
+                              <p>No</p>
                             )}
                           </div>
                         </b>

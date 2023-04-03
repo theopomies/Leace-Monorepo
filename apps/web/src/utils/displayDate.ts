@@ -1,11 +1,11 @@
 export const displayDate = (date: Date) => {
   return (
-    (date.getDate() < 10 ? "0" + date.getDate() : date.getDate()) +
+    (date.getUTCDate() < 10 ? "0" + date.getUTCDate() : date.getUTCDate()) +
     "-" +
-    (date.getMonth() + 1 < 10
-      ? "0" + (date.getMonth() + 1)
-      : date.getMonth() + 1) +
+    (date.getUTCMonth() + 1 < 10
+      ? "0" + (date.getUTCMonth() + 1)
+      : date.getUTCMonth() + 1) +
     "-" +
-    date.getFullYear()
+    date.getUTCFullYear()
   );
 };

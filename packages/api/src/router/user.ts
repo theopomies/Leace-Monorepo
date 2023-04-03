@@ -75,7 +75,7 @@ export const userRouter = router({
         lastName: z.string().optional(),
         phoneNumber: z.string().optional(),
         description: z.string().optional(),
-        birthDate: z.string().optional(),
+        birthDate: z.date().optional(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
@@ -91,7 +91,7 @@ export const userRouter = router({
         throw new TRPCError({ code: "BAD_REQUEST" });
 
       if (input.birthDate) {
-        const birthDate = new Date(input.birthDate);
+        const birthDate = input.birthDate;
         const diff_ms = Date.now() - birthDate.getTime();
         const age_dt = new Date(diff_ms);
         const age = Math.abs(age_dt.getUTCFullYear() - 1970);
