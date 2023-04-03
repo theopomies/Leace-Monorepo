@@ -27,6 +27,19 @@ const isAuthorized = (roles?: Roles[]) =>
       });
     }
 
+    // on peut appeler des routes du back dans le back ?
+    const ban = await ctx.prisma.ban.findFirst({
+      where: {
+        userId: ctx.auth.userId,
+      },
+    });
+    if (ban && ban.until > new Date()) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "You are banned",
+      });
+    }
+
     return next({
       ctx: {
         auth: ctx.auth,

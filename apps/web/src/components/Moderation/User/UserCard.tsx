@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 import { trpc } from "../../../utils/trpc";
-import { BanButton } from "../BanButton";
 import { Loader } from "../Loader";
 import { Documents } from "../Documents";
 import { ChatModal } from "../ChatModal";
@@ -12,6 +11,7 @@ export interface UserCardProps {
 
 export const UserCard = ({ userId }: UserCardProps) => {
   const { data: user } = trpc.moderation.getUser.useQuery({ userId: userId });
+  const { data: ban } = trpc.moderation.getBan.useQuery({ userId: userId });
 
   if (user)
     return (
@@ -29,13 +29,11 @@ export const UserCard = ({ userId }: UserCardProps) => {
             {user.lastName ? user.lastName : "Nom"}
           </h3>
           <div></div>
-          {user.status && user.status == "ACTIVE" ? (
+          {!ban ? (
             <p className="text-lg text-green-500">{user.status}</p>
           ) : (
-            <p className="text-lg text-red-500">{user.status}</p>
+            <p className="text-lg text-red-500">BANNED</p>
           )}
-          <BanButton userId={userId} />
-
           <p className="my-5 text-lg text-amber-400">
             {user.isPremium ? "Premium" : "Non premium"}
           </p>
@@ -66,8 +64,8 @@ export const UserCard = ({ userId }: UserCardProps) => {
         </div>
         <Documents userId={user.id} />
         {user.reports.length > 0 && (
-          <div className="px-10">
-            <p className="mb-2 text-lg">Signalements :</p>
+          <div className="border-blueGray-200 mt-10 border-t pt-10">
+            <p className="mb-2 text-lg">Reports :</p>
             <div className="flex flex-wrap gap-4">
               {user.reports.map((report, index) => (
                 <p key={index} className="text-lg">

@@ -65,17 +65,27 @@ export const moderationRouter = router({
         include: { attribute: true, reports: true },
       });
     }),
-  updateStatus: protectedProcedure([Roles.ADMIN, Roles.MODERATOR])
-    .input(
-      z.object({
-        id: z.string(),
-        status: z.enum([UserStatus.BANNED, UserStatus.ACTIVE]),
-      }),
-    )
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.user.update({
-        where: { id: input.id },
-        data: { status: input.status },
+  getBan: protectedProcedure([Roles.ADMIN, Roles.MODERATOR])
+    .input(z.object({ userId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const ban = await ctx.prisma.ban.findFirst({
+        where: { userId: input.userId },
+        orderBy: { createdAt: "desc" },
+      });
+      if (!ban) return false;
+      return ban.until > new Date();
+    }),
+  unBanUser: protectedProcedure([Roles.ADMIN, Roles.MODERATOR])
+    .input(z.object({ userId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const ban = await ctx.prisma.ban.findFirst({
+        where: { userId: input.userId },
+        orderBy: { createdAt: "desc" },
+      });
+      if (!ban) throw new TRPCError({ code: "NOT_FOUND" });
+      return ctx.prisma.ban.update({
+        where: { id: ban.id },
+        data: { until: new Date() },
       });
     }),
   createBanUser: protectedProcedure([Roles.ADMIN, Roles.MODERATOR])
@@ -93,7 +103,6 @@ export const moderationRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      console.log(input);
       const user = await ctx.prisma.user.findUnique({
         where: { id: input.userId },
         include: { bans: true },

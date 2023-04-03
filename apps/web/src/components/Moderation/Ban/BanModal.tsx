@@ -47,12 +47,12 @@ export const BanModal = ({ userId, reports, onBan }: BanModalProps) => {
 
   useEffect(() => {
     if (reports) {
-      setBanData({
-        ...banData,
+      setBanData((prevState) => ({
+        ...prevState,
         reportIds: reports.map((report) => report.id),
-      });
+      }));
     }
-  }, [banData, setBanData, reports]);
+  }, [reports]);
 
   return (
     <div className="flex w-full flex-col items-center justify-center">

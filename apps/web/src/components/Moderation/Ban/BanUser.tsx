@@ -10,6 +10,8 @@ export const BanUser = ({ userId }: BanUserProps) => {
   const mutation = trpc.moderation.createBanUser.useMutation({
     onSuccess() {
       utils.moderation.getReport.invalidate();
+      utils.moderation.getUser.invalidate();
+      utils.moderation.getBan.invalidate();
     },
   });
   const { data: reports } = trpc.moderation.getReportsByUserId.useQuery({

@@ -15,7 +15,6 @@ datasource db {
 enum UserStatus {
   ACTIVE
   INACTIVE
-  BANNED
 }
 
 enum ReportReason {
@@ -163,10 +162,10 @@ model Ban {
   id String @id @default(cuid())
 
   createdBy   User @relation(fields: [createdById], references: [id], "bans_created", onDelete: Cascade)
-  createdById String @unique
+  createdById String
 
   user   User   @relation(fields: [userId], references: [id], "banned", onDelete: Cascade)
-  userId String @unique
+  userId String
 
   reports Report[]
 

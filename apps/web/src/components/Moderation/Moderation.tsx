@@ -25,6 +25,7 @@ export const Moderation = () => {
         <div className="flex h-screen w-1/5 flex-col items-center justify-center gap-5 px-10">
           {report.data.userId && <Ban userId={report.data.userId} />}
           {report.data.postId && <Ban postId={report.data.postId} />}
+          {/* utile ? */}
         </div>
       </div>
     );
