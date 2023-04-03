@@ -16,7 +16,6 @@ import { TextArea } from "../../shared/forms/TextArea";
 
 export interface UpdateUserPageProps {
   userId: string;
-  // role: Role;
 }
 
 export function UpdateUserPage({ userId }: UpdateUserPageProps) {
@@ -29,15 +28,27 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
   const [lastName, setLastName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
 
+  const updateAttributes = trpc.attribute.updateUserAttributes.useMutation();
+
+  const [location, setLocation] = useState("");
+  const [maxPrice, setMaxPrice] = useState(0);
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxSize, setMaxSize] = useState(0);
+  const [minSize, setMinSize] = useState(0);
+  const [furnished, setFurnished] = useState(false);
+  const [house, setHouse] = useState(false);
+  const [appartment, setAppartment] = useState(false);
+  const [terrace, setTerrace] = useState(false);
+  const [pets, setPets] = useState(false);
+  const [smoker, setSmoker] = useState(false);
+  const [disability, setDisability] = useState(false);
+  const [garden, setGarden] = useState(false);
+  const [parking, setParking] = useState(false);
+  const [elevator, setElevator] = useState(false);
+  const [pool, setPool] = useState(false);
+
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
-    console.log({
-      userId,
-      birthDate,
-      firstName,
-      lastName,
-      description,
-    });
     await updateUser.mutateAsync({
       userId,
       birthDate: new Date(birthDate + "T00:00:00.000Z"),
@@ -45,6 +56,27 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
       lastName,
       description,
     });
+    if (user?.role === Role.TENANT) {
+      await updateAttributes.mutateAsync({
+        userId,
+        location,
+        maxPrice,
+        minPrice,
+        maxSize,
+        minSize,
+        furnished,
+        house,
+        appartment,
+        terrace,
+        pets,
+        smoker,
+        disability,
+        garden,
+        parking,
+        elevator,
+        pool,
+      });
+    }
     router.push(`/users/${userId}`);
   };
 
@@ -54,9 +86,20 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
       setter(event.target.value);
     };
 
+  const handleBooleanChange =
+    (setter: Dispatch<SetStateAction<boolean>>) =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setter(event.target.checked);
+    };
+
+  const handleNumberChange =
+    (setter: Dispatch<SetStateAction<number>>) =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setter(event.target.valueAsNumber);
+    };
+
   useEffect(() => {
     if (user) {
-      console.log("user", user);
       const date = user.birthDate
         ? `${user.birthDate.getUTCFullYear()}-${
             user.birthDate.getUTCMonth() + 1 > 9
@@ -68,13 +111,86 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
               : "0" + user.birthDate.getUTCDate()
           }`
         : "";
-      console.log("date", date);
       setBirthDate(date);
       setFirstName(user.firstName ?? "");
       setLastName(user.lastName ?? "");
       setDescription(user.description ?? "");
     }
   }, [user]);
+
+  useEffect(() => {
+    if (user?.attribute) {
+      setLocation(user.attribute.location || "");
+      setMaxPrice(user.attribute.maxPrice || 0);
+      setMinPrice(user.attribute.minPrice || 0);
+      setMaxSize(user.attribute.maxSize || 0);
+      setMinSize(user.attribute.minSize || 0);
+      setHouse(user.attribute.house || false);
+      setAppartment(user.attribute.appartment || false);
+      setFurnished(user.attribute.furnished || false);
+      setTerrace(user.attribute.terrace || false);
+      setPets(user.attribute.pets || false);
+      setSmoker(user.attribute.smoker || false);
+      setDisability(user.attribute.disability || false);
+      setGarden(user.attribute.garden || false);
+      setParking(user.attribute.parking || false);
+      setElevator(user.attribute.elevator || false);
+      setPool(user.attribute.pool || false);
+    }
+  }, [
+    user,
+    setLocation,
+    setMaxPrice,
+    setMinPrice,
+    setMaxSize,
+    setMinSize,
+    setHouse,
+    setAppartment,
+    setFurnished,
+    setTerrace,
+    setPets,
+    setSmoker,
+    setDisability,
+    setGarden,
+    setParking,
+    setElevator,
+    setPool,
+  ]);
+
+  const attributesStates = {
+    location,
+    handleLocationChange: handleChange(setLocation),
+    maxPrice,
+    handleMaxPriceChange: handleNumberChange(setMaxPrice),
+    minPrice,
+    handleMinPriceChange: handleNumberChange(setMinPrice),
+    maxSize,
+    handleMaxSizeChange: handleNumberChange(setMaxSize),
+    minSize,
+    handleMinSizeChange: handleNumberChange(setMinSize),
+    furnished,
+    handleFurnishedChange: handleBooleanChange(setFurnished),
+    house,
+    handleHouseChange: handleBooleanChange(setHouse),
+    appartment,
+    handleAppartmentChange: handleBooleanChange(setAppartment),
+    terrace,
+    handleTerraceChange: handleBooleanChange(setTerrace),
+    pets,
+    handlePetsChange: handleBooleanChange(setPets),
+    smoker,
+    handleSmokerChange: handleBooleanChange(setSmoker),
+    disability,
+    handleDisabilityChange: handleBooleanChange(setDisability),
+    garden,
+    handleGardenChange: handleBooleanChange(setGarden),
+    parking,
+    handleParkingChange: handleBooleanChange(setParking),
+    elevator,
+    handleElevatorChange: handleBooleanChange(setElevator),
+    pool,
+    handlePoolChange: handleBooleanChange(setPool),
+  };
 
   return (
     <div className="w-full">
@@ -122,7 +238,9 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
                 />
               </div>
             </div>
-            {/* {role === Role.TENANT && <TenantProfileForm userId={userId} />} */}
+            {user?.role === Role.TENANT && (
+              <TenantProfileForm {...attributesStates} />
+            )}
             {
               <div className=" flex justify-center pt-4">
                 <button className="rounded-md bg-indigo-500 p-3 text-white ">

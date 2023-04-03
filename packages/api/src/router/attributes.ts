@@ -66,13 +66,14 @@ export const attributesRouter = router({
             pool: input.pool,
           },
         });
+
         if (!created) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
 
         return;
       }
 
       const updated = await ctx.prisma.attribute.update({
-        where: { id: userId },
+        where: { id: attribute.id },
         data: {
           location: input.location,
           maxPrice: input.maxPrice,

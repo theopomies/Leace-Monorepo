@@ -1,119 +1,92 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect } from "react";
-import { RouterInputs } from "../../../utils/trpc";
+import { ChangeEventHandler } from "react";
 import { Checkbox } from "../../shared/forms/Checkbox";
 
 interface TenantProfileFormProps {
-  userId: string;
+  location: string;
+  handleLocationChange: ChangeEventHandler<HTMLInputElement>;
+  maxPrice: number;
+  handleMaxPriceChange: ChangeEventHandler<HTMLInputElement>;
+  minPrice: number;
+  handleMinPriceChange: ChangeEventHandler<HTMLInputElement>;
+  maxSize: number;
+  handleMaxSizeChange: ChangeEventHandler<HTMLInputElement>;
+  minSize: number;
+  handleMinSizeChange: ChangeEventHandler<HTMLInputElement>;
+  furnished: boolean;
+  handleFurnishedChange: ChangeEventHandler<HTMLInputElement>;
+  house: boolean;
+  handleHouseChange: ChangeEventHandler<HTMLInputElement>;
+  appartment: boolean;
+  handleAppartmentChange: ChangeEventHandler<HTMLInputElement>;
+  terrace: boolean;
+  handleTerraceChange: ChangeEventHandler<HTMLInputElement>;
+  pets: boolean;
+  handlePetsChange: ChangeEventHandler<HTMLInputElement>;
+  smoker: boolean;
+  handleSmokerChange: ChangeEventHandler<HTMLInputElement>;
+  disability: boolean;
+  handleDisabilityChange: ChangeEventHandler<HTMLInputElement>;
+  garden: boolean;
+  handleGardenChange: ChangeEventHandler<HTMLInputElement>;
+  parking: boolean;
+  handleParkingChange: ChangeEventHandler<HTMLInputElement>;
+  elevator: boolean;
+  handleElevatorChange: ChangeEventHandler<HTMLInputElement>;
+  pool: boolean;
+  handlePoolChange: ChangeEventHandler<HTMLInputElement>;
 }
 
-export function TenantProfileForm({ userId }: TenantProfileFormProps) {
-  const updateAtt = trpc.attribute.updateUserAttributes.useMutation();
-  const [attData, setAttData] = useState<
-    RouterInputs["attribute"]["updateUserAttributes"]
-  >({
-    userId: "",
-    location: "",
-    maxPrice: 0,
-    minPrice: 0,
-    maxSize: 0,
-    minSize: 0,
-    rentStartDate: new Date(),
-    rentEndDate: new Date(),
-    furnished: false,
-    house: false,
-    appartment: false,
-    terrace: false,
-    pets: false,
-    smoker: false,
-    disability: false,
-    garden: false,
-    parking: false,
-    elevator: false,
-    pool: false,
-  });
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    let value: string | number | boolean;
-
-    if (event.target.type === "checkbox") {
-      value = event.target.checked;
-    } else if (event.target.type === "number") {
-      value = event.target.value ? parseInt(event.target.value) : 0;
-    } else if (event.target.type === "text") {
-      value = event.target.value;
-    } else {
-      value = event.target.value;
-    }
-    setAttData({
-      ...attData,
-      [event.target.name]: value,
-    });
-  };
-
-  useEffect(() => {
-    if (userAtt) {
-      setAttData({
-        ...attData,
-        location: userAtt.location || "",
-        maxPrice: userAtt.maxPrice || 0,
-        minPrice: userAtt.minPrice || 0,
-        maxSize: userAtt.maxSize || 0,
-        minSize: userAtt.minSize || 0,
-        house: userAtt.house || false,
-        appartment: userAtt.appartment || false,
-        furnished: userAtt.furnished || false,
-        terrace: userAtt.terrace || false,
-        pets: userAtt.pets || false,
-        smoker: userAtt.smoker || false,
-        disability: userAtt.disability || false,
-        garden: userAtt.garden || false,
-        parking: userAtt.parking || false,
-        elevator: userAtt.elevator || false,
-        pool: userAtt.pool || false,
-      });
-    }
-  }, [userAtt, setAttData]);
-
-  const attributes: {
+export function TenantProfileForm({ ...attributes }: TenantProfileFormProps) {
+  const attributesList: {
     label: string;
     name: string;
+    handleChange: ChangeEventHandler<HTMLInputElement>;
   }[] = [
     {
       name: "furnished",
       label: "Furnished",
+      handleChange: attributes.handleFurnishedChange,
     },
     {
       name: "terrace",
       label: "Terrace",
+      handleChange: attributes.handleTerraceChange,
     },
     {
       name: "pets",
       label: "Pets",
+      handleChange: attributes.handlePetsChange,
     },
     {
       name: "smoker",
       label: "Smoker",
+      handleChange: attributes.handleSmokerChange,
     },
     {
       name: "disability",
       label: "Disability",
+      handleChange: attributes.handleDisabilityChange,
     },
     {
       name: "garden",
       label: "Garden",
+      handleChange: attributes.handleGardenChange,
     },
     {
       name: "parking",
       label: "Parking",
+      handleChange: attributes.handleParkingChange,
     },
     {
       name: "elevator",
       label: "Elevator",
+      handleChange: attributes.handleElevatorChange,
     },
     {
       name: "pool",
       label: "Pool",
+      handleChange: attributes.handlePoolChange,
     },
   ];
 
@@ -126,8 +99,8 @@ export function TenantProfileForm({ userId }: TenantProfileFormProps) {
             type="text"
             placeholder="Search"
             name="location"
-            onChange={handleChange}
-            value={attData.location}
+            onChange={attributes.handleLocationChange}
+            value={attributes.location}
           />
           <div className="mx-2 cursor-pointer rounded-full bg-gray-600 p-2 hover:bg-blue-400">
             <svg
@@ -149,27 +122,27 @@ export function TenantProfileForm({ userId }: TenantProfileFormProps) {
           </h2>
           <Checkbox
             name="house"
-            onChange={handleChange}
-            checked={attData.house}
+            onChange={attributes.handleHouseChange}
+            checked={attributes.house}
           >
             House
           </Checkbox>
           <Checkbox
             name="appartment"
-            onChange={handleChange}
-            checked={attData.appartment}
+            onChange={attributes.handleAppartmentChange}
+            checked={attributes.appartment}
           >
             Appartment
           </Checkbox>
           <h2 className="pb-2 pt-4 text-xl font-bold text-gray-700">
             Additionnal filters
           </h2>
-          {attributes.map((att) => (
+          {attributesList.map((att) => (
             <Checkbox
               key={att.name}
               name={att.name}
-              onChange={handleChange}
-              checked={!!attData[att.name as keyof typeof attData]}
+              onChange={att.handleChange}
+              checked={!!attributes[att.name as keyof typeof attributes]}
             >
               {att.label}
             </Checkbox>
