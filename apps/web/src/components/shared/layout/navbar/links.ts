@@ -29,12 +29,12 @@ export function getLinks(userId: string): {
     },
     {
       href: `/users/${userId}/posts`,
-      label: "My Post",
+      label: "My Posts",
       roles: [Role.OWNER, Role.AGENCY],
     },
     {
       href: "/posts/create",
-      label: "Add Post",
+      label: "Create a post",
       roles: [Role.OWNER, Role.AGENCY],
     },
     {

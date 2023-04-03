@@ -79,6 +79,11 @@ export const ProfilePage = ({ userId }: ProfilePageProps) => {
                     </p>
                   </div>
                 </div>
+                <div className="mt-4 border-t border-gray-300 pt-5">
+                  <b>
+                    <p className="mx-4 mt-4">{user.description}</p>
+                  </b>
+                </div>
                 <hr className="my-4" />
                 {user.role == Role.TENANT && user.attribute ? (
                   <div>
@@ -108,12 +113,6 @@ export const ProfilePage = ({ userId }: ProfilePageProps) => {
                     </div>
                     <hr className="my-4" />
                     <div className="m-4 h-full justify-center">
-                      <div className="mt-4 border-t border-gray-300 pt-5">
-                        <b>
-                          <p className="mx-4 mt-4">{user.description}</p>
-                        </b>
-                      </div>
-                      <div className="mt-4 border-t border-gray-300 pt-5"></div>
                       <h2 className="text-xl font-bold text-gray-400">
                         Criterials:
                       </h2>

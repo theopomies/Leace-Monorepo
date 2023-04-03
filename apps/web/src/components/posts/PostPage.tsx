@@ -1,6 +1,6 @@
-import { DisplayPost } from "../users/posts/DisplayProperty";
 import { trpc } from "../../utils/trpc";
 import { useEffect } from "react";
+import { DisplayPost } from "../users/posts/DisplayProperty";
 
 export interface PostPageProps {
   postId: string;

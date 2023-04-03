@@ -1,10 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
-import { trpc } from "../../../utils/trpc";
 import { Attribute, Post, Role } from ".prisma/client";
-import { DeletePostButton } from "./DeletePostButton";
-import { Header } from "../Header";
 import Link from "next/link";
+import { trpc } from "../../../utils/trpc";
+import { Header } from "../Header";
+import { DeletePostButton } from "./DeletePostButton";
 
 export function DisplayPost(props: { post: Post; attribute: Attribute }) {
   const { data: session } = trpc.auth.getSession.useQuery();
