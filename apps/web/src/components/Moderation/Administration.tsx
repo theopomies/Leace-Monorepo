@@ -5,7 +5,8 @@ import { trpc } from "../../utils/trpc";
 import { useRouter } from "next/router";
 import { User } from "./User";
 import { Post } from "./Post";
-import { BanUnBan } from "./Ban/BanUnBan";
+import { Ban } from "./Ban";
+import { BanPostAuthor } from "./Ban/BanPostAuthor";
 
 export const Administration = () => {
   const router = useRouter();
@@ -47,7 +48,8 @@ export const Administration = () => {
           {post.data && <Post postId={post.data.id} />}
         </div>
         <div className="flex h-screen w-1/5 flex-col items-center justify-center gap-5 px-10">
-          {user.data && <BanUnBan userId={user.data.id} />}
+          {user.data && <Ban userId={user.data.id} />}
+          {post.data && <BanPostAuthor postId={post.data.id} />}
         </div>
       </div>
     );

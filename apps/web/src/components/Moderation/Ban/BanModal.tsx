@@ -1,12 +1,8 @@
 import { ReportReason, Report } from "@prisma/client";
 import { useEffect, useState } from "react";
 import { RouterInputs } from "../../../utils/trpc";
-import { XOR } from "../../../utils/types";
 
-type banData = XOR<
-  RouterInputs["moderation"]["createBanUser"],
-  RouterInputs["moderation"]["createBanUser"]
->;
+type banData = RouterInputs["moderation"]["createBan"];
 
 export interface BanModalProps {
   userId: string;

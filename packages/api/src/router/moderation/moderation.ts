@@ -1,6 +1,6 @@
 import { router, protectedProcedure } from "../../trpc";
 import { z } from "zod";
-import { ReportReason, ReportStatus, Roles, UserStatus } from "@prisma/client";
+import { ReportReason, ReportStatus, Roles } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
@@ -65,6 +65,27 @@ export const moderationRouter = router({
         include: { attribute: true, reports: true },
       });
     }),
+  updateReport: protectedProcedure([Roles.ADMIN, Roles.MODERATOR])
+    .input(
+      z.object({
+        id: z.string(),
+        reason: z.enum([
+          ReportReason.SCAM,
+          ReportReason.SPAM,
+          ReportReason.INAPPROPRIATE,
+          ReportReason.OTHER,
+        ]),
+      }),
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.report.update({
+        where: { id: input.id },
+        data: {
+          reason: input.reason,
+          status: ReportStatus.RESOLVED,
+        },
+      });
+    }),
   getBan: protectedProcedure([Roles.ADMIN, Roles.MODERATOR])
     .input(z.object({ userId: z.string() }))
     .query(async ({ ctx, input }) => {
@@ -88,7 +109,7 @@ export const moderationRouter = router({
         data: { until: new Date() },
       });
     }),
-  createBanUser: protectedProcedure([Roles.ADMIN, Roles.MODERATOR])
+  createBan: protectedProcedure([Roles.ADMIN, Roles.MODERATOR])
     .input(
       z.object({
         userId: z.string(),
@@ -177,11 +198,12 @@ export const moderationRouter = router({
   rejectUserReports: protectedProcedure([Roles.ADMIN, Roles.MODERATOR])
     .input(z.object({ userId: z.string() }))
     .mutation(async ({ ctx, input }) => {
+      //utile ? si non une seule procédure pour rejectReports
       const user = await ctx.prisma.user.findUnique({
         where: { id: input.userId },
       });
       if (!user) throw new TRPCError({ code: "NOT_FOUND" });
-
+      //
       const reports = await ctx.prisma.report.findMany({
         where: { userId: input.userId, status: ReportStatus.PENDING },
       });

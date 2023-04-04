@@ -7,7 +7,7 @@ export interface BanUserProps {
 
 export const BanUser = ({ userId }: BanUserProps) => {
   const utils = trpc.useContext();
-  const mutation = trpc.moderation.createBanUser.useMutation({
+  const mutation = trpc.moderation.createBan.useMutation({
     onSuccess() {
       utils.moderation.getReport.invalidate();
       utils.moderation.getUser.invalidate();
@@ -18,7 +18,7 @@ export const BanUser = ({ userId }: BanUserProps) => {
     userId,
   });
 
-  const OnBan = (banData: RouterInputs["moderation"]["createBanUser"]) => {
+  const OnBan = (banData: RouterInputs["moderation"]["createBan"]) => {
     mutation.mutate(banData);
   };
 
