@@ -20,7 +20,7 @@ export const DeleteImgButton = ({ postId, id }: DeleteImgButtonProps) => {
   return (
     <button
       type="button"
-      className="absolute -right-1 -top-1 inline-flex items-center justify-center rounded-full bg-red-500 p-1 text-white hover:bg-white hover:text-red-500"
+      className="absolute -right-1 -top-1 inline-flex w-5 cursor-pointer items-center justify-center rounded-full bg-red-500 p-1 text-white hover:bg-white hover:text-red-500"
       onClick={onClickDelete}
     >
       <Cross />

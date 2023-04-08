@@ -113,7 +113,7 @@ export const moderationRouter = router({
     .input(
       z.object({
         userId: z.string(),
-        reportIds: z.array(z.string()).optional(),
+        reportIds: z.array(z.string()),
         reason: z.enum([
           ReportReason.SCAM,
           ReportReason.SPAM,

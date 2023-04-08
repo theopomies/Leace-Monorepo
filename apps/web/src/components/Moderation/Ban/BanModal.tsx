@@ -1,6 +1,8 @@
 import { ReportReason, Report } from "@prisma/client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { RouterInputs } from "../../../utils/trpc";
+import { TableSelect } from "./TableSelect";
+import { Select } from "../../shared/Select";
 
 type banData = RouterInputs["moderation"]["createBan"];
 
@@ -18,17 +20,11 @@ export const BanModal = ({ userId, reports, onBan }: BanModalProps) => {
     reason: reports[0]?.reason || ReportReason["SPAM"],
     comment: "",
   });
-  const [error, setError] = useState(false);
+  const [error, setError] = useState({ reportIds: false, comment: false });
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    if (event.target.value.length === 0) {
-      setError(true);
-    } else {
-      setError(false);
-    }
-
     setBanData({
       ...banData,
       [event.target.name]: event.target.value,
@@ -36,19 +32,21 @@ export const BanModal = ({ userId, reports, onBan }: BanModalProps) => {
   };
 
   const handleBan = (banData: banData) => {
+    const errors = { reportIds: false, comment: false };
+    if (banData.reportIds.length === 0) {
+      errors.reportIds = true;
+    }
+    if (banData.comment.length === 0) {
+      errors.comment = true;
+    }
+    if (Object.keys(errors).length > 0) {
+      setError(errors);
+      return;
+    }
     onBan(banData);
-    setError(false);
+    setError({ reportIds: false, comment: true });
     setShowModal(false);
   };
-
-  useEffect(() => {
-    if (reports) {
-      setBanData((prevState) => ({
-        ...prevState,
-        reportIds: reports.map((report) => report.id),
-      }));
-    }
-  }, [reports]);
 
   return (
     <div className="flex w-full flex-col items-center justify-center">
@@ -60,33 +58,39 @@ export const BanModal = ({ userId, reports, onBan }: BanModalProps) => {
       </button>
       {showModal && (
         <>
-          <form
-            onSubmit={() => handleBan(banData)}
-            className="fixed inset-0 z-50 flex  items-center justify-center p-5"
-          >
-            <div className="space w-1/3 items-center justify-center space-y-6 rounded-lg bg-slate-50 p-10 shadow-lg">
-              <p className="text-2xl">Select a sanction</p>
-              <select
+          <div className="fixed inset-0 z-50 flex h-full justify-center overflow-auto p-5">
+            <div className="m-auto flex h-max w-2/3 flex-col space-y-6 rounded-lg bg-slate-50 p-10 shadow-lg">
+              <p className="text-2xl">Ban user form</p>
+              <Select
+                title="Reason"
                 value={banData.reason}
-                onChange={(e) => {
-                  setBanData({
-                    ...banData,
-                    reason: e.target.value as ReportReason,
-                  });
-                }}
-                className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 shadow-sm outline-none focus:border-blue-500 focus:ring-blue-500"
-              >
-                {(
+                options={
                   Object.keys(ReportReason) as Array<keyof typeof ReportReason>
-                ).map((value, index) => (
-                  <option key={index} value={value}>
-                    {value}
-                  </option>
-                ))}
-              </select>
+                }
+                onChange={(value) =>
+                  setBanData({ ...banData, reason: value as ReportReason })
+                }
+              />
+              {reports.length > 0 && (
+                <div>
+                  <TableSelect
+                    reports={reports}
+                    banData={banData}
+                    setBanData={setBanData}
+                  />
+                  {error.reportIds && (
+                    <p className="mt-1 text-red-500">
+                      Please select at least one report
+                    </p>
+                  )}
+                </div>
+              )}
+
               <div className="w-full">
                 <label
-                  className={`${error ? "text-red-500" : "text-gray-700"}`}
+                  className={`${
+                    error.comment ? "text-red-500" : "text-gray-700"
+                  }`}
                 >
                   Comment
                 </label>
@@ -95,29 +99,27 @@ export const BanModal = ({ userId, reports, onBan }: BanModalProps) => {
                   name="comment"
                   onChange={handleChange}
                   value={banData.comment}
-                  className={`block w-full rounded-md border bg-gray-100 p-3 shadow-sm outline-none ${
-                    error ? "border-red-500" : "border-gray-300"
+                  className={`block w-full rounded-md border p-3 shadow-sm outline-none ${
+                    error.comment ? "border-red-500" : "border-gray-300"
                   }`}
                 />
               </div>
               <div className="flex items-center justify-center gap-4">
                 <button
                   className="rounded-full bg-slate-400 px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none hover:bg-slate-500 hover:shadow-lg focus:outline-none"
-                  type="button"
                   onClick={() => setShowModal(false)}
                 >
                   Close
                 </button>
                 <button
-                  disabled={banData.comment.length === 0}
                   className="rounded-full bg-red-400 px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none hover:bg-red-500 hover:shadow-lg focus:outline-none disabled:bg-slate-400"
-                  type="submit"
+                  onClick={() => handleBan(banData)}
                 >
                   Ban
                 </button>
               </div>
             </div>
-          </form>
+          </div>
           <div className="fixed inset-0 z-40 bg-black opacity-25"></div>
         </>
       )}
