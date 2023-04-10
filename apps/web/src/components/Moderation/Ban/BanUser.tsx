@@ -11,7 +11,7 @@ export const BanUser = ({ userId }: BanUserProps) => {
     onSuccess() {
       utils.moderation.getReport.invalidate();
       utils.moderation.getUser.invalidate();
-      utils.moderation.getBan.invalidate();
+      utils.moderation.getIsBan.invalidate();
     },
   });
   const { data: reports } = trpc.moderation.getReportsByUserId.useQuery({

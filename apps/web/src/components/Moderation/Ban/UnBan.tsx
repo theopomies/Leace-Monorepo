@@ -9,7 +9,7 @@ export const UnBan = ({ userId }: UnBanProps) => {
   const mutation = trpc.moderation.unBanUser.useMutation({
     onSuccess() {
       utils.moderation.getUser.invalidate();
-      utils.moderation.getBan.invalidate();
+      utils.moderation.getIsBan.invalidate();
     },
   });
   const handleClick = () => {

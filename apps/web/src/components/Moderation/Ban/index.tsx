@@ -7,8 +7,8 @@ export interface BanProps {
 }
 
 export const Ban = ({ userId }: BanProps) => {
-  const { data: ban } = trpc.moderation.getBan.useQuery({ userId });
+  const { data: isBan } = trpc.moderation.getIsBan.useQuery({ userId });
 
-  if (ban) return <UnBan userId={userId} />;
+  if (isBan) return <UnBan userId={userId} />;
   return <BanUser userId={userId} />;
 };

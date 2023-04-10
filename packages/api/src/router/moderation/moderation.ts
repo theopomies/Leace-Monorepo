@@ -86,26 +86,26 @@ export const moderationRouter = router({
         },
       });
     }),
-  getBan: protectedProcedure([Roles.ADMIN, Roles.MODERATOR])
+  getIsBan: protectedProcedure([Roles.ADMIN, Roles.MODERATOR])
     .input(z.object({ userId: z.string() }))
     .query(async ({ ctx, input }) => {
-      const ban = await ctx.prisma.ban.findFirst({
+      const lastBan = await ctx.prisma.ban.findFirst({
         where: { userId: input.userId },
-        orderBy: { createdAt: "desc" },
+        orderBy: { until: "desc" },
       });
-      if (!ban) return false;
-      return ban.until > new Date();
+      if (!lastBan) return false;
+      return lastBan.until > new Date();
     }),
   unBanUser: protectedProcedure([Roles.ADMIN, Roles.MODERATOR])
     .input(z.object({ userId: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const ban = await ctx.prisma.ban.findFirst({
+      const lastBan = await ctx.prisma.ban.findFirst({
         where: { userId: input.userId },
-        orderBy: { createdAt: "desc" },
+        orderBy: { until: "desc" },
       });
-      if (!ban) throw new TRPCError({ code: "NOT_FOUND" });
+      if (!lastBan) throw new TRPCError({ code: "NOT_FOUND" });
       return ctx.prisma.ban.update({
-        where: { id: ban.id },
+        where: { id: lastBan.id },
         data: { until: new Date() },
       });
     }),
@@ -132,7 +132,7 @@ export const moderationRouter = router({
 
       const lastBan = await ctx.prisma.ban.findFirst({
         where: { userId: input.userId },
-        orderBy: { createdAt: "desc" },
+        orderBy: { until: "desc" },
       });
       if (lastBan && lastBan.until > new Date()) {
         throw new TRPCError({ code: "CONFLICT", message: "Already Banned" });

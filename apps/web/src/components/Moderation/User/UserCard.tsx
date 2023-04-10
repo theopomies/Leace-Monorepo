@@ -11,7 +11,7 @@ export interface UserCardProps {
 
 export const UserCard = ({ userId }: UserCardProps) => {
   const { data: user } = trpc.moderation.getUser.useQuery({ userId: userId });
-  const { data: ban } = trpc.moderation.getBan.useQuery({ userId: userId });
+  const { data: isBan } = trpc.moderation.getIsBan.useQuery({ userId: userId });
 
   if (user)
     return (
@@ -28,8 +28,7 @@ export const UserCard = ({ userId }: UserCardProps) => {
             {user.firstName ? user.firstName : "Prénom"}{" "}
             {user.lastName ? user.lastName : "Nom"}
           </h3>
-          <div></div>
-          {!ban ? (
+          {!isBan ? (
             <p className="text-lg text-green-500">{user.status}</p>
           ) : (
             <p className="text-lg text-red-500">BANNED</p>
