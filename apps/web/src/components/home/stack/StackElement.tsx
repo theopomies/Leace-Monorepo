@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { XOR } from "../../../utils/types";
 import { SlideShow } from "./SlideShow";
+import { Button } from "../../shared/button/Button";
 
 export type StackElementProps = {
   id: string;
@@ -36,12 +37,9 @@ export function StackElement({
     >
       {isExpanded && (
         <span className="absolute bottom-3 right-4">
-          <button
-            className="bg-red-400 px-3 py-1 text-white hover:bg-red-500"
-            onClick={onReport}
-          >
+          <Button theme={"danger"} onClick={onReport}>
             Report
-          </button>
+          </Button>
         </span>
       )}
       <motion.div

@@ -2,6 +2,7 @@ import React, { MouseEventHandler, useState } from "react";
 import { Header } from "../../components/users/Header";
 import { useRouter } from "next/router";
 import { trpc, RouterInputs } from "../../utils/trpc";
+import { Button } from "../shared/button/Button";
 
 export const CreatePost = () => {
   const router = useRouter();
@@ -328,12 +329,7 @@ export const CreatePost = () => {
               </div>
             </div>
             <div className="flex justify-center">
-              <button
-                className="rounded-lg bg-indigo-500 px-4 py-2 font-medium text-white hover:bg-indigo-600"
-                onClick={handleSubmit}
-              >
-                Submit
-              </button>
+              <Button onClick={handleSubmit}>Submit</Button>
             </div>
           </div>
         </div>

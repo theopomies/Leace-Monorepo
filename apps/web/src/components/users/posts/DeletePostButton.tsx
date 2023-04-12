@@ -2,6 +2,7 @@ import React from "react";
 import { trpc } from "../../../utils/trpc";
 import { useRouter } from "next/router";
 import { useSession } from "@clerk/nextjs";
+import { Button } from "../../shared/button/Button";
 
 export interface DeletePostButtonProps {
   postId: string;
@@ -24,11 +25,8 @@ export function DeletePostButton({ postId }: DeletePostButtonProps) {
   };
 
   return (
-    <button
-      className="rounded-full bg-red-500 py-2 px-4 font-bold text-white hover:bg-red-700"
-      onClick={onDelete}
-    >
+    <Button theme="danger" onClick={onDelete}>
       Delete
-    </button>
+    </Button>
   );
 }

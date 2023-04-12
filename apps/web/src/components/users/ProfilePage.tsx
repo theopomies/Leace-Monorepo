@@ -25,16 +25,6 @@ export const ProfilePage = ({ userId }: ProfilePageProps) => {
     <div className="w-full">
       <Header heading={"Profile"} />
       <div className="flex w-full justify-center p-5">
-        {session && userId == session.userId && (
-          <div>
-            <Link
-              className="rounded bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700"
-              href={`/users/${userId}/update`}
-            >
-              Modifier
-            </Link>
-          </div>
-        )}
         <div className="m-14 flex w-2/5 justify-center rounded-lg bg-white p-5 shadow">
           <div className="h-auto p-4 text-center">
             <div>
@@ -85,7 +75,7 @@ export const ProfilePage = ({ userId }: ProfilePageProps) => {
                   </b>
                 </div>
                 <hr className="my-4" />
-                {user.role == Role.TENANT && user.attribute ? (
+                {user.role == Role.TENANT && user.attribute && (
                   <div>
                     <div className="m-4 flex h-full justify-center">
                       <div className="pr-20 pt-4 pb-2">
@@ -206,10 +196,18 @@ export const ProfilePage = ({ userId }: ProfilePageProps) => {
                       </h2>
                     </div>
                   </div>
-                ) : (
-                  <></>
                 )}
               </form>
+              {session && userId == session.userId && (
+                <div>
+                  <Link
+                    className="rounded bg-indigo-500 py-2 px-4 font-bold text-white hover:bg-indigo-700"
+                    href={`/users/${userId}/update`}
+                  >
+                    Modifier
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
         </div>

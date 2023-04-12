@@ -2,6 +2,7 @@ import { MouseEventHandler, useEffect, useState } from "react";
 import { RouterInputs, trpc } from "../../utils/trpc";
 import { useRouter } from "next/router";
 import { Header } from "../users/Header";
+import { Button } from "../shared/button/Button";
 
 export interface UpdatePostProps {
   postId: string;
@@ -372,12 +373,7 @@ export const UpdatePost = ({ postId }: UpdatePostProps) => {
               </div>
             </div>
             <div className="flex justify-center">
-              <button
-                className="rounded-lg bg-indigo-500 px-4 py-2 font-medium text-white hover:bg-indigo-600"
-                onClick={handleSubmit}
-              >
-                Submit
-              </button>
+              <Button onClick={handleSubmit}>Submit</Button>
             </div>
           </div>
         </div>

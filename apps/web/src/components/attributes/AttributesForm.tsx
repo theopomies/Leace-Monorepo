@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { ChangeEventHandler } from "react";
-import { Checkbox } from "../../shared/forms/Checkbox";
+import { Checkbox } from "../shared/forms/Checkbox";
 
-interface TenantProfileFormProps {
+interface AttributesFormProps {
   location: string;
   handleLocationChange: ChangeEventHandler<HTMLInputElement>;
   maxPrice: number;
@@ -37,7 +37,7 @@ interface TenantProfileFormProps {
   handlePoolChange: ChangeEventHandler<HTMLInputElement>;
 }
 
-export function TenantProfileForm({ ...attributes }: TenantProfileFormProps) {
+export function AttributesForm({ ...attributes }: AttributesFormProps) {
   const attributesList: {
     label: string;
     name: string;

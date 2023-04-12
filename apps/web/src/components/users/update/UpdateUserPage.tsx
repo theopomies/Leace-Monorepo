@@ -8,11 +8,12 @@ import {
 import { trpc } from "../../../utils/trpc";
 import { Role } from "@prisma/client";
 import { Header } from "../Header";
-import { TenantProfileForm } from "./TenantProfileForm";
+import { AttributesForm } from "../../attributes/AttributesForm";
 import { useRouter } from "next/router";
 import { TextInput } from "../../shared/forms/TextInput";
 import { DateInput } from "../../shared/forms/DateInput";
 import { TextArea } from "../../shared/forms/TextArea";
+import { Button } from "../../shared/button/Button";
 
 export interface UpdateUserPageProps {
   userId: string;
@@ -239,13 +240,19 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
               </div>
             </div>
             {user?.role === Role.TENANT && (
-              <TenantProfileForm {...attributesStates} />
+              <AttributesForm {...attributesStates} />
             )}
             {
-              <div className=" mt-4 flex justify-center pt-4">
-                <button className="rounded-md bg-indigo-500 p-3 text-white ">
-                  Update
-                </button>
+              <div className=" mt-4 flex justify-center gap-8 pt-4">
+                <Button
+                  theme="danger"
+                  onClick={(e) => {
+                    e.preventDefault();
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button theme="primary">Update</Button>
               </div>
             }
           </div>

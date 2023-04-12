@@ -1,6 +1,7 @@
 import { ReportReason, ReportStatus } from "@prisma/client";
 import { useState } from "react";
 import { trpc } from "../../utils/trpc";
+import { Button } from "../shared/button/Button";
 
 export interface ReportButtonProps {
   reportId: string;
@@ -47,12 +48,7 @@ export const ReportButton = ({ reportId }: ReportButtonProps) => {
           ),
         )}
       </select>
-      <button
-        className="ml-2 rounded-full bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700"
-        onClick={handleClick}
-      >
-        Ok
-      </button>
+      <Button onClick={handleClick}>Ok</Button>
     </div>
   );
 };

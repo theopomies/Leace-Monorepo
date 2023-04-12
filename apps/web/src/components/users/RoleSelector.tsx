@@ -1,6 +1,7 @@
 import { MouseEventHandler } from "react";
 import { trpc } from "../../utils/trpc";
 import { Role } from "@prisma/client";
+import { Button } from "../shared/button/Button";
 
 export interface RoleSelectorProps {
   userId: string;
@@ -30,24 +31,9 @@ export const RoleSelector = ({ userId }: RoleSelectorProps) => {
         </h1>
         <p className="text-xl font-medium">Choose your role</p>
         <div className="flex justify-center">
-          <button
-            className="m-2 rounded-lg bg-blue-500 py-2 px-4 font-medium text-white hover:bg-blue-700"
-            onClick={handleClick(Role.TENANT)}
-          >
-            Tenant
-          </button>
-          <button
-            className="m-2 rounded-lg bg-blue-500 py-2 px-4 font-medium text-white hover:bg-blue-700"
-            onClick={handleClick(Role.OWNER)}
-          >
-            Owner
-          </button>
-          <button
-            className="m-2 rounded-lg bg-blue-500 py-2 px-4 font-medium text-white hover:bg-blue-700"
-            onClick={handleClick(Role.AGENCY)}
-          >
-            Agency
-          </button>
+          <Button onClick={handleClick(Role.TENANT)}>Tenant</Button>
+          <Button onClick={handleClick(Role.OWNER)}>Owner</Button>
+          <Button onClick={handleClick(Role.AGENCY)}>Agency</Button>
         </div>
       </div>
     </div>
