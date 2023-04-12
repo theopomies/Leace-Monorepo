@@ -1,6 +1,7 @@
 import {
   Dispatch,
   FormEventHandler,
+  MouseEventHandler,
   SetStateAction,
   useEffect,
   useState,
@@ -98,6 +99,11 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
     (event: React.ChangeEvent<HTMLInputElement>) => {
       setter(event.target.valueAsNumber);
     };
+
+  const handleCancel: MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.preventDefault();
+    router.push(`/users/${userId}`);
+  };
 
   useEffect(() => {
     if (user) {
@@ -244,12 +250,7 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
             )}
             {
               <div className=" mt-4 flex justify-center gap-8 pt-4">
-                <Button
-                  theme="danger"
-                  onClick={(e) => {
-                    e.preventDefault();
-                  }}
-                >
+                <Button theme="danger" onClick={handleCancel}>
                   Cancel
                 </Button>
                 <Button theme="primary">Update</Button>

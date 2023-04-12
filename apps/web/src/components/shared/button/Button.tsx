@@ -15,9 +15,9 @@ export function Button({
   ...props
 }: ButtonProps) {
   const themeStyles = {
-    primary: "bg-indigo",
-    danger: "bg-red",
-    success: "bg-emerald",
+    primary: "bg-indigo-500 hover:bg-indigo-600 active:bg-indigo-700",
+    danger: "bg-red-500 hover:bg-red-600 active:bg-red-700",
+    success: "bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700",
   };
 
   return (
@@ -25,8 +25,7 @@ export function Button({
       className={
         overrideStyles
           ? className
-          : `rounded-md ${themeStyles[theme]}-500 hover:${themeStyles[theme]}-600 px-4 py-3 text-white active:${themeStyles[theme]}-700 ` +
-            className
+          : `rounded-md ${themeStyles[theme]} px-4 py-3 text-white ` + className
       }
       {...props}
     />
