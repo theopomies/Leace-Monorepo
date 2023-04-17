@@ -5,11 +5,12 @@ import { PostStack } from "./stack/PostStack";
 import { TenantStack } from "./stack/TenantStack";
 import { Administration } from "../moderation/Administration";
 import { Moderation } from "../moderation/Moderation";
+import { Loader } from "../shared/Loader";
 
 export const Home = () => {
-  const { data: session } = trpc.auth.getSession.useQuery();
+  const { data: session, isLoading } = trpc.auth.getSession.useQuery();
 
-  if (!session) return <div>Unreachable</div>;
+  if (!session || isLoading) return <Loader />;
 
   const role = session.role;
 

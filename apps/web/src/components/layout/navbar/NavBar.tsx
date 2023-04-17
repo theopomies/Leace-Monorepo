@@ -1,7 +1,7 @@
 import { Role } from "@prisma/client";
 import { useClerk } from "@clerk/clerk-react";
 import Link from "next/link";
-import { trpc } from "../../../../utils/trpc";
+import { trpc } from "../../../utils/trpc";
 import { getLinks } from "./links";
 
 export interface NavBarProps {

@@ -1,5 +1,5 @@
 import { Role } from "@prisma/client";
-import { LoggedLayout } from "../components/shared/layout/LoggedLayout";
+import { LoggedLayout } from "../components/layout/LoggedLayout";
 import { Support } from "../components/moderation/Support";
 
 export default function SupportPage() {

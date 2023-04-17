@@ -2,8 +2,8 @@ import { useRouter } from "next/router";
 import { NavBar } from "./navbar/NavBar";
 import Head from "next/head";
 import { Role } from "@prisma/client";
-import { trpc } from "../../../utils/trpc";
-import { Loader } from "../Loader";
+import { trpc } from "../../utils/trpc";
+import { Loader } from "../shared/Loader";
 
 export interface LoggedLayoutProps {
   children: React.ReactNode;

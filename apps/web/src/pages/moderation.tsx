@@ -1,4 +1,4 @@
-import { LoggedLayout } from "../components/shared/layout/LoggedLayout";
+import { LoggedLayout } from "../components/layout/LoggedLayout";
 import { Role } from "@prisma/client";
 import { Moderation } from "../components/moderation/Moderation";
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { LoggedLayout } from "../../../components/shared/layout/LoggedLayout";
+import { LoggedLayout } from "../../../components/layout/LoggedLayout";
 import { UserPostsList } from "../../../components/users/posts/UserPostsList";
 import { useRouter } from "next/router";
 

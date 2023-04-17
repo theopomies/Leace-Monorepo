@@ -1,6 +1,6 @@
 import { PremiumPage as PremiumPageRaw } from "../components/premium/PremiumPage";
 import { Loader } from "../components/shared/Loader";
-import { LoggedLayout } from "../components/shared/layout/LoggedLayout";
+import { LoggedLayout } from "../components/layout/LoggedLayout";
 import { trpc } from "../utils/trpc";
 
 const Premium = () => {

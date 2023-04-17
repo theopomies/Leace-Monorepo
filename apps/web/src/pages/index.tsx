@@ -1,4 +1,4 @@
-import { LoggedLayout } from "../components/shared/layout/LoggedLayout";
+import { LoggedLayout } from "../components/layout/LoggedLayout";
 import { Home } from "../components/home/Home";
 
 const Index = () => {

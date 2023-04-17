@@ -1,4 +1,4 @@
-import { LoggedLayout } from "../../../components/shared/layout/LoggedLayout";
+import { LoggedLayout } from "../../../components/layout/LoggedLayout";
 import { useRouter } from "next/router";
 import { UpdatePost } from "../../../components/posts/UpdatePost";
 import { Role } from "@prisma/client";

@@ -22,11 +22,12 @@ const checkAuthorizations = (authorizations: Authorization[]) =>
       });
     }
 
-    if (!ctx.role)
+    if (!ctx.role) {
       throw new TRPCError({
         code: "UNAUTHORIZED",
         message: "User does not have role",
       });
+    }
 
     const isAuthorized = authorizations.includes(ctx.role);
 

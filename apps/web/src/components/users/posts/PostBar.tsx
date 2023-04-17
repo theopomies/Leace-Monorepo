@@ -16,7 +16,7 @@ export const PostBar = ({ postId, title, desc, type }: PostBarProps) => {
   return (
     <div className="mx-auto my-5 max-w-md overflow-hidden rounded-xl bg-white shadow-md md:max-w-2xl">
       <div className="md:flex">
-        {img && img[0] ? (
+        {img && img[0] && (
           <div className="md:shrink-0">
             <img
               className="h-48 w-full object-cover md:h-full md:w-48"
@@ -24,8 +24,6 @@ export const PostBar = ({ postId, title, desc, type }: PostBarProps) => {
               alt="Modern building architecture"
             />
           </div>
-        ) : (
-          <></>
         )}
 
         <div className="p-8">
