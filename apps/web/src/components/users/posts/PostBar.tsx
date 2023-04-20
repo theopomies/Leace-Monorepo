@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { trpc } from "../../../utils/trpc";
+import { PostType } from "@prisma/client";
 
 export interface PostBarProps {
   postId: string;
   title: string;
   desc: string;
-  type: string;
+  type: PostType;
 }
 
 export const PostBar = ({ postId, title, desc, type }: PostBarProps) => {
@@ -36,7 +37,9 @@ export const PostBar = ({ postId, title, desc, type }: PostBarProps) => {
           >
             {desc}
           </Link>
-          <p className="mt-2 text-slate-500">{type}</p>
+          <p className="mt-2 text-slate-500">
+            {type == PostType.RENTED ? "Rented ✅" : "Available"}
+          </p>
         </div>
       </div>
     </div>

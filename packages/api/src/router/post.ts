@@ -67,7 +67,7 @@ export const postRouter = router({
           message: "This is not a post from this user",
         });
 
-      const updated = ctx.prisma.post.update({
+      const updated = await ctx.prisma.post.update({
         where: { id: input.postId },
         data: {
           title: input.title,

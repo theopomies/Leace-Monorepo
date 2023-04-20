@@ -102,7 +102,7 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
 
   const handleCancel: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.preventDefault();
-    router.push(`/users/${userId}`);
+    router.back();
   };
 
   useEffect(() => {
