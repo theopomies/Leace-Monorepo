@@ -2,12 +2,12 @@ import { router, protectedProcedure } from "../trpc";
 import { z } from "zod";
 import { ConversationType, PostType, Role } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
-import { getId } from "../utils/getId";
 import {
   getPostsWithAttribute,
   getUsersWithAttribute,
   shuffle,
 } from "../utils/algorithm";
+import { getId } from "../utils/getId";
 
 export const postRouter = router({
   createPost: protectedProcedure([Role.AGENCY, Role.OWNER])
@@ -191,68 +191,32 @@ export const postRouter = router({
 
       return total;
     }),
-  getRentExpenseByUserId: protectedProcedure([Role.TENANT])
-    .input(z.object({ userId: z.string() }))
-    .query(async ({ ctx, input }) => {
-      const userId = getId({ ctx, userId: input.userId });
-
-      const user = await ctx.prisma.user.findUnique({ where: { id: userId } });
-
-      if (!user) throw new TRPCError({ code: "NOT_FOUND" });
-
-      if (user.role != Role.TENANT)
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "User provided does not fit in this scope",
-        });
-
-      const rs = await ctx.prisma.relationship.findMany({
-        where: {
-          userId: userId,
-          isMatch: true,
-          post: { type: PostType.RENTED },
-          conversation: { type: ConversationType.DONE },
+  getPostsToBeSeen: protectedProcedure([Role.TENANT]).query(async ({ ctx }) => {
+    const user = await ctx.prisma.user.findUniqueOrThrow({
+      where: { id: ctx.auth.userId },
+      include: { postsToBeSeen: true },
+    });
+    // If less or equal than 3 posts, add more
+    if (user.postsToBeSeen.length <= 3) {
+      const newPosts = await getPostsWithAttribute(user.id);
+      if (newPosts.length === 0) return user.postsToBeSeen;
+      const updatedUser = await ctx.prisma.user.update({
+        where: { id: user.id },
+        data: {
+          postsToBeSeen: {
+            connect: newPosts.map((post) => ({ id: post.id })),
+          },
         },
-        include: { post: { include: { attribute: true } } },
-      });
-
-      let total = 0;
-
-      rs.map((rs) => {
-        if (rs.post && rs.post.attribute && rs.post.attribute.price)
-          total += rs.post.attribute.price;
-      });
-
-      return total;
-    }),
-  getPostsToBeSeen: protectedProcedure([Roles.TENANT]).query(
-    async ({ ctx }) => {
-      const user = await ctx.prisma.user.findUniqueOrThrow({
-        where: { id: ctx.auth.userId },
         include: { postsToBeSeen: true },
       });
-      // If less or equal than 3 posts, add more
-      if (user.postsToBeSeen.length <= 3) {
-        const newPosts = await getPostsWithAttribute(user.id);
-        if (newPosts.length === 0) return user.postsToBeSeen;
-        const updatedUser = await ctx.prisma.user.update({
-          where: { id: user.id },
-          data: {
-            postsToBeSeen: {
-              connect: newPosts.map((post) => ({ id: post.id })),
-            },
-          },
-          include: { postsToBeSeen: true },
-        });
-        shuffle(updatedUser.postsToBeSeen);
-        return updatedUser.postsToBeSeen;
-      }
-      // If more than 3 posts, return the list
-      shuffle(user.postsToBeSeen);
-      return user.postsToBeSeen;
-    },
-  ),
-  getUsersToBeSeen: protectedProcedure([Roles.AGENCY, Roles.OWNER])
+      shuffle(updatedUser.postsToBeSeen);
+      return updatedUser.postsToBeSeen;
+    }
+    // If more than 3 posts, return the list
+    shuffle(user.postsToBeSeen);
+    return user.postsToBeSeen;
+  }),
+  getUsersToBeSeen: protectedProcedure([Role.AGENCY, Role.OWNER])
     .input(z.object({ userId: z.string(), postId: z.string() }))
     .query(async ({ ctx, input }) => {
       if (input.userId !== ctx.auth.userId) {
@@ -287,5 +251,39 @@ export const postRouter = router({
       // If more than 3 posts, return the list
       shuffle(post.usersToBeSeen);
       return post.usersToBeSeen;
+    }),
+  getRentExpenseByUserId: protectedProcedure([Role.TENANT])
+    .input(z.object({ userId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const userId = getId({ ctx, userId: input.userId });
+
+      const user = await ctx.prisma.user.findUnique({ where: { id: userId } });
+
+      if (!user) throw new TRPCError({ code: "NOT_FOUND" });
+
+      if (user.role != Role.TENANT)
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "User provided does not fit in this scope",
+        });
+
+      const rs = await ctx.prisma.relationship.findMany({
+        where: {
+          userId: userId,
+          isMatch: true,
+          post: { type: PostType.RENTED },
+          conversation: { type: ConversationType.DONE },
+        },
+        include: { post: { include: { attribute: true } } },
+      });
+
+      let total = 0;
+
+      rs.map((rs) => {
+        if (rs.post && rs.post.attribute && rs.post.attribute.price)
+          total += rs.post.attribute.price;
+      });
+
+      return total;
     }),
 });
