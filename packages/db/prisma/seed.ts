@@ -15,9 +15,6 @@ async function main() {
   });
 
   const posts = await makePosts(prisma);
-  await prisma.post.createMany({
-    data: posts,
-  });
 
   const reports = await makeReports(prisma);
   await prisma.report.createMany({
