@@ -9,6 +9,7 @@
     "with-env": "dotenv -e ../../.env --",
     "dev": "pnpm with-env prisma studio --port 5556",
     "db-push": "pnpm with-env prisma db push",
+    "db-push-accept": "pnpm with-env prisma db push --accept-data-loss",
     "db-generate": "pnpm with-env prisma generate",
     "prisma:validate": "pnpm with-env prisma validate",
     "db-seed": "pnpm with-env prisma db seed"

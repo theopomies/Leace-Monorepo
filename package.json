@@ -8,6 +8,7 @@
     "clean:workspaces": "turbo clean",
     "db-generate": "turbo db-generate",
     "db-push": "turbo db-push",
+    "db-push-accept": "turbo db-push-accept",
     "dev": "turbo dev --parallel",
     "android": "turbo android --parallel",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
