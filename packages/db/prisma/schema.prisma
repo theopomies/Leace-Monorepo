@@ -52,6 +52,11 @@ enum PostType {
   TO_BE_RENTED
 }
 
+enum HomeType {
+  APARTMENT
+  HOUSE
+}
+
 model User {
   id   String @id @default(cuid())
   role Role?
@@ -70,7 +75,14 @@ model User {
 
   attribute Attribute?
 
-  posts         Post[]
+  posts         Post[] @relation("posts_created")
+
+  postsSeen     Post[] @relation("posts_seen")
+  postsToBeSeen Post[] @relation("posts_to_be_seen")
+
+  seenBy     Post[] @relation("users_seen")
+  toBeSeenBy Post[] @relation("users_to_be_seen")
+
   images        Image[] // Not necessary one picture look Ok for users, just post can have more than one pictures. To discuss
   documents     Document[]
   relationships Relationship[]
@@ -88,7 +100,7 @@ model User {
 model Post {
   id String @id @default(cuid())
 
-  createdBy   User   @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  createdBy   User   @relation(fields: [createdById], references: [id],"posts_created", onDelete: Cascade)
   createdById String
 
   title   String?
@@ -97,6 +109,12 @@ model Post {
   type    PostType? @default(TO_BE_RENTED)
 
   attribute Attribute?
+
+  seenBy User[] @relation("posts_seen")
+  toBeSeenBy User[] @relation("posts_to_be_seen")
+
+  usersSeen     User[] @relation("users_seen")
+  usersToBeSeen User[] @relation("users_to_be_seen")
 
   images    Image[]
   documents Document[]
@@ -121,6 +139,8 @@ model Attribute {
   postId String? @unique
 
   location String?
+  lat      Float?
+  lng      Float?
 
   // Only Tenant
   maxPrice Int?
@@ -128,6 +148,8 @@ model Attribute {
 
   maxSize Int?
   minSize Int?
+
+  range Int?
 
   // Only Owner and Agency
   price Int?
@@ -137,8 +159,7 @@ model Attribute {
   rentEndDate   DateTime?
 
   furnished  Boolean?
-  house      Boolean?
-  appartment Boolean?
+  homeType   HomeType?
   terrace    Boolean?
   pets       Boolean?
   smoker     Boolean?
