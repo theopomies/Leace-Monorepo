@@ -1,12 +1,12 @@
 import { router, protectedProcedure } from "../../trpc";
 import { z } from "zod";
-import { ReportReason, ReportStatus, Roles, UserStatus } from "@prisma/client";
+import { ReportReason, ReportStatus, Role, UserStatus } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 export const moderationRouter = router({
-  getReport: protectedProcedure([Roles.ADMIN, Roles.MODERATOR]).query(
+  getReport: protectedProcedure([Role.ADMIN, Role.MODERATOR]).query(
     ({ ctx }) => {
       return ctx.prisma.report.findFirstOrThrow({
         orderBy: { createdAt: "desc" },
@@ -14,21 +14,21 @@ export const moderationRouter = router({
       });
     },
   ),
-  getUserById: protectedProcedure([Roles.ADMIN])
+  getUserById: protectedProcedure([Role.ADMIN])
     .input(z.string())
     .query(({ ctx, input }) => {
       return ctx.prisma.user.findFirstOrThrow({
         where: { id: input },
       });
     }),
-  getPostById: protectedProcedure([Roles.ADMIN, Roles.MODERATOR])
+  getPostById: protectedProcedure([Role.ADMIN, Role.MODERATOR])
     .input(z.string())
     .query(({ ctx, input }) => {
       return ctx.prisma.post.findFirstOrThrow({
         where: { id: input },
       });
     }),
-  getUser: protectedProcedure([Roles.ADMIN, Roles.MODERATOR])
+  getUser: protectedProcedure([Role.ADMIN, Role.MODERATOR])
     .input(z.object({ userId: z.string() }))
     .query(({ ctx, input }) => {
       return ctx.prisma.user.findUniqueOrThrow({
@@ -41,7 +41,7 @@ export const moderationRouter = router({
         },
       });
     }),
-  getPosts: protectedProcedure([Roles.ADMIN, Roles.MODERATOR])
+  getPosts: protectedProcedure([Role.ADMIN, Role.MODERATOR])
     .input(z.object({ userId: z.string() }))
     .query(async ({ ctx, input }) => {
       const posts = await ctx.prisma.post.findMany({
@@ -50,7 +50,7 @@ export const moderationRouter = router({
       if (!posts) throw new TRPCError({ code: "NOT_FOUND" });
       return posts;
     }),
-  getPost: protectedProcedure([Roles.ADMIN, Roles.MODERATOR])
+  getPost: protectedProcedure([Role.ADMIN, Role.MODERATOR])
     .input(z.object({ postId: z.string() }))
     .query(({ ctx, input }) => {
       return ctx.prisma.post.findUniqueOrThrow({
@@ -58,7 +58,7 @@ export const moderationRouter = router({
         include: { attribute: true, reports: true },
       });
     }),
-  updateReport: protectedProcedure([Roles.ADMIN, Roles.MODERATOR])
+  updateReport: protectedProcedure([Role.ADMIN, Role.MODERATOR])
     .input(
       z.object({
         id: z.string(),
@@ -88,7 +88,7 @@ export const moderationRouter = router({
           : { status: input.status },
       });
     }),
-  updateStatus: protectedProcedure([Roles.ADMIN, Roles.MODERATOR])
+  updateStatus: protectedProcedure([Role.ADMIN, Role.MODERATOR])
     .input(
       z.object({
         id: z.string(),
@@ -101,7 +101,7 @@ export const moderationRouter = router({
         data: { status: input.status },
       });
     }),
-  deletePostImage: protectedProcedure()
+  deletePostImage: protectedProcedure([Role.ADMIN, Role.MODERATOR])
     .input(z.object({ postId: z.string(), id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const image = await ctx.prisma.image.findFirst({
@@ -122,7 +122,7 @@ export const moderationRouter = router({
 
       return await getSignedUrl(ctx.s3Client, command);
     }),
-  documentValidation: protectedProcedure([Roles.ADMIN, Roles.MODERATOR])
+  documentValidation: protectedProcedure([Role.ADMIN, Role.MODERATOR])
     .input(
       z.object({
         id: z.string(),
@@ -142,7 +142,7 @@ export const moderationRouter = router({
         data: { valid: input.valid },
       });
     }),
-  getMatch: protectedProcedure([Roles.ADMIN, Roles.MODERATOR])
+  getMatch: protectedProcedure([Role.ADMIN, Role.MODERATOR])
     .input(z.object({ id: z.string() }).optional())
     .query(async ({ ctx, input }) => {
       const user = await ctx.prisma.user.findUnique({
@@ -151,7 +151,7 @@ export const moderationRouter = router({
       });
       if (!user) throw new TRPCError({ code: "NOT_FOUND" });
 
-      if (user.role === Roles.AGENCY || user.role === Roles.OWNER) {
+      if (user.role === Role.AGENCY || user.role === Role.OWNER) {
         const postIds = await ctx.prisma.post.findMany({
           where: { createdById: user.id },
           select: { id: true },
@@ -203,7 +203,7 @@ export const moderationRouter = router({
       if (!rs) throw new TRPCError({ code: "NOT_FOUND" });
       return rs;
     }),
-  getMessages: protectedProcedure([Roles.ADMIN, Roles.MODERATOR])
+  getMessages: protectedProcedure([Role.ADMIN, Role.MODERATOR])
     .input(
       z.object({
         conversationId: z.string(),
@@ -224,7 +224,7 @@ export const moderationRouter = router({
         where: { id: conversation.relationId },
       });
       if (!relationship) throw new TRPCError({ code: "NOT_FOUND" });
-      if (ctx.role == Roles.OWNER || ctx.role == Roles.AGENCY) {
+      if (ctx.role == Role.OWNER || ctx.role == Role.AGENCY) {
         const post = await ctx.prisma.post.findUnique({
           where: { id: relationship.postId },
         });
@@ -232,7 +232,7 @@ export const moderationRouter = router({
         if (post.createdById != ctx.auth.userId)
           throw new TRPCError({ code: "FORBIDDEN" });
       }
-      if (ctx.role == Roles.TENANT) {
+      if (ctx.role == Role.TENANT) {
         if (relationship.userId != ctx.auth.userId)
           throw new TRPCError({ code: "FORBIDDEN" });
       }
@@ -248,7 +248,7 @@ export const moderationRouter = router({
 
       return messages;
     }),
-  sendMessage: protectedProcedure([Roles.ADMIN, Roles.MODERATOR])
+  sendMessage: protectedProcedure([Role.ADMIN, Role.MODERATOR])
     .input(z.object({ conversationId: z.string(), content: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const conversation = await ctx.prisma.conversation.findUnique({
@@ -263,7 +263,7 @@ export const moderationRouter = router({
         where: { id: conversation.relationId },
       });
       if (!relationship) throw new TRPCError({ code: "NOT_FOUND" });
-      if (ctx.role == Roles.OWNER || ctx.role == Roles.AGENCY) {
+      if (ctx.role == Role.OWNER || ctx.role == Role.AGENCY) {
         const post = await ctx.prisma.post.findUnique({
           where: { id: relationship.postId },
         });
@@ -271,7 +271,7 @@ export const moderationRouter = router({
         if (post.createdById != ctx.auth.userId)
           throw new TRPCError({ code: "FORBIDDEN" });
       }
-      if (ctx.role == Roles.TENANT) {
+      if (ctx.role == Role.TENANT) {
         if (relationship.userId != ctx.auth.userId)
           throw new TRPCError({ code: "FORBIDDEN" });
       }
