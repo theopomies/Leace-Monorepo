@@ -1,8 +1,7 @@
 import React from "react";
 
 import { View, SafeAreaView, Text, Image } from "react-native";
-import MagicLink from "../components/MagicLink";
-import OAuth from "../components/Oauth";
+import { MagicLink, OAuth } from "../components/Auth";
 
 export default function AuthScreen() {
   return (

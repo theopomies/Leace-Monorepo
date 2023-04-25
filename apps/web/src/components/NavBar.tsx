@@ -15,7 +15,7 @@ const links: {
     roles: [Roles.OWNER, Roles.AGENCY, Roles.TENANT, Roles.ADMIN],
   },
   {
-    href: "#",
+    href: "/dashboard",
     label: "Dashboard",
     roles: [Roles.OWNER, Roles.AGENCY],
   },

@@ -3,9 +3,9 @@ import React from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { TRPCProvider } from "./utils/trpc";
 import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-expo";
-import { HomeScreen } from "./screens/home";
-import AuthScreen from "./screens/auth";
+import RootNavigator from "./navigation/RootNavigator";
 import { tokenCache } from "./utils/cache";
+import AuthScreen from "./screens/auth";
 
 export const App = () => {
   return (
@@ -16,7 +16,7 @@ export const App = () => {
       <SignedIn>
         <TRPCProvider>
           <SafeAreaProvider>
-            <HomeScreen />
+            <RootNavigator />
             <StatusBar />
           </SafeAreaProvider>
         </TRPCProvider>
