@@ -59,7 +59,7 @@ export const Administration = () => {
       <div className="w-3/5">
         <Search setUid={setUid} />
         <p className="flex w-full items-center justify-center">
-          Utilisateur introuvable
+          User not found
         </p>
       </div>
     </div>

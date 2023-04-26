@@ -71,7 +71,7 @@ export const DocumentModal = ({
               type="button"
               onClick={handleClick}
             >
-              {document.valid ? "Invalider" : "Valider"}
+              {document.valid ? "Verify" : "Unverify"}
             </button>
           </div>
         </div>

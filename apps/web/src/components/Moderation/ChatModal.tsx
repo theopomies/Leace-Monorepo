@@ -14,7 +14,7 @@ export const ChatModal = ({ userId }: ChatModalProps) => {
         className="rounded-full bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700"
         onClick={() => setShowModal(true)}
       >
-        Voir les conversations
+        View conversations
       </button>
       {showModal && (
         <>

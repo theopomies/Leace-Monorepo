@@ -33,7 +33,7 @@ export const Moderation = () => {
   } else {
     return (
       <div className="flex w-full items-center justify-center">
-        <p>Aucun utilisateur ou post signalé</p>
+        <p>No user or post reported</p>
       </div>
     );
   }
