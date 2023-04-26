@@ -1,6 +1,6 @@
 import {
   UserStatus,
-  Roles,
+  Role,
   ReportReason,
   PrismaClient,
   Prisma,
@@ -29,7 +29,7 @@ export const makeUsers = () => {
         ? UserStatus.ACTIVE
         : UserStatus.INACTIVE,
       isPremium: Boolean(Math.round(Math.random())) ? true : false,
-      role: Boolean(Math.round(Math.random())) ? Roles.TENANT : Roles.OWNER,
+      role: Boolean(Math.round(Math.random())) ? Role.TENANT : Role.OWNER,
     });
   }
   return users;
@@ -40,11 +40,11 @@ export const makePosts = async (prisma: PrismaClient) => {
 
   for (let i = 0; i < nbPosts; i++) {
     const userCount = await prisma.user.count({
-      where: { role: Roles.OWNER },
+      where: { role: Role.OWNER },
     });
     const skip = Math.floor(Math.random() * userCount);
     const createdBy = await prisma.user.findMany({
-      where: { role: Roles.OWNER },
+      where: { role: Role.OWNER },
       take: 1,
       skip: skip,
       orderBy: {
@@ -81,11 +81,11 @@ export const makeReports = async (prisma: PrismaClient) => {
       },
     });
     const ownerCount = await prisma.user.count({
-      where: { role: Roles.TENANT },
+      where: { role: Role.TENANT },
     });
     const skipUsers = Math.floor(Math.random() * ownerCount);
     const randUser = await prisma.user.findMany({
-      where: { role: Roles.TENANT },
+      where: { role: Role.TENANT },
       take: 1,
       skip: skipUsers,
       orderBy: {
@@ -185,11 +185,11 @@ export const makeRelationships = async (prisma: PrismaClient) => {
 
   for (let i = 0; i < nbRelationships; i++) {
     const userCount = await prisma.user.count({
-      where: { role: Roles.TENANT },
+      where: { role: Role.TENANT },
     });
     const skipUsers = Math.floor(Math.random() * userCount);
     const randUser = await prisma.user.findMany({
-      where: { role: Roles.TENANT },
+      where: { role: Role.TENANT },
       take: 1,
       skip: skipUsers,
       orderBy: {

@@ -1,93 +1,117 @@
-import { router, protectedProcedure, isAuthedProcedure } from "../trpc";
+import { router, protectedProcedure, AuthenticatedProcedure } from "../trpc";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
-import { Roles, UserStatus } from "@prisma/client";
+import { Role, UserStatus } from "@prisma/client";
 import { isPossiblePhoneNumber } from "libphonenumber-js";
+import { getId } from "../utils/getId";
 
 export const userRouter = router({
-  updateUserRole: isAuthedProcedure
-    .input(z.enum([Roles.TENANT, Roles.OWNER, Roles.AGENCY]))
-    .mutation(async ({ ctx, input }) => {
-      const user = await ctx.prisma.user.findUnique({
-        where: { id: ctx.auth.userId },
-      });
-      if (!user) {
-        const user = await ctx.clerkClient.users.getUser(ctx.auth.userId);
-        const newAccount = await ctx.prisma.user.create({
-          data: {
-            id: ctx.auth.userId,
-            image: user.profileImageUrl,
-            email: user.emailAddresses[0]?.emailAddress,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            phoneNumber: user.primaryPhoneNumberId,
-            role: input,
-          },
-        });
-        if (!newAccount) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
-      }
+  /** Create a new user only for yourself,
+      Invalid if:
+        - You have followed a ambiguous signUp/signIn flow.
+        - Your user doesn't exist on clerk authentication database.
+  */
+  createUser: AuthenticatedProcedure.mutation(async ({ ctx }) => {
+    const user = await ctx.prisma.user.findUnique({
+      where: { id: ctx.auth.userId },
+    });
 
-      const att = await ctx.prisma.attribute.findUnique({
-        where: { userId: ctx.auth.userId },
-      });
-      if (!att) {
-        const attCreate = await ctx.prisma.attribute.create({
-          data: {
-            userId: ctx.auth.userId,
-          },
-        });
-        if (!attCreate) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
-      }
+    if (user) {
+      throw new TRPCError({ code: "FORBIDDEN", message: "User already exist" });
+    }
 
-      return ctx.prisma.user.update({
-        where: { id: ctx.auth.userId },
-        data: { role: input },
+    const clerkUser = await ctx.clerkClient.users.getUser(ctx.auth.userId);
+
+    if (!clerkUser)
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "User not found in clerk database",
       });
+
+    const newAccount = await ctx.prisma.user.create({
+      data: {
+        id: ctx.auth.userId,
+        image: clerkUser.profileImageUrl,
+        email: clerkUser.emailAddresses[0]?.emailAddress,
+        firstName: clerkUser.firstName,
+        lastName: clerkUser.lastName,
+        phoneNumber: clerkUser.primaryPhoneNumberId,
+      },
+    });
+
+    if (!newAccount) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+  }),
+  /** Update a user role with the given id and role. */
+  updateUserRoleById: AuthenticatedProcedure.input(
+    z.object({
+      userId: z.string(),
+      role: z.enum([Role.TENANT, Role.OWNER, Role.AGENCY]),
     }),
-  updateUser: protectedProcedure([Roles.TENANT, Roles.AGENCY, Roles.OWNER])
+  ).mutation(async ({ ctx, input }) => {
+    const userId = getId({ ctx: ctx, userId: input.userId });
+
+    const user = await ctx.prisma.user.findUnique({ where: { id: userId } });
+
+    if (!user) throw new TRPCError({ code: "NOT_FOUND" });
+
+    const updated = await ctx.prisma.user.update({
+      where: { id: userId },
+      data: { role: input.role },
+    });
+
+    if (!updated) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+  }),
+  /** Update one user's data with the given id
+      Also check for:
+        - a valid phone number
+        - a valid birthdate
+      An account turn active after the first update.
+  */
+  updateUserById: protectedProcedure([Role.TENANT, Role.OWNER, Role.AGENCY])
     .input(
       z.object({
+        userId: z.string(),
         firstName: z.string().optional(),
         lastName: z.string().optional(),
         phoneNumber: z.string().optional(),
         description: z.string().optional(),
-        birthDate: z.string().optional(),
+        birthDate: z.date().optional(),
       }),
     )
-    .mutation(async ({ ctx, input }) => {
-      const getUser = await ctx.prisma.user.findUnique({
-        where: { id: ctx.auth.userId },
+    .mutation(async ({ input, ctx }) => {
+      const userId = getId({ ctx: ctx, userId: input.userId });
+
+      const user = await ctx.prisma.user.findUnique({
+        where: { id: userId },
       });
 
-      if (!getUser) throw new TRPCError({ code: "NOT_FOUND" });
-
-      if (getUser.id !== ctx.auth.userId)
-        throw new TRPCError({ code: "FORBIDDEN" });
+      if (!user) throw new TRPCError({ code: "NOT_FOUND" });
 
       if (input.phoneNumber && !isPossiblePhoneNumber(input.phoneNumber, "FR"))
         throw new TRPCError({ code: "BAD_REQUEST" });
 
       if (input.birthDate) {
-        const birthDate = new Date(input.birthDate);
+        const birthDate = input.birthDate;
         const diff_ms = Date.now() - birthDate.getTime();
         const age_dt = new Date(diff_ms);
         const age = Math.abs(age_dt.getUTCFullYear() - 1970);
         if (age < 18) throw new TRPCError({ code: "BAD_REQUEST" });
-        return ctx.prisma.user.update({
-          where: { id: ctx.auth.userId },
+        const updated = await ctx.prisma.user.update({
+          where: { id: userId },
           data: {
             firstName: input.firstName,
             lastName: input.lastName,
             phoneNumber: input.phoneNumber,
             description: input.description,
-            birthDate: birthDate,
+            birthDate,
             status: UserStatus.ACTIVE,
           },
         });
+        if (!updated) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
       }
 
-      return ctx.prisma.user.update({
-        where: { id: ctx.auth.userId },
+      const updated = await ctx.prisma.user.update({
+        where: { id: userId },
         data: {
           firstName: input.firstName,
           lastName: input.lastName,
@@ -95,38 +119,41 @@ export const userRouter = router({
           description: input.description,
         },
       });
+
+      if (!updated) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
     }),
-  getUser: protectedProcedure([
-    Roles.TENANT,
-    Roles.AGENCY,
-    Roles.OWNER,
-    Roles.ADMIN,
-    Roles.MODERATOR,
-  ])
-    .input(z.string().optional())
-    .query(({ ctx, input }) => {
-      if (!input) {
-        return ctx.prisma.user.findUniqueOrThrow({
-          where: { id: ctx.auth.userId },
-          include: {
-            attribute: true,
-          },
-        });
-      }
-      return ctx.prisma.user.findUniqueOrThrow({
+  /**  Retrieve one user's data with the given id, based on your authorizations. */
+  getUserById: protectedProcedure([Role.TENANT, Role.OWNER, Role.AGENCY])
+    .input(z.object({ userId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const userId = input.userId;
+
+      const user = await ctx.prisma.user.findUnique({
         where: {
-          id: input,
+          id: userId,
         },
         include: {
           attribute: true,
         },
       });
+
+      if (!user) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+      return user;
     }),
-  deleteUser: protectedProcedure([
-    Roles.TENANT,
-    Roles.AGENCY,
-    Roles.OWNER,
-  ]).mutation(({ ctx }) => {
-    return ctx.prisma.user.delete({ where: { id: ctx.auth.userId } });
-  }),
+  /** Delete one user with the given id. */
+  deleteUserById: protectedProcedure([Role.TENANT, Role.OWNER, Role.AGENCY])
+    .input(z.object({ userId: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      const userId = getId({ ctx: ctx, userId: input.userId });
+
+      const user = await ctx.prisma.user.findUnique({ where: { id: userId } });
+
+      if (!user) throw new TRPCError({ code: "NOT_FOUND" });
+
+      const deleted = await ctx.prisma.user.delete({
+        where: { id: userId },
+      });
+
+      if (!deleted) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+    }),
 });

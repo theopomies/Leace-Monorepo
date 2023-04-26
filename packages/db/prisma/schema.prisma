@@ -38,7 +38,7 @@ enum ConversationType {
   DONE
 }
 
-enum Roles {
+enum Role {
   TENANT
   OWNER
   AGENCY
@@ -53,7 +53,7 @@ enum PostType {
 
 model User {
   id   String @id @default(cuid())
-  role Roles
+  role Role?
 
   email         String?   @unique
   emailVerified DateTime?

@@ -30,7 +30,7 @@ export default async function handler(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.log(error.message);
-    return res.status(400).send(`Webhook Error: ${error.message}`);
+    return res.status(400).send(`usershook Error: ${error.message}`);
   }
 
   const session = event.data.object as Stripe.Checkout.Session;

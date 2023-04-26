@@ -1,7 +1,8 @@
 import { initTRPC, TRPCError } from "@trpc/server";
 import { type Context } from "./context";
-import { Roles } from "@leace/db";
+import { Role } from "@leace/db";
 import superjson from "superjson";
+
 const t = initTRPC.context<Context>().create({
   transformer: superjson,
   errorFormatter({ shape }) {
@@ -9,18 +10,28 @@ const t = initTRPC.context<Context>().create({
   },
 });
 
-const isAuthorized = (roles?: Roles[]) =>
+export type Authorization = Role;
+
+const checkAuthorizations = (authorizations: Authorization[]) =>
   t.middleware(async ({ ctx, next }) => {
-    if (!ctx.auth.userId) {
+    const isAuthenticated = ctx.auth.userId;
+    if (!isAuthenticated) {
       throw new TRPCError({
         code: "UNAUTHORIZED",
         message: "Not authenticated",
       });
     }
 
-    // role should not be null if the user follow a normal flow.
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    if (roles && !roles.includes(ctx.role!)) {
+    if (!ctx.role) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "User does not have role",
+      });
+    }
+
+    const isAuthorized = authorizations.includes(ctx.role);
+
+    if (!isAuthorized) {
       throw new TRPCError({
         code: "UNAUTHORIZED",
         message: "Not authorized",
@@ -50,7 +61,7 @@ const isAuthorized = (roles?: Roles[]) =>
     });
   });
 
-const isAuthed = t.middleware(({ next, ctx }) => {
+const checkAuthenticated = t.middleware(({ next, ctx }) => {
   if (!ctx.auth.userId) {
     throw new TRPCError({ code: "UNAUTHORIZED", message: "Not authenticated" });
   }
@@ -63,6 +74,6 @@ const isAuthed = t.middleware(({ next, ctx }) => {
 
 export const router = t.router;
 export const publicProcedure = t.procedure;
-export const protectedProcedure = (roles?: Roles[]) =>
-  t.procedure.use(isAuthorized(roles));
-export const isAuthedProcedure = t.procedure.use(isAuthed);
+export const protectedProcedure = (authorizations: Authorization[]) =>
+  t.procedure.use(checkAuthorizations(authorizations));
+export const AuthenticatedProcedure = t.procedure.use(checkAuthenticated);

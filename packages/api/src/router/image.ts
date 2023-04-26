@@ -1,4 +1,4 @@
-import { Image, Roles } from "@prisma/client";
+import { Image, Role } from "@prisma/client";
 import { protectedProcedure, router } from "../trpc";
 import { z } from "zod";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
@@ -11,7 +11,7 @@ import { randomUUID } from "crypto";
 import { TRPCError } from "@trpc/server";
 
 export const imageRouter = router({
-  PutSignedUserUrl: protectedProcedure()
+  putSignedUserUrl: protectedProcedure([Role.TENANT, Role.AGENCY, Role.OWNER])
     .input(z.object({ fileType: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const id = randomUUID();
@@ -34,7 +34,7 @@ export const imageRouter = router({
 
       return await getSignedUrl(ctx.s3Client, command);
     }),
-  GetSignedUserUrl: protectedProcedure()
+  getSignedUserUrl: protectedProcedure([Role.TENANT, Role.AGENCY, Role.OWNER])
     .input(z.string().optional())
     .query(async ({ ctx, input }) => {
       const userId = input ? input : ctx.auth.userId;
@@ -58,7 +58,11 @@ export const imageRouter = router({
         }),
       );
     }),
-  DeleteSignedUserUrl: protectedProcedure()
+  deleteSignedUserUrl: protectedProcedure([
+    Role.TENANT,
+    Role.AGENCY,
+    Role.OWNER,
+  ])
     .input(z.string())
     .mutation(async ({ ctx, input }) => {
       const image = await ctx.prisma.image.findFirst({
@@ -80,12 +84,7 @@ export const imageRouter = router({
       return await getSignedUrl(ctx.s3Client, command);
     }),
 
-  PutSignedPostUrl: protectedProcedure([
-    Roles.OWNER,
-    Roles.AGENCY,
-    Roles.MODERATOR,
-    Roles.ADMIN,
-  ])
+  putSignedPostUrl: protectedProcedure([Role.TENANT, Role.AGENCY, Role.OWNER])
     .input(z.object({ postId: z.string(), fileType: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const id = randomUUID();
@@ -113,7 +112,7 @@ export const imageRouter = router({
 
       return await getSignedUrl(ctx.s3Client, command);
     }),
-  GetSignedPostUrl: protectedProcedure()
+  getSignedPostUrl: protectedProcedure([Role.TENANT, Role.AGENCY, Role.OWNER])
     .input(z.string())
     .query(async ({ ctx, input }) => {
       const getPost = await ctx.prisma.post.findUnique({
@@ -139,11 +138,10 @@ export const imageRouter = router({
         }),
       );
     }),
-  DeleteSignedPostUrl: protectedProcedure([
-    Roles.OWNER,
-    Roles.AGENCY,
-    Roles.MODERATOR,
-    Roles.ADMIN,
+  deleteSignedPostUrl: protectedProcedure([
+    Role.TENANT,
+    Role.AGENCY,
+    Role.OWNER,
   ])
     .input(z.object({ postId: z.string(), imageId: z.string() }))
     .mutation(async ({ ctx, input }) => {
