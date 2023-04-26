@@ -4,78 +4,62 @@ import { Loader } from "../Loader";
 import { Documents } from "../Documents";
 import { ChatModal } from "../ChatModal";
 import { displayDate } from "../../../utils/displayDate";
+import { DisplayReports } from "../Report/DisplayReports";
 
 export interface UserCardProps {
   userId: string;
 }
 
 export const UserCard = ({ userId }: UserCardProps) => {
-  const { data: user } = trpc.moderation.getUser.useQuery({ userId: userId });
-  const { data: isBan } = trpc.moderation.getIsBan.useQuery({ userId: userId });
+  const { data: user, isLoading: userLoading } =
+    trpc.moderation.getUser.useQuery({ userId });
+  const { data: isBan } = trpc.moderation.getIsBan.useQuery({ userId });
 
-  if (user)
-    return (
-      <div className="flex w-full flex-col overflow-auto rounded-lg bg-white p-8 shadow">
-        <img
-          src={user.image || "/defaultImage.png"}
-          referrerPolicy="no-referrer"
-          alt="image"
-          className="mx-auto h-32 rounded-full shadow-xl"
-        />
-        <div className="mt-2 px-16 text-center">
-          <h3 className="font-semibold">{user.role}</h3>
-          <h3 className=" text-4xl font-semibold">
-            {user.firstName ? user.firstName : "Prénom"}{" "}
-            {user.lastName ? user.lastName : "Nom"}
-          </h3>
-          {!isBan ? (
-            <p className="text-lg text-green-500">{user.status}</p>
-          ) : (
-            <p className="text-lg text-red-500">BANNED</p>
-          )}
-          <p className="my-5 text-lg text-amber-400">
-            {user.isPremium ? "Premium" : "Non premium"}
+  if (userLoading) return <Loader />;
+
+  if (!user) return <p>Something went wrong</p>;
+
+  return (
+    <div className="flex w-full flex-col overflow-auto rounded-lg bg-white p-8 shadow">
+      <img
+        src={user.image || "/defaultImage.png"}
+        referrerPolicy="no-referrer"
+        alt="image"
+        className="mx-auto h-32 rounded-full shadow-xl"
+      />
+      <div className="mt-2 px-16 text-center">
+        <h3 className="font-semibold">{user.role}</h3>
+        <h3 className=" text-4xl font-semibold">
+          {user.firstName ? user.firstName : "FirstName"}{" "}
+          {user.lastName ? user.lastName : "LastName"}
+        </h3>
+        <p className={`text-lg ${!isBan ? "text-green-500" : "text-red-500"}`}>
+          {user.status}
+        </p>
+        <p className="my-5 text-lg text-amber-400">
+          {user.isPremium ? "Premium" : "No premium"}
+        </p>
+        <div className="grid grid-cols-2 gap-4">
+          <p className="text-lg">{user.email ? user.email : "No email"}</p>
+          <p className="text-lg">
+            {user.phoneNumber ? user.phoneNumber : "No phone number"}
           </p>
-          <div className="grid grid-cols-2 gap-4">
-            <p className="text-lg">
-              {user.email ? user.email : "Email inconnu"}
-            </p>
-            <p className="text-lg">
-              {user.phoneNumber
-                ? user.phoneNumber
-                : "Numéro de téléphone inconnu"}
-            </p>
-            <p className="text-lg">
-              {user.birthDate
-                ? displayDate(user.birthDate)
-                : "Naissance inconnue"}
-            </p>
-            <p className="text-lg">
-              {user.country ? user.country : "Pays inconnu"}
-            </p>
-          </div>
-        </div>
-        <ChatModal userId={user.id} />
-        <div className="border-blueGray-200 my-10 border-y py-10 text-center">
-          <p className="px-10 text-gray-600">
-            {user.description ? user.description : "Pas de description"}
+          <p className="text-lg">
+            {user.birthDate ? displayDate(user.birthDate) : "No birth date"}
+          </p>
+          <p className="text-lg">
+            {user.country ? user.country : "No country"}
           </p>
         </div>
-        <Documents userId={user.id} />
-        {user.reports.length > 0 && (
-          <div className="border-blueGray-200 mt-10 border-t pt-10">
-            <p className="mb-2 text-lg">Reports :</p>
-            <div className="flex flex-wrap gap-4">
-              {user.reports.map((report, index) => (
-                <p key={index} className="text-lg">
-                  Le {displayDate(report.createdAt)}, {report.createdById} a
-                  signalé {user.firstName || user.lastName} pour {report.reason}
-                </p>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
-    );
-  return <Loader />;
+      <ChatModal userId={user.id} />
+      <div className="border-blueGray-200 my-10 border-y py-10 text-center">
+        <p className="px-10 text-gray-600">
+          {user.description ? user.description : "No description"}
+        </p>
+      </div>
+      <Documents userId={user.id} />
+      <DisplayReports reports={user.reports} />
+    </div>
+  );
 };

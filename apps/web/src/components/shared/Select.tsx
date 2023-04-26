@@ -4,13 +4,13 @@ import { motion } from "framer-motion";
 import { Check } from "../Moderation/Icons";
 
 export interface SelectProps {
-  title: string;
+  label: string;
   value: string;
   options: string[];
   onChange: (value: string) => void;
 }
 
-export const Select = ({ title, value, options, onChange }: SelectProps) => {
+export const Select = ({ label, value, options, onChange }: SelectProps) => {
   const [open, setOpen] = useState(false);
   const selectRef = useRef<HTMLDivElement>(null);
 
@@ -35,7 +35,7 @@ export const Select = ({ title, value, options, onChange }: SelectProps) => {
         id="listbox-label"
         className="block text-sm font-medium leading-6 text-gray-900"
       >
-        {title}
+        {label}
       </label>
       <div className="relative mt-2" ref={selectRef}>
         <button
