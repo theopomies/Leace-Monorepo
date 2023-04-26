@@ -33,13 +33,14 @@ export const BanModal = ({ userId, reports, onBan }: BanModalProps) => {
 
   const handleBan = (banData: banData) => {
     const errors = { reportIds: false, comment: false };
-    if (banData.reportIds.length === 0) {
+    if (reports.length > 0 && banData.reportIds.length === 0) {
       errors.reportIds = true;
     }
     if (banData.comment.length === 0) {
       errors.comment = true;
     }
-    if (Object.keys(errors).length > 0) {
+    // If at least one error is set to true..
+    if (Object.values(errors).includes(true)) {
       setError(errors);
       return;
     }
@@ -62,7 +63,7 @@ export const BanModal = ({ userId, reports, onBan }: BanModalProps) => {
             <div className="m-auto flex h-max w-2/3 flex-col space-y-6 rounded-lg bg-slate-50 p-10 shadow-lg">
               <p className="text-2xl">Ban user form</p>
               <Select
-                title="Reason"
+                label="Reason"
                 value={banData.reason}
                 options={
                   Object.keys(ReportReason) as Array<keyof typeof ReportReason>
