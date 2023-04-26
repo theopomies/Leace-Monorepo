@@ -9,7 +9,7 @@ import { displayDate } from "../../../utils/displayDate";
 import { GreenCheck } from "./GreenCheck";
 import { RedUncheck } from "./RedUncheck";
 import { Loader } from "../../shared/Loader";
-import { DisplayReports } from "../../Moderation/Report/DisplayReports";
+import { DisplayReports } from "../report/DisplayReports";
 
 export interface PostProps {
   postId: string;
