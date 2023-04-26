@@ -4,6 +4,7 @@ import { TRPCError } from "@trpc/server";
 import { Role, UserStatus } from "@prisma/client";
 import { isPossiblePhoneNumber } from "libphonenumber-js";
 import { getId } from "../utils/getId";
+import { filterStrings } from "../utils/filter";
 
 export const userRouter = router({
   /** Create a new user only for yourself,
@@ -79,6 +80,15 @@ export const userRouter = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
+      filterStrings({
+        check: [
+          input.firstName,
+          input.lastName,
+          input.phoneNumber,
+          input.description,
+        ],
+      });
+
       const userId = getId({ ctx: ctx, userId: input.userId });
 
       const user = await ctx.prisma.user.findUnique({

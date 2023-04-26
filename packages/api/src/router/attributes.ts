@@ -3,6 +3,7 @@ import { z } from "zod";
 import { Role } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { getId } from "../utils/getId";
+import { checkLocation, filterStrings } from "../utils/filter";
 
 export const attributesRouter = router({
   updateUserAttributes: protectedProcedure([Role.TENANT])
@@ -30,6 +31,9 @@ export const attributesRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      filterStrings({ check: [input.location] });
+      checkLocation({ check: [input.location] });
+
       const userId = getId({ ctx, userId: input.userId });
 
       const user = await ctx.prisma.user.findUnique({ where: { id: userId } });
@@ -121,6 +125,9 @@ export const attributesRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      filterStrings({ check: [input.location] });
+      checkLocation({ check: [input.location] });
+
       const post = await ctx.prisma.post.findUnique({
         where: { id: input.postId },
       });

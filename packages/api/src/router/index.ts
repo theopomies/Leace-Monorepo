@@ -9,6 +9,7 @@ import { relationshipRouter } from "./relationship";
 import { documentRouter } from "./document";
 import { imageRouter } from "./image";
 import { conversationRouter } from "./conversation";
+import { leaseRouter } from "./lease";
 
 export const appRouter = router({
   auth: authRouter,
@@ -21,6 +22,7 @@ export const appRouter = router({
   document: documentRouter,
   image: imageRouter,
   conversation: conversationRouter,
+  lease: leaseRouter,
 });
 
 // export type definition of API

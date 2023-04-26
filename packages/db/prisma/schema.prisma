@@ -79,6 +79,8 @@ model User {
   reports        Report[] @relation("reported")
   reportsCreated Report[] @relation("reports_created")
 
+  LeaseCreated Lease[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -99,7 +101,6 @@ model Post {
   attribute Attribute?
 
   images    Image[]
-  documents Document[]
 
   reports       Report[]
   relationships Relationship[]
@@ -187,8 +188,8 @@ model Document {
   user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String?
 
-  post   Post?   @relation(fields: [postId], references: [id], onDelete: Cascade)
-  postId String?
+  lease Lease? @relation(fields: [leaseId], references: [id], onDelete: Cascade)
+  leaseId String?
 
   valid  Boolean @default(false)
   ext String
@@ -197,7 +198,7 @@ model Document {
   updatedAt DateTime @updatedAt
 
   @@index([userId])
-  @@index([postId])
+  @@index([leaseId])
   @@map("documents")
 }
 
@@ -231,6 +232,8 @@ model Relationship {
 
   isMatch      Boolean? @default(false)
   conversation Conversation?
+
+  lease Lease?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -274,4 +277,26 @@ model Message {
   @@index([conversationId])
   @@index([senderId])
   @@map("messages")
+}
+
+model Lease {
+  id String @id @default(cuid())
+
+  relationShip   Relationship @relation(fields: [relationShipId], references: [id], onDelete: Cascade)
+  relationShipId String @unique
+
+  isSigned Boolean? @default(false)
+  rentCost Int?
+  utilitiesCost Int?
+  startDate DateTime?
+  endDate DateTime?
+
+  documents Document[]
+
+  createdBy   User   @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  createdById String
+
+  @@index([relationShipId])
+  @@index([createdById])
+
 }

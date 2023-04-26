@@ -3,6 +3,7 @@ import { z } from "zod";
 import { ConversationType, PostType, Role } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { getId } from "../utils/getId";
+import { filterStrings } from "../utils/filter";
 
 export const postRouter = router({
   createPost: protectedProcedure([Role.AGENCY, Role.OWNER])
@@ -14,6 +15,8 @@ export const postRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      filterStrings({ check: [input.title, input.content, input.desc] });
+
       const userId = ctx.auth.userId;
 
       const user = await ctx.prisma.user.findUnique({ where: { id: userId } });
@@ -51,6 +54,8 @@ export const postRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      filterStrings({ check: [input.title, input.content, input.desc] });
+
       const post = await ctx.prisma.post.findUnique({
         where: { id: input.postId },
       });
@@ -132,7 +137,7 @@ export const postRouter = router({
       if (user.role != Role.AGENCY && user.role != Role.OWNER) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "User provided is cannot create post",
+          message: "User provided can't create post",
         });
       }
 
