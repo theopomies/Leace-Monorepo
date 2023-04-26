@@ -1,7 +1,7 @@
 import { XOR } from "../../../utils/types";
 import { ReportButton } from "./ReportButton";
-import { BanPostAuthor } from "../Ban/BanPostAuthor";
-import { Ban } from "../Ban";
+import { BanPostAuthor } from "../ban/BanPostAuthor";
+import { Ban } from "../ban";
 import { RejectPostReports } from "./RejectPostReports";
 import { RejectUserReports } from "./RejectUserReports";
 

@@ -4,7 +4,7 @@ import { Loader } from "../../shared/Loader";
 import { Documents } from "../documents";
 import { ChatModal } from "../ChatModal";
 import { displayDate } from "../../../utils/displayDate";
-import { DisplayReports } from "../../Moderation/Report/DisplayReports";
+import { DisplayReports } from "../report/DisplayReports";
 
 export interface UserCardProps {
   userId: string;

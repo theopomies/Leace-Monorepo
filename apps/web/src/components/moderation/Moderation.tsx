@@ -2,7 +2,7 @@ import { Loader } from "../shared/Loader";
 import { trpc } from "../../utils/trpc";
 import { Post } from "./post";
 import { User } from "./user";
-import { Report } from "../Moderation/Report";
+import { Report } from "./report";
 
 export const Moderation = () => {
   const report = trpc.moderation.getReport.useQuery(undefined, {

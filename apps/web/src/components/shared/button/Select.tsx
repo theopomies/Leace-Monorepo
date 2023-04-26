@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { Check } from "../Moderation/Icons";
+import { Check } from "../../moderation/Icons";
 
 export interface SelectProps {
   label: string;

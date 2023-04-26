@@ -2,7 +2,7 @@ import { Report } from "@prisma/client";
 import { Dispatch, SetStateAction } from "react";
 import { displayDate } from "../../../utils/displayDate";
 import { RouterInputs } from "../../../utils/trpc";
-import { StatusSpan } from "../Report/StatusSpan";
+import { StatusSpan } from "../report/StatusSpan";
 
 type banData = RouterInputs["moderation"]["createBan"];
 

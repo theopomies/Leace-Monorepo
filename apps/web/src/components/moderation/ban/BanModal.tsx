@@ -2,7 +2,7 @@ import { ReportReason, Report } from "@prisma/client";
 import { useState } from "react";
 import { RouterInputs } from "../../../utils/trpc";
 import { TableSelect } from "./TableSelect";
-import { Select } from "../../shared/Select";
+import { Select } from "../../shared/button/Select";
 
 type banData = RouterInputs["moderation"]["createBan"];
 

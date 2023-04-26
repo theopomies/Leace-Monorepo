@@ -4,7 +4,7 @@ import Head from "next/head";
 import { Role } from "@prisma/client";
 import { trpc } from "../../utils/trpc";
 import { Loader } from "../shared/Loader";
-import { BanMessage } from "../Moderation/Ban/BanMessage";
+import { BanMessage } from "../moderation/ban/BanMessage";
 
 export interface LoggedLayoutProps {
   children: React.ReactNode;

@@ -5,8 +5,8 @@ import { trpc } from "../../utils/trpc";
 import { useRouter } from "next/router";
 import { User } from "./user";
 import { Post } from "./post";
-import { Ban } from "../Moderation/Ban";
-import { BanPostAuthor } from "../Moderation/Ban/BanPostAuthor";
+import { Ban } from "./ban";
+import { BanPostAuthor } from "./ban/BanPostAuthor";
 
 export const Administration = () => {
   const router = useRouter();
