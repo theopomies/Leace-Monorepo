@@ -1,7 +1,8 @@
-import { Report, ReportStatus } from "@prisma/client";
+import { Report } from "@prisma/client";
 import { Dispatch, SetStateAction } from "react";
 import { displayDate } from "../../../utils/displayDate";
 import { RouterInputs } from "../../../utils/trpc";
+import { StatusSpan } from "../Report/StatusSpan";
 
 type banData = RouterInputs["moderation"]["createBan"];
 
@@ -83,19 +84,7 @@ export const TableSelect = ({
               <td className="px-6 py-4">{displayDate(report.createdAt)}</td>
               <td className="px-6 py-4">{report.reason}</td>
               <td className="px-6 py-4">
-                <span
-                  className={`inline-flex rounded-full px-2 text-xs font-semibold leading-5 ${
-                    report.status === ReportStatus.PENDING
-                      ? "bg-yellow-100 text-yellow-800"
-                      : report.status === ReportStatus.RESOLVED
-                      ? "bg-green-100 text-green-800"
-                      : report.status === ReportStatus.REJECTED
-                      ? "bg-red-100 text-red-800"
-                      : ""
-                  }`}
-                >
-                  {report.status}
-                </span>
+                <StatusSpan report={report} />
               </td>
             </tr>
           ))}
