@@ -1,4 +1,5 @@
 import { trpc } from "../../../utils/trpc";
+import { Button } from "../../shared/button/Button";
 
 export interface UnBanProps {
   userId: string;
@@ -18,12 +19,7 @@ export const UnBan = ({ userId }: UnBanProps) => {
 
   return (
     <div className="flex w-full items-center justify-center">
-      <button
-        className="rounded-full bg-red-500 py-2 px-4 font-bold text-white hover:bg-red-700"
-        onClick={handleClick}
-      >
-        UnBan
-      </button>
+      <Button onClick={handleClick}>UnBan</Button>
     </div>
   );
 };

@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
 import { trpc } from "../../../utils/trpc";
+import { Button } from "../../shared/button/Button";
 
 export interface DocumentModalProps {
   document: { id: string; url: string; valid: boolean; ext: string };
@@ -58,24 +59,13 @@ export const DocumentModal = ({
           )}
 
           <div className="mr-9 flex items-center justify-center gap-4">
-            <button
-              className="rounded-full bg-slate-400 px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none transition-all duration-150 ease-linear hover:bg-slate-500 hover:shadow-lg focus:outline-none"
-              type="button"
-              onClick={() => setShowModal(false)}
-            >
-              Close
-            </button>
-            <button
-              className={`${
-                document.valid
-                  ? "bg-red-500 hover:bg-red-600"
-                  : "bg-emerald-500 hover:bg-emerald-600"
-              } rounded-full  px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none transition-all duration-150 ease-linear  hover:shadow-lg focus:outline-none`}
-              type="button"
+            <Button onClick={() => setShowModal(false)}>Close</Button>
+            <Button
               onClick={handleClick}
+              theme={document.valid ? "danger" : "success"}
             >
-              {document.valid ? "Verify" : "Unverify"}
-            </button>
+              {document.valid ? "Unverify" : "Verify"}
+            </Button>
           </div>
         </div>
       </div>

@@ -1,4 +1,5 @@
 import { trpc } from "../../../utils/trpc";
+import { Button } from "../../shared/button/Button";
 
 export interface RejectPostReportProps {
   postId: string;
@@ -17,12 +18,9 @@ export const RejectPostReports = ({ postId }: RejectPostReportProps) => {
 
   return (
     <div className="flex w-full items-center justify-center">
-      <button
-        className="rounded-full bg-red-500 py-2 px-4 font-bold text-white hover:bg-red-700"
-        onClick={handleClick}
-      >
+      <Button theme="danger" onClick={handleClick}>
         Reject
-      </button>
+      </Button>
     </div>
   );
 };

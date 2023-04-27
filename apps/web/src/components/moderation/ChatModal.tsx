@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Chat } from "../shared/chat";
+import { Button } from "../shared/button/Button";
 
 export interface ChatModalProps {
   userId: string;
@@ -10,25 +11,14 @@ export const ChatModal = ({ userId }: ChatModalProps) => {
 
   return (
     <div className="flex w-full flex-col items-center justify-center">
-      <button
-        className="rounded-full bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700"
-        onClick={() => setShowModal(true)}
-      >
-        View conversations
-      </button>
+      <Button onClick={() => setShowModal(true)}>View conversations</Button>
       {showModal && (
         <>
           <div className="px-auto fixed inset-0 z-50 flex justify-center p-5">
             <div className="flex w-full items-center justify-center rounded-lg bg-slate-50 shadow-lg">
               <Chat userId={userId} isModeration />
               <div className="mr-6 flex items-center justify-center gap-4">
-                <button
-                  className="rounded-full bg-slate-400 px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none transition-all duration-150 ease-linear hover:bg-slate-500 hover:shadow-lg focus:outline-none"
-                  type="button"
-                  onClick={() => setShowModal(false)}
-                >
-                  Close
-                </button>
+                <Button onClick={() => setShowModal(false)}>Close</Button>
               </div>
             </div>
           </div>

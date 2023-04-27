@@ -3,6 +3,8 @@ import { useState } from "react";
 import { RouterInputs } from "../../../utils/trpc";
 import { TableSelect } from "./TableSelect";
 import { Select } from "../../shared/button/Select";
+import { TextArea } from "../../shared/forms/TextArea";
+import { Button } from "../../shared/button/Button";
 
 type banData = RouterInputs["moderation"]["createBan"];
 
@@ -51,12 +53,7 @@ export const BanModal = ({ userId, reports, onBan }: BanModalProps) => {
 
   return (
     <div className="flex w-full flex-col items-center justify-center">
-      <button
-        className="rounded-full bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700"
-        onClick={() => setShowModal(true)}
-      >
-        Ban
-      </button>
+      <Button onClick={() => setShowModal(true)}>Ban</Button>
       {showModal && (
         <>
           <div className="fixed inset-0 z-50 flex h-full justify-center overflow-auto p-5">
@@ -95,6 +92,13 @@ export const BanModal = ({ userId, reports, onBan }: BanModalProps) => {
                 >
                   Comment
                 </label>
+                <TextArea
+                  rows={3}
+                  placeholder="Comment..."
+                  onChange={handleChange}
+                  value={banData.comment}
+                  className={`${error.comment && "border-red-500"}`}
+                />
                 <textarea
                   rows={3}
                   name="comment"
@@ -106,18 +110,10 @@ export const BanModal = ({ userId, reports, onBan }: BanModalProps) => {
                 />
               </div>
               <div className="flex items-center justify-center gap-4">
-                <button
-                  className="rounded-full bg-slate-400 px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none hover:bg-slate-500 hover:shadow-lg focus:outline-none"
-                  onClick={() => setShowModal(false)}
-                >
-                  Close
-                </button>
-                <button
-                  className="rounded-full bg-red-400 px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none hover:bg-red-500 hover:shadow-lg focus:outline-none disabled:bg-slate-400"
-                  onClick={() => handleBan(banData)}
-                >
+                <Button onClick={() => setShowModal(false)}>Close</Button>
+                <Button theme="danger" onClick={() => handleBan(banData)}>
                   Ban
-                </button>
+                </Button>
               </div>
             </div>
           </div>
