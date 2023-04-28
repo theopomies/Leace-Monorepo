@@ -1,9 +1,11 @@
-import { useRouter } from "next/router";
 import { NavBar } from "./navbar/NavBar";
 import Head from "next/head";
 import { Role } from "@prisma/client";
 import { trpc } from "../../utils/trpc";
 import { Loader } from "../shared/Loader";
+import { RedirectToSignIn, SignedIn, SignedOut } from "@clerk/nextjs";
+import { ReactNode, useEffect } from "react";
+import { useRouter } from "next/router";
 import { BanMessage } from "../moderation/ban/BanMessage";
 
 export interface LoggedLayoutProps {
@@ -17,19 +19,50 @@ export function LoggedLayout({
   title,
   roles = [],
 }: LoggedLayoutProps) {
+  const router = useRouter();
+
+  // Convert router.asPath to a url encoded string
+  const from = encodeURIComponent(router.asPath);
+
+  return (
+    <>
+      <SignedIn>
+        <AuthorizedLayout title={title} roles={roles}>
+          {children}
+        </AuthorizedLayout>
+      </SignedIn>
+      <SignedOut>
+        <RedirectToSignIn
+          afterSignInUrl={`/users/create?from=${from}`}
+          afterSignUpUrl={"/users/create"}
+        />
+      </SignedOut>
+    </>
+  );
+}
+
+const AuthorizedLayout = ({
+  title,
+  children,
+  roles,
+}: {
+  title: string;
+  children: ReactNode;
+  roles?: Role[];
+}) => {
   const { data: session, isLoading } = trpc.auth.getSession.useQuery();
   const router = useRouter();
 
-  if (isLoading) {
+  useEffect(() => {
+    if (session && !session.role) router.push("/");
+  }, [session, router]);
+
+  if (isLoading || !session) {
     return <Loader />;
   }
 
-  if (!session && !isLoading) {
-    router.push("/sign-in");
-    return null;
-  }
-
   if (
+    roles &&
     roles.length > 0 &&
     (!session.role || (roles && !roles.includes(session.role)))
   ) {
@@ -47,4 +80,4 @@ export function LoggedLayout({
       </div>
     </>
   );
-}
+};
