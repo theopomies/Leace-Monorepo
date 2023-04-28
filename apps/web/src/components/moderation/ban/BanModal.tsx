@@ -86,34 +86,28 @@ export const BanModal = ({ userId, reports, onBan }: BanModalProps) => {
 
               <div className="w-full">
                 <label
-                  className={`${
+                  className={`text-sm text-gray-900 ${
                     error.comment ? "text-red-500" : "text-gray-700"
                   }`}
                 >
                   Comment
                 </label>
                 <TextArea
-                  rows={3}
-                  placeholder="Comment..."
                   onChange={handleChange}
                   value={banData.comment}
-                  className={`${error.comment && "border-red-500"}`}
-                />
-                <textarea
-                  rows={3}
-                  name="comment"
-                  onChange={handleChange}
-                  value={banData.comment}
-                  className={`block w-full rounded-md border p-3 shadow-sm outline-none ${
-                    error.comment ? "border-red-500" : "border-gray-300"
-                  }`}
+                  overrideStyles
+                  className={`${
+                    error.comment
+                      ? "ring-red-500 focus:ring-red-500"
+                      : "ring-gray-300 focus:ring-indigo-500"
+                  } mt-2 w-full rounded-lg p-2.5 text-start text-sm text-gray-900 ring-1 ring-inset focus:outline-none focus:ring-2`}
                 />
               </div>
               <div className="flex items-center justify-center gap-4">
-                <Button onClick={() => setShowModal(false)}>Close</Button>
                 <Button theme="danger" onClick={() => handleBan(banData)}>
                   Ban
                 </Button>
+                <Button onClick={() => setShowModal(false)}>Close</Button>
               </div>
             </div>
           </div>
