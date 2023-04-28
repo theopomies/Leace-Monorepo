@@ -123,7 +123,13 @@ export const userRouter = router({
       if (!updated) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
     }),
   /**  Retrieve one user's data with the given id, based on your authorizations. */
-  getUserById: protectedProcedure([Role.TENANT, Role.OWNER, Role.AGENCY])
+  getUserById: protectedProcedure([
+    Role.TENANT,
+    Role.OWNER,
+    Role.AGENCY,
+    Role.ADMIN,
+    Role.MODERATOR,
+  ])
     .input(z.object({ userId: z.string() }))
     .query(async ({ ctx, input }) => {
       const userId = input.userId;
