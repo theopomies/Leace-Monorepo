@@ -1,38 +1,60 @@
-import { useSession } from "@clerk/nextjs";
+import {
+  RedirectToSignIn,
+  SignedIn,
+  SignedOut,
+  useSession,
+} from "@clerk/nextjs";
 import { Loader } from "../../components/shared/Loader";
 import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export default function CreateUser() {
   const session = useSession();
   const createUser = trpc.user.createUser.useMutation();
   const router = useRouter();
+  const [redirecting, setRedirecting] = useState(false);
+
+  const from = useMemo(() => {
+    const from = router.query.from;
+    if (typeof from === "string") {
+      // Decode the url encoded string
+      return decodeURIComponent(from);
+    }
+    return "/";
+  }, [router.query.from]);
 
   useEffect(() => {
-    if (!session.isLoaded || !session) {
+    if (!session.isLoaded || !session || redirecting || !session.isSignedIn) {
       return;
     }
+    setRedirecting(true);
 
     createUser
       .mutateAsync()
-      .then(() => {
-        router.push("/"); // Redirect to home page
-      })
       .catch((err) => {
         console.error(err);
-        router.push("/"); // Redirect to home page
+      })
+      .then(() => {
+        router.push(from); // Redirect to home page
       });
-  }, [session, createUser, router]);
+  }, [session, createUser, router, redirecting, from]);
 
   if (!session.isLoaded) {
     return <Loader />;
   }
 
-  if (!session) {
-    router.push("/sign-in");
-    return <Loader />;
-  }
-
-  return <Loader />;
+  return (
+    <>
+      <SignedIn>
+        <Loader />
+      </SignedIn>
+      <SignedOut>
+        <RedirectToSignIn
+          afterSignUpUrl={"/users/create"}
+          afterSignInUrl={router.asPath}
+        />
+      </SignedOut>
+    </>
+  );
 }
