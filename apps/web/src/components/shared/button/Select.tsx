@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { Check } from "../../moderation/Icons";
 
 export interface SelectProps {
-  label: string;
+  label?: string;
   value: string;
   options: string[];
   onChange: (value: string) => void;
@@ -30,17 +30,16 @@ export const Select = ({ label, value, options, onChange }: SelectProps) => {
   }, [selectRef]);
 
   return (
-    <div>
-      <label
-        id="listbox-label"
-        className="block text-sm font-medium leading-6 text-gray-900"
-      >
-        {label}
-      </label>
-      <div className="relative mt-2" ref={selectRef}>
+    <div className="h-full w-full">
+      {label && (
+        <label id="listbox-label" className="mb-2 block text-sm text-gray-900">
+          {label}
+        </label>
+      )}
+      <div className="relative h-full" ref={selectRef}>
         <button
           type="button"
-          className="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6"
+          className="relative h-full w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6"
           onClick={() => setOpen(!open)}
         >
           <span className="flex items-center">

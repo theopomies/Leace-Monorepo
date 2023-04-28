@@ -2,6 +2,7 @@ import { ReportReason } from "@prisma/client";
 import { useState } from "react";
 import { trpc } from "../../../utils/trpc";
 import { Button } from "../../shared/button/Button";
+import { Select } from "../../shared/button/Select";
 
 export interface ReportButtonProps {
   reportId: string;
@@ -25,22 +26,14 @@ export const ReportButton = ({ reportId }: ReportButtonProps) => {
   };
 
   return (
-    <div className="flex w-full items-center justify-center">
-      <select
+    <div className="flex w-full items-center justify-center gap-2">
+      <Select
         value={selected}
-        onChange={(e) => {
-          setSelected(e.target.value as ReportReason);
+        options={Object.keys(ReportReason) as Array<keyof typeof ReportReason>}
+        onChange={(value) => {
+          setSelected(value as ReportReason);
         }}
-        className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 shadow-sm outline-none focus:border-blue-500 focus:ring-blue-500"
-      >
-        {(Object.keys(ReportReason) as Array<keyof typeof ReportReason>).map(
-          (value, index) => (
-            <option key={index} value={value}>
-              {value}
-            </option>
-          ),
-        )}
-      </select>
+      />
       <Button onClick={handleClick}>Ok</Button>
     </div>
   );
