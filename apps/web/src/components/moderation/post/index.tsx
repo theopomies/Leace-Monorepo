@@ -1,3 +1,4 @@
+import { Button } from "../../shared/button/Button";
 import { UserCard } from "../user/UserCard";
 import { PostCard } from "./PostCard";
 import { useState } from "react";
@@ -12,12 +13,9 @@ export const Post = ({ postId }: PostProps) => {
 
   return (
     <div className="flex w-full flex-col">
-      <button
-        className="z-10 mb-2 rounded-full bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700"
-        onClick={() => setViewProfile(!viewProfile)}
-      >
+      <Button onClick={() => setViewProfile(!viewProfile)} className="mb-2">
         {viewProfile ? "View post" : "View profile"}
-      </button>
+      </Button>
       {postId && !viewProfile && (
         <PostCard postId={postId} setUserId={setUserId} />
       )}

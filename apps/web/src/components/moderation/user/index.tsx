@@ -4,6 +4,7 @@ import { trpc } from "../../../utils/trpc";
 import { PostCard } from "../post/PostCard";
 import { PostList } from "../post/PostList";
 import { UserCard } from "./UserCard";
+import { Button } from "../../shared/button/Button";
 
 export interface PostProps {
   userId: string;
@@ -18,12 +19,9 @@ export const User = ({ userId }: PostProps) => {
   return (
     <div className="flex w-full flex-col">
       {user && (user.role === Role.AGENCY || user.role === Role.OWNER) && (
-        <button
-          className="z-10 mb-2 rounded-full bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700"
-          onClick={() => setViewProfile(!viewProfile)}
-        >
+        <Button onClick={() => setViewProfile(!viewProfile)} className="mb-2">
           {viewProfile ? "View post" : "View profile"}
-        </button>
+        </Button>
       )}
       {viewProfile && userId && <UserCard userId={userId} />}
       {userId && !viewProfile && (
