@@ -1,14 +1,14 @@
 import axios from "axios";
-import { trpc } from "../../utils/trpc";
-import { Cross } from "./Icons";
-import { Button } from "../shared/button/Button";
+import { trpc } from "../../../utils/trpc";
+import { Cross } from "../Icons";
+import { Button } from "../../shared/button/Button";
 
-export interface DeleteImgButtonProps {
+export interface DeletePostImgProps {
   postId: string;
   id: string;
 }
 
-export const DeleteImgButton = ({ postId, id }: DeleteImgButtonProps) => {
+export const DeletePostImg = ({ postId, id }: DeletePostImgProps) => {
   const utils = trpc.useContext();
   const mut = trpc.moderation.deletePostImage.useMutation();
   const onClickDelete = async () => {
@@ -22,7 +22,8 @@ export const DeleteImgButton = ({ postId, id }: DeleteImgButtonProps) => {
     <Button
       theme="danger"
       onClick={onClickDelete}
-      className="absolute -right-1 -top-1 inline-flex w-5"
+      overrideStyles
+      className="absolute -right-1 -top-1 inline-flex items-center justify-center rounded-md bg-red-500 p-1 text-white hover:bg-white hover:text-red-500"
     >
       <Cross />
     </Button>

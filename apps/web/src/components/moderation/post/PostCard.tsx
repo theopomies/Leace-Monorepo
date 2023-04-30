@@ -1,5 +1,4 @@
 /* eslint-disable @next/next/no-img-element */
-import { DeleteImgButton } from "../DeleteImgButton";
 import { trpc } from "../../../utils/trpc";
 import { SlideShow } from "../../home/stack/SlideShow";
 import { motion } from "framer-motion";
@@ -10,6 +9,7 @@ import { GreenCheck } from "./GreenCheck";
 import { RedUncheck } from "./RedUncheck";
 import { Loader } from "../../shared/Loader";
 import { DisplayReports } from "../report/DisplayReports";
+import { DeletePostImg } from "./DeletePostImg";
 
 export interface PostProps {
   postId: string;
@@ -100,7 +100,7 @@ export const PostCard = ({ postId, setUserId }: PostProps) => {
                   alt="image"
                   className="mx-auto h-32 shadow-xl"
                 />
-                <DeleteImgButton postId={post.id} id={image.id} />
+                <DeletePostImg postId={post.id} id={image.id} />
               </div>
             ))}
           </div>
