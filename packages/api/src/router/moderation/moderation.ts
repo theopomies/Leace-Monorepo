@@ -245,6 +245,19 @@ export const moderationRouter = router({
         });
       });
     }),
+  deleteUserImage: protectedProcedure([Role.ADMIN, Role.MODERATOR])
+    .input(z.object({ userId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const user = await ctx.prisma.user.findUnique({
+        where: { id: input.userId },
+      });
+      if (!user) throw new TRPCError({ code: "NOT_FOUND" });
+
+      return await ctx.prisma.user.update({
+        where: { id: input.userId },
+        data: { image: null },
+      });
+    }),
   deletePostImage: protectedProcedure([Role.ADMIN, Role.MODERATOR])
     .input(z.object({ postId: z.string(), id: z.string() }))
     .mutation(async ({ ctx, input }) => {

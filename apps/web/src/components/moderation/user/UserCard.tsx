@@ -5,6 +5,7 @@ import { Documents } from "../documents";
 import { ChatModal } from "../ChatModal";
 import { displayDate } from "../../../utils/displayDate";
 import { DisplayReports } from "../report/DisplayReports";
+import { DeleteUserImg } from "./DeleteUserImg";
 
 export interface UserCardProps {
   userId: string;
@@ -21,12 +22,17 @@ export const UserCard = ({ userId }: UserCardProps) => {
 
   return (
     <div className="flex w-full flex-col overflow-auto rounded-lg bg-white p-8 shadow">
-      <img
-        src={user.image || "/defaultImage.png"}
-        referrerPolicy="no-referrer"
-        alt="image"
-        className="mx-auto h-32 rounded-full shadow-xl"
-      />
+      <div className="flex justify-center">
+        <div className="relative">
+          <img
+            src={user.image || "/defaultImage.png"}
+            referrerPolicy="no-referrer"
+            alt="image"
+            className="mx-auto h-32 rounded-full shadow-xl"
+          />
+          {user.image && <DeleteUserImg userId={userId} />}
+        </div>
+      </div>
       <div className="mt-2 px-16 text-center">
         <h3 className="font-semibold">{user.role}</h3>
         <h3 className=" text-4xl font-semibold">
