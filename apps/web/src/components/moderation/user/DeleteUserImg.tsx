@@ -8,9 +8,9 @@ export interface DeleteUserImgProps {
 
 export const DeleteUserImg = ({ userId }: DeleteUserImgProps) => {
   const utils = trpc.useContext();
-  const { mutate } = trpc.moderation.deleteUserImage.useMutation({
+  const { mutate } = trpc.moderation.image.deleteUserImage.useMutation({
     onSuccess() {
-      utils.moderation.getUser.invalidate();
+      utils.moderation.user.getUser.invalidate();
     },
   });
 

@@ -7,10 +7,10 @@ export interface UnBanProps {
 
 export const UnBan = ({ userId }: UnBanProps) => {
   const utils = trpc.useContext();
-  const mutation = trpc.moderation.unBanUser.useMutation({
+  const mutation = trpc.moderation.ban.unBanUser.useMutation({
     onSuccess() {
-      utils.moderation.getUser.invalidate();
-      utils.moderation.getIsBan.invalidate();
+      utils.moderation.user.getUser.invalidate();
+      utils.moderation.ban.getIsBan.invalidate();
     },
   });
   const handleClick = () => {

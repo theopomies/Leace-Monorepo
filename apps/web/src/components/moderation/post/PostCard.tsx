@@ -18,7 +18,7 @@ export interface PostProps {
 
 export const PostCard = ({ postId, setUserId }: PostProps) => {
   const { data: post, isLoading: postLoading } =
-    trpc.moderation.getPost.useQuery({ postId: postId });
+    trpc.moderation.post.getPost.useQuery({ postId });
   const { data: images } = trpc.image.getSignedPostUrl.useQuery(postId);
 
   useEffect(() => {

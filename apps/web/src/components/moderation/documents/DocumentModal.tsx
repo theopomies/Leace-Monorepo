@@ -14,7 +14,8 @@ export const DocumentModal = ({
   setShowModal,
   refetchDocuments,
 }: DocumentModalProps) => {
-  const documentValidation = trpc.moderation.documentValidation.useMutation();
+  const documentValidation =
+    trpc.moderation.document.documentValidation.useMutation();
 
   const handleClick = async () => {
     if (document) {

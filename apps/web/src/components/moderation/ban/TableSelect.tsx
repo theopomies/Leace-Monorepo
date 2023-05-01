@@ -4,7 +4,7 @@ import { displayDate } from "../../../utils/displayDate";
 import { RouterInputs } from "../../../utils/trpc";
 import { StatusSpan } from "../report/StatusSpan";
 
-type banData = RouterInputs["moderation"]["createBan"];
+type banData = RouterInputs["moderation"]["ban"]["createBan"];
 
 interface TableSelectProps {
   reports: Report[];

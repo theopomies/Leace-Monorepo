@@ -12,9 +12,9 @@ export const ReportButton = ({ reportId }: ReportButtonProps) => {
   const [selected, setSelected] = useState<ReportReason>(ReportReason["SPAM"]);
 
   const utils = trpc.useContext();
-  const mutation = trpc.moderation.updateReport.useMutation({
+  const mutation = trpc.moderation.report.updateReport.useMutation({
     onSuccess() {
-      utils.moderation.getReport.invalidate();
+      utils.moderation.report.getReport.invalidate();
     },
   });
 

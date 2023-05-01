@@ -5,7 +5,7 @@ import { User } from "./user";
 import { Report } from "./report";
 
 export const Moderation = () => {
-  const report = trpc.moderation.getReport.useQuery(undefined, {
+  const report = trpc.moderation.report.getReport.useQuery(undefined, {
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     refetchOnReconnect: false,

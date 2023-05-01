@@ -12,14 +12,14 @@ export const Administration = () => {
   const router = useRouter();
   const [uid, setUid] = useState((router.query.id as string) || "");
 
-  const user = trpc.moderation.getUserById.useQuery(uid.toString(), {
+  const user = trpc.moderation.user.getUserById.useQuery(uid.toString(), {
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     refetchOnReconnect: false,
     retry: false,
   });
 
-  const post = trpc.moderation.getPostById.useQuery(uid.toString(), {
+  const post = trpc.moderation.post.getPostById.useQuery(uid.toString(), {
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     refetchOnReconnect: false,

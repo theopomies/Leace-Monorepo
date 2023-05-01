@@ -13,8 +13,8 @@ export interface UserCardProps {
 
 export const UserCard = ({ userId }: UserCardProps) => {
   const { data: user, isLoading: userLoading } =
-    trpc.moderation.getUser.useQuery({ userId });
-  const { data: isBan } = trpc.moderation.getIsBan.useQuery({ userId });
+    trpc.moderation.user.getUser.useQuery({ userId });
+  const { data: isBan } = trpc.moderation.ban.getIsBan.useQuery({ userId });
 
   if (userLoading) return <Loader />;
 

@@ -9,7 +9,7 @@ export interface PostListProps {
 }
 
 export const PostList = ({ userId, setPostId }: PostListProps) => {
-  const { data: posts } = trpc.moderation.getPosts.useQuery({ userId: userId });
+  const { data: posts } = trpc.moderation.post.getPosts.useQuery({ userId });
 
   if (posts) {
     return (

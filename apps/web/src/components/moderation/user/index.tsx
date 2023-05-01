@@ -11,7 +11,7 @@ export interface PostProps {
 }
 
 export const User = ({ userId }: PostProps) => {
-  const { data: user } = trpc.moderation.getUser.useQuery({ userId: userId }); // Just to get the user role
+  const { data: user } = trpc.moderation.user.getUser.useQuery({ userId });
 
   const [viewProfile, setViewProfile] = useState(true);
   const [postId, setPostId] = useState<string | null>(null);

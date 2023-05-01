@@ -6,7 +6,7 @@ import { Select } from "../../shared/button/Select";
 import { TextArea } from "../../shared/forms/TextArea";
 import { Button } from "../../shared/button/Button";
 
-type banData = RouterInputs["moderation"]["createBan"];
+type banData = RouterInputs["moderation"]["ban"]["createBan"];
 
 export interface BanModalProps {
   userId: string;

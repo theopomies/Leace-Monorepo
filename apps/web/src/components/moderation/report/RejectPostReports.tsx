@@ -7,9 +7,9 @@ export interface RejectPostReportProps {
 
 export const RejectPostReports = ({ postId }: RejectPostReportProps) => {
   const utils = trpc.useContext();
-  const mutation = trpc.moderation.rejectPostReports.useMutation({
+  const mutation = trpc.moderation.report.rejectPostReports.useMutation({
     onSuccess() {
-      utils.moderation.getReport.invalidate();
+      utils.moderation.report.getReport.invalidate();
     },
   });
   const handleClick = () => {
