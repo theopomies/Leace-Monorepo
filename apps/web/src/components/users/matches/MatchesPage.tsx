@@ -4,6 +4,7 @@ import { TenantList } from "../TenantList";
 import { PostList } from "../posts/PostList";
 import { trpc } from "../../../utils/trpc";
 import { Loader } from "../../shared/Loader";
+import { Chat } from "../../shared/chat";
 
 export interface MatchesPageProps {
   userId: string;
@@ -25,9 +26,14 @@ export function MatchesPage({ userId }: MatchesPageProps) {
   return (
     <div className="w-full">
       <Header heading="My Matches" />
-      {role == Role.TENANT && <TenantList userId={userId} />}
+      {role == Role.TENANT && (
+        <div className="flex h-screen w-full justify-center p-4">
+          <Chat userId={session.userId} chatOn isTenant />
+        </div>
+      )}
+      {role == Role.TENANT && <PostList userId={userId} />}
       {(role == Role.OWNER || role == Role.AGENCY) && (
-        <PostList userId={userId} />
+        <TenantList userId={userId} />
       )}
     </div>
   );
