@@ -2,27 +2,17 @@ import { Dispatch, SetStateAction } from "react";
 import { trpc } from "../../../utils/trpc";
 import { ChatList } from "./ChatList";
 
-export interface ChatListMatchOwnerProps {
+export interface ChatListSupportProps {
   userId: string;
   setConversationId: Dispatch<SetStateAction<string>>;
 }
 
-export const ChatListMatchOwner = ({
+export const ChatListSupport = ({
   userId,
   setConversationId,
-}: ChatListMatchOwnerProps) => {
-  const { data: relationships } = trpc.relationship.getMatchesForOwner.useQuery(
-    { userId },
-    {
-      onSuccess(data) {
-        if (data && data[0] && data[0].conversation)
-          setConversationId(data[0].conversation.id);
-      },
-    },
-  );
-
+}: ChatListSupportProps) => {
   const { data: supportRelationships } =
-    trpc.support.getRelationshipsForOwner.useQuery(
+    trpc.moderation.support.getRelationships.useQuery(
       { userId },
       {
         onSuccess(data) {
@@ -34,7 +24,6 @@ export const ChatListMatchOwner = ({
 
   return (
     <ChatList
-      relationships={relationships}
       supportRelationships={supportRelationships}
       setConversationId={setConversationId}
       userId={userId}

@@ -4,14 +4,13 @@ import { ChatBox } from "./ChatBox";
 export interface ChatBoxModerationProps {
   conversationId: string;
   userId: string;
-  chatOn: boolean | undefined;
 }
 
 export const ChatBoxModeration = ({
   conversationId,
   ...rest
 }: ChatBoxModerationProps) => {
-  const { data: messages } = trpc.moderation.getMessages.useQuery({
+  const { data: messages } = trpc.moderation.conversation.getMessages.useQuery({
     conversationId,
   });
 

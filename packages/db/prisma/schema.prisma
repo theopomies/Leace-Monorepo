@@ -55,17 +55,17 @@ model User {
   id   String @id @default(cuid())
   role Role?
 
-  email         String?   @unique
+  email         String?     @unique
   emailVerified DateTime?
   image         String?
-  firstName   String?
-  lastName    String?
-  phoneNumber String?     @unique
-  country     String?
-  description String? @db.Text
-  birthDate   DateTime?
-  status      UserStatus? @default(INACTIVE)
-  isPremium   Boolean?    @default(false)
+  firstName     String?
+  lastName      String?
+  phoneNumber   String?     @unique
+  country       String?
+  description   String?     @db.Text
+  birthDate     DateTime?
+  status        UserStatus? @default(INACTIVE)
+  isPremium     Boolean?    @default(false)
 
   attribute Attribute?
 
@@ -75,11 +75,14 @@ model User {
   relationships Relationship[]
   messages      Message[]
 
-  bans           Ban[] @relation("banned")
-  bansCreated    Ban[] @relation("bans_created")
+  bans        Ban[] @relation("banned")
+  bansCreated Ban[] @relation("bans_created")
 
   reports        Report[] @relation("reported")
   reportsCreated Report[] @relation("reports_created")
+
+  supportedBy SupportRelationship[] @relation("supporting")
+  supporting  SupportRelationship[] @relation("supportedBy")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -95,7 +98,7 @@ model Post {
 
   title   String?
   content String?
-  desc    String? @db.Text
+  desc    String?   @db.Text
   type    PostType? @default(TO_BE_RENTED)
 
   attribute Attribute?
@@ -133,7 +136,7 @@ model Attribute {
 
   // Only Owner and Agency
   price Int?
-  size Int?
+  size  Int?
 
   rentStartDate DateTime?
   rentEndDate   DateTime?
@@ -161,7 +164,7 @@ model Attribute {
 model Ban {
   id String @id @default(cuid())
 
-  createdBy   User @relation(fields: [createdById], references: [id], "bans_created", onDelete: Cascade)
+  createdBy   User   @relation(fields: [createdById], references: [id], "bans_created", onDelete: Cascade)
   createdById String
 
   user   User   @relation(fields: [userId], references: [id], "banned", onDelete: Cascade)
@@ -169,8 +172,8 @@ model Ban {
 
   reports Report[]
 
-  reason ReportReason?
-  until  DateTime
+  reason  ReportReason?
+  until   DateTime
   comment String
 
   createdAt DateTime @default(now())
@@ -193,7 +196,7 @@ model Report {
   post   Post?   @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId String?
 
-  ban Ban? @relation(fields: [banId], references: [id], onDelete: Cascade)
+  ban   Ban?    @relation(fields: [banId], references: [id], onDelete: Cascade)
   banId String?
 
   reason ReportReason?
@@ -219,8 +222,8 @@ model Document {
   post   Post?   @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId String?
 
-  valid  Boolean @default(false)
-  ext String
+  valid Boolean @default(false)
+  ext   String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -258,7 +261,7 @@ model Relationship {
   post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId String
 
-  isMatch      Boolean? @default(false)
+  isMatch      Boolean?      @default(false)
   conversation Conversation?
 
   createdAt DateTime @default(now())
@@ -269,11 +272,34 @@ model Relationship {
   @@map("relationships")
 }
 
+model SupportRelationship {
+  id String @id @default(cuid())
+
+  support   User   @relation(fields: [supportId], references: [id], "supporting", onDelete: Cascade)
+  supportId String
+
+  user   User   @relation(fields: [userId], references: [id], "supportedBy", onDelete: Cascade)
+  userId String
+
+  isMatch      Boolean?      @default(false)
+  conversation Conversation?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([supportId])
+  @@index([userId])
+  @@map("supportRelationships")
+}
+
 model Conversation {
   id String @id @default(cuid())
 
   rs         Relationship? @relation(fields: [relationId], references: [id], onDelete: Cascade)
   relationId String?       @unique
+
+  supportRs         SupportRelationship? @relation(fields: [supportRelationId], references: [id], onDelete: Cascade)
+  supportRelationId String?              @unique
 
   type     ConversationType? @default(NONE)
   messages Message[]

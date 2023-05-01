@@ -22,11 +22,21 @@ export const ChatListMatchTenant = ({
       },
     );
 
-  if (!relationships) return <div>No conversations</div>;
+  const { data: supportRelationships } =
+    trpc.support.getRelationshipsForTenant.useQuery(
+      { userId },
+      {
+        onSuccess(data) {
+          if (data && data[0] && data[0].conversation)
+            setConversationId(data[0].conversation.id);
+        },
+      },
+    );
 
   return (
     <ChatList
       relationships={relationships}
+      supportRelationships={supportRelationships}
       setConversationId={setConversationId}
       userId={userId}
     />

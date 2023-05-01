@@ -3,12 +3,12 @@ import { useEffect, useRef } from "react";
 import { Message, User } from "@prisma/client";
 import { ChatMessage } from "./ChatMessage";
 import { ChatInputMatch } from "./ChatInputMatch";
-import { ChatInputModeration } from "./ChatInputModeration";
+import { ChatInputSupport } from "./ChatInputSupport";
 
 export interface ChatBoxProps {
   conversationId: string;
   userId: string;
-  chatOn: boolean | undefined;
+  chatOn?: boolean;
   messages: (Message & { sender: User })[];
   isModeration?: boolean;
 }
@@ -16,7 +16,7 @@ export interface ChatBoxProps {
 export const ChatBox = ({
   conversationId,
   userId,
-  chatOn,
+  chatOn = false,
   messages,
   isModeration = false,
 }: ChatBoxProps) => {
@@ -43,7 +43,7 @@ export const ChatBox = ({
           </div>
         </div>
         {conversationId && isModeration ? (
-          chatOn && <ChatInputModeration conversationId={conversationId} />
+          chatOn && <ChatInputSupport conversationId={conversationId} />
         ) : (
           <ChatInputMatch conversationId={conversationId} />
         )}

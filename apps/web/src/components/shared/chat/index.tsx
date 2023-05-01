@@ -6,28 +6,36 @@ import { ChatListMatchOwner } from "./ChatListMatchOwner";
 import { ChatListMatchTenant } from "./ChatListMatchTenant";
 import { ChatListModeration } from "./ChatListModeration";
 import { XOR } from "../../../utils/types";
+import { ChatListSupport } from "./ChatListSupport";
+import { ChatBoxSupport } from "./ChatBoxSupport";
 
 export type ChatProps = {
   userId: string;
   chatOn?: boolean;
+  isSupport?: boolean;
 } & XOR<{ isModeration?: boolean }, { isTenant: boolean }>;
 
 export const Chat = ({
   userId,
-  isTenant,
   chatOn = false,
+  isSupport = false,
   isModeration = false,
+  isTenant,
 }: ChatProps) => {
-  const [conversationId, setConversationId] = useState("");
+  const [conversationId, setConversationId] = useState(""); // add value to make the diff between relationship and supportRelationship
 
   return (
     <div className="flex h-full w-full text-gray-800 antialiased">
       <div className="flex w-full flex-row overflow-x-hidden">
-        {isModeration ? (
+        {isSupport ? (
+          <ChatListSupport
+            userId={userId}
+            setConversationId={setConversationId}
+          />
+        ) : isModeration ? (
           <ChatListModeration
             userId={userId}
             setConversationId={setConversationId}
-            chatOn={chatOn}
           />
         ) : isTenant ? (
           <ChatListMatchTenant
@@ -41,11 +49,16 @@ export const Chat = ({
           />
         )}
         {conversationId &&
-          (isModeration ? (
-            <ChatBoxModeration
+          (isSupport ? (
+            <ChatBoxSupport
               conversationId={conversationId}
               userId={userId}
               chatOn={chatOn}
+            />
+          ) : isModeration ? (
+            <ChatBoxModeration
+              conversationId={conversationId}
+              userId={userId}
             />
           ) : (
             <ChatBoxMatch

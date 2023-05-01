@@ -4,11 +4,12 @@ import { userRouter } from "./user";
 import { postRouter } from "./post";
 import { reportRouter } from "./report";
 import { attributesRouter } from "./attributes";
-import { moderationRouter } from "./moderation/moderation";
+import { moderationRouter } from "./moderation";
 import { relationshipRouter } from "./relationship";
 import { documentRouter } from "./document";
 import { imageRouter } from "./image";
 import { conversationRouter } from "./conversation";
+import { supportRouter } from "./support";
 
 export const appRouter = router({
   auth: authRouter,
@@ -21,6 +22,7 @@ export const appRouter = router({
   document: documentRouter,
   image: imageRouter,
   conversation: conversationRouter,
+  support: supportRouter,
 });
 
 // export type definition of API
