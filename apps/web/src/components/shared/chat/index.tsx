@@ -25,48 +25,50 @@ export const Chat = ({
   const [conversationId, setConversationId] = useState(""); // add value to make the diff between relationship and supportRelationship
 
   return (
-    <div className="flex h-full w-full text-gray-800 antialiased">
-      <div className="flex w-full flex-row overflow-x-hidden">
-        {isSupport ? (
-          <ChatListSupport
-            userId={userId}
-            setConversationId={setConversationId}
-          />
-        ) : isModeration ? (
-          <ChatListModeration
-            userId={userId}
-            setConversationId={setConversationId}
-          />
-        ) : isTenant ? (
-          <ChatListMatchTenant
-            userId={userId}
-            setConversationId={setConversationId}
-          />
-        ) : (
-          <ChatListMatchOwner
-            userId={userId}
-            setConversationId={setConversationId}
-          />
-        )}
-        {conversationId &&
-          (isSupport ? (
-            <ChatBoxSupport
-              conversationId={conversationId}
+    <div className="flex w-full items-center justify-center rounded-lg bg-slate-50 shadow-lg">
+      <div className="flex h-full w-full text-gray-800 antialiased">
+        <div className="flex w-full flex-row overflow-x-hidden">
+          {isSupport ? (
+            <ChatListSupport
               userId={userId}
-              chatOn={chatOn}
+              setConversationId={setConversationId}
             />
           ) : isModeration ? (
-            <ChatBoxModeration
-              conversationId={conversationId}
+            <ChatListModeration
               userId={userId}
+              setConversationId={setConversationId}
+            />
+          ) : isTenant ? (
+            <ChatListMatchTenant
+              userId={userId}
+              setConversationId={setConversationId}
             />
           ) : (
-            <ChatBoxMatch
-              conversationId={conversationId}
+            <ChatListMatchOwner
               userId={userId}
-              chatOn={chatOn}
+              setConversationId={setConversationId}
             />
-          ))}
+          )}
+          {conversationId &&
+            (isSupport ? (
+              <ChatBoxSupport
+                conversationId={conversationId}
+                userId={userId}
+                chatOn={chatOn}
+              />
+            ) : isModeration ? (
+              <ChatBoxModeration
+                conversationId={conversationId}
+                userId={userId}
+              />
+            ) : (
+              <ChatBoxMatch
+                conversationId={conversationId}
+                userId={userId}
+                chatOn={chatOn}
+              />
+            ))}
+        </div>
       </div>
     </div>
   );
