@@ -61,11 +61,13 @@ export const ChatList = ({
         <div className="flex flex-row items-center justify-between pl-2 text-xs">
           <span className="font-bold">Conversations</span>
           <div className="flex gap-2">
+            {supportRelationships && (
+              <span className="flex w-4 items-center justify-center rounded-full bg-indigo-300">
+                {supportRelationships.length}
+              </span>
+            )}
             <span className="flex w-4 items-center justify-center rounded-full bg-gray-300">
               {relationships ? relationships.length : 0}
-            </span>
-            <span className="flex w-4 items-center justify-center rounded-full bg-indigo-300">
-              {supportRelationships && supportRelationships.length}
             </span>
           </div>
         </div>
@@ -92,10 +94,15 @@ export const ChatList = ({
                 />
               </div>
               <div className="ml-2 text-sm font-semibold">
-                {supportRelationship.user.id === userId
-                  ? `${supportRelationship.support.firstName} ${supportRelationship.support.lastName}`
-                  : `${supportRelationship.user.firstName} ${supportRelationship.user.lastName}`}
+                {supportRelationship.user.id === userId ? (
+                  <span className=" text-indigo-500">
+                    {supportRelationship.support.firstName} Support Leace
+                  </span>
+                ) : (
+                  `${supportRelationship.user.firstName} ${supportRelationship.user.lastName}`
+                )}
               </div>
+              <p></p>
               <div className="ml-auto flex h-4 w-4 items-center justify-center rounded bg-red-500 text-xs leading-none text-white">
                 {supportRelationship.conversation?.messages?.length}
               </div>

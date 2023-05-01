@@ -42,7 +42,7 @@ export const ChatBox = ({
             ))}
           </div>
         </div>
-        {conversationId && isModeration ? (
+        {isModeration ? (
           chatOn && <ChatInputSupport conversationId={conversationId} />
         ) : (
           <ChatInputMatch conversationId={conversationId} />

@@ -9,9 +9,7 @@ export const ChatInputMatch = ({ conversationId }: ChatInputMatchProps) => {
   const utils = trpc.useContext();
   const sendMessage = trpc.conversation.sendMessage.useMutation({
     onSuccess() {
-      utils.conversation.getMessages.invalidate({
-        conversationId: conversationId,
-      });
+      utils.conversation.getMessages.invalidate({ conversationId });
     },
   });
 
