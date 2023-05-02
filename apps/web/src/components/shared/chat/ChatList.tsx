@@ -6,7 +6,10 @@ import {
   Relationship,
   SupportRelationship,
   User,
+  Role,
 } from "@prisma/client";
+import { trpc } from "../../../utils/trpc";
+import { SupportButton } from "./SupportButton";
 
 export type relationshipsType =
   | (Relationship & {
@@ -37,6 +40,10 @@ export const ChatList = ({
   supportRelationships,
   setConversationId,
 }: ChatListProps) => {
+  const { data: session } = trpc.auth.getSession.useQuery();
+
+  if (!session || !session.role) return null;
+
   return (
     <div className="flex h-full w-1/5 flex-shrink-0 flex-col rounded-tl-lg rounded-bl-lg bg-white pb-6">
       <div className="flex w-full flex-row items-center justify-center rounded-tl-lg bg-indigo-500 p-6">
@@ -66,9 +73,11 @@ export const ChatList = ({
                 {supportRelationships.length}
               </span>
             )}
-            <span className="flex w-4 items-center justify-center rounded-full bg-gray-300">
-              {relationships ? relationships.length : 0}
-            </span>
+            {session.role !== Role.ADMIN && session.role !== Role.MODERATOR && (
+              <span className="flex w-4 items-center justify-center rounded-full bg-gray-300">
+                {relationships ? relationships.length : 0}
+              </span>
+            )}
           </div>
         </div>
         <div className="mt-4 flex h-full w-full flex-col space-y-1">
@@ -102,10 +111,6 @@ export const ChatList = ({
                   `${supportRelationship.user.firstName} ${supportRelationship.user.lastName}`
                 )}
               </div>
-              <p></p>
-              <div className="ml-auto flex h-4 w-4 items-center justify-center rounded bg-red-500 text-xs leading-none text-white">
-                {supportRelationship.conversation?.messages?.length}
-              </div>
             </button>
           ))}
           {relationships?.map((relationship) => (
@@ -134,13 +139,11 @@ export const ChatList = ({
                   ? `${relationship.post.createdBy.firstName} ${relationship.post.createdBy.lastName}`
                   : `${relationship.user.firstName} ${relationship.user.lastName}`}
               </div>
-              <div className="ml-auto flex h-4 w-4 items-center justify-center rounded bg-red-500 text-xs leading-none text-white">
-                {relationship.conversation?.messages?.length}
-              </div>
             </button>
           ))}
         </div>
       </div>
+      <SupportButton userId={userId} role={session.role} />
     </div>
   );
 };
