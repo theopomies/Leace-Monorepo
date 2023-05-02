@@ -4,11 +4,13 @@ import { ChatList } from "./ChatList";
 
 export interface ChatListModerationProps {
   userId: string;
+  conversationId: string;
   setConversationId: Dispatch<SetStateAction<string>>;
 }
 
 export const ChatListModeration = ({
   userId,
+  conversationId,
   setConversationId,
 }: ChatListModerationProps) => {
   const { data: relationships } =
@@ -16,7 +18,7 @@ export const ChatListModeration = ({
       { userId },
       {
         onSuccess(data) {
-          if (data && data[0] && data[0].conversation)
+          if (!conversationId && data && data[0] && data[0].conversation)
             setConversationId(data[0].conversation.id);
         },
       },
@@ -24,9 +26,10 @@ export const ChatListModeration = ({
 
   return (
     <ChatList
-      relationships={relationships}
-      setConversationId={setConversationId}
       userId={userId}
+      conversationId={conversationId}
+      setConversationId={setConversationId}
+      relationships={relationships}
     />
   );
 };

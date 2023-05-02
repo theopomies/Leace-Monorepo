@@ -29,6 +29,7 @@ export type supportRelationshipsType =
 
 export interface ChatListProps {
   userId: string;
+  conversationId: string;
   setConversationId: React.Dispatch<React.SetStateAction<string>>;
   relationships?: relationshipsType;
   supportRelationships?: supportRelationshipsType;
@@ -36,9 +37,10 @@ export interface ChatListProps {
 
 export const ChatList = ({
   userId,
+  conversationId,
+  setConversationId,
   relationships,
   supportRelationships,
-  setConversationId,
 }: ChatListProps) => {
   const { data: session } = trpc.auth.getSession.useQuery();
 
@@ -84,7 +86,10 @@ export const ChatList = ({
           {supportRelationships?.map((supportRelationship) => (
             <button
               key={supportRelationship.id}
-              className="flex flex-row items-center rounded-xl p-2 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
+              className={`flex flex-row items-center rounded-xl p-2 hover:bg-gray-100 ${
+                conversationId === supportRelationship.conversation?.id &&
+                "bg-gray-100"
+              } focus:outline-none`}
               onClick={() => {
                 if (supportRelationship.conversation)
                   setConversationId(supportRelationship.conversation.id);
@@ -116,7 +121,10 @@ export const ChatList = ({
           {relationships?.map((relationship) => (
             <button
               key={relationship.id}
-              className="flex flex-row items-center rounded-xl p-2 hover:bg-gray-100"
+              className={`flex flex-row items-center rounded-xl p-2 hover:bg-gray-100 ${
+                conversationId === relationship.conversation?.id &&
+                "bg-gray-100"
+              } focus:outline-none`}
               onClick={() => {
                 if (relationship.conversation)
                   setConversationId(relationship.conversation.id);
@@ -143,7 +151,11 @@ export const ChatList = ({
           ))}
         </div>
       </div>
-      <SupportButton userId={userId} role={session.role} />
+      <SupportButton
+        userId={userId}
+        role={session.role}
+        setConversationId={setConversationId}
+      />
     </div>
   );
 };

@@ -4,18 +4,20 @@ import { ChatList } from "./ChatList";
 
 export interface ChatListMatchOwnerProps {
   userId: string;
+  conversationId: string;
   setConversationId: Dispatch<SetStateAction<string>>;
 }
 
 export const ChatListMatchOwner = ({
   userId,
+  conversationId,
   setConversationId,
 }: ChatListMatchOwnerProps) => {
   const { data: relationships } = trpc.relationship.getMatchesForOwner.useQuery(
     { userId },
     {
       onSuccess(data) {
-        if (data && data[0] && data[0].conversation)
+        if (!conversationId && data && data[0] && data[0].conversation)
           setConversationId(data[0].conversation.id);
       },
     },
@@ -26,7 +28,7 @@ export const ChatListMatchOwner = ({
       { userId },
       {
         onSuccess(data) {
-          if (data && data[0] && data[0].conversation)
+          if (!conversationId && data && data[0] && data[0].conversation)
             setConversationId(data[0].conversation.id);
         },
       },
@@ -34,10 +36,11 @@ export const ChatListMatchOwner = ({
 
   return (
     <ChatList
+      userId={userId}
+      conversationId={conversationId}
+      setConversationId={setConversationId}
       relationships={relationships}
       supportRelationships={supportRelationships}
-      setConversationId={setConversationId}
-      userId={userId}
     />
   );
 };

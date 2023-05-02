@@ -31,21 +31,25 @@ export const Chat = ({
           {isSupport ? (
             <ChatListSupport
               userId={userId}
+              conversationId={conversationId}
               setConversationId={setConversationId}
             />
           ) : isModeration ? (
             <ChatListModeration
               userId={userId}
+              conversationId={conversationId}
               setConversationId={setConversationId}
             />
           ) : isTenant ? (
             <ChatListMatchTenant
               userId={userId}
+              conversationId={conversationId}
               setConversationId={setConversationId}
             />
           ) : (
             <ChatListMatchOwner
               userId={userId}
+              conversationId={conversationId}
               setConversationId={setConversationId}
             />
           )}

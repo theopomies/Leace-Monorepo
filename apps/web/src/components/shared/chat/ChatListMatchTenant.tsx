@@ -4,11 +4,13 @@ import { ChatList } from "./ChatList";
 
 export interface ChatListMatchTenantProps {
   userId: string;
+  conversationId: string;
   setConversationId: Dispatch<SetStateAction<string>>;
 }
 
 export const ChatListMatchTenant = ({
   userId,
+  conversationId,
   setConversationId,
 }: ChatListMatchTenantProps) => {
   const { data: relationships } =
@@ -16,7 +18,7 @@ export const ChatListMatchTenant = ({
       { userId },
       {
         onSuccess(data) {
-          if (data && data[0] && data[0].conversation)
+          if (!conversationId && data && data[0] && data[0].conversation)
             setConversationId(data[0].conversation.id);
         },
       },
@@ -27,7 +29,7 @@ export const ChatListMatchTenant = ({
       { userId },
       {
         onSuccess(data) {
-          if (data && data[0] && data[0].conversation)
+          if (!conversationId && data && data[0] && data[0].conversation)
             setConversationId(data[0].conversation.id);
         },
       },
@@ -35,10 +37,11 @@ export const ChatListMatchTenant = ({
 
   return (
     <ChatList
+      userId={userId}
+      conversationId={conversationId}
+      setConversationId={setConversationId}
       relationships={relationships}
       supportRelationships={supportRelationships}
-      setConversationId={setConversationId}
-      userId={userId}
     />
   );
 };
