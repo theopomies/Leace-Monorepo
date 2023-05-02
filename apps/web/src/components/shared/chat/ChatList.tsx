@@ -84,7 +84,7 @@ export const ChatList = ({
           {supportRelationships?.map((supportRelationship) => (
             <button
               key={supportRelationship.id}
-              className="flex flex-row items-center rounded-xl p-2 hover:bg-gray-100"
+              className="flex flex-row items-center rounded-xl p-2 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
               onClick={() => {
                 if (supportRelationship.conversation)
                   setConversationId(supportRelationship.conversation.id);
