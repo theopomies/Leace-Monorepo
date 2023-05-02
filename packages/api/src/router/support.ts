@@ -34,12 +34,20 @@ export const supportRouter = router({
       });
       if (!supportRelationship) throw new TRPCError({ code: "NOT_FOUND" });
 
-      const chat = await ctx.prisma.conversation.create({
+      const conversation = await ctx.prisma.conversation.create({
         data: { supportRelationId: supportRelationship.id },
       });
-      if (!chat) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+      if (!conversation) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
 
-      return chat;
+      await ctx.prisma.message.create({
+        data: {
+          content: "What can the best mechanic in LS do for you ?",
+          conversationId: conversation.id,
+          senderId: support.id,
+        },
+      });
+
+      return conversation.id;
     }),
   getRelationshipsForTenant: protectedProcedure([Role.TENANT])
     .input(z.object({ userId: z.string() }))
