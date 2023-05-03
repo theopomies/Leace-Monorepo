@@ -22,7 +22,7 @@ export const Chat = ({
   isModeration = false,
   isTenant,
 }: ChatProps) => {
-  const [conversationId, setConversationId] = useState(""); // add value to make the diff between relationship and supportRelationship
+  const [conversationId, setConversationId] = useState("");
 
   return (
     <div className="flex w-full items-center justify-center rounded-lg bg-slate-50 shadow-lg">

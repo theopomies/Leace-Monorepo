@@ -81,8 +81,8 @@ model User {
   reports        Report[] @relation("reported")
   reportsCreated Report[] @relation("reports_created")
 
-  supportedBy SupportRelationship[] @relation("supporting")
-  supporting  SupportRelationship[] @relation("supportedBy")
+  supportedBy SupportRelationship[] @relation("supportedBy")
+  supporting  SupportRelationship[] @relation("supporting")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

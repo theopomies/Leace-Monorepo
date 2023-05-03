@@ -40,6 +40,7 @@ export const relationshipModeration = router({
               include: { messages: true },
             },
           },
+          orderBy: { updatedAt: "desc" },
         });
         if (!rs) throw new TRPCError({ code: "NOT_FOUND" });
 
@@ -61,6 +62,7 @@ export const relationshipModeration = router({
             include: { messages: true },
           },
         },
+        orderBy: { updatedAt: "desc" },
       });
       if (!rs) throw new TRPCError({ code: "NOT_FOUND" });
 

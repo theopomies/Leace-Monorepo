@@ -1,4 +1,4 @@
-import { Role } from "@prisma/client";
+import { Role, ConversationType } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";
@@ -16,13 +16,11 @@ export const supportRouter = router({
       const supports = await ctx.prisma.user.findMany({
         where: { role: Role.ADMIN },
         include: { supporting: true },
+        orderBy: { supporting: { _count: "asc" } }, // Support who has the least supportRelationships
       });
       if (!supports) throw new TRPCError({ code: "NOT_FOUND" });
 
-      // **For the moment** find support who has no supportRelationship
-      const support = supports.find((support) => {
-        return support.supporting.length == 0;
-      });
+      const support = supports[0];
       if (!support)
         throw new TRPCError({
           code: "NOT_FOUND",
@@ -62,12 +60,18 @@ export const supportRouter = router({
 
       const supportRelationships =
         await ctx.prisma.supportRelationship.findMany({
-          where: { userId },
+          where: {
+            userId,
+            conversation: {
+              type: { not: ConversationType.DONE },
+            },
+          },
           include: {
             support: true,
             user: true,
             conversation: { include: { messages: true } },
           },
+          orderBy: { updatedAt: "desc" },
         });
 
       if (!supportRelationships) throw new TRPCError({ code: "NOT_FOUND" });
@@ -88,16 +92,59 @@ export const supportRouter = router({
 
       const supportRelationShips =
         await ctx.prisma.supportRelationship.findMany({
-          where: { userId },
+          where: {
+            userId,
+            conversation: {
+              type: { not: ConversationType.DONE },
+            },
+          },
           include: {
             support: true,
             user: true,
             conversation: { include: { messages: true } },
           },
+          orderBy: { updatedAt: "desc" },
         });
 
       if (!supportRelationShips) throw new TRPCError({ code: "NOT_FOUND" });
 
       return supportRelationShips;
+    }),
+  endOfConversation: protectedProcedure([
+    Role.TENANT,
+    Role.OWNER,
+    Role.AGENCY,
+    Role.ADMIN,
+    Role.MODERATOR,
+  ])
+    .input(z.object({ conversationId: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      const conversation = await ctx.prisma.conversation.findUnique({
+        where: { id: input.conversationId },
+      });
+
+      if (!conversation) throw new TRPCError({ code: "NOT_FOUND" });
+      if (!conversation.supportRelationId)
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+      const supportRelationship =
+        await ctx.prisma.supportRelationship.findUnique({
+          where: { id: conversation.supportRelationId },
+        });
+      if (!supportRelationship) throw new TRPCError({ code: "NOT_FOUND" });
+
+      if (
+        supportRelationship.userId != ctx.auth.userId &&
+        supportRelationship.supportId != ctx.auth.userId
+      )
+        throw new TRPCError({ code: "FORBIDDEN" });
+
+      if (conversation.type === ConversationType.DONE)
+        throw new TRPCError({ code: "BAD_REQUEST" });
+
+      await ctx.prisma.conversation.update({
+        where: { id: conversation.id },
+        data: { type: ConversationType.DONE },
+      });
     }),
 });

@@ -7,6 +7,7 @@ import {
   SupportRelationship,
   User,
   Role,
+  ConversationType,
 } from "@prisma/client";
 import { trpc } from "../../../utils/trpc";
 import { SupportButton } from "./SupportButton";
@@ -47,7 +48,7 @@ export const ChatList = ({
   if (!session || !session.role) return null;
 
   return (
-    <div className="flex h-full w-1/5 flex-shrink-0 flex-col rounded-tl-lg rounded-bl-lg bg-white pb-6">
+    <div className="flex h-full w-1/5 flex-shrink-0 flex-col rounded-tl-lg rounded-bl-lg bg-white">
       <div className="flex w-full flex-row items-center justify-center rounded-tl-lg bg-indigo-500 p-6">
         <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-indigo-100 text-indigo-700">
           <svg
@@ -70,9 +71,11 @@ export const ChatList = ({
         <div className="flex flex-row items-center justify-between pl-2 text-xs">
           <span className="font-bold">Conversations</span>
           <div className="flex gap-2">
-            {supportRelationships && (
+            {((supportRelationships && supportRelationships.length !== 0) ||
+              session.role === Role.ADMIN ||
+              session.role === Role.MODERATOR) && (
               <span className="flex w-4 items-center justify-center rounded-full bg-indigo-300">
-                {supportRelationships.length}
+                {supportRelationships ? supportRelationships.length : 0}
               </span>
             )}
             {session.role !== Role.ADMIN && session.role !== Role.MODERATOR && (
@@ -83,41 +86,43 @@ export const ChatList = ({
           </div>
         </div>
         <div className="mt-4 flex h-full w-full flex-col space-y-1">
-          {supportRelationships?.map((supportRelationship) => (
-            <button
-              key={supportRelationship.id}
-              className={`flex flex-row items-center rounded-xl p-2 hover:bg-gray-100 ${
-                conversationId === supportRelationship.conversation?.id &&
-                "bg-gray-100"
-              } focus:outline-none`}
-              onClick={() => {
-                if (supportRelationship.conversation)
-                  setConversationId(supportRelationship.conversation.id);
-              }}
-            >
-              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full uppercase">
-                <img
-                  src={
-                    supportRelationship.user.id === userId
-                      ? supportRelationship.support.image || "/defaultImage.png"
-                      : supportRelationship.user.image || "/defaultImage.png"
-                  }
-                  referrerPolicy="no-referrer"
-                  alt="image"
-                  className="mx-auto h-full rounded-full"
-                />
-              </div>
-              <div className="ml-2 text-sm font-semibold">
-                {supportRelationship.user.id === userId ? (
-                  <span className=" text-indigo-500">
-                    {supportRelationship.support.firstName} Support Leace
-                  </span>
-                ) : (
-                  `${supportRelationship.user.firstName} ${supportRelationship.user.lastName}`
-                )}
-              </div>
-            </button>
-          ))}
+          {supportRelationships
+            ?.filter((sr) => sr.conversation?.type !== ConversationType.DONE)
+            .map((supportRelationship) => (
+              <button
+                key={supportRelationship.id}
+                className={`flex flex-row items-center rounded-xl p-2 hover:bg-gray-100 ${
+                  conversationId === supportRelationship.conversation?.id &&
+                  "bg-gray-100"
+                } focus:outline-none`}
+                onClick={() => {
+                  if (supportRelationship.conversation)
+                    setConversationId(supportRelationship.conversation.id);
+                }}
+              >
+                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full uppercase">
+                  <img
+                    src={
+                      supportRelationship.user.id === userId
+                        ? supportRelationship.support.image || "/logo.png"
+                        : supportRelationship.user.image || "/defaultImage.png"
+                    }
+                    referrerPolicy="no-referrer"
+                    alt="image"
+                    className="mx-auto h-full rounded-full"
+                  />
+                </div>
+                <div className="ml-2 text-sm font-semibold">
+                  {supportRelationship.user.id === userId ? (
+                    <span className=" text-indigo-500">
+                      {supportRelationship.support.firstName} Support Leace
+                    </span>
+                  ) : (
+                    `${supportRelationship.user.firstName} ${supportRelationship.user.lastName}`
+                  )}
+                </div>
+              </button>
+            ))}
           {relationships?.map((relationship) => (
             <button
               key={relationship.id}
@@ -151,11 +156,15 @@ export const ChatList = ({
           ))}
         </div>
       </div>
-      <SupportButton
-        userId={userId}
-        role={session.role}
-        setConversationId={setConversationId}
-      />
+      {supportRelationships?.every(
+        (sr) => sr.conversation?.type === ConversationType.DONE,
+      ) && (
+        <SupportButton
+          userId={userId}
+          role={session.role}
+          setConversationId={setConversationId}
+        />
+      )}
     </div>
   );
 };

@@ -240,6 +240,7 @@ export const relationshipRouter = router({
           conversation: { include: { messages: true } },
           user: true,
         },
+        orderBy: { updatedAt: "desc" },
       });
 
       if (!relationShips) throw new TRPCError({ code: "NOT_FOUND" });
@@ -283,6 +284,7 @@ export const relationshipRouter = router({
           conversation: { include: { messages: true } },
           user: true,
         },
+        orderBy: { updatedAt: "desc" },
       });
 
       if (!relationShips) throw new TRPCError({ code: "NOT_FOUND" });
