@@ -9,7 +9,7 @@ export const ChatInputSupport = ({ conversationId }: ChatInputSupportProps) => {
   const utils = trpc.useContext();
   const sendMessage = trpc.moderation.support.sendMessage.useMutation({
     onSuccess() {
-      utils.moderation.support.getMessages.invalidate({ conversationId });
+      utils.moderation.support.getMessages.invalidate();
     },
   });
 

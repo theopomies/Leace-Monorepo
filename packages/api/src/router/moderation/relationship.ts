@@ -36,9 +36,7 @@ export const relationshipModeration = router({
               },
             },
             user: true,
-            conversation: {
-              include: { messages: true },
-            },
+            conversation: true,
           },
           orderBy: { updatedAt: "desc" },
         });
@@ -58,9 +56,7 @@ export const relationshipModeration = router({
             },
           },
           user: true,
-          conversation: {
-            include: { messages: true },
-          },
+          conversation: true,
         },
         orderBy: { updatedAt: "desc" },
       });

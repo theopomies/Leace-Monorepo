@@ -52,23 +52,6 @@ const checkConversationAccess = async ({
 };
 
 export const conversationRouter = router({
-  getType: protectedProcedure([
-    Role.AGENCY,
-    Role.OWNER,
-    Role.TENANT,
-    Role.ADMIN,
-    Role.MODERATOR,
-  ])
-    .input(z.object({ conversationId: z.string() }))
-    .query(async ({ input, ctx }) => {
-      const conversation = await ctx.prisma.conversation.findUnique({
-        where: { id: input.conversationId },
-      });
-      if (!conversation) throw new TRPCError({ code: "NOT_FOUND" });
-
-      return conversation.type;
-    }),
-
   sendDealToUser: protectedProcedure([Role.AGENCY, Role.OWNER])
     .input(
       z.object({

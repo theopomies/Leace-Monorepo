@@ -8,6 +8,7 @@ import { ChatListModeration } from "./ChatListModeration";
 import { XOR } from "../../../utils/types";
 import { ChatListSupport } from "./ChatListSupport";
 import { ChatBoxSupport } from "./ChatBoxSupport";
+import { Conversation } from "@prisma/client";
 
 export type ChatProps = {
   userId: string;
@@ -22,7 +23,7 @@ export const Chat = ({
   isModeration = false,
   isTenant,
 }: ChatProps) => {
-  const [conversationId, setConversationId] = useState("");
+  const [conversation, setConversation] = useState<Conversation>();
 
   return (
     <div className="flex w-full items-center justify-center rounded-lg bg-slate-50 shadow-lg">
@@ -31,43 +32,41 @@ export const Chat = ({
           {isSupport ? (
             <ChatListSupport
               userId={userId}
-              conversationId={conversationId}
-              setConversationId={setConversationId}
+              conversation={conversation}
+              setConversation={setConversation}
             />
           ) : isModeration ? (
             <ChatListModeration
               userId={userId}
-              conversationId={conversationId}
-              setConversationId={setConversationId}
+              conversation={conversation}
+              setConversation={setConversation}
             />
           ) : isTenant ? (
             <ChatListMatchTenant
               userId={userId}
-              conversationId={conversationId}
-              setConversationId={setConversationId}
+              conversation={conversation}
+              setConversation={setConversation}
             />
           ) : (
             <ChatListMatchOwner
               userId={userId}
-              conversationId={conversationId}
-              setConversationId={setConversationId}
+              conversation={conversation}
+              setConversation={setConversation}
             />
           )}
-          {conversationId &&
+          {conversation &&
             (isSupport ? (
               <ChatBoxSupport
-                conversationId={conversationId}
+                conversation={conversation}
                 userId={userId}
                 chatOn={chatOn}
+                isSupport
               />
             ) : isModeration ? (
-              <ChatBoxModeration
-                conversationId={conversationId}
-                userId={userId}
-              />
+              <ChatBoxModeration conversation={conversation} userId={userId} />
             ) : (
               <ChatBoxMatch
-                conversationId={conversationId}
+                conversation={conversation}
                 userId={userId}
                 chatOn={chatOn}
               />

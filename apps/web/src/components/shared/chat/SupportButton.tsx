@@ -1,17 +1,19 @@
-import { Role } from "@prisma/client";
+import { Role, Conversation } from "@prisma/client";
 import { Button } from "../button/Button";
 import { trpc } from "../../../utils/trpc";
 
 export interface SupportButtonProps {
   userId: string;
   role: Role;
-  setConversationId: React.Dispatch<React.SetStateAction<string>>;
+  setConversation: React.Dispatch<
+    React.SetStateAction<Conversation | undefined>
+  >;
 }
 
 export const SupportButton = ({
   userId,
   role,
-  setConversationId,
+  setConversation,
 }: SupportButtonProps) => {
   const utils = trpc.useContext();
   const { mutateAsync } = trpc.support.createRelationship.useMutation({
@@ -26,7 +28,7 @@ export const SupportButton = ({
       <div className="mt-auto flex justify-center">
         <Button
           onClick={() => {
-            mutateAsync({ userId }).then(setConversationId);
+            mutateAsync({ userId }).then(setConversation);
           }}
           className="my-2 flex items-center gap-2"
         >

@@ -1,24 +1,25 @@
 import { Dispatch, SetStateAction } from "react";
 import { trpc } from "../../../utils/trpc";
 import { ChatList } from "./ChatList";
+import { Conversation } from "@prisma/client";
 
 export interface ChatListMatchOwnerProps {
   userId: string;
-  conversationId: string;
-  setConversationId: Dispatch<SetStateAction<string>>;
+  conversation: Conversation | undefined;
+  setConversation: Dispatch<SetStateAction<Conversation | undefined>>;
 }
 
 export const ChatListMatchOwner = ({
   userId,
-  conversationId,
-  setConversationId,
+  conversation,
+  setConversation,
 }: ChatListMatchOwnerProps) => {
   const { data: relationships } = trpc.relationship.getMatchesForOwner.useQuery(
     { userId },
     {
       onSuccess(data) {
-        if (!conversationId && data && data[0] && data[0].conversation)
-          setConversationId(data[0].conversation.id);
+        if (!conversation && data && data[0] && data[0].conversation)
+          setConversation(data[0].conversation);
       },
     },
   );
@@ -28,8 +29,8 @@ export const ChatListMatchOwner = ({
       { userId },
       {
         onSuccess(data) {
-          if (!conversationId && data && data[0] && data[0].conversation)
-            setConversationId(data[0].conversation.id);
+          if (!conversation && data && data[0] && data[0].conversation)
+            setConversation(data[0].conversation);
         },
       },
     );
@@ -37,8 +38,8 @@ export const ChatListMatchOwner = ({
   return (
     <ChatList
       userId={userId}
-      conversationId={conversationId}
-      setConversationId={setConversationId}
+      conversation={conversation}
+      setConversation={setConversation}
       relationships={relationships}
       supportRelationships={supportRelationships}
     />

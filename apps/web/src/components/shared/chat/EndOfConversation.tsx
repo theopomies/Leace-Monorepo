@@ -1,20 +1,15 @@
-import { ConversationType } from "@prisma/client";
+import { Conversation, ConversationType } from "@prisma/client";
 import { trpc } from "../../../utils/trpc";
 import { Button } from "../button/Button";
 
 export interface EndOfConversationProps {
-  conversationId: string;
-  conversationType: ConversationType;
+  conversation: Conversation;
 }
 
-export const EndOfConversation = ({
-  conversationId,
-  conversationType,
-}: EndOfConversationProps) => {
+export const EndOfConversation = ({ conversation }: EndOfConversationProps) => {
   const utils = trpc.useContext();
   const { mutate } = trpc.support.endOfConversation.useMutation({
     onSuccess() {
-      utils.conversation.getType.invalidate();
       utils.moderation.support.getRelationships.invalidate();
       utils.support.getRelationshipsForOwner.invalidate();
       utils.support.getRelationshipsForTenant.invalidate();
@@ -23,10 +18,12 @@ export const EndOfConversation = ({
 
   return (
     <div className="mt-auto flex justify-center">
-      {conversationType === ConversationType.DONE ? (
+      {conversation.type === ConversationType.DONE ? (
         <p className="text-indigo-500">Chat Ended</p>
       ) : (
-        <Button onClick={() => mutate({ conversationId })}>End Chat</Button>
+        <Button onClick={() => mutate({ conversationId: conversation.id })}>
+          End Chat
+        </Button>
       )}
     </div>
   );

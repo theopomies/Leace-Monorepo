@@ -26,9 +26,7 @@ export const supportModeration = router({
         include: {
           support: true,
           user: true,
-          conversation: {
-            include: { messages: true },
-          },
+          conversation: true,
         },
         orderBy: { updatedAt: "desc" },
       });
@@ -36,7 +34,6 @@ export const supportModeration = router({
 
       return supportRs;
     }),
-
   getMessages: protectedProcedure([Role.ADMIN, Role.MODERATOR])
     .input(
       z.object({

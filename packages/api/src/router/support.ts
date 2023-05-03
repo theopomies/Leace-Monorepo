@@ -45,7 +45,7 @@ export const supportRouter = router({
         },
       });
 
-      return conversation.id;
+      return conversation;
     }),
   getRelationshipsForTenant: protectedProcedure([Role.TENANT])
     .input(z.object({ userId: z.string() }))
@@ -69,7 +69,7 @@ export const supportRouter = router({
           include: {
             support: true,
             user: true,
-            conversation: { include: { messages: true } },
+            conversation: true,
           },
           orderBy: { updatedAt: "desc" },
         });
@@ -101,7 +101,7 @@ export const supportRouter = router({
           include: {
             support: true,
             user: true,
-            conversation: { include: { messages: true } },
+            conversation: true,
           },
           orderBy: { updatedAt: "desc" },
         });
