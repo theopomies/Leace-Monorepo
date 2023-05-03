@@ -4,7 +4,6 @@ import { TenantList } from "../TenantList";
 import { PostList } from "../posts/PostList";
 import { trpc } from "../../../utils/trpc";
 import { Loader } from "../../shared/Loader";
-import { Chat } from "../../shared/chat";
 
 export interface MatchesPageProps {
   userId: string;
