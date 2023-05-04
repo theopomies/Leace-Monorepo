@@ -10,9 +10,8 @@ export const EndOfConversation = ({ conversation }: EndOfConversationProps) => {
   const utils = trpc.useContext();
   const { mutate } = trpc.support.endOfConversation.useMutation({
     onSuccess() {
-      utils.moderation.support.getRelationships.invalidate();
-      utils.support.getRelationshipsForOwner.invalidate();
-      utils.support.getRelationshipsForTenant.invalidate();
+      utils.moderation.support.getConversation.invalidate();
+      utils.conversation.getConversation.invalidate();
     },
   });
 

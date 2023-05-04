@@ -4,7 +4,7 @@ import { Role } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 
 export const conversationModeration = router({
-  getMessages: protectedProcedure([Role.ADMIN, Role.MODERATOR])
+  getConversation: protectedProcedure([Role.ADMIN, Role.MODERATOR])
     .input(
       z.object({
         conversationId: z.string(),
@@ -15,6 +15,15 @@ export const conversationModeration = router({
     .query(async ({ ctx, input }) => {
       const conversation = await ctx.prisma.conversation.findUnique({
         where: { id: input.conversationId },
+        include: {
+          messages: {
+            orderBy: { createdAt: "asc" },
+            take: input.take,
+            skip: input.cursor ? 1 : 0,
+            cursor: input.cursor ? { id: input.cursor } : undefined,
+            include: { sender: true },
+          },
+        },
       });
 
       if (!conversation) throw new TRPCError({ code: "NOT_FOUND" });
@@ -38,15 +47,6 @@ export const conversationModeration = router({
           throw new TRPCError({ code: "FORBIDDEN" });
       }
 
-      const messages = await ctx.prisma.message.findMany({
-        where: { conversationId: conversation.id },
-        orderBy: { createdAt: "asc" },
-        take: input.take,
-        skip: input.cursor ? 1 : 0,
-        cursor: input.cursor ? { id: input.cursor } : undefined,
-        include: { sender: true },
-      });
-
-      return messages;
+      return conversation;
     }),
 });

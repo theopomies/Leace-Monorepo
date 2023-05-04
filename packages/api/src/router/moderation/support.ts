@@ -34,7 +34,7 @@ export const supportModeration = router({
 
       return supportRs;
     }),
-  getMessages: protectedProcedure([Role.ADMIN, Role.MODERATOR])
+  getConversation: protectedProcedure([Role.ADMIN, Role.MODERATOR])
     .input(
       z.object({
         conversationId: z.string(),
@@ -45,6 +45,15 @@ export const supportModeration = router({
     .query(async ({ ctx, input }) => {
       const conversation = await ctx.prisma.conversation.findUnique({
         where: { id: input.conversationId },
+        include: {
+          messages: {
+            orderBy: { createdAt: "asc" },
+            take: input.take,
+            skip: input.cursor ? 1 : 0,
+            cursor: input.cursor ? { id: input.cursor } : undefined,
+            include: { sender: true },
+          },
+        },
       });
 
       if (!conversation) throw new TRPCError({ code: "NOT_FOUND" });
@@ -60,16 +69,7 @@ export const supportModeration = router({
       if (supportRelationship.supportId != ctx.auth.userId)
         throw new TRPCError({ code: "FORBIDDEN" });
 
-      const messages = await ctx.prisma.message.findMany({
-        where: { conversationId: conversation.id },
-        orderBy: { createdAt: "asc" },
-        take: input.take,
-        skip: input.cursor ? 1 : 0,
-        cursor: input.cursor ? { id: input.cursor } : undefined,
-        include: { sender: true },
-      });
-
-      return messages;
+      return conversation;
     }),
   sendMessage: protectedProcedure([Role.ADMIN, Role.MODERATOR])
     .input(z.object({ conversationId: z.string(), content: z.string() }))

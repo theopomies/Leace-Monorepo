@@ -1,26 +1,25 @@
 import { Dispatch, SetStateAction } from "react";
 import { trpc } from "../../../utils/trpc";
 import { ChatList } from "./ChatList";
-import { Conversation } from "@prisma/client";
 
 export interface ChatListModerationProps {
   userId: string;
-  conversation: Conversation | undefined;
-  setConversation: Dispatch<SetStateAction<Conversation | undefined>>;
+  conversationId: string;
+  setConversationId: Dispatch<SetStateAction<string>>;
 }
 
 export const ChatListModeration = ({
   userId,
-  conversation,
-  setConversation,
+  conversationId,
+  setConversationId,
 }: ChatListModerationProps) => {
   const { data: relationships } =
     trpc.moderation.relationship.getMatches.useQuery(
       { userId },
       {
         onSuccess(data) {
-          if (!conversation && data && data[0] && data[0].conversation)
-            setConversation(data[0].conversation);
+          if (!conversationId && data && data[0] && data[0].conversation)
+            setConversationId(data[0].conversation.id);
         },
       },
     );
@@ -28,8 +27,8 @@ export const ChatListModeration = ({
   return (
     <ChatList
       userId={userId}
-      conversation={conversation}
-      setConversation={setConversation}
+      conversationId={conversationId}
+      setConversationId={setConversationId}
       relationships={relationships}
     />
   );

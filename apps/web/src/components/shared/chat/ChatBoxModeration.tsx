@@ -1,21 +1,20 @@
-import { Conversation } from "@prisma/client";
 import { trpc } from "../../../utils/trpc";
 import { ChatBox } from "./ChatBox";
 
 export interface ChatBoxModerationProps {
-  conversation: Conversation;
+  conversationId: string;
   userId: string;
 }
 
 export const ChatBoxModeration = ({
-  conversation,
+  conversationId,
   ...rest
 }: ChatBoxModerationProps) => {
-  const { data: messages } = trpc.moderation.conversation.getMessages.useQuery({
-    conversationId: conversation.id,
+  const { data } = trpc.moderation.conversation.getConversation.useQuery({
+    conversationId,
   });
 
-  return (
-    <ChatBox conversation={conversation} messages={messages ?? []} {...rest} />
-  );
+  if (!data) return null;
+
+  return <ChatBox conversation={data} {...rest} />;
 };

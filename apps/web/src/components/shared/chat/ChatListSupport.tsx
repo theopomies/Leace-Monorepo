@@ -1,26 +1,25 @@
 import { Dispatch, SetStateAction } from "react";
 import { trpc } from "../../../utils/trpc";
 import { ChatList } from "./ChatList";
-import { Conversation } from "@prisma/client";
 
 export interface ChatListSupportProps {
   userId: string;
-  conversation: Conversation | undefined;
-  setConversation: Dispatch<SetStateAction<Conversation | undefined>>;
+  conversationId: string;
+  setConversationId: Dispatch<SetStateAction<string>>;
 }
 
 export const ChatListSupport = ({
   userId,
-  conversation,
-  setConversation,
+  conversationId,
+  setConversationId,
 }: ChatListSupportProps) => {
   const { data: supportRelationships } =
     trpc.moderation.support.getRelationships.useQuery(
       { userId },
       {
         onSuccess(data) {
-          if (!conversation && data && data[0] && data[0].conversation)
-            setConversation(data[0].conversation);
+          if (!conversationId && data && data[0] && data[0].conversation)
+            setConversationId(data[0].conversation.id);
         },
       },
     );
@@ -28,8 +27,8 @@ export const ChatListSupport = ({
   return (
     <ChatList
       userId={userId}
-      conversation={conversation}
-      setConversation={setConversation}
+      conversationId={conversationId}
+      setConversationId={setConversationId}
       supportRelationships={supportRelationships}
     />
   );

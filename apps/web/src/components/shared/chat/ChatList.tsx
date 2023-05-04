@@ -29,18 +29,16 @@ export type supportRelationshipsType =
 
 export interface ChatListProps {
   userId: string;
-  conversation: Conversation | undefined;
-  setConversation: React.Dispatch<
-    React.SetStateAction<Conversation | undefined>
-  >;
+  conversationId: string;
+  setConversationId: React.Dispatch<React.SetStateAction<string>>;
   relationships?: relationshipsType;
   supportRelationships?: supportRelationshipsType;
 }
 
 export const ChatList = ({
   userId,
-  conversation,
-  setConversation,
+  conversationId,
+  setConversationId,
   relationships,
   supportRelationships,
 }: ChatListProps) => {
@@ -93,13 +91,12 @@ export const ChatList = ({
               <button
                 key={supportRelationship.id}
                 className={`flex flex-row items-center rounded-xl p-2 hover:bg-gray-100 ${
-                  conversation &&
-                  conversation.id === supportRelationship.conversation?.id &&
+                  conversationId === supportRelationship.conversation?.id &&
                   "bg-gray-100"
                 } focus:outline-none`}
                 onClick={() => {
                   if (supportRelationship.conversation)
-                    setConversation(supportRelationship.conversation);
+                    setConversationId(supportRelationship.conversation.id);
                 }}
               >
                 <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full uppercase">
@@ -129,13 +126,12 @@ export const ChatList = ({
             <button
               key={relationship.id}
               className={`flex flex-row items-center rounded-xl p-2 hover:bg-gray-100 ${
-                conversation &&
-                conversation.id === relationship.conversation?.id &&
+                conversationId === relationship.conversation?.id &&
                 "bg-gray-100"
               } focus:outline-none`}
               onClick={() => {
                 if (relationship.conversation)
-                  setConversation(relationship.conversation);
+                  setConversationId(relationship.conversation.id);
               }}
             >
               <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full uppercase">
@@ -165,7 +161,7 @@ export const ChatList = ({
         <SupportButton
           userId={userId}
           role={session.role}
-          setConversation={setConversation}
+          setConversationId={setConversationId}
         />
       )}
     </div>

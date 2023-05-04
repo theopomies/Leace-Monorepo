@@ -45,7 +45,7 @@ export const supportRouter = router({
         },
       });
 
-      return conversation;
+      return conversation.id;
     }),
   getRelationshipsForTenant: protectedProcedure([Role.TENANT])
     .input(z.object({ userId: z.string() }))
