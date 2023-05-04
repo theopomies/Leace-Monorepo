@@ -20,9 +20,11 @@ export const DocumentsList = ({
 }: DocumentsListProps) => {
   const [showModal, setShowModal] = useState(false);
 
-  const { data: pdfLogo } = trpc.document.getSignedAssetUrl.useQuery({
-    name: "pdfLogo.jpg",
-  });
+  const { data: pdfLogo } = trpc.moderation.document.getSignedAssetUrl.useQuery(
+    {
+      name: "pdfLogo.jpg",
+    },
+  );
 
   return (
     <div className="flex justify-center gap-4">
