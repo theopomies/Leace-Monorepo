@@ -93,6 +93,7 @@ export const BanModal = ({ userId, reports, onBan }: BanModalProps) => {
                   Comment
                 </label>
                 <TextArea
+                  name="comment"
                   onChange={handleChange}
                   value={banData.comment}
                   overrideStyles
