@@ -74,6 +74,7 @@ export const banModeration = router({
               userId: input.userId,
               reports: { connect: input.reportIds?.map((id) => ({ id })) },
               reason: input.reason,
+              duration: "365 days",
               until: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365), // 365 days
               comment: input.comment,
             },
@@ -85,6 +86,7 @@ export const banModeration = router({
               userId: input.userId,
               reports: { connect: input.reportIds?.map((id) => ({ id })) },
               reason: input.reason,
+              duration: "30 days",
               until: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30), // 30 days
               comment: input.comment,
             },
@@ -96,6 +98,7 @@ export const banModeration = router({
               userId: input.userId,
               reports: { connect: input.reportIds?.map((id) => ({ id })) },
               reason: input.reason,
+              duration: "15 days",
               until: new Date(Date.now() + 1000 * 60 * 60 * 24 * 15), // 15 days
               comment: input.comment,
             },
@@ -107,6 +110,7 @@ export const banModeration = router({
               userId: input.userId,
               reports: { connect: input.reportIds?.map((id) => ({ id })) },
               reason: input.reason,
+              duration: "7 days",
               until: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7), // 7 days
               comment: input.comment,
             },

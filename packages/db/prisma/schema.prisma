@@ -172,9 +172,10 @@ model Ban {
 
   reports Report[]
 
-  reason  ReportReason?
-  until   DateTime
-  comment String
+  reason   ReportReason?
+  duration String
+  until    DateTime
+  comment  String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
