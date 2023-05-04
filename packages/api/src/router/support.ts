@@ -110,41 +110,4 @@ export const supportRouter = router({
 
       return supportRelationShips;
     }),
-  endOfConversation: protectedProcedure([
-    Role.TENANT,
-    Role.OWNER,
-    Role.AGENCY,
-    Role.ADMIN,
-    Role.MODERATOR,
-  ])
-    .input(z.object({ conversationId: z.string() }))
-    .mutation(async ({ input, ctx }) => {
-      const conversation = await ctx.prisma.conversation.findUnique({
-        where: { id: input.conversationId },
-      });
-
-      if (!conversation) throw new TRPCError({ code: "NOT_FOUND" });
-      if (!conversation.supportRelationId)
-        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
-
-      const supportRelationship =
-        await ctx.prisma.supportRelationship.findUnique({
-          where: { id: conversation.supportRelationId },
-        });
-      if (!supportRelationship) throw new TRPCError({ code: "NOT_FOUND" });
-
-      if (
-        supportRelationship.userId != ctx.auth.userId &&
-        supportRelationship.supportId != ctx.auth.userId
-      )
-        throw new TRPCError({ code: "FORBIDDEN" });
-
-      if (conversation.type === ConversationType.DONE)
-        throw new TRPCError({ code: "BAD_REQUEST" });
-
-      await ctx.prisma.conversation.update({
-        where: { id: conversation.id },
-        data: { type: ConversationType.DONE },
-      });
-    }),
 });

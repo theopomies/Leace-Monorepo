@@ -8,7 +8,7 @@ export interface EndOfConversationProps {
 
 export const EndOfConversation = ({ conversation }: EndOfConversationProps) => {
   const utils = trpc.useContext();
-  const { mutate } = trpc.support.endOfConversation.useMutation({
+  const { mutate } = trpc.conversation.endOfConversation.useMutation({
     onSuccess() {
       utils.moderation.support.getConversation.invalidate();
       utils.conversation.getConversation.invalidate();
