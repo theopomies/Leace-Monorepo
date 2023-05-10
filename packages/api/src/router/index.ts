@@ -17,12 +17,12 @@ export const appRouter = router({
   post: postRouter,
   report: reportRouter,
   attribute: attributesRouter,
-  moderation: moderationRouter,
   relationship: relationshipRouter,
   document: documentRouter,
   image: imageRouter,
   conversation: conversationRouter,
   support: supportRouter,
+  moderation: moderationRouter,
 });
 
 // export type definition of API
