@@ -9,7 +9,7 @@ export interface DeletePostImgProps {
 }
 
 export const DeletePostImg = ({ postId, id }: DeletePostImgProps) => {
-  const mut = trpc.image.deleteSignedPostUrl.useMutation();
+  const mut = trpc.moderation.image.deleteSignedPostUrl.useMutation();
   const onClickDelete = async () => {
     await mut.mutateAsync({ postId: postId, imageId: id }).then(async (url) => {
       await axios.delete(url);

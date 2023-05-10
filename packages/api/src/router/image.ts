@@ -11,13 +11,7 @@ import { randomUUID } from "crypto";
 import { TRPCError } from "@trpc/server";
 
 export const imageRouter = router({
-  putSignedPostUrl: protectedProcedure([
-    Role.TENANT,
-    Role.AGENCY,
-    Role.OWNER,
-    Role.ADMIN,
-    Role.MODERATOR,
-  ])
+  putSignedPostUrl: protectedProcedure([Role.TENANT, Role.AGENCY, Role.OWNER])
     .input(z.object({ postId: z.string(), fileType: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const id = randomUUID();
@@ -45,13 +39,7 @@ export const imageRouter = router({
 
       return await getSignedUrl(ctx.s3Client, command);
     }),
-  getSignedPostUrl: protectedProcedure([
-    Role.TENANT,
-    Role.AGENCY,
-    Role.OWNER,
-    Role.ADMIN,
-    Role.MODERATOR,
-  ])
+  getSignedPostUrl: protectedProcedure([Role.TENANT, Role.AGENCY, Role.OWNER])
     .input(z.string())
     .query(async ({ ctx, input }) => {
       const getPost = await ctx.prisma.post.findUnique({
@@ -81,8 +69,6 @@ export const imageRouter = router({
     Role.TENANT,
     Role.AGENCY,
     Role.OWNER,
-    Role.ADMIN,
-    Role.MODERATOR,
   ])
     .input(z.object({ postId: z.string(), imageId: z.string() }))
     .mutation(async ({ ctx, input }) => {

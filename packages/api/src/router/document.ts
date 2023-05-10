@@ -11,13 +11,7 @@ import { randomUUID } from "crypto";
 import { TRPCError } from "@trpc/server";
 
 export const documentRouter = router({
-  putSignedUserUrl: protectedProcedure([
-    Role.TENANT,
-    Role.AGENCY,
-    Role.OWNER,
-    Role.ADMIN,
-    Role.MODERATOR,
-  ])
+  putSignedUserUrl: protectedProcedure([Role.TENANT, Role.AGENCY, Role.OWNER])
     .input(z.object({ fileType: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const id = randomUUID();
@@ -40,13 +34,7 @@ export const documentRouter = router({
 
       return await getSignedUrl(ctx.s3Client, command);
     }),
-  getSignedUserUrl: protectedProcedure([
-    Role.TENANT,
-    Role.AGENCY,
-    Role.OWNER,
-    Role.ADMIN,
-    Role.MODERATOR,
-  ])
+  getSignedUserUrl: protectedProcedure([Role.TENANT, Role.AGENCY, Role.OWNER])
     .input(z.string().optional())
     .query(async ({ ctx, input }) => {
       const userId = input ? input : ctx.auth.userId;
@@ -77,8 +65,6 @@ export const documentRouter = router({
     Role.TENANT,
     Role.AGENCY,
     Role.OWNER,
-    Role.ADMIN,
-    Role.MODERATOR,
   ])
     .input(z.string())
     .mutation(async ({ ctx, input }) => {
@@ -101,13 +87,7 @@ export const documentRouter = router({
       return await getSignedUrl(ctx.s3Client, command);
     }),
 
-  putSignedPostUrl: protectedProcedure([
-    Role.TENANT,
-    Role.AGENCY,
-    Role.OWNER,
-    Role.ADMIN,
-    Role.MODERATOR,
-  ])
+  putSignedPostUrl: protectedProcedure([Role.TENANT, Role.AGENCY, Role.OWNER])
     .input(z.object({ postId: z.string(), fileType: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const id = randomUUID();
@@ -135,13 +115,7 @@ export const documentRouter = router({
 
       return await getSignedUrl(ctx.s3Client, command);
     }),
-  getSignedPostUrl: protectedProcedure([
-    Role.TENANT,
-    Role.AGENCY,
-    Role.OWNER,
-    Role.ADMIN,
-    Role.MODERATOR,
-  ])
+  getSignedPostUrl: protectedProcedure([Role.TENANT, Role.AGENCY, Role.OWNER])
     .input(z.string())
     .query(async ({ ctx, input }) => {
       const getPost = await ctx.prisma.post.findUnique({
@@ -174,8 +148,6 @@ export const documentRouter = router({
     Role.TENANT,
     Role.AGENCY,
     Role.OWNER,
-    Role.ADMIN,
-    Role.MODERATOR,
   ])
     .input(z.object({ postId: z.string(), documentId: z.string() }))
     .mutation(async ({ ctx, input }) => {
