@@ -13,7 +13,7 @@ export const PostList = ({ userId, setPostId }: PostListProps) => {
 
   if (posts) {
     return (
-      <div className="z-10 mb-2 grid h-48 grid-cols-3 gap-4 overflow-auto rounded-t-lg rounded-l-lg bg-[#c9c8cb40] p-5">
+      <div className="z-10 mb-2 grid max-h-48 grid-cols-3 gap-4 overflow-auto rounded-t-lg rounded-l-lg bg-[#c9c8cb40] p-5">
         {posts.map((post) => (
           <div
             key={post.id}

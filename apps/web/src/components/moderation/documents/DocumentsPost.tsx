@@ -7,7 +7,7 @@ export interface DocumentsPostProps {
 
 export const DocumentsPost = ({ postId }: DocumentsPostProps) => {
   const { data: documents, refetch: refetchDocuments } =
-    trpc.moderation.document.getSignedPostUrl.useQuery(postId);
+    trpc.document.getSignedPostUrl.useQuery(postId);
 
   if (documents && documents.length > 0 && refetchDocuments) {
     return (

@@ -96,11 +96,7 @@ export const PostCard = ({ postId, setUserId }: PostProps) => {
           <div className="mt-10 flex flex-wrap justify-center gap-4">
             {images.map((image, index) => (
               <div key={index} className="relative">
-                <img
-                  src={image.url}
-                  alt="image"
-                  className="mx-auto h-32 shadow-xl"
-                />
+                <img src={image.url} alt="image" className="mx-auto h-32" />
                 <DeletePostImg postId={post.id} id={image.id} />
               </div>
             ))}
