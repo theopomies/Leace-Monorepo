@@ -1,19 +1,15 @@
 import { trpc } from "../../../utils/trpc";
 import { ChatInput } from "./ChatInput";
 
-export interface ChatInputModerationProps {
+export interface ChatInputSupportProps {
   conversationId: string;
 }
 
-export const ChatInputModeration = ({
-  conversationId,
-}: ChatInputModerationProps) => {
+export const ChatInputSupport = ({ conversationId }: ChatInputSupportProps) => {
   const utils = trpc.useContext();
-  const sendMessage = trpc.moderation.sendMessage.useMutation({
+  const sendMessage = trpc.moderation.support.sendMessage.useMutation({
     onSuccess() {
-      utils.moderation.getMessages.invalidate({
-        conversationId: conversationId,
-      });
+      utils.moderation.support.getConversation.invalidate();
     },
   });
 

@@ -8,15 +8,11 @@ export interface ChatBoxMatch {
 }
 
 export const ChatBoxMatch = ({ conversationId, ...rest }: ChatBoxMatch) => {
-  const { data: messages } = trpc.conversation.getMessages.useQuery({
+  const { data } = trpc.conversation.getConversation.useQuery({
     conversationId,
   });
 
-  return (
-    <ChatBox
-      messages={messages ?? []}
-      conversationId={conversationId}
-      {...rest}
-    />
-  );
+  if (!data) return null;
+
+  return <ChatBox conversation={data} {...rest} />;
 };

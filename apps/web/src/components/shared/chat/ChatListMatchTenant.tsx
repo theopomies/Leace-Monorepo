@@ -4,11 +4,13 @@ import { ChatList } from "./ChatList";
 
 export interface ChatListMatchTenantProps {
   userId: string;
+  conversationId: string;
   setConversationId: Dispatch<SetStateAction<string>>;
 }
 
 export const ChatListMatchTenant = ({
   userId,
+  conversationId,
   setConversationId,
 }: ChatListMatchTenantProps) => {
   const { data: relationships } =
@@ -16,19 +18,30 @@ export const ChatListMatchTenant = ({
       { userId },
       {
         onSuccess(data) {
-          if (data && data[0] && data[0].conversation)
+          if (!conversationId && data && data[0] && data[0].conversation)
             setConversationId(data[0].conversation.id);
         },
       },
     );
 
-  if (!relationships) return <div>No conversations</div>;
+  const { data: supportRelationships } =
+    trpc.support.getRelationshipsForTenant.useQuery(
+      { userId },
+      {
+        onSuccess(data) {
+          if (!conversationId && data && data[0] && data[0].conversation)
+            setConversationId(data[0].conversation.id);
+        },
+      },
+    );
 
   return (
     <ChatList
-      relationships={relationships}
-      setConversationId={setConversationId}
       userId={userId}
+      conversationId={conversationId}
+      setConversationId={setConversationId}
+      relationships={relationships}
+      supportRelationships={supportRelationships}
     />
   );
 };
