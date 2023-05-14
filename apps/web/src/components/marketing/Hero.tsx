@@ -1,3 +1,6 @@
+import Link from "next/link";
+import { Button } from "../shared/button/Button";
+
 export function Hero() {
   return (
     <section
@@ -27,15 +30,23 @@ export function Hero() {
           Doing to Real Estate what Tinder did to dating
         </h1>
         <p className="p-4 text-center leading-8 text-gray-500">
-          <div>
+          <span className="block">
             Leace is a platform that allows you to find your next home,
             roommate, or tenant with ease.
-          </div>
-          <div>
+          </span>
+          <span>
             It combines the best of real estate agencies with the best of online
             listing platforms.
-          </div>
+          </span>
         </p>
+      </div>
+      <div className="flex gap-4">
+        <Link href="/">
+          <Button>Get Started</Button>
+        </Link>
+        <Link href="#newsletter">
+          <Button theme="white">Stay informed</Button>
+        </Link>
       </div>
     </section>
   );
