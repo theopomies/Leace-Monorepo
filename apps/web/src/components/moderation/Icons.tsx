@@ -1,7 +1,7 @@
 export const Check = () => {
   return (
     <svg
-      className="w-3"
+      className="w-5"
       fill="none"
       stroke="currentColor"
       viewBox="0 0 24 24"
@@ -20,7 +20,7 @@ export const Check = () => {
 export const Cross = () => {
   return (
     <svg
-      className="w-3"
+      className="w-5"
       fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"

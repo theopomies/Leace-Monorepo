@@ -172,15 +172,6 @@ export const makeImages = async (prisma: PrismaClient) => {
   const images = new Array<Prisma.ImageCreateManyInput>();
 
   for (let i = 0; i < nbImages; i++) {
-    const userCount = await prisma.user.count();
-    const skipUsers = Math.floor(Math.random() * userCount);
-    const randUser = await prisma.user.findMany({
-      take: 1,
-      skip: skipUsers,
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
     const postCount = await prisma.post.count();
     const skipPosts = Math.floor(Math.random() * postCount);
     const randPost = await prisma.post.findMany({
@@ -190,25 +181,13 @@ export const makeImages = async (prisma: PrismaClient) => {
         createdAt: "desc",
       },
     });
-    if (
-      !randUser ||
-      !randUser[0] ||
-      !randUser[0].id ||
-      !randPost ||
-      !randPost[0] ||
-      !randPost[0].id
-    ) {
+    if (!randPost || !randPost[0] || !randPost[0].id) {
       continue;
     }
-    Boolean(Math.round(Math.random()))
-      ? images.push({
-          ext: "png",
-          userId: randUser[0].id,
-        })
-      : images.push({
-          ext: "png",
-          postId: randPost[0].id,
-        });
+    images.push({
+      ext: "png",
+      postId: randPost[0].id,
+    });
   }
   return images;
 };

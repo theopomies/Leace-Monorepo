@@ -38,6 +38,22 @@ const checkAuthorizations = (authorizations: Authorization[]) =>
       });
     }
 
+    const lastBan = await ctx.prisma.ban.findFirst({
+      where: {
+        userId: ctx.auth.userId,
+      },
+      orderBy: {
+        until: "desc",
+      },
+    });
+
+    if (lastBan && lastBan.until > new Date()) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "You are banned",
+      });
+    }
+
     return next({
       ctx: {
         auth: ctx.auth,
