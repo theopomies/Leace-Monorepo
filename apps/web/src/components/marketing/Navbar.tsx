@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button } from "../shared/button/Button";
 
-const sections = [
+export const sections = [
   {
     label: "Vision",
     href: "#vision",

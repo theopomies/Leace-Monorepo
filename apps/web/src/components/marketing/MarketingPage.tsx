@@ -1,3 +1,5 @@
+import { Footer } from "./Footer";
+import { Hero } from "./Hero";
 import { Navbar } from "./Navbar";
 import { Newsletter } from "./Newsletter";
 
@@ -8,8 +10,12 @@ export function MarketingPage() {
         <Navbar />
       </header>
       <main className="container m-auto">
+        <Hero />
         <Newsletter />
       </main>
+      <footer>
+        <Footer />
+      </footer>
     </div>
   );
 }
