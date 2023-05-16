@@ -204,7 +204,7 @@ export const ProfilePage = ({ userId }: ProfilePageProps) => {
                     className="rounded bg-indigo-500 py-3 px-4 font-bold text-white hover:bg-indigo-600 active:bg-indigo-700"
                     href={`/users/${userId}/update`}
                   >
-                    Modifier
+                    Modify
                   </Link>
                 </div>
               )}

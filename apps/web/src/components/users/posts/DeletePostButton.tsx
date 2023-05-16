@@ -21,7 +21,7 @@ export function DeletePostButton({ postId }: DeletePostButtonProps) {
 
   const onDelete = () => {
     delPost.mutate({ postId });
-    router.push(`/${session?.session?.user.id ?? "/"}`);
+    router.push(`/users/${session?.session?.user.id ?? "/"}`);
   };
 
   return (
