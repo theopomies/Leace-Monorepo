@@ -1,31 +1,30 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { View, TextInput, TouchableOpacity } from 'react-native'
 import { Icon } from 'react-native-elements'
 import { Dropdown } from '../Dropdown/Dropdown'
 
-const BottomBar = ({ onSelect, data, value, handleChange }: { onSelect: (item: { item: string }) => void, data: { item: string, color: string }[], value: string, handleChange: (value: string) => void }) => {
-    return (
-        <>
-            <View className='absolute left-2 bottom-4 flex justify-center items-center w-10 h-10 rounded-full'>
-                <Dropdown onSelect={onSelect} data={data} />
-            </View>
-            <View className='bg-white w-4/5 rounded-lg'>
-                <TextInput
-                    value={value}
-                    onChangeText={handleChange}
-                    className='h-full px-10 text-xl'
-                    multiline
-                    placeholder="Enter message..." />
-            </View>
+const BottomBar = ({ onSelect, data, value, handleChange }: { onSelect: (item: { item: string }) => void, data: { item: string }[], value: string, handleChange: (value: string) => void }) => {
+    const [showOptions, setShowOptions] = useState(false);
 
-            <TouchableOpacity className='absolute right-2 bottom-4 flex justify-center items-center w-10 h-10 rounded-full'>
-                {value ?
-                    <Icon size={15} name="send" reverse={true} color="#1461b4fa" />
-                    :
-                    <></>}
-            </TouchableOpacity>
-        </>
+    return (
+        <View className="w-full h-full flex-row items-center mt-48">
+            <View className="flex-rom mr-2">
+                <Dropdown onSelect={onSelect} data={data} showOptions={showOptions} setShowOptions={setShowOptions} />
+            </View>
+            {showOptions ? null : (
+                <View className="flex-1 bg-white rounded-lg py-1 px-3 flex-row">
+                    <TextInput
+                        value={value}
+                        onChangeText={handleChange}
+                        className="flex-1"
+                        placeholder="Type a message" />
+                    <TouchableOpacity disabled={!value}>
+                        <Icon size={15} name="send" reverse color={value ? '#002642' : '#BDBDBD'} />
+                    </TouchableOpacity>
+                </View>
+            )}
+        </View>
     )
 }
 
-export default BottomBar
+export default BottomBar;

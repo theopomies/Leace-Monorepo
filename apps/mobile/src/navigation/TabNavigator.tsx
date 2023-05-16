@@ -29,6 +29,8 @@ export type TabStackParamList = {
   Occupied: undefined;
   Available: undefined;
   Chat: undefined;
+
+  Contract: undefined;
 };
 
 const TabNavigator = () => {

@@ -106,8 +106,12 @@ const CreateAttributes = ({ route }: { route: RouteProp<TabStackParamList, "Crea
                 ]}
                 onChangeAttributesHandler={onChangeAttributesHandler} />
             <View className="flex-row justify-center mb-10 mt-10">
-                <Button title={'Cancel'} color={'custom'} onPress={() => navigation.navigate("Stack")} />
-                <Button title={'Next'} color={'custom'} onPress={() => updateAttributesButton()} />
+                <View className="mr-10">
+                    <Button title={'Cancel'} color={'custom'} onPress={() => navigation.navigate("Stack")} />
+                </View>
+                <View>
+                    <Button title={'Next'} color={'custom'} onPress={() => updateAttributesButton()} />
+                </View>
             </View>
 
         </ScrollView >

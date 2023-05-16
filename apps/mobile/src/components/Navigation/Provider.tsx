@@ -5,6 +5,7 @@ import { Dashboard, Expenses, Income, Clients, Occupied, Available, Chat } from 
 import { Match, MatchChat } from '../../screens/Match';
 import { CreatePost, CreateAttributes, ViewPost, ViewDetails } from '../../screens/Post';
 import { Stack } from '../../screens/Stack/stack';
+import { Contract } from "../../screens/Contract/contract";
 import Role from '../../screens/Role/role';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { TabStackParamList } from '../../navigation/TabNavigator';
@@ -121,7 +122,13 @@ const Provider = ({ role }: { role: keyof typeof UserRoles }) => {
             <Tab.Screen name="Clients" component={Clients} options={{ tabBarButton: () => null, headerShown: false }} />
             <Tab.Screen name="Occupied" component={Occupied} options={{ tabBarButton: () => null, headerShown: false }} />
             <Tab.Screen name="Available" component={Available} options={{ tabBarButton: () => null, headerShown: false }} />
-            <Tab.Screen name="Chat" component={Chat} options={{ tabBarButton: () => null, headerShown: false }} />
+            <Tab.Screen name="Chat" component={Chat} options={{
+                tabBarButton: () => null, headerShown: false, tabBarStyle: {
+                    display: "none"
+                }
+            }} />
+
+            <Tab.Screen name="Contract" component={Contract} options={{ tabBarButton: () => null, headerShown: false }} />
         </Tab.Navigator>
     )
 }

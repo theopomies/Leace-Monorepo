@@ -26,7 +26,9 @@ const Expenses = () => {
                         </View>
                     ))
                     :
-                    <></>
+                    <View className="items-center justify-center right-0 left-0 top-80 bottom-80">
+                        <Text className="text-3xl font-bold text-center items-center justify-center">No property at the moment</Text>
+                    </View>
                 }
             </View>
         </ScrollView>

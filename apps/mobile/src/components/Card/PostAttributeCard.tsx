@@ -68,9 +68,13 @@ const PostAttributeCard = ({
                     elevator={elevator} pool={pool} />
             </View>
 
-            <View className="flex-row space-x-10 justify-center mb-10">
-                <Button title={'Edit'} color={'custom'} />
-                <Button title={'Delete'} color={'red-500'} />
+            <View className="flex-row justify-center mb-10">
+                <View className="mr-10">
+                    <Button title={'Edit'} color={'custom'} />
+                </View>
+                <View>
+                    <Button title={'Delete'} color={'red-500'} />
+                </View>
             </View>
         </View>
     )

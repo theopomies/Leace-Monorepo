@@ -70,10 +70,13 @@ const CreatePost = () => {
                         multiline={false}
                         placeholder="Enter content..." />
                 </View>
-                <View className="flex-row justify-center mb-10">
-                    <Button title={'Cancel'} color={'custom'} onPress={() => navigation.navigate("Stack")} />
-                    <Button title={'Next'} color={'custom'} onPress={() => createPostButton()} />
-
+                <View className="flex-row flex items-center justify-center">
+                    <View className="mr-10">
+                        <Button title={'Cancel'} color={'custom'} onPress={() => navigation.navigate("Stack")} />
+                    </View>
+                    <View>
+                        <Button title={'Next'} color={'custom'} onPress={() => createPostButton()} />
+                    </View>
                 </View>
             </View>
         </View>
