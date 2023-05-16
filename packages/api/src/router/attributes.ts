@@ -19,7 +19,7 @@ export const attributesRouter = router({
         rentStartDate: z.date().optional(),
         rentEndDate: z.date().optional(),
         furnished: z.boolean().optional(),
-        homeType: z.enum(["HOUSE", "APARTMENT"]).optional(),
+        homeType: z.enum(["HOUSE", "APARTMENT", ""]).optional(),
         terrace: z.boolean().optional(),
         pets: z.boolean().optional(),
         smoker: z.boolean().optional(),
@@ -55,8 +55,7 @@ export const attributesRouter = router({
             rentStartDate: input.rentStartDate,
             rentEndDate: input.rentEndDate,
             furnished: input.furnished,
-            house: input.house,
-            appartment: input.appartment,
+            homeType: input.homeType || null,
             terrace: input.terrace,
             pets: input.pets,
             smoker: input.smoker,
@@ -73,6 +72,7 @@ export const attributesRouter = router({
         return;
       }
 
+      console.log("input:", input.homeType);
       const updated = await ctx.prisma.attribute.update({
         where: { id: attribute.id },
         data: {
@@ -86,7 +86,7 @@ export const attributesRouter = router({
           rentStartDate: input.rentStartDate,
           rentEndDate: input.rentEndDate,
           furnished: input.furnished,
-          homeType: input.homeType,
+          homeType: input.homeType || null,
           terrace: input.terrace,
           pets: input.pets,
           smoker: input.smoker,
@@ -97,6 +97,8 @@ export const attributesRouter = router({
           pool: input.pool,
         },
       });
+
+      console.log(updated);
 
       if (!updated) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
     }),
@@ -112,7 +114,7 @@ export const attributesRouter = router({
         rentStartDate: z.date().optional(),
         rentEndDate: z.date().optional(),
         furnished: z.boolean().optional(),
-        homeType: z.enum(["HOUSE", "APARTMENT"]).optional(),
+        homeType: z.enum(["HOUSE", "APARTMENT", ""]).optional(),
         terrace: z.boolean().optional(),
         pets: z.boolean().optional(),
         smoker: z.boolean().optional(),
@@ -154,8 +156,7 @@ export const attributesRouter = router({
             rentStartDate: input.rentStartDate,
             rentEndDate: input.rentEndDate,
             furnished: input.furnished,
-            house: input.house,
-            appartment: input.appartment,
+            homeType: input.homeType || null,
             terrace: input.terrace,
             pets: input.pets,
             smoker: input.smoker,
@@ -181,7 +182,7 @@ export const attributesRouter = router({
           rentStartDate: input.rentStartDate,
           rentEndDate: input.rentEndDate,
           furnished: input.furnished,
-          homeType: input.homeType,
+          homeType: input.homeType || null,
           terrace: input.terrace,
           pets: input.pets,
           smoker: input.smoker,

@@ -92,11 +92,7 @@ export const ProfilePage = ({ userId }: ProfilePageProps) => {
                         </h2>
                         <div>
                           <b>
-                            {user.attribute.house === true ? (
-                              <p>House</p>
-                            ) : (
-                              <p>Appartment</p>
-                            )}
+                            <p>{user.attribute.homeType ?? 'Whatever'}</p>
                           </b>
                         </div>
                       </div>

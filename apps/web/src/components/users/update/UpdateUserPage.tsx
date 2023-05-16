@@ -15,6 +15,7 @@ import { TextInput } from "../../shared/forms/TextInput";
 import { DateInput } from "../../shared/forms/DateInput";
 import { TextArea } from "../../shared/forms/TextArea";
 import { Button } from "../../shared/button/Button";
+import { HomeType } from "../../../utils/types";
 
 export interface UpdateUserPageProps {
   userId: string;
@@ -38,8 +39,7 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
   const [maxSize, setMaxSize] = useState(0);
   const [minSize, setMinSize] = useState(0);
   const [furnished, setFurnished] = useState(false);
-  const [house, setHouse] = useState(false);
-  const [appartment, setAppartment] = useState(false);
+  const [homeType, setHomeType] = useState<HomeType | undefined>();
   const [terrace, setTerrace] = useState(false);
   const [pets, setPets] = useState(false);
   const [smoker, setSmoker] = useState(false);
@@ -67,8 +67,7 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
         maxSize,
         minSize,
         furnished,
-        house,
-        appartment,
+        homeType,
         terrace,
         pets,
         smoker,
@@ -98,6 +97,12 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
     (setter: Dispatch<SetStateAction<number>>) =>
     (event: React.ChangeEvent<HTMLInputElement>) => {
       setter(event.target.valueAsNumber);
+    };
+
+  const handleHomeTypeChange =
+    (setter: Dispatch<SetStateAction<HomeType | undefined>>) =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setter(event.target.value as HomeType);
     };
 
   const handleCancel: MouseEventHandler<HTMLButtonElement> = (e) => {
@@ -132,8 +137,7 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
       setMinPrice(user.attribute.minPrice || 0);
       setMaxSize(user.attribute.maxSize || 0);
       setMinSize(user.attribute.minSize || 0);
-      setHouse(user.attribute.house || false);
-      setAppartment(user.attribute.appartment || false);
+      setHomeType(user.attribute.homeType || undefined);
       setFurnished(user.attribute.furnished || false);
       setTerrace(user.attribute.terrace || false);
       setPets(user.attribute.pets || false);
@@ -151,8 +155,7 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
     setMinPrice,
     setMaxSize,
     setMinSize,
-    setHouse,
-    setAppartment,
+    setHomeType,
     setFurnished,
     setTerrace,
     setPets,
@@ -177,10 +180,8 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
     handleMinSizeChange: handleNumberChange(setMinSize),
     furnished,
     handleFurnishedChange: handleBooleanChange(setFurnished),
-    house,
-    handleHouseChange: handleBooleanChange(setHouse),
-    appartment,
-    handleAppartmentChange: handleBooleanChange(setAppartment),
+    homeType,
+    handleHomeTypeChange: handleHomeTypeChange(setHomeType),
     terrace,
     handleTerraceChange: handleBooleanChange(setTerrace),
     pets,

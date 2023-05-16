@@ -21,9 +21,7 @@ export function DisplayPost({ post, attribute }: DisplayPostProps) {
             </div>
             <div className="my-4">
               <h2 className="text-xl">Type de logement:</h2>
-              <strong>
-                {attribute.house === true ? "Maison" : "Appartement"}
-              </strong>
+              <strong>{attribute.homeType}</strong>
             </div>
             <div className="my-4">
               <h2 className="text-xl">Critères:</h2>

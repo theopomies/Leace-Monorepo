@@ -9,6 +9,7 @@ import { Checkbox } from "../shared/forms/Checkbox";
 import { TextArea } from "../shared/forms/TextArea";
 import { NumberInput } from "../shared/forms/NumberInput";
 import { FileInput } from "../shared/forms/FileInput";
+import { HomeType } from "../../utils/types";
 
 export interface PostFormProps {
   title: string;
@@ -19,10 +20,8 @@ export interface PostFormProps {
   setLocation: ChangeEventHandler;
   furnished: boolean;
   setFurnished: ChangeEventHandler;
-  house: boolean;
-  setHouse: ChangeEventHandler;
-  appartment: boolean;
-  setAppartment: ChangeEventHandler;
+  homeType: HomeType | undefined;
+  setHomeType: ChangeEventHandler;
   terrace: boolean;
   setTerrace: ChangeEventHandler;
   pets: boolean;
@@ -82,22 +81,26 @@ export const PostForm = (props: PostFormProps) => {
               Type de logement
             </h2>
             <div className="flex justify-center gap-4 p-4">
-              <Checkbox
-                type="checkbox"
-                name="house"
-                onChange={props.setHouse}
-                checked={props.house}
-              >
-                Maison
-              </Checkbox>
-              <Checkbox
-                type="checkbox"
-                name="appartment"
-                onChange={props.setAppartment}
-                checked={props.appartment}
-              >
-                Appartement
-              </Checkbox>
+              <label>
+                <Checkbox
+                  name="homeType"
+                  onChange={props.setHomeType}
+                  checked={props.homeType === "HOUSE"}
+                  value={'HOUSE'}
+                >
+                  Maison
+                </Checkbox>
+              </label>
+              <label>
+                <Checkbox
+                  name="homeType"
+                  onChange={props.setHomeType}
+                  checked={props.homeType === "APARTMENT"}
+                  value={'APARTMENT'}
+                >
+                  Appartement
+                </Checkbox>
+              </label>
             </div>
           </div>
           <div>

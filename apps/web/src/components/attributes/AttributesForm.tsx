@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { ChangeEventHandler } from "react";
 import { Checkbox } from "../shared/forms/Checkbox";
+import { HomeType } from "../../utils/types";
 
 interface AttributesFormProps {
   location: string;
@@ -15,10 +16,8 @@ interface AttributesFormProps {
   handleMinSizeChange: ChangeEventHandler<HTMLInputElement>;
   furnished: boolean;
   handleFurnishedChange: ChangeEventHandler<HTMLInputElement>;
-  house: boolean;
-  handleHouseChange: ChangeEventHandler<HTMLInputElement>;
-  appartment: boolean;
-  handleAppartmentChange: ChangeEventHandler<HTMLInputElement>;
+  homeType: HomeType | undefined;
+  handleHomeTypeChange: ChangeEventHandler<HTMLInputElement>;
   terrace: boolean;
   handleTerraceChange: ChangeEventHandler<HTMLInputElement>;
   pets: boolean;
@@ -122,18 +121,28 @@ export function AttributesForm({ ...attributes }: AttributesFormProps) {
           </h2>
           <div className="flex w-full justify-center gap-1">
             <Checkbox
-              name="house"
-              onChange={attributes.handleHouseChange}
-              checked={attributes.house}
+              name="homeType"
+              onChange={attributes.handleHomeTypeChange}
+              checked={attributes.homeType === "HOUSE"}
+              value={"HOUSE"}
             >
               House
             </Checkbox>
             <Checkbox
-              name="appartment"
-              onChange={attributes.handleAppartmentChange}
-              checked={attributes.appartment}
+              name="homeType"
+              onChange={attributes.handleHomeTypeChange}
+              checked={attributes.homeType === "APARTMENT"}
+              value={"APARTMENT"}
             >
               Appartment
+            </Checkbox>
+            <Checkbox
+              name="homeType"
+              onChange={attributes.handleHomeTypeChange}
+              checked={!attributes.homeType}
+              value={undefined}
+            >
+              Whatever
             </Checkbox>
           </div>
           <h2 className="pb-2 pt-4 text-xl font-bold text-gray-700">
