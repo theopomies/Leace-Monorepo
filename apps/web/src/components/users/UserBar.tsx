@@ -5,6 +5,7 @@ import { Button } from "../shared/button/Button";
 import { trpc } from "../../utils/trpc";
 
 export interface TenantBarProps {
+  other_user_id: string;
   img: string;
   desc: string;
   firstname: string;
@@ -14,6 +15,7 @@ export interface TenantBarProps {
 }
 
 export const TenantBar = ({
+  other_user_id,
   img,
   desc,
   firstname,
@@ -45,7 +47,7 @@ export const TenantBar = ({
             {firstname}
           </div>
           <Link
-            href="#"
+            href={`/users/${other_user_id}`}
             className="mt-1 block text-lg font-medium leading-tight text-black hover:underline"
           >
             {lastName}

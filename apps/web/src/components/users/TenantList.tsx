@@ -13,19 +13,21 @@ export const TenantList = ({ userId }: TenantListProps) => {
     return (
       <>
         {relationships.map(
-          ({ user: { image, description, firstName, lastName }, id }) => {
-            <TenantBar
-              img={image ?? ""}
-              desc={description ?? ""}
-              firstname={firstName ?? ""}
-              lastName={lastName ?? ""}
-              userId={userId}
-              relationShipId={id}
-            />;
-          },
-        )}
-      </>
-    );
+          ({ user: {id : other_user_id, image, description, firstName, lastName }, id }) => (
+            <div key={id}>
+              <TenantBar
+                other_user_id = {other_user_id}
+                img={image ?? ""}
+                desc={description ?? ""}
+                firstname={firstName ?? ""}
+                lastName={lastName ?? ""}
+                userId={userId}
+                relationShipId={id}
+                />
+                </div>
+              ))}
+            </>
+          );
   }
   return <></>;
 };

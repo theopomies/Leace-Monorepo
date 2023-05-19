@@ -2,7 +2,6 @@
 import { PostType } from "@prisma/client";
 import { trpc } from "../../../utils/trpc";
 import { PostBar } from "./PostBar";
-import Link from "next/link";
 
 export interface PostListProps {
   userId: string;
