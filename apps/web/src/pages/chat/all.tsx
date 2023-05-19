@@ -10,9 +10,7 @@ const Support = () => {
     return (
       <LoggedLayout title="Chat | Leace">
         <div className="flex h-screen w-full justify-center p-4">
-          <div className="flex w-full items-center justify-center rounded-lg bg-slate-50 shadow-lg">
             <Chat userId={session.data.userId} chatOn />
-          </div>
         </div>
       </LoggedLayout>
     );
