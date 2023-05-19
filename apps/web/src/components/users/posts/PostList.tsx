@@ -2,6 +2,7 @@
 import { PostType } from "@prisma/client";
 import { trpc } from "../../../utils/trpc";
 import { PostBar } from "./PostBar";
+import Link from "next/link";
 
 export interface PostListProps {
   userId: string;
@@ -10,20 +11,24 @@ export interface PostListProps {
 export const PostList = ({ userId }: PostListProps) => {
   const { data: relationships } =
     trpc.relationship.getMatchesForTenant.useQuery({ userId });
-  if (relationships) {
-    return (
-      <>
-        {relationships.map(({ post: { id, title, desc, type } }) => (
-          <PostBar
-            key={id}
-            postId={id}
-            title={title ?? "Title"}
-            desc={desc ?? "Description"}
-            type={type ?? PostType.TO_BE_RENTED}
-          />
-        ))}
-      </>
-    );
-  }
-  return <></>;
-};
+  
+    if (relationships) {
+      return (
+        <>
+          {relationships.map(({ post: { id: postId, title, desc, type }, id }) => (
+            <div key={id}>
+              <PostBar
+                postId={postId}
+                title={title ?? "Title"}
+                desc={desc ?? "Description"}
+                type={type ?? PostType.TO_BE_RENTED}
+                userId={userId}
+                relationShipId={id}
+              />
+            </div>
+          ))}
+        </>
+      );
+    }
+    return <></>;
+  };

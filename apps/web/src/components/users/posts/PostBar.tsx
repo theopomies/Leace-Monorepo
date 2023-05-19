@@ -3,16 +3,28 @@
 import Link from "next/link";
 import { trpc } from "../../../utils/trpc";
 import { PostType } from "@prisma/client";
-
+import { Button } from "../../shared/button/Button";
 export interface PostBarProps {
   postId: string;
   title: string;
   desc: string;
   type: PostType;
+  userId: string;
+  relationShipId: string;
 }
 
-export const PostBar = ({ postId, title, desc, type }: PostBarProps) => {
+export const PostBar = ({ postId, title, desc, type, userId, relationShipId }: PostBarProps) => {
+  const utils = trpc.useContext();
   const { data: img } = trpc.image.getSignedPostUrl.useQuery(postId);
+  const deleteMatchMutation = trpc.relationship.deleteMatchForTenant.useMutation({
+    onSuccess: () => {
+      utils.relationship.getMatchesForTenant.invalidate({ userId });
+    },
+  });
+
+  const handleDeleteMatch = async () => {
+    await deleteMatchMutation.mutateAsync({ userId, relationShipId });
+  };
 
   return (
     <div className="mx-auto my-5 max-w-md overflow-hidden rounded-xl bg-white shadow-md md:max-w-2xl">
@@ -42,6 +54,9 @@ export const PostBar = ({ postId, title, desc, type }: PostBarProps) => {
           </p>
         </div>
       </div>
+        <Button theme="danger" onClick={handleDeleteMatch}>
+          Delete Match
+        </Button>
     </div>
   );
 };

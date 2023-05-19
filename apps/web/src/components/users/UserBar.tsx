@@ -1,12 +1,16 @@
 /* eslint-disable @next/next/no-img-element */
 
 import Link from "next/link";
+import { Button } from "../shared/button/Button";
+import { trpc } from "../../utils/trpc";
 
 export interface TenantBarProps {
   img: string;
   desc: string;
   firstname: string;
   lastName: string;
+  userId: string;
+  relationShipId: string;
 }
 
 export const TenantBar = ({
@@ -14,7 +18,18 @@ export const TenantBar = ({
   desc,
   firstname,
   lastName,
+  userId,
+  relationShipId,
 }: TenantBarProps) => {
+  const utils = trpc.useContext();
+  const deleteMatchMutation = trpc.relationship.deleteMatchForOwner.useMutation({
+    onSuccess: () => {
+      utils.relationship.getMatchesForOwner.invalidate({ userId });
+    },
+  });
+  const handleDeleteMatch = async () => {
+    await deleteMatchMutation.mutateAsync({ userId, relationShipId });
+  };
   return (
     <div className="mx-auto my-5 max-w-md overflow-hidden rounded-xl bg-white shadow-md md:max-w-2xl">
       <div className="md:flex">
@@ -38,6 +53,9 @@ export const TenantBar = ({
           <p className="mt-2 text-slate-500">{desc}</p>
         </div>
       </div>
+      <Button theme="danger" onClick={handleDeleteMatch}>
+          Delete Match
+      </Button>
     </div>
   );
 };

@@ -13,12 +13,14 @@ export const TenantList = ({ userId }: TenantListProps) => {
     return (
       <>
         {relationships.map(
-          ({ user: { image, description, firstName, lastName } }) => {
+          ({ user: { image, description, firstName, lastName }, id }) => {
             <TenantBar
               img={image ?? ""}
               desc={description ?? ""}
               firstname={firstName ?? ""}
               lastName={lastName ?? ""}
+              userId={userId}
+              relationShipId={id}
             />;
           },
         )}
