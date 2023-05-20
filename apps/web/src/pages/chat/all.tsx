@@ -3,14 +3,14 @@ import { trpc } from "../../utils/trpc";
 import { Loader } from "../../components/shared/Loader";
 import { LoggedLayout } from "../../components/layout/LoggedLayout";
 
-const Support = () => {
+const ChatAll = () => {
   const session = trpc.auth.getSession.useQuery();
 
   if (session.data && !session.error) {
     return (
       <LoggedLayout title="Chat | Leace">
         <div className="flex h-screen w-full justify-center p-4">
-            <Chat userId={session.data.userId} chatOn />
+            <Chat userId={session.data.userId} chatOn/>
         </div>
       </LoggedLayout>
     );
@@ -18,4 +18,4 @@ const Support = () => {
   return <Loader />;
 };
 
-export default Support;
+export default ChatAll;
