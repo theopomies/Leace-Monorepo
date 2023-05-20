@@ -10,6 +10,9 @@ export const OccupiedClientList = ({ userId }: TenantListProps) => {
   const { data: relationships } = trpc.relationship.getLikesForOwner.useQuery({
     userId,
   });
+  const { data: user } = trpc.user.getUserById.useQuery({
+    userId: userId ?? "",
+  });
   //   console.log(relationships);
   if (relationships && relationships?.rs) {
     return (
@@ -35,6 +38,7 @@ export const OccupiedClientList = ({ userId }: TenantListProps) => {
                   lastName={lastName ?? ""}
                   userId={userId}
                   relationShipId={id}
+                  user={user}
                 />
               </div>
             ),

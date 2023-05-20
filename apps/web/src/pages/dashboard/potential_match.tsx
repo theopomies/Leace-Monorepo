@@ -1,7 +1,7 @@
 import { LoggedLayout } from "../../components/layout/LoggedLayout";
 import { Role } from "@prisma/client";
 import { trpc } from "../../utils/trpc";
-import { OccupiedClientList } from "../../components/dashboard/OccupiedClientList";
+import { OccupiedClientList } from "../../components/dashboard/PotentialMatch";
 import { Loader } from "../../components/shared/Loader";
 
 export default function OccupiedClientPage() {
@@ -9,7 +9,7 @@ export default function OccupiedClientPage() {
 
   if (isLoading) return <Loader />;
   return (
-    <LoggedLayout title="Clients | Leace" roles={[Role.AGENCY]}>
+    <LoggedLayout title="Potential Match | Leace" roles={[Role.AGENCY]}>
       {!!session && <OccupiedClientList userId={session.userId} />}
     </LoggedLayout>
   );

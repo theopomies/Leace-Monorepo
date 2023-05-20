@@ -13,14 +13,22 @@ export interface PostBarProps {
   relationShipId: string;
 }
 
-export const PostBar = ({ postId, title, desc, type, userId, relationShipId }: PostBarProps) => {
+export const PostBar = ({
+  postId,
+  title,
+  desc,
+  type,
+  userId,
+  relationShipId,
+}: PostBarProps) => {
   const utils = trpc.useContext();
   const { data: img } = trpc.image.getSignedPostUrl.useQuery(postId);
-  const deleteMatchMutation = trpc.relationship.deleteMatchForTenant.useMutation({
-    onSuccess: () => {
-      utils.relationship.getMatchesForTenant.invalidate({ userId });
-    },
-  });
+  const deleteMatchMutation =
+    trpc.relationship.deleteMatchForTenant.useMutation({
+      onSuccess: () => {
+        utils.relationship.getMatchesForTenant.invalidate({ userId });
+      },
+    });
 
   const handleDeleteMatch = async () => {
     await deleteMatchMutation.mutateAsync({ userId, relationShipId });
@@ -54,9 +62,9 @@ export const PostBar = ({ postId, title, desc, type, userId, relationShipId }: P
           </p>
         </div>
       </div>
-        <Button theme="danger" onClick={handleDeleteMatch}>
-          Delete Match
-        </Button>
+      <Button theme="danger" onClick={handleDeleteMatch}>
+        Delete Match
+      </Button>
     </div>
   );
 };

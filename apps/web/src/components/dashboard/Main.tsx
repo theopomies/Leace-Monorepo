@@ -53,7 +53,7 @@ export function Dashboard({ user }: DashboardListProps) {
                 className="w-full rounded bg-purple-500 px-4 py-2 font-bold text-white hover:bg-purple-700"
                 href={`/dashboard/clients`}
               >
-                Clients
+                Potential matches
               </Link>
             </div>
           )}

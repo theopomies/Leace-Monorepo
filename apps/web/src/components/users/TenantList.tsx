@@ -9,6 +9,9 @@ export const TenantList = ({ userId }: TenantListProps) => {
   const { data: relationships } = trpc.relationship.getMatchesForOwner.useQuery(
     { userId },
   );
+  const { data: user } = trpc.user.getUserById.useQuery({
+    userId: userId ?? "",
+  });
   if (relationships) {
     return (
       <>
@@ -32,6 +35,7 @@ export const TenantList = ({ userId }: TenantListProps) => {
                 lastName={lastName ?? ""}
                 userId={userId}
                 relationShipId={id}
+                user={user}
               />
             </div>
           ),

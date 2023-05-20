@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { Button } from "../shared/button/Button";
 import { trpc } from "../../utils/trpc";
+import { Attribute } from "@prisma/client";
+import { User } from "@leace/db";
 
 export interface TenantBarProps {
   other_user_id: string;
@@ -12,6 +14,11 @@ export interface TenantBarProps {
   lastName: string;
   userId: string;
   relationShipId: string;
+  user:
+    | (User & {
+        attribute: Attribute | null;
+      })
+    | undefined;
 }
 
 export const TenantBar = ({
@@ -22,6 +29,7 @@ export const TenantBar = ({
   lastName,
   userId,
   relationShipId,
+  user,
 }: TenantBarProps) => {
   const utils = trpc.useContext();
   const deleteMatchMutation = trpc.relationship.deleteMatchForOwner.useMutation(
@@ -34,6 +42,9 @@ export const TenantBar = ({
 
   const handleDeleteMatch = async () => {
     await deleteMatchMutation.mutateAsync({ userId, relationShipId });
+  };
+  const handleLikeMatch = async () => {
+    // how to like a match
   };
   return (
     <div className="mx-auto my-5 max-w-md overflow-hidden rounded-xl bg-white shadow-md md:max-w-2xl">
@@ -61,6 +72,11 @@ export const TenantBar = ({
       <Button theme="danger" onClick={handleDeleteMatch}>
         Delete Match
       </Button>
+      {user && user.isPremium && (
+        <Button theme="success" onClick={handleLikeMatch}>
+          Like Match
+        </Button>
+      )}
     </div>
   );
 };
