@@ -78,7 +78,7 @@ export const ProfilePage = ({ userId }: ProfilePageProps) => {
                 {user.role == Role.TENANT && user.attribute && (
                   <div>
                     <div className="m-4 flex h-full justify-center">
-                      <div className="pr-20 pt-4 pb-2">
+                      <div className="pb-2 pr-20 pt-4">
                         <h2 className="text-xl font-bold text-gray-400">
                           Location:
                         </h2>
@@ -86,7 +86,7 @@ export const ProfilePage = ({ userId }: ProfilePageProps) => {
                           <b>{user.attribute.location}</b>
                         </p>
                       </div>
-                      <div className="pr-20 pt-4 pb-2">
+                      <div className="pb-2 pr-20 pt-4">
                         <h2 className="text-xl font-bold text-gray-400">
                           What you are looking for:
                         </h2>
@@ -201,7 +201,7 @@ export const ProfilePage = ({ userId }: ProfilePageProps) => {
               {session && userId == session.userId && (
                 <div>
                   <Link
-                    className="rounded bg-indigo-500 py-3 px-4 font-bold text-white hover:bg-indigo-600 active:bg-indigo-700"
+                    className="rounded bg-indigo-500 px-4 py-3 font-bold text-white hover:bg-indigo-600 active:bg-indigo-700"
                     href={`/users/${userId}/update`}
                   >
                     Modify
