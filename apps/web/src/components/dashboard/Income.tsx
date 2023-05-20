@@ -15,22 +15,25 @@ const initialIncomes: Income[] = [
   // { id: 3, amount: 250, date: "2023-03-01" },
 ];
 
-
 interface IncomeListProps {
-  userId: string; 
+  userId: string;
 }
 
-
 export function Income({ userId }: IncomeListProps) {
-  // const incomesList = trpc.post.getRentIncomeByUserId.useQuery({userId: userId});
-
+  const incomesList = trpc.post.getRentIncomeByUserId.useQuery({
+    userId: userId,
+  });
+  console.log(incomesList.data);
 
   const [selectedMonth, setSelectedMonth] = useState<string>("all");
   const [Incomes, setIncomes] = useState<Income[]>(initialIncomes);
   const [amount, setAmount] = useState<number | null>(null);
   const [date, setDate] = useState("");
 
-  const filteredIncomes = selectedMonth === "all" ? Incomes : Incomes.filter((rev) => rev.date.startsWith(selectedMonth));
+  const filteredIncomes =
+    selectedMonth === "all"
+      ? Incomes
+      : Incomes.filter((rev) => rev.date.startsWith(selectedMonth));
 
   const addIncome = () => {
     if (!amount || !date) {
@@ -54,11 +57,11 @@ export function Income({ userId }: IncomeListProps) {
 
   return (
     <div className="container mx-auto p-4">
-      <div className="flex flex-col items-center justify-center min-h-screen">
-        <h1 className="text-3xl font-bold mb-8">Mes revenus</h1>
+      <div className="flex min-h-screen flex-col items-center justify-center">
+        <h1 className="mb-8 text-3xl font-bold">Mes revenus</h1>
 
-        <div className="w-full max-w-screen-md flex flex-col items-center">
-          <div className="flex items-center mb-4">
+        <div className="flex w-full max-w-screen-md flex-col items-center">
+          <div className="mb-4 flex items-center">
             <label htmlFor="month-select" className="mr-4">
               Mois :
             </label>
@@ -66,7 +69,7 @@ export function Income({ userId }: IncomeListProps) {
               id="month-select"
               value={selectedMonth}
               onChange={(e) => setSelectedMonth(e.target.value)}
-              className="border border-gray-300 rounded-md py-1 px-3"
+              className="rounded-md border border-gray-300 px-3 py-1"
             >
               <option value="all">Tous les mois</option>
               <option value="2023-04">Avril 2023</option>
@@ -77,26 +80,26 @@ export function Income({ userId }: IncomeListProps) {
           <div className="mt-4">
             <input
               type="number"
-              className="px-2 py-1 border rounded-lg mr-2"
+              className="mr-2 rounded-lg border px-2 py-1"
               value={amount || ""}
               onChange={(e) => setAmount(e.target.valueAsNumber)}
               placeholder="Montant"
             />
             <input
               type="date"
-              className="px-2 py-1 border rounded-lg mr-2"
+              className="mr-2 rounded-lg border px-2 py-1"
               value={date}
               onChange={(e) => setDate(e.target.value)}
             />
-            <button 
+            <button
               onClick={addIncome}
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              className="rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
             >
               Ajouter un revenu
             </button>
           </div>
 
-          <table className="w-full border border-gray-300 rounded-md overflow-hidden mt-4">
+          <table className="mt-4 w-full overflow-hidden rounded-md border border-gray-300">
             <thead className="bg-gray-100">
               <tr>
                 <th className="px-4 py-2 text-left">Date</th>
@@ -114,13 +117,15 @@ export function Income({ userId }: IncomeListProps) {
             <tfoot className="bg-gray-100">
               <tr>
                 <td className="px-4 py-2 font-bold">Total</td>
-                <td className="px-4 py-2 font-bold">{filteredIncomes.reduce((acc, rev) => acc + rev.amount, 0)}</td>
+                <td className="px-4 py-2 font-bold">
+                  {filteredIncomes.reduce((acc, rev) => acc + rev.amount, 0)}
+                </td>
               </tr>
             </tfoot>
           </table>
         </div>
-        <Link 
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mt-4 flex items-center justify-center rounded"
+        <Link
+          className="mt-4 flex items-center justify-center rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
           href={`/dashboard/main`}
         >
           Return

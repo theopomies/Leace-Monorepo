@@ -52,7 +52,8 @@ interface ExpenseListProps {
 
 
 export function Expenses({ userId }: ExpenseListProps) {
-  // const expenses = trpc.post.getRentExpenseByUserId.useQuery({userId: userId});
+  const expenses_get = trpc.post.getRentExpenseByUserId.useQuery({userId: userId});
+  console.log(expenses_get.data);
 
   const [expenses, setExpenses] = useState<ExpenseItem[]>([
     // {
