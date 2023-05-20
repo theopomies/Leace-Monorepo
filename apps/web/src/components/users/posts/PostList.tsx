@@ -10,11 +10,12 @@ export interface PostListProps {
 export const PostList = ({ userId }: PostListProps) => {
   const { data: relationships } =
     trpc.relationship.getMatchesForTenant.useQuery({ userId });
-  
-    if (relationships) {
-      return (
-        <>
-          {relationships.map(({ post: { id: postId, title, desc, type }, id }) => (
+
+  if (relationships) {
+    return (
+      <>
+        {relationships.map(
+          ({ post: { id: postId, title, desc, type }, id }) => (
             <div key={id}>
               <PostBar
                 postId={postId}
@@ -25,9 +26,10 @@ export const PostList = ({ userId }: PostListProps) => {
                 relationShipId={id}
               />
             </div>
-          ))}
-        </>
-      );
-    }
-    return <></>;
-  };
+          ),
+        )}
+      </>
+    );
+  }
+  return <></>;
+};

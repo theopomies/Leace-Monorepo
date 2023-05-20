@@ -24,11 +24,14 @@ export const TenantBar = ({
   relationShipId,
 }: TenantBarProps) => {
   const utils = trpc.useContext();
-  const deleteMatchMutation = trpc.relationship.deleteMatchForOwner.useMutation({
-    onSuccess: () => {
-      utils.relationship.getMatchesForOwner.invalidate({ userId });
+  const deleteMatchMutation = trpc.relationship.deleteMatchForOwner.useMutation(
+    {
+      onSuccess: () => {
+        utils.relationship.getLikesForOwner.invalidate({ userId });
+      },
     },
-  });
+  );
+
   const handleDeleteMatch = async () => {
     await deleteMatchMutation.mutateAsync({ userId, relationShipId });
   };
@@ -56,7 +59,7 @@ export const TenantBar = ({
         </div>
       </div>
       <Button theme="danger" onClick={handleDeleteMatch}>
-          Delete Match
+        Delete Match
       </Button>
     </div>
   );

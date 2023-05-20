@@ -13,32 +13,34 @@ export const OccupiedClientList = ({ userId }: TenantListProps) => {
   //   console.log(relationships);
   if (relationships && relationships?.rs) {
     return (
-      <>
-        {relationships?.rs.map(
-          ({
-            user: {
-              id: other_user_id,
-              image,
-              description,
-              firstName,
-              lastName,
-            },
-            id,
-          }) => (
-            <div key={id}>
-              <TenantBar
-                other_user_id={other_user_id}
-                img={image ?? ""}
-                desc={description ?? ""}
-                firstname={firstName ?? ""}
-                lastName={lastName ?? ""}
-                userId={userId}
-                relationShipId={id}
-              />
-            </div>
-          ),
-        )}
-      </>
+      <div className="container mx-auto p-4">
+        <>
+          {relationships?.rs.map(
+            ({
+              user: {
+                id: other_user_id,
+                image,
+                description,
+                firstName,
+                lastName,
+              },
+              id,
+            }) => (
+              <div key={id}>
+                <TenantBar
+                  other_user_id={other_user_id}
+                  img={image ?? ""}
+                  desc={description ?? ""}
+                  firstname={firstName ?? ""}
+                  lastName={lastName ?? ""}
+                  userId={userId}
+                  relationShipId={id}
+                />
+              </div>
+            ),
+          )}
+        </>
+      </div>
     );
   } else {
     return (
