@@ -1,4 +1,4 @@
-import { Image, Roles } from "@prisma/client";
+import { Image, Role } from "@prisma/client";
 import { protectedProcedure, router } from "../trpc";
 import { z } from "zod";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
@@ -11,81 +11,7 @@ import { randomUUID } from "crypto";
 import { TRPCError } from "@trpc/server";
 
 export const imageRouter = router({
-  PutSignedUserUrl: protectedProcedure()
-    .input(z.object({ fileType: z.string() }))
-    .mutation(async ({ ctx, input }) => {
-      const id = randomUUID();
-
-      const ext = input.fileType.split("/")[1];
-      if (!ext || (ext != "png" && ext != "jpeg"))
-        throw new TRPCError({ code: "BAD_REQUEST" });
-
-      const created = await ctx.prisma.image.create({
-        data: { id: id, userId: ctx.auth.userId, ext: ext },
-      });
-      if (!created) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
-
-      const key = `${ctx.auth.userId}/images/${id}.${ext}`;
-      const bucketParams = {
-        Bucket: "leaceawsbucket",
-        Key: key,
-      };
-      const command = new PutObjectCommand(bucketParams);
-
-      return await getSignedUrl(ctx.s3Client, command);
-    }),
-  GetSignedUserUrl: protectedProcedure()
-    .input(z.string().optional())
-    .query(async ({ ctx, input }) => {
-      const userId = input ? input : ctx.auth.userId;
-
-      const images = await ctx.prisma.image.findMany({
-        where: {
-          userId: userId,
-        },
-      });
-      if (!images) throw new TRPCError({ code: "NOT_FOUND" });
-
-      return await Promise.all(
-        images.map(async (image: Image) => {
-          const bucketParams = {
-            Bucket: "leaceawsbucket",
-            Key: `${userId}/images/${image.id}.${image.ext}`,
-          };
-          const command = new GetObjectCommand(bucketParams);
-
-          return { ...image, url: await getSignedUrl(ctx.s3Client, command) };
-        }),
-      );
-    }),
-  DeleteSignedUserUrl: protectedProcedure()
-    .input(z.string())
-    .mutation(async ({ ctx, input }) => {
-      const image = await ctx.prisma.image.findFirst({
-        where: { id: input, userId: ctx.auth.userId },
-      });
-      if (!image) throw new TRPCError({ code: "NOT_FOUND" });
-
-      const deleted = await ctx.prisma.image.delete({
-        where: { id: image.id },
-      });
-      if (!deleted) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
-
-      const bucketParams = {
-        Bucket: "leaceawsbucket",
-        Key: `${ctx.auth.userId}/images/${image.id}.${image.ext}`,
-      };
-      const command = new DeleteObjectCommand(bucketParams);
-
-      return await getSignedUrl(ctx.s3Client, command);
-    }),
-
-  PutSignedPostUrl: protectedProcedure([
-    Roles.OWNER,
-    Roles.AGENCY,
-    Roles.MODERATOR,
-    Roles.ADMIN,
-  ])
+  putSignedPostUrl: protectedProcedure([Role.TENANT, Role.AGENCY, Role.OWNER])
     .input(z.object({ postId: z.string(), fileType: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const id = randomUUID();
@@ -113,7 +39,7 @@ export const imageRouter = router({
 
       return await getSignedUrl(ctx.s3Client, command);
     }),
-  GetSignedPostUrl: protectedProcedure()
+  getSignedPostUrl: protectedProcedure([Role.TENANT, Role.AGENCY, Role.OWNER])
     .input(z.string())
     .query(async ({ ctx, input }) => {
       const getPost = await ctx.prisma.post.findUnique({
@@ -139,11 +65,10 @@ export const imageRouter = router({
         }),
       );
     }),
-  DeleteSignedPostUrl: protectedProcedure([
-    Roles.OWNER,
-    Roles.AGENCY,
-    Roles.MODERATOR,
-    Roles.ADMIN,
+  deleteSignedPostUrl: protectedProcedure([
+    Role.TENANT,
+    Role.AGENCY,
+    Role.OWNER,
   ])
     .input(z.object({ postId: z.string(), imageId: z.string() }))
     .mutation(async ({ ctx, input }) => {

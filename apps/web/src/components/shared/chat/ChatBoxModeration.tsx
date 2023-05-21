@@ -1,0 +1,20 @@
+import { trpc } from "../../../utils/trpc";
+import { ChatBox } from "./ChatBox";
+
+export interface ChatBoxModerationProps {
+  conversationId: string;
+  userId: string;
+}
+
+export const ChatBoxModeration = ({
+  conversationId,
+  ...rest
+}: ChatBoxModerationProps) => {
+  const { data } = trpc.moderation.conversation.getConversation.useQuery({
+    conversationId,
+  });
+
+  if (!data) return null;
+
+  return <ChatBox conversation={data} {...rest} />;
+};
