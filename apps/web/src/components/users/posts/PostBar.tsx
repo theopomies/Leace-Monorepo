@@ -24,7 +24,7 @@ export const PostBar = ({
   const utils = trpc.useContext();
   const { data: img } = trpc.image.getSignedPostUrl.useQuery(postId);
   const deleteMatchMutation =
-    trpc.relationship.deleteMatchForTenant.useMutation({
+    trpc.relationship.deleteRelationForTenant.useMutation({
       onSuccess: () => {
         utils.relationship.getMatchesForTenant.invalidate({ userId });
       },
