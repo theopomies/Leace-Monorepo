@@ -7,12 +7,12 @@ export const sections = [
     href: "#vision",
   },
   {
-    label: "About",
-    href: "#about",
-  },
-  {
     label: "Roadmap",
     href: "#roadmap",
+  },
+  {
+    label: "About us",
+    href: "#about-us",
   },
   {
     label: "Newsletter",

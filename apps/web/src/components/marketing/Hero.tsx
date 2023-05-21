@@ -4,8 +4,8 @@ import { Button } from "../shared/button/Button";
 export function Hero() {
   return (
     <section
-      id="hero"
-      className="container flex flex-col items-center gap-4 py-8"
+      id="vision"
+      className="container m-auto flex flex-col items-center gap-4 py-8"
     >
       <div className="overflow-hidden rounded-full bg-white px-6 py-2">
         <ul className="relative flex gap-8">
@@ -31,8 +31,8 @@ export function Hero() {
         </h1>
         <p className="p-4 text-center leading-8 text-gray-500">
           <span className="block">
-            Leace is a platform that allows you to find your next home,
-            roommate, or tenant with ease.
+            Leace is a platform that allows you to find your next home or tenant
+            with ease.
           </span>
           <span>
             It combines the best of real estate agencies with the best of online

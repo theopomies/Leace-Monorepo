@@ -13,8 +13,11 @@ export function Newsletter() {
   };
 
   return (
-    <section id="newsletter" className="flex flex-col items-center gap-4 py-8">
-      <h2 className="text-4xl font-semibold">Join the newsletter</h2>
+    <section
+      id="newsletter"
+      className="my-32 flex flex-col items-center gap-5 py-8"
+    >
+      <h2 className="text-5xl font-light">Join the newsletter</h2>
       <p>
         Stay up to date with all the news, insights, and updates we have coming.
       </p>
