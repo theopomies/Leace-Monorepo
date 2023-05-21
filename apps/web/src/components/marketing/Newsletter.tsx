@@ -27,6 +27,7 @@ export function Newsletter() {
           className="w-80 bg-slate-50 aria-[invalid]:border-red-500"
           type="email"
           value={email}
+          onChange={(event) => setEmail(event.target.value)}
         />
         <Button type="submit">Sign Up</Button>
       </form>

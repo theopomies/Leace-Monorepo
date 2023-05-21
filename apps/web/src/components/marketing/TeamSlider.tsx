@@ -6,41 +6,65 @@ const TEAM_MEMBERS = [
   {
     name: "Theo Pomies",
     title: "CTO",
+    image: "/images/theo.jpeg",
+    description:
+      "Originaly from Bordeaux, France, Theo is a fullstack engineer with a passion for entrepreneurship. He is currently studying at Epitech from New York.",
     id: 1,
   },
   {
     name: "Gregoire Bezier",
     title: "CEO",
+    image: "/images/gregoire.jpeg",
+    description:
+      "Originaly from Pau, France, Gregoire is a seasoned python engineer. He is currently studying at Epitech from New York.",
     id: 2,
   },
   {
     name: "Hugo Maltese",
     title: "Lead Backend Engineer",
+    image: "/images/hugo.jpeg",
+    description:
+      "Originaly from Lyon, France, Hugo is a backend engineer that previously worked at Fruitz, a product by Bumble. He is currently studying at Epitech from New York.",
     id: 3,
   },
   {
     name: "Romain Dufourt",
     title: "Backend Engineer",
+    image: "/images/romain.jpeg",
+    description:
+      "Originaly from Paris, France, Romain is a backend engineer. He is currently studying at Epitech from New York.",
     id: 4,
   },
   {
     name: "Oriol Figueras",
     title: "Mobile Engineer",
+    image: "/images/oriol.jpeg",
+    description:
+      "Originaly from Barcelona, Spain, Oriol is a mobile engineer. He is currently studying at Epitech from New York.",
     id: 5,
   },
   {
     name: "David Aphing-Kouassi",
     title: "Mobile Engineer",
+    image: "/images/david.jpeg",
+    description:
+      "Originaly from Bordeaux, France, David is a mobile engineer. He is currently studying at Epitech from California.",
     id: 6,
   },
   {
     name: "Benjamin Ziane",
     title: "Backend Engineer",
+    image: "/images/benjamin.jpeg",
+    description:
+      "Originaly from Lyon, France, Benjamin is a Fullstack engineer. He is currently studying at Epitech from New York.",
     id: 7,
   },
   {
     name: "Etienne Mulard",
     title: "Backend Engineer",
+    image: "/images/etienne.jpeg",
+    description:
+      "Originaly from Paris, France, Etienne is a backend engineer. He is currently studying at Epitech from Dublin.",
     id: 8,
   },
 ];
@@ -87,36 +111,13 @@ export const TeamSlider = () => {
               <TeamMemberCard
                 name={member.name}
                 title={member.title}
-                description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed neque elit, tristique quis tempus id, scelerisque sed ligula. Curabitur sed risus eget arcu hendrerit mollis."
-                image={
-                  "https://picsum.photos/200?random=" +
-                  (member.id % TEAM_MEMBERS.length)
-                }
+                description={member.description}
+                image={member.image}
               />
             </motion.div>
           ))}
         </AnimatePresence>
       </div>
-      {/* <style jsx>
-        {`
-          .slider:hover {
-            animation-play-state: paused;
-          }
-
-          .slider {
-            animation: 5s slide infinite linear;
-          }
-
-          @keyframes slide {
-            from {
-              transform: translateX(0);
-            }
-            to {
-              transform: translateX(-50%);
-            }
-          }
-        `}
-      </style> */}
     </section>
   );
 };
