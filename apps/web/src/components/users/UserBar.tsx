@@ -4,8 +4,7 @@ import Link from "next/link";
 import { Button } from "../shared/button/Button";
 import { trpc } from "../../utils/trpc";
 import { Attribute } from "@prisma/client";
-import { User, Post } from "@leace/db";
-import { string } from "zod";
+import { User} from "@leace/db";
 
 export interface TenantBarProps {
   other_user_id: string;
