@@ -12,6 +12,8 @@ export interface TenantBarProps {
   desc: string;
   firstname: string;
   lastName: string;
+  isMatch: boolean;
+  postId: string;
   userId: string;
   relationShipId: string;
   user:
@@ -27,11 +29,19 @@ export const TenantBar = ({
   desc,
   firstname,
   lastName,
+  isMatch,
+  postId,
   userId,
   relationShipId,
   user,
 }: TenantBarProps) => {
   const utils = trpc.useContext();
+  const likeTenantForPost = trpc.relationship.likeTenantForPost.useMutation({
+    onSuccess: () => {
+      utils.relationship.getLikesForOwner.invalidate({ userId });
+    },
+  });
+
   const deleteMatchMutation = trpc.relationship.deleteMatchForOwner.useMutation(
     {
       onSuccess: () => {
@@ -45,7 +55,10 @@ export const TenantBar = ({
   };
 
   const handleLikeMatch = async () => {
-    // how to like a match
+    await likeTenantForPost.mutateAsync({
+      userId: other_user_id,
+      postId: postId,
+    });
   };
 
   return (
@@ -80,7 +93,8 @@ export const TenantBar = ({
       >
         Chat with Match
       </Link>
-      {user && user.isPremium && (
+      {user && user.isPremium && 
+        isMatch != true && (
         <Button theme="success" onClick={handleLikeMatch}>
           Like Match
         </Button>

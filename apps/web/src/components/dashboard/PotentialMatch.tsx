@@ -28,6 +28,8 @@ export const OccupiedClientList = ({ userId }: TenantListProps) => {
                 lastName,
               },
               id,
+              isMatch,
+              postId,
             }) => (
               <div key={id}>
                 <TenantBar
@@ -36,6 +38,8 @@ export const OccupiedClientList = ({ userId }: TenantListProps) => {
                   desc={description ?? ""}
                   firstname={firstName ?? ""}
                   lastName={lastName ?? ""}
+                  isMatch={isMatch ?? false}
+                  postId={postId ?? ""}
                   userId={userId}
                   relationShipId={id}
                   user={user}
