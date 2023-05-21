@@ -4,7 +4,8 @@ import Link from "next/link";
 import { Button } from "../shared/button/Button";
 import { trpc } from "../../utils/trpc";
 import { Attribute } from "@prisma/client";
-import { User } from "@leace/db";
+import { User, Post } from "@leace/db";
+import { string } from "zod";
 
 export interface TenantBarProps {
   other_user_id: string;
@@ -13,9 +14,10 @@ export interface TenantBarProps {
   firstname: string;
   lastName: string;
   isMatch: boolean;
-  postId: string;
   userId: string;
   relationShipId: string;
+  postId: string;
+  title: string;
   user:
     | (User & {
         attribute: Attribute | null;
@@ -30,9 +32,10 @@ export const TenantBar = ({
   firstname,
   lastName,
   isMatch,
-  postId,
   userId,
   relationShipId,
+  postId,
+  title,
   user,
 }: TenantBarProps) => {
   const utils = trpc.useContext();
@@ -42,13 +45,12 @@ export const TenantBar = ({
     },
   });
 
-  const deleteMatchMutation = trpc.relationship.deleteMatchForOwner.useMutation(
-    {
+  const deleteMatchMutation =
+    trpc.relationship.deleteRelationForOwner.useMutation({
       onSuccess: () => {
         utils.relationship.getLikesForOwner.invalidate({ userId });
       },
-    },
-  );
+    });
 
   const handleDeleteMatch = async () => {
     await deleteMatchMutation.mutateAsync({ userId, relationShipId });
@@ -84,21 +86,25 @@ export const TenantBar = ({
           <p className="mt-2 text-slate-500">{desc}</p>
         </div>
       </div>
-      <Button theme="danger" onClick={handleDeleteMatch}>
-        Delete Match
-      </Button>
-      <Link
-        className="rounded bg-indigo-500 px-4 py-3 font-bold text-white hover:bg-indigo-600 active:bg-indigo-700"
-        href={`/chat/all`}
-      >
-        Chat with Match
-      </Link>
-      {user && user.isPremium && 
-        isMatch != true && (
-        <Button theme="success" onClick={handleLikeMatch}>
-          Like Match
+      <div className="flex text-sm font-semibold uppercase tracking-wide">
+        <p className="font-black text-black"> {title} </p>
+      </div>
+      <div className="flex items-center justify-between bg-gray-100 px-8 py-4">
+        <Button theme="danger" onClick={handleDeleteMatch}>
+          Delete Match
         </Button>
-      )}
+        <Link
+          className="rounded bg-indigo-500 px-4 py-3 font-bold text-white hover:bg-indigo-600 active:bg-indigo-700"
+          href={`/chat/all`}
+        >
+          Chat with Match
+        </Link>
+        {user && user.isPremium && isMatch != true && (
+          <Button theme="success" onClick={handleLikeMatch}>
+            Like Match
+          </Button>
+        )}
+      </div>
     </div>
   );
 };

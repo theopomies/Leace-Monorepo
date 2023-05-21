@@ -13,12 +13,12 @@ export const OccupiedClientList = ({ userId }: TenantListProps) => {
   const { data: user } = trpc.user.getUserById.useQuery({
     userId: userId ?? "",
   });
-  //   console.log(relationships);
-  if (relationships && relationships?.rs) {
+
+  if (relationships && relationships.rs) {
     return (
       <div className="container mx-auto p-4">
         <>
-          {relationships?.rs.map(
+          {relationships.rs.map(
             ({
               user: {
                 id: other_user_id,
@@ -27,9 +27,9 @@ export const OccupiedClientList = ({ userId }: TenantListProps) => {
                 firstName,
                 lastName,
               },
+              post: { id: postId, title },
               id,
               isMatch,
-              postId,
             }) => (
               <div key={id}>
                 <TenantBar
@@ -39,9 +39,10 @@ export const OccupiedClientList = ({ userId }: TenantListProps) => {
                   firstname={firstName ?? ""}
                   lastName={lastName ?? ""}
                   isMatch={isMatch ?? false}
-                  postId={postId ?? ""}
                   userId={userId}
                   relationShipId={id}
+                  postId={postId}
+                  title={title ?? ""}
                   user={user}
                 />
               </div>

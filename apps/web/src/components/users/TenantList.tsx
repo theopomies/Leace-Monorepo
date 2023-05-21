@@ -25,9 +25,9 @@ export const TenantList = ({ userId }: TenantListProps) => {
               firstName,
               lastName,
             },
+            post: { id: postId, title },
             id,
             isMatch,
-            postId,
           }) => (
             <div key={id}>
               <TenantBar
@@ -37,8 +37,9 @@ export const TenantList = ({ userId }: TenantListProps) => {
                 firstname={firstName ?? ""}
                 lastName={lastName ?? ""}
                 isMatch={isMatch ?? false}
-                postId={postId}
                 userId={userId}
+                postId={postId}
+                title={title ?? ""}
                 relationShipId={id}
                 user={user}
               />
