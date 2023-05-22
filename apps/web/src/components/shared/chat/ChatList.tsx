@@ -8,10 +8,10 @@ import {
   Conversation,
   ConversationType,
 } from "@prisma/client";
-import { trpc } from "../../../utils/trpc";
 import { SupportButton } from "./SupportButton";
+import Link from "next/link";
 
-export type relationshipsType =
+export type Relationships =
   | (Relationship & {
       user: User;
       conversation: Conversation | null;
@@ -19,7 +19,7 @@ export type relationshipsType =
     })[]
   | undefined;
 
-export type supportRelationshipsType =
+export type SupportRelationships =
   | (SupportRelationship & {
       user: User;
       support: User;
@@ -31,8 +31,10 @@ export interface ChatListProps {
   userId: string;
   conversationId: string;
   setConversationId: React.Dispatch<React.SetStateAction<string>>;
-  relationships?: relationshipsType;
-  supportRelationships?: supportRelationshipsType;
+  role: Role;
+  relationships?: Relationships;
+  supportRelationships?: SupportRelationships;
+  conversationLink?: string;
 }
 
 export const ChatList = ({
@@ -41,11 +43,9 @@ export const ChatList = ({
   setConversationId,
   relationships,
   supportRelationships,
+  role,
+  conversationLink = "/users/[userId]/matches/[conversationId]",
 }: ChatListProps) => {
-  const { data: session } = trpc.auth.getSession.useQuery();
-
-  if (!session || !session.role) return null;
-
   return (
     <div className="flex h-full w-1/5 flex-shrink-0 flex-col rounded-tl-lg rounded-bl-lg bg-white">
       <div className="flex w-full flex-row items-center justify-center rounded-tl-lg bg-indigo-500 p-6">
@@ -71,13 +71,13 @@ export const ChatList = ({
           <span className="font-bold">Conversations</span>
           <div className="flex gap-2">
             {((supportRelationships && supportRelationships.length !== 0) ||
-              session.role === Role.ADMIN ||
-              session.role === Role.MODERATOR) && (
+              role === Role.ADMIN ||
+              role === Role.MODERATOR) && (
               <span className="flex w-4 items-center justify-center rounded-full bg-indigo-300">
                 {supportRelationships ? supportRelationships.length : 0}
               </span>
             )}
-            {session.role !== Role.ADMIN && session.role !== Role.MODERATOR && (
+            {role !== Role.ADMIN && role !== Role.MODERATOR && (
               <span className="flex w-4 items-center justify-center rounded-full bg-gray-300">
                 {relationships ? relationships.length : 0}
               </span>
@@ -88,23 +88,70 @@ export const ChatList = ({
           {supportRelationships
             ?.filter((sr) => sr.conversation?.type !== ConversationType.DONE)
             .map((supportRelationship) => (
-              <button
+              <Link
+                href={conversationLink
+                  .replace("[userId]", userId)
+                  .replace(
+                    "[conversationId]",
+                    supportRelationship.conversation?.id || "",
+                  )}
                 key={supportRelationship.id}
-                className={`flex flex-row items-center rounded-xl p-2 hover:bg-gray-100 ${
-                  conversationId === supportRelationship.conversation?.id &&
+              >
+                <button
+                  key={supportRelationship.id}
+                  className={`flex w-full flex-row items-center rounded-xl p-2 hover:bg-gray-100 ${
+                    conversationId === supportRelationship.conversation?.id &&
+                    "bg-gray-100"
+                  } focus:outline-none`}
+                >
+                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full uppercase">
+                    <img
+                      src={
+                        supportRelationship.user.id === userId
+                          ? supportRelationship.support.image || "/logo.png"
+                          : supportRelationship.user.image ||
+                            "/defaultImage.png"
+                      }
+                      referrerPolicy="no-referrer"
+                      alt="image"
+                      className="mx-auto h-full rounded-full"
+                    />
+                  </div>
+                  <div className="ml-2 text-sm font-semibold">
+                    {supportRelationship.user.id === userId ? (
+                      <span className=" text-indigo-500">
+                        {supportRelationship.support.firstName} Support Leace
+                      </span>
+                    ) : (
+                      `${supportRelationship.user.firstName} ${supportRelationship.user.lastName}`
+                    )}
+                  </div>
+                </button>
+              </Link>
+            ))}
+          {relationships?.map((relationship) => (
+            <Link
+              href={conversationLink
+                .replace("[userId]", userId)
+                .replace(
+                  "[conversationId]",
+                  relationship.conversation?.id || "",
+                )}
+              key={relationship.id}
+            >
+              <button
+                className={`flex w-full flex-row items-center rounded-xl p-2 hover:bg-gray-100 ${
+                  conversationId === relationship.conversation?.id &&
                   "bg-gray-100"
                 } focus:outline-none`}
-                onClick={() => {
-                  if (supportRelationship.conversation)
-                    setConversationId(supportRelationship.conversation.id);
-                }}
               >
                 <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full uppercase">
                   <img
                     src={
-                      supportRelationship.user.id === userId
-                        ? supportRelationship.support.image || "/logo.png"
-                        : supportRelationship.user.image || "/defaultImage.png"
+                      relationship.user.id === userId
+                        ? relationship.post.createdBy.image ||
+                          "/defaultImage.png"
+                        : relationship.user.image || "/defaultImage.png"
                     }
                     referrerPolicy="no-referrer"
                     alt="image"
@@ -112,58 +159,24 @@ export const ChatList = ({
                   />
                 </div>
                 <div className="ml-2 text-sm font-semibold">
-                  {supportRelationship.user.id === userId ? (
-                    <span className=" text-indigo-500">
-                      {supportRelationship.support.firstName} Support Leace
-                    </span>
-                  ) : (
-                    `${supportRelationship.user.firstName} ${supportRelationship.user.lastName}`
-                  )}
+                  {relationship.user.id === userId
+                    ? `${relationship.post.createdBy.firstName} ${relationship.post.createdBy.lastName}`
+                    : `${relationship.user.firstName} ${relationship.user.lastName}`}
                 </div>
               </button>
-            ))}
-          {relationships?.map((relationship) => (
-            <button
-              key={relationship.id}
-              className={`flex flex-row items-center rounded-xl p-2 hover:bg-gray-100 ${
-                conversationId === relationship.conversation?.id &&
-                "bg-gray-100"
-              } focus:outline-none`}
-              onClick={() => {
-                if (relationship.conversation)
-                  setConversationId(relationship.conversation.id);
-              }}
-            >
-              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full uppercase">
-                <img
-                  src={
-                    relationship.user.id === userId
-                      ? relationship.post.createdBy.image || "/defaultImage.png"
-                      : relationship.user.image || "/defaultImage.png"
-                  }
-                  referrerPolicy="no-referrer"
-                  alt="image"
-                  className="mx-auto h-full rounded-full"
-                />
-              </div>
-              <div className="ml-2 text-sm font-semibold">
-                {relationship.user.id === userId
-                  ? `${relationship.post.createdBy.firstName} ${relationship.post.createdBy.lastName}`
-                  : `${relationship.user.firstName} ${relationship.user.lastName}`}
-              </div>
-            </button>
+            </Link>
           ))}
         </div>
       </div>
-      {supportRelationships?.every(
+      {/* {supportRelationships?.every(
         (sr) => sr.conversation?.type === ConversationType.DONE,
       ) && (
         <SupportButton
           userId={userId}
-          role={session.role}
+          role={role}
           setConversationId={setConversationId}
         />
-      )}
+      )} */}
     </div>
   );
 };

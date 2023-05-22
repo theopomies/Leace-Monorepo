@@ -12,6 +12,7 @@ export interface PostBarProps {
   isMatch: boolean;
   userId: string;
   relationshipId: string;
+  conversationId?: string;
 }
 
 export const PostBar = ({
@@ -22,6 +23,7 @@ export const PostBar = ({
   isMatch,
   userId,
   relationshipId,
+  conversationId,
 }: PostBarProps) => {
   const utils = trpc.useContext();
   const { data: img } = trpc.image.getSignedPostUrl.useQuery(postId);
@@ -68,10 +70,10 @@ export const PostBar = ({
         <Button theme="danger" onClick={handleDeleteMatch}>
           Delete Match
         </Button>
-        {isMatch && (
+        {isMatch && conversationId && (
           <Link
             className="rounded bg-indigo-500 px-4 py-3 font-bold text-white hover:bg-indigo-600 active:bg-indigo-700"
-            href={`/chat/all`}
+            href={`/users/${userId}/matches/${conversationId}`}
           >
             Chat with Match
           </Link>

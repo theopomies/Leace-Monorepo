@@ -14,7 +14,7 @@ export const PostList = ({ userId }: PostListProps) => {
   if (relationships && relationships.length > 0) {
     return (
       <>
-        {relationships.map(({ post, id, isMatch }) => (
+        {relationships.map(({ post, id, isMatch, conversation }) => (
           <PostBar
             key={id}
             postId={post.id}
@@ -24,6 +24,7 @@ export const PostList = ({ userId }: PostListProps) => {
             type={post.type ?? PostType.TO_BE_RENTED}
             userId={userId}
             relationshipId={id}
+            conversationId={conversation?.id}
           />
         ))}
       </>

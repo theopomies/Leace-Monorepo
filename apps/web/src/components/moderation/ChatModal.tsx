@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Chat } from "../shared/chat";
+import { Chat } from "../shared/chat/Chat";
 import { Button } from "../shared/button/Button";
 import { Cross } from "./Icons";
 
