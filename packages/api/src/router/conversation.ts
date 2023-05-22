@@ -332,29 +332,4 @@ export const conversationRouter = router({
 
       return count;
     }),
-  endOfConversation: protectedProcedure([
-    Role.TENANT,
-    Role.OWNER,
-    Role.AGENCY,
-    Role.ADMIN,
-    Role.MODERATOR,
-  ])
-    .input(z.object({ conversationId: z.string() }))
-    .mutation(async ({ input, ctx }) => {
-      const conversation = await ctx.prisma.conversation
-        .findUnique({
-          where: { id: input.conversationId },
-        })
-        .then((conversation) => {
-          return checkConversation({ ctx, conversation });
-        });
-
-      if (conversation.type === ConversationType.DONE)
-        throw new TRPCError({ code: "BAD_REQUEST" });
-
-      await ctx.prisma.conversation.update({
-        where: { id: conversation.id },
-        data: { type: ConversationType.DONE },
-      });
-    }),
 });

@@ -1,9 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
 import { Message, User } from "@prisma/client";
 
+export interface MessageWithSender extends Message {
+  sender: User;
+}
+
 export interface ChatMessageProps {
   userId: string;
-  message: Message & { sender: User };
+  message: MessageWithSender;
 }
 
 export const ChatMessage = ({ userId, message }: ChatMessageProps) => {

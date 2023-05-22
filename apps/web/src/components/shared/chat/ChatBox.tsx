@@ -1,28 +1,14 @@
-/* eslint-disable @next/next/no-img-element */
 import { useEffect, useRef } from "react";
-import { Message, User, ConversationType, Conversation } from "@prisma/client";
-import { ChatMessage } from "./ChatMessage";
-import { ChatInputMatch } from "./ChatInputMatch";
-import { ChatInputSupport } from "./ChatInputSupport";
-import { EndOfConversation } from "./EndOfConversation";
+import { ChatMessage, MessageWithSender } from "./ChatMessage";
+import { ChatInput } from "./ChatInput";
 
 export interface ChatBoxProps {
   userId: string;
-  conversation: Conversation & {
-    messages: (Message & {
-      sender: User;
-    })[];
-  };
-  chatOn?: boolean;
-  isSupport?: boolean;
+  messages: MessageWithSender[];
+  onSend?: (content: string) => void;
 }
 
-export const ChatBox = ({
-  userId,
-  conversation,
-  chatOn = false,
-  isSupport = false,
-}: ChatBoxProps) => {
+export const ChatBox = ({ userId, messages, onSend }: ChatBoxProps) => {
   const msgRef = useRef<null | HTMLDivElement>(null);
 
   useEffect(() => {
@@ -40,16 +26,12 @@ export const ChatBox = ({
       <div className="flex h-full w-full flex-auto flex-shrink-0 flex-col rounded-2xl bg-gray-100 p-4">
         <div ref={msgRef} className="flex h-full w-full flex-col overflow-auto">
           <div className="flex h-full flex-col">
-            {conversation.messages?.map((message) => (
+            {messages.map((message) => (
               <ChatMessage key={message.id} userId={userId} message={message} />
             ))}
-            <EndOfConversation conversation={conversation} />
           </div>
         </div>
-        {conversation.type !== ConversationType.DONE &&
-          (isSupport
-            ? chatOn && <ChatInputSupport conversationId={conversation.id} />
-            : chatOn && <ChatInputMatch conversationId={conversation.id} />)}
+        {onSend !== undefined && <ChatInput onSend={onSend} />}
       </div>
     </div>
   );
