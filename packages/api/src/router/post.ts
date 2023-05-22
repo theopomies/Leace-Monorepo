@@ -1,6 +1,6 @@
 import { router, protectedProcedure } from "../trpc";
 import { z } from "zod";
-import { ConversationType, PostType, Role } from "@prisma/client";
+import { PostType, Role } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { getId } from "../utils/getId";
 import { filterStrings } from "../utils/filter";
@@ -219,7 +219,7 @@ export const postRouter = router({
           userId: userId,
           isMatch: true,
           post: { type: PostType.RENTED },
-          conversation: { type: ConversationType.DONE },
+          lease: { isSigned: true },
         },
         include: { post: { include: { attribute: true } } },
       });

@@ -31,14 +31,6 @@ enum ReportStatus {
   REJECTED
 }
 
-enum ConversationType {
-  NONE
-  TENANT
-  OWNER
-  AGENCY
-  DONE
-}
-
 enum Role {
   TENANT
   OWNER
@@ -253,8 +245,7 @@ model Conversation {
 
   rs         Relationship? @relation(fields: [relationId], references: [id], onDelete: Cascade)
   relationId String?       @unique
-
-  type     ConversationType? @default(NONE)
+  
   messages Message[]
 
   createdAt DateTime @default(now())
@@ -290,11 +281,11 @@ model Lease {
   relationShip   Relationship @relation(fields: [relationShipId], references: [id], onDelete: Cascade)
   relationShipId String @unique
 
-  isSigned Boolean? @default(false)
-  rentCost Int?
-  utilitiesCost Int?
-  startDate DateTime?
-  endDate DateTime?
+  isSigned Boolean @default(false)
+  rentCost Int
+  utilitiesCost Int
+  startDate DateTime
+  endDate DateTime
 
   documents Document[]
 

@@ -10,11 +10,10 @@ export const leaseRouter = router({
     .input(
       z.object({
         relationShipId: z.string(),
-        isSigned: z.boolean().optional(),
-        rentCost: z.number().optional(),
-        utilitiesCost: z.number().optional(),
-        startDate: z.date().optional(),
-        endDate: z.date().optional(),
+        rentCost: z.number(),
+        utilitiesCost: z.number(),
+        startDate: z.date(),
+        endDate: z.date(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -41,7 +40,6 @@ export const leaseRouter = router({
       const lease = await ctx.prisma.lease.create({
         data: {
           relationShipId: rs.id,
-          isSigned: input.isSigned,
           rentCost: input.rentCost,
           utilitiesCost: input.utilitiesCost,
           startDate: input.startDate,
@@ -52,37 +50,12 @@ export const leaseRouter = router({
 
       if (!lease) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
 
-      if (input.isSigned && input.startDate) {
-        const currentDate: Date = new Date();
-
-        if (currentDate >= input.startDate) {
-          const tenant = ctx.prisma.user.update({
-            where: { id: rs.userId },
-            data: { status: UserStatus.INACTIVE },
-          });
-
-          if (!tenant) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
-
-          const post = ctx.prisma.post.update({
-            where: { id: rs.postId },
-            data: { type: PostType.RENTED },
-          });
-
-          if (!post) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
-        }
-      }
-
       return lease;
     }),
-  updateLeaseById: protectedProcedure([Role.AGENCY, Role.OWNER])
+  signLeaseById: protectedProcedure([Role.TENANT])
     .input(
       z.object({
         leaseId: z.string(),
-        isSigned: z.boolean(),
-        rentCost: z.number(),
-        utilitiesCost: z.number(),
-        startDate: z.date(),
-        endDate: z.date(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -98,6 +71,72 @@ export const leaseRouter = router({
 
       if (!rs) throw new TRPCError({ code: "NOT_FOUND" });
 
+      if (ctx.auth.userId != rs.userId) {
+        throw new TRPCError({ code: "FORBIDDEN" });
+      }
+
+      const conversation = await ctx.prisma.conversation.findUnique({
+        where: { relationId: rs.id },
+      });
+
+      if (!conversation) throw new TRPCError({ code: "NOT_FOUND" });
+
+      const post = await ctx.prisma.post.findUnique({
+        where: { id: rs.postId },
+      });
+
+      if (!post) throw new TRPCError({ code: "NOT_FOUND" });
+
+      if (post.type != PostType.TO_BE_RENTED)
+        throw new TRPCError({ code: "BAD_REQUEST" });
+
+      await ctx.prisma.lease.update({
+        where: { id: lease.id },
+        data: { isSigned: true },
+      });
+
+      const currentDate: Date = new Date();
+
+      if (currentDate >= lease.startDate) {
+        const tenant = ctx.prisma.user.update({
+          where: { id: rs.userId },
+          data: { status: UserStatus.INACTIVE },
+        });
+        if (!tenant) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+        const post = ctx.prisma.post.update({
+          where: { id: rs.postId },
+          data: { type: PostType.RENTED },
+        });
+        if (!post) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+      }
+    }),
+  updateLeaseById: protectedProcedure([Role.AGENCY, Role.OWNER])
+    .input(
+      z.object({
+        leaseId: z.string(),
+        rentCost: z.number(),
+        utilitiesCost: z.number(),
+        startDate: z.date(),
+        endDate: z.date(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const lease = await ctx.prisma.lease.findUnique({
+        where: { id: input.leaseId },
+      });
+
+      if (!lease) throw new TRPCError({ code: "NOT_FOUND" });
+
+      if (lease.isSigned) {
+        if (!lease) throw new TRPCError({ code: "BAD_REQUEST" });
+      }
+
+      const rs = await ctx.prisma.relationship.findUnique({
+        where: { id: lease.relationShipId },
+      });
+
+      if (!rs) throw new TRPCError({ code: "NOT_FOUND" });
+
       const post = await ctx.prisma.post.findUnique({
         where: { id: rs.postId },
       });
@@ -105,9 +144,9 @@ export const leaseRouter = router({
       if (!post) throw new TRPCError({ code: "NOT_FOUND" });
 
       if (
+        ctx.auth.userId != post.createdById &&
         ctx.role != Role.MODERATOR &&
-        ctx.role != Role.ADMIN &&
-        ctx.auth.userId != post.createdById
+        ctx.role != Role.ADMIN
       ) {
         throw new TRPCError({ code: "FORBIDDEN" });
       }
@@ -115,7 +154,6 @@ export const leaseRouter = router({
       const updated = await ctx.prisma.lease.update({
         where: { id: input.leaseId },
         data: {
-          isSigned: input.isSigned,
           rentCost: input.rentCost,
           utilitiesCost: input.utilitiesCost,
           startDate: input.startDate,
@@ -124,23 +162,6 @@ export const leaseRouter = router({
       });
 
       if (!updated) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
-
-      if (input.isSigned && input.startDate) {
-        const currentDate: Date = new Date();
-
-        if (currentDate >= input.startDate) {
-          const tenant = ctx.prisma.user.update({
-            where: { id: rs.userId },
-            data: { status: UserStatus.INACTIVE },
-          });
-          if (!tenant) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
-          const post = ctx.prisma.post.update({
-            where: { id: rs.postId },
-            data: { type: PostType.RENTED },
-          });
-          if (!post) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
-        }
-      }
     }),
   deleteLeaseById: protectedProcedure([Role.AGENCY, Role.OWNER])
     .input(z.object({ leaseId: z.string() }))
