@@ -199,21 +199,16 @@ export const ProfilePage = ({ userId }: ProfilePageProps) => {
                         </b>
                       </h2>
                     </div>
-                    {documents && documents.length > 0 && (
-                      <DocumentsList documents={documents} />
-                    )}
                   </div>
+                )}
+                {documents && documents.length > 0 && (
+                  <DocumentsList documents={documents} />
                 )}
               </form>
               {session && userId == session.userId && (
-                <div>
-                  <Link
-                    className="rounded bg-indigo-500 px-4 py-3 font-bold text-white hover:bg-indigo-600 active:bg-indigo-700"
-                    href={`/users/${userId}/update`}
-                  >
-                    Modify
-                  </Link>
-                </div>
+                <Link href={`/users/${userId}/update`}>
+                  <Button>Modify</Button>
+                </Link>
               )}
             </div>
           </div>

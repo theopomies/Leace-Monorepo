@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { useState } from "react";
 import { DocumentModal } from "./DocumentModal";
-import { Check, Cross } from "../../moderation/Icons";
+import { Check } from "../../moderation/Icons";
 
 export interface DocumentsListProps {
   documents: {
@@ -36,13 +36,9 @@ export const DocumentsList = ({ documents }: DocumentsListProps) => {
               onClick={() => setShowModal(true)}
             />
           )}
-          {doc.valid ? (
+          {doc.valid && (
             <div className="absolute -right-1 -top-1 inline-flex w-5 items-center justify-center rounded-full bg-green-500 p-1 text-white">
               <Check />
-            </div>
-          ) : (
-            <div className="absolute -right-1 -top-1 inline-flex w-5 items-center justify-center rounded-full bg-red-500 p-1 text-white">
-              <Cross />
             </div>
           )}
           {showModal && (
