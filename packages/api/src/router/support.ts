@@ -1,4 +1,4 @@
-import { Role, ConversationType } from "@prisma/client";
+import { Role } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";
@@ -62,9 +62,6 @@ export const supportRouter = router({
         await ctx.prisma.supportRelationship.findMany({
           where: {
             userId,
-            conversation: {
-              type: { not: ConversationType.DONE },
-            },
           },
           include: {
             support: true,
@@ -94,9 +91,6 @@ export const supportRouter = router({
         await ctx.prisma.supportRelationship.findMany({
           where: {
             userId,
-            conversation: {
-              type: { not: ConversationType.DONE },
-            },
           },
           include: {
             support: true,

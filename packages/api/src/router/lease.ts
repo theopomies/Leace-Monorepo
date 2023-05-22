@@ -95,20 +95,19 @@ export const leaseRouter = router({
         data: { isSigned: true },
       });
 
-      const currentDate: Date = new Date();
+      const tenant = ctx.prisma.user.update({
+        where: { id: rs.userId },
+        data: { status: UserStatus.INACTIVE },
+      });
 
-      if (currentDate >= lease.startDate) {
-        const tenant = ctx.prisma.user.update({
-          where: { id: rs.userId },
-          data: { status: UserStatus.INACTIVE },
-        });
-        if (!tenant) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
-        const post = ctx.prisma.post.update({
-          where: { id: rs.postId },
-          data: { type: PostType.RENTED },
-        });
-        if (!post) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
-      }
+      if (!tenant) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+      const updated = await ctx.prisma.post.update({
+        where: { id: rs.postId },
+        data: { type: PostType.RENTED },
+      });
+
+      if (!updated) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
     }),
   updateLeaseById: protectedProcedure([Role.AGENCY, Role.OWNER])
     .input(
