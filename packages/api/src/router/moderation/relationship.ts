@@ -1,6 +1,6 @@
 import { router, protectedProcedure } from "../../trpc";
 import { z } from "zod";
-import { Role } from "@prisma/client";
+import { Role, RelationType } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 
 export const relationshipModeration = router({
@@ -22,7 +22,7 @@ export const relationshipModeration = router({
 
         const rs = await ctx.prisma.relationship.findMany({
           where: {
-            isMatch: true,
+            RelationType: RelationType.MATCH,
             postId: {
               in: postIds.map((postObj) => {
                 return postObj.id;
@@ -46,7 +46,7 @@ export const relationshipModeration = router({
       }
       const rs = await ctx.prisma.relationship.findMany({
         where: {
-          isMatch: true,
+          RelationType: RelationType.MATCH,
           userId: user.id,
         },
         include: {
