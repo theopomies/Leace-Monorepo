@@ -9,6 +9,7 @@ export interface PostBarProps {
   title: string;
   desc: string;
   type: PostType;
+  isMatch: boolean;
   userId: string;
   relationShipId: string;
 }
@@ -18,6 +19,7 @@ export const PostBar = ({
   title,
   desc,
   type,
+  isMatch,
   userId,
   relationShipId,
 }: PostBarProps) => {
@@ -62,9 +64,19 @@ export const PostBar = ({
           </p>
         </div>
       </div>
-      <Button theme="danger" onClick={handleDeleteMatch}>
-        Delete Match
-      </Button>
+      <div className="flex items-center justify-between bg-gray-100 px-8 py-4">
+        <Button theme="danger" onClick={handleDeleteMatch}>
+          Delete Match
+        </Button>
+        {isMatch && (
+          <Link
+            className="rounded bg-indigo-500 px-4 py-3 font-bold text-white hover:bg-indigo-600 active:bg-indigo-700"
+            href={`/chat/all`}
+          >
+            Chat with Match
+          </Link>
+        )}
+      </div>
     </div>
   );
 };

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Button } from "../shared/button/Button";
 import { trpc } from "../../utils/trpc";
 import { Attribute } from "@prisma/client";
-import { User} from "@leace/db";
+import { User } from "@leace/db";
 
 export interface TenantBarProps {
   other_user_id: string;
@@ -92,12 +92,14 @@ export const TenantBar = ({
         <Button theme="danger" onClick={handleDeleteMatch}>
           Delete Match
         </Button>
-        <Link
-          className="rounded bg-indigo-500 px-4 py-3 font-bold text-white hover:bg-indigo-600 active:bg-indigo-700"
-          href={`/chat/all`}
-        >
-          Chat with Match
-        </Link>
+        {isMatch && (
+          <Link
+            className="rounded bg-indigo-500 px-4 py-3 font-bold text-white hover:bg-indigo-600 active:bg-indigo-700"
+            href={`/chat/all`}
+          >
+            Chat with Match
+          </Link>
+        )}
         {user && user.isPremium && isMatch != true && (
           <Button theme="success" onClick={handleLikeMatch}>
             Like Match

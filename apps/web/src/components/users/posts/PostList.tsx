@@ -14,12 +14,13 @@ export const PostList = ({ userId }: PostListProps) => {
     return (
       <>
         {relationships.map(
-          ({ post: { id: postId, title, desc, type }, id }) => (
+          ({ post: { id: postId, title, desc, type }, id, isMatch }) => (
             <div key={id}>
               <PostBar
                 postId={postId}
                 title={title ?? "Title"}
                 desc={desc ?? "Description"}
+                isMatch={isMatch ?? false}
                 type={type ?? PostType.TO_BE_RENTED}
                 userId={userId}
                 relationShipId={id}
