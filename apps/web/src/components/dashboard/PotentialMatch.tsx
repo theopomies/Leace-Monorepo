@@ -21,7 +21,7 @@ export const OccupiedClientList = ({ userId }: TenantListProps) => {
           {relationships.rs.map(
             ({
               user: {
-                id: other_user_id,
+                id: otherUserId,
                 image,
                 description,
                 firstName,
@@ -33,14 +33,14 @@ export const OccupiedClientList = ({ userId }: TenantListProps) => {
             }) => (
               <div key={id}>
                 <TenantBar
-                  other_user_id={other_user_id}
+                  otherUserId={otherUserId}
                   img={image ?? ""}
                   desc={description ?? ""}
                   firstname={firstName ?? ""}
                   lastName={lastName ?? ""}
                   isMatch={isMatch ?? false}
                   userId={userId}
-                  relationShipId={id}
+                  relationshipId={id}
                   postId={postId}
                   title={title ?? ""}
                   user={user}

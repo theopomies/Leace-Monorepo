@@ -47,12 +47,13 @@ const ExpensesList: React.FC<ExpensesListProps> = ({ expenses }) => {
 };
 
 interface ExpenseListProps {
-  userId: string; 
+  userId: string;
 }
 
-
 export function Expenses({ userId }: ExpenseListProps) {
-  const expenses_get = trpc.post.getRentExpenseByUserId.useQuery({userId: userId});
+  const expenses_get = trpc.post.getRentExpenseByUserId.useQuery({
+    userId: userId,
+  });
   console.log(expenses_get.data);
 
   const [expenses, setExpenses] = useState<ExpenseItem[]>([
@@ -106,37 +107,37 @@ export function Expenses({ userId }: ExpenseListProps) {
     <div className="container mx-auto p-4">
       <h1 className="mb-4 text-3xl font-bold">Liste des dépenses</h1>
       <ExpensesList expenses={expenses} />
-      
+
       <div className="mt-4">
         <input
-          className="px-2 py-1 border rounded-lg mr-2"
+          className="mr-2 rounded-lg border px-2 py-1"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Description"
         />
         <input
           type="number"
-          className="px-2 py-1 border rounded-lg mr-2"
+          className="mr-2 rounded-lg border px-2 py-1"
           value={amount || ""}
           onChange={(e) => setAmount(e.target.valueAsNumber)}
           placeholder="Montant"
         />
         <input
           type="date"
-          className="px-2 py-1 border rounded-lg mr-2"
+          className="mr-2 rounded-lg border px-2 py-1"
           value={date}
           onChange={(e) => setDate(e.target.value)}
         />
-        <button 
+        <button
           onClick={addExpense}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          className="rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
         >
           Ajouter une dépense
         </button>
       </div>
 
-      <Link 
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mt-4 flex items-center justify-center rounded"
+      <Link
+        className="mt-4 flex items-center justify-center rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
         href={`/dashboard/main`}
       >
         Return

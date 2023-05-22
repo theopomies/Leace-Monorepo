@@ -9,6 +9,7 @@ export default function DashboardPage() {
   const { data: user } = trpc.user.getUserById.useQuery({
     userId: session?.userId ?? "",
   });
+  
   if (isLoading) return <Loader />;
 
   return (

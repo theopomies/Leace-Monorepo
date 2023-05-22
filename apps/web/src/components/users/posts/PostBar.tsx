@@ -11,7 +11,7 @@ export interface PostBarProps {
   type: PostType;
   isMatch: boolean;
   userId: string;
-  relationShipId: string;
+  relationshipId: string;
 }
 
 export const PostBar = ({
@@ -21,7 +21,7 @@ export const PostBar = ({
   type,
   isMatch,
   userId,
-  relationShipId,
+  relationshipId,
 }: PostBarProps) => {
   const utils = trpc.useContext();
   const { data: img } = trpc.image.getSignedPostUrl.useQuery(postId);
@@ -33,7 +33,7 @@ export const PostBar = ({
     });
 
   const handleDeleteMatch = async () => {
-    await deleteMatchMutation.mutateAsync({ userId, relationShipId });
+    await deleteMatchMutation.mutateAsync({ userId, relationshipId });
   };
 
   return (

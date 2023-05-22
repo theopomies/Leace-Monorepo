@@ -5,24 +5,24 @@ import { LoggedLayout } from "../../components/layout/LoggedLayout";
 import { Role } from "@prisma/client";
 
 const ChatAll = () => {
-  const session = trpc.auth.getSession.useQuery();
-  const role = session.data?.role;
+  const { data: session, isLoading } = trpc.auth.getSession.useQuery();
 
-  if (session.data && !session.error) {
-    return (
-      <LoggedLayout title="Chat | Leace">
+  if (isLoading) return <Loader />;
+
+  return (
+    <LoggedLayout title="Chat | Leace">
+      {!!session && (
         <div className="flex h-screen w-full justify-center p-4">
-          {role === Role.TENANT && (
-            <Chat userId={session.data.userId} chatOn isTenant={true} />
+          {session.role === Role.TENANT && (
+            <Chat userId={session.userId} chatOn isTenant={true} />
           )}
-          {(role === Role.AGENCY || role === Role.OWNER) && (
-            <Chat userId={session.data.userId} chatOn isTenant={false} />
+          {(session.role === Role.AGENCY || session.role === Role.OWNER) && (
+            <Chat userId={session.userId} chatOn isTenant={false} />
           )}
         </div>
-      </LoggedLayout>
-    );
-  }
-  return <Loader />;
+      )}
+    </LoggedLayout>
+  );
 };
 
 export default ChatAll;

@@ -7,14 +7,14 @@ import { Attribute } from "@prisma/client";
 import { User } from "@leace/db";
 
 export interface TenantBarProps {
-  other_user_id: string;
+  otherUserId: string;
   img: string;
   desc: string;
   firstname: string;
   lastName: string;
   isMatch: boolean;
   userId: string;
-  relationShipId: string;
+  relationshipId: string;
   postId: string;
   title: string;
   user:
@@ -25,14 +25,14 @@ export interface TenantBarProps {
 }
 
 export const TenantBar = ({
-  other_user_id,
+  otherUserId,
   img,
   desc,
   firstname,
   lastName,
   isMatch,
   userId,
-  relationShipId,
+  relationshipId,
   postId,
   title,
   user,
@@ -52,12 +52,12 @@ export const TenantBar = ({
     });
 
   const handleDeleteMatch = async () => {
-    await deleteMatchMutation.mutateAsync({ userId, relationShipId });
+    await deleteMatchMutation.mutateAsync({ userId, relationshipId });
   };
 
   const handleLikeMatch = async () => {
     await likeTenantForPost.mutateAsync({
-      userId: other_user_id,
+      userId: otherUserId,
       postId: postId,
     });
   };
@@ -77,7 +77,7 @@ export const TenantBar = ({
             {firstname}
           </div>
           <Link
-            href={`/users/${other_user_id}`}
+            href={`/users/${otherUserId}`}
             className="mt-1 block text-lg font-medium leading-tight text-black hover:underline"
           >
             {lastName}

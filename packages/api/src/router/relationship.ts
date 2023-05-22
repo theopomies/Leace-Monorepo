@@ -292,7 +292,7 @@ export const relationshipRouter = router({
       return relationShips;
     }),
   deleteRelationForTenant: protectedProcedure([Role.TENANT])
-    .input(z.object({ userId: z.string(), relationShipId: z.string() }))
+    .input(z.object({ userId: z.string(), relationshipId: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const userId = getId({ ctx, userId: input.userId });
 
@@ -304,7 +304,7 @@ export const relationshipRouter = router({
 
       const rs = await ctx.prisma.relationship.findUnique({
         where: {
-          id: input.relationShipId,
+          id: input.relationshipId,
         },
       });
 
@@ -323,7 +323,7 @@ export const relationshipRouter = router({
       if (!deleted) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
     }),
   deleteRelationForOwner: protectedProcedure([Role.OWNER, Role.AGENCY])
-    .input(z.object({ userId: z.string(), relationShipId: z.string() }))
+    .input(z.object({ userId: z.string(), relationshipId: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const userId = getId({ ctx, userId: input.userId });
 
@@ -335,7 +335,7 @@ export const relationshipRouter = router({
         throw new TRPCError({ code: "FORBIDDEN" });
 
       const rs = await ctx.prisma.relationship.findUnique({
-        where: { id: input.relationShipId },
+        where: { id: input.relationshipId },
         include: { post: true },
       });
 

@@ -48,13 +48,6 @@ export interface PostFormProps {
 }
 
 export const PostForm = (props: PostFormProps) => {
-  const handleFile = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (!event.target.files || !event.target.files[0]) return;
-    const files = event.target.files[0].type.split("/")[1];
-    console.log(files);
-    console.log(event.target.files[0]);
-  };
-
   return (
     <form className="flex justify-center" onSubmit={props.onSubmit}>
       <div className="flex justify-center rounded-lg bg-white p-12 shadow">
@@ -224,9 +217,7 @@ export const PostForm = (props: PostFormProps) => {
               Photos
             </h2>
             <div className="mt-2 flex flex-wrap justify-center gap-4">
-              <FileInput multiple={false} onChange={handleFile}>
-                Upload First Image
-              </FileInput>
+              <FileInput multiple={false}>Upload First Image</FileInput>
               <FileInput multiple={false}>Upload Second Image</FileInput>
               <FileInput multiple={false}>Upload Third Image</FileInput>
             </div>

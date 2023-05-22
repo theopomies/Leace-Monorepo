@@ -9,45 +9,38 @@ export const TenantList = ({ userId }: TenantListProps) => {
   const { data: relationships } = trpc.relationship.getMatchesForOwner.useQuery(
     { userId },
   );
-
   const { data: user } = trpc.user.getUserById.useQuery({
     userId: userId ?? "",
   });
-  if (relationships) {
-    return (
-      <>
-        {relationships.map(
-          ({
-            user: {
-              id: other_user_id,
-              image,
-              description,
-              firstName,
-              lastName,
-            },
-            post: { id: postId, title },
-            id,
-            isMatch,
-          }) => (
-            <div key={id}>
-              <TenantBar
-                other_user_id={other_user_id}
-                img={image ?? ""}
-                desc={description ?? ""}
-                firstname={firstName ?? ""}
-                lastName={lastName ?? ""}
-                isMatch={isMatch ?? false}
-                userId={userId}
-                postId={postId}
-                title={title ?? ""}
-                relationShipId={id}
-                user={user}
-              />
-            </div>
-          ),
-        )}
-      </>
-    );
-  }
-  return <></>;
+
+  if (!relationships) return <></>;
+
+  return (
+    <>
+      {relationships.map(
+        ({
+          user: { id: otherUserId, image, description, firstName, lastName },
+          post: { id: postId, title },
+          id,
+          isMatch,
+        }) => (
+          <div key={id}>
+            <TenantBar
+              otherUserId={otherUserId}
+              img={image ?? ""}
+              desc={description ?? ""}
+              firstname={firstName ?? ""}
+              lastName={lastName ?? ""}
+              isMatch={isMatch ?? false}
+              userId={userId}
+              postId={postId}
+              title={title ?? ""}
+              relationshipId={id}
+              user={user}
+            />
+          </div>
+        ),
+      )}
+    </>
+  );
 };
