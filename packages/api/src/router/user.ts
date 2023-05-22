@@ -80,15 +80,6 @@ export const userRouter = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      filterStrings({
-        check: [
-          input.firstName,
-          input.lastName,
-          input.phoneNumber,
-          input.description,
-        ],
-      });
-
       const userId = getId({ ctx: ctx, userId: input.userId });
 
       const user = await ctx.prisma.user.findUnique({
@@ -131,6 +122,17 @@ export const userRouter = router({
       });
 
       if (!updated) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+      filterStrings({
+        ctx,
+        userId,
+        check: [
+          input.firstName,
+          input.lastName,
+          input.phoneNumber,
+          input.description,
+        ],
+      });
     }),
   /**  Retrieve one user's data with the given id, based on your authorizations. */
   getUserById: protectedProcedure([Role.TENANT, Role.OWNER, Role.AGENCY])

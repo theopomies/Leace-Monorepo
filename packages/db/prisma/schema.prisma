@@ -101,6 +101,7 @@ model Post {
   attribute Attribute?
 
   images    Image[]
+  documents Document[]
 
   reports       Report[]
   relationships Relationship[]
@@ -191,6 +192,9 @@ model Document {
   lease Lease? @relation(fields: [leaseId], references: [id], onDelete: Cascade)
   leaseId String?
 
+  post   Post?   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId String?
+
   valid  Boolean @default(false)
   ext String
 
@@ -199,6 +203,7 @@ model Document {
 
   @@index([userId])
   @@index([leaseId])
+  @@index([postId])
   @@map("documents")
 }
 

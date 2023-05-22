@@ -15,8 +15,6 @@ export const postRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      filterStrings({ check: [input.title, input.content, input.desc] });
-
       const userId = ctx.auth.userId;
 
       const user = await ctx.prisma.user.findUnique({ where: { id: userId } });
@@ -41,6 +39,12 @@ export const postRouter = router({
 
       if (!post) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
 
+      filterStrings({
+        ctx,
+        postId: post.id,
+        check: [input.title, input.content, input.desc],
+      });
+
       return post;
     }),
   updatePostById: protectedProcedure([Role.AGENCY, Role.OWNER])
@@ -54,8 +58,6 @@ export const postRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      filterStrings({ check: [input.title, input.content, input.desc] });
-
       const post = await ctx.prisma.post.findUnique({
         where: { id: input.postId },
       });
@@ -83,6 +85,12 @@ export const postRouter = router({
       });
 
       if (!updated) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+      filterStrings({
+        ctx,
+        postId: input.postId,
+        check: [input.title, input.content, input.desc],
+      });
     }),
   deletePostById: protectedProcedure([Role.AGENCY, Role.OWNER])
     .input(z.object({ postId: z.string() }))

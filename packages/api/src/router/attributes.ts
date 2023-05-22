@@ -31,9 +31,6 @@ export const attributesRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      filterStrings({ check: [input.location] });
-      checkLocation({ check: [input.location] });
-
       const userId = getId({ ctx, userId: input.userId });
 
       const user = await ctx.prisma.user.findUnique({ where: { id: userId } });
@@ -72,6 +69,9 @@ export const attributesRouter = router({
         });
 
         if (!created) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+        filterStrings({ ctx, userId: input.userId, check: [input.location] });
+        checkLocation({ ctx, userId: input.userId, check: [input.location] });
 
         return;
       }
@@ -125,9 +125,6 @@ export const attributesRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      filterStrings({ check: [input.location] });
-      checkLocation({ check: [input.location] });
-
       const post = await ctx.prisma.post.findUnique({
         where: { id: input.postId },
       });
@@ -197,5 +194,8 @@ export const attributesRouter = router({
       });
 
       if (!updated) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+      filterStrings({ ctx, postId: input.postId, check: [input.location] });
+      checkLocation({ ctx, postId: input.postId, check: [input.location] });
     }),
 });
