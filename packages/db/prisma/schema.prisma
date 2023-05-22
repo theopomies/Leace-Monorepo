@@ -262,7 +262,7 @@ model Relationship {
   postId String
 
   conversation Conversation?
-  RelationType RelationType
+  relationType RelationType
 
   lease Lease?
 

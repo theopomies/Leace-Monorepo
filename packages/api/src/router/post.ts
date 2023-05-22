@@ -217,7 +217,7 @@ export const postRouter = router({
       const rs = await ctx.prisma.relationship.findMany({
         where: {
           userId: userId,
-          RelationType: RelationType.MATCH,
+          relationType: RelationType.MATCH,
           post: { type: PostType.RENTED },
           lease: { isSigned: true },
         },

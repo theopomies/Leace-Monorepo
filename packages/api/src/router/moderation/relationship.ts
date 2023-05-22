@@ -22,7 +22,7 @@ export const relationshipModeration = router({
 
         const rs = await ctx.prisma.relationship.findMany({
           where: {
-            RelationType: RelationType.MATCH,
+            relationType: RelationType.MATCH,
             postId: {
               in: postIds.map((postObj) => {
                 return postObj.id;
@@ -46,7 +46,7 @@ export const relationshipModeration = router({
       }
       const rs = await ctx.prisma.relationship.findMany({
         where: {
-          RelationType: RelationType.MATCH,
+          relationType: RelationType.MATCH,
           userId: user.id,
         },
         include: {

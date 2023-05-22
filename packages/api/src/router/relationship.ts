@@ -54,17 +54,17 @@ export const relationshipRouter = router({
           data: {
             userId: user.id,
             postId: post.id,
-            RelationType: RelationType.POST,
+            relationType: RelationType.POST,
           },
         });
         if (!created) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
 
-        return created.RelationType;
+        return created.relationType;
       }
 
       const updated = await ctx.prisma.relationship.update({
         where: { id: rs.id },
-        data: { RelationType: RelationType.MATCH },
+        data: { relationType: RelationType.MATCH },
       });
 
       if (!updated) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
@@ -74,7 +74,7 @@ export const relationshipRouter = router({
       });
       if (!chat) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
 
-      return updated.RelationType;
+      return updated.relationType;
     }),
   dislikeTenantForPost: protectedProcedure([Role.AGENCY, Role.OWNER])
     .input(
@@ -159,18 +159,18 @@ export const relationshipRouter = router({
           data: {
             userId: user.id,
             postId: post.id,
-            RelationType: RelationType.TENANT,
+            relationType: RelationType.TENANT,
           },
         });
 
         if (!created) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
 
-        return created.RelationType;
+        return created.relationType;
       }
 
       const updated = await ctx.prisma.relationship.update({
         where: { id: rs.id },
-        data: { RelationType: RelationType.MATCH },
+        data: { relationType: RelationType.MATCH },
       });
 
       if (!updated) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
@@ -181,7 +181,7 @@ export const relationshipRouter = router({
 
       if (!chat) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
 
-      return updated.RelationType;
+      return updated.relationType;
     }),
   dislikePostForTenant: protectedProcedure([Role.TENANT])
     .input(
@@ -236,7 +236,7 @@ export const relationshipRouter = router({
       if (user.role != Role.TENANT) throw new TRPCError({ code: "FORBIDDEN" });
 
       const relationShips = await ctx.prisma.relationship.findMany({
-        where: { RelationType: RelationType.MATCH, userId: userId },
+        where: { relationType: RelationType.MATCH, userId: userId },
         include: {
           post: { include: { createdBy: true } },
           conversation: true,
@@ -276,7 +276,7 @@ export const relationshipRouter = router({
 
       const relationShips = await ctx.prisma.relationship.findMany({
         where: {
-          RelationType: RelationType.MATCH,
+          relationType: RelationType.MATCH,
           postId: {
             in: postIds,
           },
@@ -370,7 +370,7 @@ export const relationshipRouter = router({
       if (user.role != Role.TENANT) throw new TRPCError({ code: "FORBIDDEN" });
 
       const relationShips = await ctx.prisma.relationship.findMany({
-        where: { RelationType: RelationType.POST, userId: userId },
+        where: { relationType: RelationType.POST, userId: userId },
         include: {
           post: true,
         },
@@ -412,7 +412,7 @@ export const relationshipRouter = router({
 
       const relationShips = await ctx.prisma.relationship.findMany({
         where: {
-          RelationType: RelationType.TENANT,
+          relationType: RelationType.TENANT,
           postId: {
             in: postIds,
           },
