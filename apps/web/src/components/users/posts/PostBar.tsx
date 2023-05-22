@@ -13,14 +13,14 @@ export interface PostBarProps {
 
 export const PostBar = ({ postId, title, desc, type }: PostBarProps) => {
   const { data: img } = trpc.image.getSignedPostUrl.useQuery(postId);
-
+  console.log(img);
   return (
     <div className="mx-auto my-5 max-w-md overflow-hidden rounded-xl bg-white shadow-md md:max-w-2xl">
-      <div className="md:flex">
+      <div className="md:flex ">
         {img && img[0] && (
-          <div className="md:shrink-0">
+          <div className="w-2/5">
             <img
-              className="h-48 w-full object-cover md:h-full md:w-48"
+              className="h-full object-cover"
               src={img[0].url}
               alt="Modern building architecture"
             />

@@ -18,7 +18,6 @@ export const CreatePost = () => {
   const [description, setDescription] = useState("");
 
   const updatePost = trpc.attribute.updatePostAttributes.useMutation();
-  const uploadImage = trpc.image.putSignedPostUrl.useMutation();
   const [location, setLocation] = useState("");
   const [furnished, setFurnished] = useState(false);
   const [house, setHouse] = useState(false);
@@ -33,6 +32,8 @@ export const CreatePost = () => {
   const [pool, setPool] = useState(false);
   const [size, setSize] = useState(0);
   const [price, setPrice] = useState(0);
+
+  const uploadImage = trpc.image.putSignedPostUrl.useMutation();
   const [images, setImages] = useState<File[] | undefined>();
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
@@ -56,6 +57,8 @@ export const CreatePost = () => {
       elevator,
       pool,
       disability,
+      size,
+      price,
     });
     if (images && images.length > 0) {
       images.map(async (image) => {

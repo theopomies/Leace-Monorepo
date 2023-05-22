@@ -4,6 +4,8 @@ import { trpc } from "../../utils/trpc";
 import { Role } from "@prisma/client";
 import Link from "next/link";
 import { Loader } from "../shared/Loader";
+import { Button } from "../shared/button/Button";
+import { DocumentsList } from "../shared/document/DocumentsList";
 
 export interface ProfilePageProps {
   userId: string;
@@ -12,6 +14,7 @@ export interface ProfilePageProps {
 export const ProfilePage = ({ userId }: ProfilePageProps) => {
   const { data: user, isLoading } = trpc.user.getUserById.useQuery({ userId });
   const { data: session } = trpc.auth.getSession.useQuery();
+  const { data: documents } = trpc.document.getSignedUserUrl.useQuery(userId);
 
   if (isLoading) {
     return <Loader />;
@@ -30,6 +33,7 @@ export const ProfilePage = ({ userId }: ProfilePageProps) => {
             <div>
               <img
                 src={
+                  user.image ||
                   "https://demos.creative-tim.com/notus-js/assets/img/team-2-800x800.jpg"
                 }
                 referrerPolicy="no-referrer"
@@ -78,7 +82,7 @@ export const ProfilePage = ({ userId }: ProfilePageProps) => {
                 {user.role == Role.TENANT && user.attribute && (
                   <div>
                     <div className="m-4 flex h-full justify-center">
-                      <div className="pr-20 pt-4 pb-2">
+                      <div className="pb-2 pr-20 pt-4">
                         <h2 className="text-xl font-bold text-gray-400">
                           Location:
                         </h2>
@@ -86,7 +90,7 @@ export const ProfilePage = ({ userId }: ProfilePageProps) => {
                           <b>{user.attribute.location}</b>
                         </p>
                       </div>
-                      <div className="pr-20 pt-4 pb-2">
+                      <div className="pb-2 pr-20 pt-4">
                         <h2 className="text-xl font-bold text-gray-400">
                           What you are looking for:
                         </h2>
@@ -195,16 +199,16 @@ export const ProfilePage = ({ userId }: ProfilePageProps) => {
                         </b>
                       </h2>
                     </div>
+                    {documents && documents.length > 0 && (
+                      <DocumentsList documents={documents} />
+                    )}
                   </div>
                 )}
               </form>
               {session && userId == session.userId && (
                 <div>
-                  <Link
-                    className="rounded bg-indigo-500 py-3 px-4 font-bold text-white hover:bg-indigo-600 active:bg-indigo-700"
-                    href={`/users/${userId}/update`}
-                  >
-                    Modifier
+                  <Link href={`/users/${userId}/update`}>
+                    <Button>Modifier</Button>
                   </Link>
                 </div>
               )}

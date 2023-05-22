@@ -222,6 +222,9 @@ export const PostForm = (props: PostFormProps) => {
               <FileInput multiple onChange={props.setImages}>
                 Upload Image
               </FileInput>
+              {props.images?.map((image, index) => (
+                <p key={index}>{image.name}</p>
+              ))}
             </div>
           </div>
           <div className="mt-6 flex justify-center gap-4">

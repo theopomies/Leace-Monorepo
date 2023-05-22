@@ -58,7 +58,7 @@ export const imageRouter = router({
         images.map(async (image: Image) => {
           const bucketParams = {
             Bucket: "leaceawsbucket",
-            Key: `${getPost.id}/images/${image.id}.${image.ext}`,
+            Key: `posts/${getPost.id}/images/${image.id}.${image.ext}`,
           };
           const command = new GetObjectCommand(bucketParams);
           return { ...image, url: await getSignedUrl(ctx.s3Client, command) };
@@ -89,7 +89,7 @@ export const imageRouter = router({
 
       const bucketParams = {
         Bucket: "leaceawsbucket",
-        Key: `${ctx.auth.userId}/images/${image.id}.${image.ext}`,
+        Key: `posts/${ctx.auth.userId}/images/${image.id}.${image.ext}`,
       };
       const command = new DeleteObjectCommand(bucketParams);
 

@@ -10,6 +10,7 @@ import { Header } from "../../components/users/Header";
 import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
 import { PostForm } from "./PostForm";
+import axios from "axios";
 
 export interface UpdatePostProps {
   postId: string;
@@ -38,6 +39,9 @@ export const UpdatePost = ({ postId }: UpdatePostProps) => {
   const [pool, setPool] = useState(false);
   const [size, setSize] = useState(0);
   const [price, setPrice] = useState(0);
+
+  const uploadImage = trpc.image.putSignedPostUrl.useMutation();
+  const [images, setImages] = useState<File[] | undefined>();
 
   useEffect(() => {
     if (post) {
@@ -83,6 +87,18 @@ export const UpdatePost = ({ postId }: UpdatePostProps) => {
       pool,
       disability,
     });
+    if (images && images.length > 0) {
+      images.map(async (image) => {
+        await uploadImage
+          .mutateAsync({
+            postId,
+            fileType: image.type,
+          })
+          .then((url) => {
+            axios.put(url, image);
+          });
+      });
+    }
     router.push(`/posts/${postId}`);
   };
 
@@ -108,6 +124,13 @@ export const UpdatePost = ({ postId }: UpdatePostProps) => {
     e.preventDefault();
     router.back();
   };
+  const handleImage =
+    (setter: Dispatch<SetStateAction<File[] | undefined>>) =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (event.target.files && event.target.files[0]) {
+        setter(Array.from(event.target.files));
+      }
+    };
 
   return (
     <div className="w-full">
@@ -147,6 +170,8 @@ export const UpdatePost = ({ postId }: UpdatePostProps) => {
         size={size}
         setPrice={handleNumberChange(setPrice)}
         price={price}
+        setImages={handleImage(setImages)}
+        images={images}
       />
     </div>
   );
