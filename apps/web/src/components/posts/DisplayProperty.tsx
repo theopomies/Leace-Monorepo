@@ -31,6 +31,7 @@ export function DisplayPost({
   images,
   role,
 }: DisplayPostProps) {
+  console.log(images);
   if (!post) {
     return <div>Not found</div>;
   }

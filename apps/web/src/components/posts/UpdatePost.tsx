@@ -94,12 +94,14 @@ export const UpdatePost = ({ postId }: UpdatePostProps) => {
             postId,
             fileType: image.type,
           })
-          .then((url) => {
+          .then((url: string) => {
             axios.put(url, image);
           });
       });
     }
-    router.push(`/posts/${postId}`);
+    setTimeout(() => {
+      router.push(`/posts/${postId}`);
+    }, 500);
   };
 
   const handleChange =
