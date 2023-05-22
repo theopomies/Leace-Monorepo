@@ -43,6 +43,8 @@ export interface PostFormProps {
   setSize: ChangeEventHandler;
   price: number;
   setPrice: ChangeEventHandler;
+  images: File[] | undefined;
+  setImages: ChangeEventHandler;
   onSubmit: FormEventHandler;
   onCancel: MouseEventHandler<HTMLButtonElement>;
 }
@@ -217,9 +219,9 @@ export const PostForm = (props: PostFormProps) => {
               Photos
             </h2>
             <div className="mt-2 flex flex-wrap justify-center gap-4">
-              <FileInput multiple={false}>Upload First Image</FileInput>
-              <FileInput multiple={false}>Upload Second Image</FileInput>
-              <FileInput multiple={false}>Upload Third Image</FileInput>
+              <FileInput multiple onChange={props.setImages}>
+                Upload Image
+              </FileInput>
             </div>
           </div>
           <div className="mt-6 flex justify-center gap-4">

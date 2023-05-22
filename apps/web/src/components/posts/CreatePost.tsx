@@ -9,6 +9,7 @@ import { Header } from "../../components/users/Header";
 import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
 import { PostForm } from "./PostForm";
+import axios from "axios";
 
 export const CreatePost = () => {
   const router = useRouter();
@@ -17,6 +18,7 @@ export const CreatePost = () => {
   const [description, setDescription] = useState("");
 
   const updatePost = trpc.attribute.updatePostAttributes.useMutation();
+  const uploadImage = trpc.image.putSignedPostUrl.useMutation();
   const [location, setLocation] = useState("");
   const [furnished, setFurnished] = useState(false);
   const [house, setHouse] = useState(false);
@@ -31,6 +33,7 @@ export const CreatePost = () => {
   const [pool, setPool] = useState(false);
   const [size, setSize] = useState(0);
   const [price, setPrice] = useState(0);
+  const [images, setImages] = useState<File[] | undefined>();
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
@@ -54,6 +57,18 @@ export const CreatePost = () => {
       pool,
       disability,
     });
+    if (images && images.length > 0) {
+      images.map(async (image) => {
+        await uploadImage
+          .mutateAsync({
+            postId,
+            fileType: image.type,
+          })
+          .then((url) => {
+            axios.put(url, image);
+          });
+      });
+    }
     router.push(`/posts/${postId}`);
   };
 
@@ -73,6 +88,14 @@ export const CreatePost = () => {
     (setter: Dispatch<SetStateAction<number>>) =>
     (event: React.ChangeEvent<HTMLInputElement>) => {
       setter(event.target.valueAsNumber);
+    };
+
+  const handleImage =
+    (setter: Dispatch<SetStateAction<File[] | undefined>>) =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (event.target.files && event.target.files[0]) {
+        setter(Array.from(event.target.files));
+      }
     };
 
   const handleCancel: MouseEventHandler<HTMLButtonElement> = (e) => {
@@ -118,6 +141,8 @@ export const CreatePost = () => {
         size={size}
         setPrice={handleNumberChange(setPrice)}
         price={price}
+        setImages={handleImage(setImages)}
+        images={images}
       />
     </div>
   );

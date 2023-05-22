@@ -30,7 +30,7 @@ export const imageRouter = router({
       });
       if (!created) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
 
-      const key = `${getPost.id}/images/${id}.${ext}`;
+      const key = `posts/${getPost.id}/images/${id}.${ext}`;
       const bucketParams = {
         Bucket: "leaceawsbucket",
         Key: key,
