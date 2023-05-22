@@ -207,8 +207,11 @@ export const ProfilePage = ({ userId }: ProfilePageProps) => {
               </form>
               {session && userId == session.userId && (
                 <div>
-                  <Link href={`/users/${userId}/update`}>
-                    <Button>Modifier</Button>
+                  <Link
+                    className="rounded bg-indigo-500 px-4 py-3 font-bold text-white hover:bg-indigo-600 active:bg-indigo-700"
+                    href={`/users/${userId}/update`}
+                  >
+                    Modify
                   </Link>
                 </div>
               )}

@@ -3,17 +3,39 @@
 import Link from "next/link";
 import { trpc } from "../../../utils/trpc";
 import { PostType } from "@prisma/client";
-
+import { Button } from "../../shared/button/Button";
 export interface PostBarProps {
   postId: string;
   title: string;
   desc: string;
   type: PostType;
+  isMatch: boolean;
+  userId: string;
+  relationshipId: string;
 }
 
-export const PostBar = ({ postId, title, desc, type }: PostBarProps) => {
+export const PostBar = ({
+  postId,
+  title,
+  desc,
+  type,
+  isMatch,
+  userId,
+  relationshipId,
+}: PostBarProps) => {
+  const utils = trpc.useContext();
   const { data: img } = trpc.image.getSignedPostUrl.useQuery(postId);
-  console.log(img);
+  const deleteMatchMutation =
+    trpc.relationship.deleteRelationForTenant.useMutation({
+      onSuccess: () => {
+        utils.relationship.getMatchesForTenant.invalidate({ userId });
+      },
+    });
+
+  const handleDeleteMatch = async () => {
+    await deleteMatchMutation.mutateAsync({ userId, relationshipId });
+  };
+
   return (
     <div className="mx-auto my-5 max-w-md overflow-hidden rounded-xl bg-white shadow-md md:max-w-2xl">
       <div className="md:flex ">
@@ -41,6 +63,19 @@ export const PostBar = ({ postId, title, desc, type }: PostBarProps) => {
             {type == PostType.RENTED ? "Rented ✅" : "Available"}
           </p>
         </div>
+      </div>
+      <div className="flex items-center justify-between bg-gray-100 px-8 py-4">
+        <Button theme="danger" onClick={handleDeleteMatch}>
+          Delete Match
+        </Button>
+        {isMatch && (
+          <Link
+            className="rounded bg-indigo-500 px-4 py-3 font-bold text-white hover:bg-indigo-600 active:bg-indigo-700"
+            href={`/chat/all`}
+          >
+            Chat with Match
+          </Link>
+        )}
       </div>
     </div>
   );

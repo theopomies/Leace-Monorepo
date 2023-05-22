@@ -26,7 +26,7 @@ export function Button({
       className={
         overrideStyles
           ? className
-          : `rounded-md ${themeStyles[theme]} px-4 py-3 text-white ` + className
+          : `rounded-md font-bold ${themeStyles[theme]} px-4 py-3 text-white ` + className
       }
       {...props}
     />
