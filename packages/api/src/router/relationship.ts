@@ -293,8 +293,8 @@ export const relationshipRouter = router({
 
       return relationShips;
     }),
-  deleteMatchForTenant: protectedProcedure([Role.TENANT])
-    .input(z.object({ userId: z.string(), relationShipId: z.string() }))
+  deleteRelationForTenant: protectedProcedure([Role.TENANT])
+    .input(z.object({ userId: z.string(), relationshipId: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const userId = getId({ ctx, userId: input.userId });
 
@@ -306,7 +306,7 @@ export const relationshipRouter = router({
 
       const rs = await ctx.prisma.relationship.findUnique({
         where: {
-          id: input.relationShipId,
+          id: input.relationshipId,
         },
       });
 
@@ -318,20 +318,14 @@ export const relationshipRouter = router({
           message: "This user does not correspond to this relationship",
         });
 
-      if (rs.RelationType != RelationType.MATCH)
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "This is not a match",
-        });
-
       const deleted = await ctx.prisma.relationship.delete({
         where: { id: rs.id },
       });
 
       if (!deleted) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
     }),
-  deleteMatchForOwner: protectedProcedure([Role.OWNER, Role.AGENCY])
-    .input(z.object({ userId: z.string(), relationShipId: z.string() }))
+  deleteRelationForOwner: protectedProcedure([Role.OWNER, Role.AGENCY])
+    .input(z.object({ userId: z.string(), relationshipId: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const userId = getId({ ctx, userId: input.userId });
 
@@ -343,7 +337,7 @@ export const relationshipRouter = router({
         throw new TRPCError({ code: "FORBIDDEN" });
 
       const rs = await ctx.prisma.relationship.findUnique({
-        where: { id: input.relationShipId },
+        where: { id: input.relationshipId },
         include: { post: true },
       });
 
@@ -353,12 +347,6 @@ export const relationshipRouter = router({
         throw new TRPCError({
           code: "FORBIDDEN",
           message: "This user does not correspond to this relationship",
-        });
-
-      if (rs.RelationType != RelationType.MATCH)
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "This is not a match",
         });
 
       const deleted = await ctx.prisma.relationship.delete({
@@ -431,6 +419,7 @@ export const relationshipRouter = router({
         },
         include: {
           user: true,
+          post: true,
         },
       });
 
