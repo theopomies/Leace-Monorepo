@@ -237,9 +237,10 @@ export const relationshipRouter = router({
         where: { isMatch: true, userId: userId },
         include: {
           post: { include: { createdBy: true } },
-          conversation: { include: { messages: true } },
+          conversation: true,
           user: true,
         },
+        orderBy: { updatedAt: "desc" },
       });
 
       if (!relationShips) throw new TRPCError({ code: "NOT_FOUND" });
@@ -280,9 +281,10 @@ export const relationshipRouter = router({
         },
         include: {
           post: { include: { createdBy: true } },
-          conversation: { include: { messages: true } },
+          conversation: true,
           user: true,
         },
+        orderBy: { updatedAt: "desc" },
       });
 
       if (!relationShips) throw new TRPCError({ code: "NOT_FOUND" });

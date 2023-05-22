@@ -25,9 +25,9 @@ export function MatchesPage({ userId }: MatchesPageProps) {
   return (
     <div className="w-full">
       <Header heading="My Matches" />
-      {role == Role.TENANT && <TenantList userId={userId} />}
+      {role == Role.TENANT && <PostList userId={userId} />}
       {(role == Role.OWNER || role == Role.AGENCY) && (
-        <PostList userId={userId} />
+        <TenantList userId={userId} />
       )}
     </div>
   );

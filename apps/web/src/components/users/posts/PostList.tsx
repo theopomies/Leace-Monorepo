@@ -8,9 +8,8 @@ export interface PostListProps {
 }
 
 export const PostList = ({ userId }: PostListProps) => {
-  const { data: relationships } = trpc.relationship.getMatchesForOwner.useQuery(
-    { userId },
-  );
+  const { data: relationships } =
+    trpc.relationship.getMatchesForTenant.useQuery({ userId });
   if (relationships) {
     return (
       <>

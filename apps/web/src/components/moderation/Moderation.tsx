@@ -1,11 +1,11 @@
 import { Loader } from "../shared/Loader";
-import { ReportButton } from "./ReportButton";
 import { trpc } from "../../utils/trpc";
 import { Post } from "./post";
 import { User } from "./user";
+import { Report } from "./report";
 
 export const Moderation = () => {
-  const report = trpc.moderation.getReport.useQuery(undefined, {
+  const report = trpc.moderation.report.getReport.useQuery(undefined, {
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     refetchOnReconnect: false,
@@ -23,14 +23,17 @@ export const Moderation = () => {
           {report.data.postId && <Post postId={report.data.postId} />}
         </div>
         <div className="flex h-screen w-1/5 flex-col items-center justify-center gap-5 px-10">
-          <ReportButton reportId={report.data.id} />
+          {report.data.userId && <Report userId={report.data.userId} />}
+          {report.data.postId && (
+            <Report reportId={report.data.id} postId={report.data.postId} />
+          )}
         </div>
       </div>
     );
   } else {
     return (
       <div className="flex w-full items-center justify-center">
-        <p>Aucun utilisateur ou post signalé</p>
+        <p>No user or post reported</p>
       </div>
     );
   }

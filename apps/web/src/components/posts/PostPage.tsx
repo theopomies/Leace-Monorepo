@@ -1,5 +1,4 @@
 import { trpc } from "../../utils/trpc";
-import { useEffect } from "react";
 import { DisplayPost } from "./DisplayProperty";
 
 export interface PostPageProps {
@@ -8,10 +7,6 @@ export interface PostPageProps {
 
 export const PostPage = ({ postId }: PostPageProps) => {
   const { data: post } = trpc.post.getPostById.useQuery({ postId });
-
-  useEffect(() => {
-    console.log(post, post?.attribute);
-  }, [post]);
 
   return (
     <div className="h-full w-full bg-slate-100">

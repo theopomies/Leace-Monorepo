@@ -135,7 +135,13 @@ export const userRouter = router({
       });
     }),
   /**  Retrieve one user's data with the given id, based on your authorizations. */
-  getUserById: protectedProcedure([Role.TENANT, Role.OWNER, Role.AGENCY])
+  getUserById: protectedProcedure([
+    Role.TENANT,
+    Role.OWNER,
+    Role.AGENCY,
+    Role.ADMIN,
+    Role.MODERATOR,
+  ])
     .input(z.object({ userId: z.string() }))
     .query(async ({ ctx, input }) => {
       const userId = input.userId;

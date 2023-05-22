@@ -10,6 +10,7 @@ export interface NavBarProps {
 
 export function NavBar({ userId }: NavBarProps) {
   const links = getLinks(userId);
+  const { auth } = trpc.useContext();
   const { data: me } = trpc.user.getUserById.useQuery({ userId });
   const { signOut } = useClerk();
   const handleLink = ({
@@ -59,7 +60,10 @@ export function NavBar({ userId }: NavBarProps) {
         <li>
           <Link
             href="#"
-            onClick={() => signOut()}
+            onClick={async () => {
+              await signOut();
+              await auth.getSession.invalidate();
+            }}
             className="flex h-12 transform flex-row items-center text-gray-500 transition-transform duration-200 ease-in hover:translate-x-2 hover:text-gray-800"
           >
             <span className="inline-flex h-12 w-12 items-center justify-center text-lg text-gray-400"></span>
