@@ -13,9 +13,14 @@ export function getLinks(userId: string): {
       roles: [Role.OWNER, Role.AGENCY, Role.TENANT, Role.ADMIN],
     },
     {
-      href: "#",
+      href: "/chat/all",
+      label: "Chat",
+      roles: [Role.OWNER, Role.AGENCY, Role.TENANT],
+    },
+    {
+      href: `/dashboard/main`,
       label: "Dashboard",
-      roles: [Role.OWNER, Role.AGENCY],
+      roles: [Role.AGENCY],
     },
     {
       href: `/users/${userId}/matches`,
