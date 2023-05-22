@@ -11,7 +11,6 @@ import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
 import { PostForm } from "./PostForm";
 import axios from "axios";
-
 export interface UpdatePostProps {
   postId: string;
 }
@@ -40,6 +39,7 @@ export const UpdatePost = ({ postId }: UpdatePostProps) => {
   const [size, setSize] = useState(0);
   const [price, setPrice] = useState(0);
 
+  const { data: imagesGet } = trpc.image.getSignedPostUrl.useQuery(postId);
   const uploadImage = trpc.image.putSignedPostUrl.useMutation();
   const [images, setImages] = useState<File[] | undefined>();
 
@@ -172,6 +172,7 @@ export const UpdatePost = ({ postId }: UpdatePostProps) => {
         price={price}
         setImages={handleImage(setImages)}
         images={images}
+        imagesGet={imagesGet}
       />
     </div>
   );

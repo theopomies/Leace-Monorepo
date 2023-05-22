@@ -9,6 +9,7 @@ export interface PostPageProps {
 export const PostPage = ({ postId }: PostPageProps) => {
   const { data: post } = trpc.post.getPostById.useQuery({ postId });
   const { data: session, isLoading } = trpc.auth.getSession.useQuery();
+  const { data: images } = trpc.image.getSignedPostUrl.useQuery(postId);
 
   if (isLoading) {
     return <Loader />;
@@ -26,6 +27,7 @@ export const PostPage = ({ postId }: PostPageProps) => {
         <DisplayPost
           post={post}
           attribute={post.attribute}
+          images={images}
           role={role}
         />
       )}

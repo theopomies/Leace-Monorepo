@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React, {
   ChangeEventHandler,
   FormEventHandler,
@@ -9,6 +10,17 @@ import { Checkbox } from "../shared/forms/Checkbox";
 import { TextArea } from "../shared/forms/TextArea";
 import { NumberInput } from "../shared/forms/NumberInput";
 import { FileInput } from "../shared/forms/FileInput";
+
+type Image =
+  | {
+      url: string;
+      id: string;
+      ext: string;
+      postId: string | null;
+      createdAt: Date;
+      updatedAt: Date;
+    }[]
+  | undefined;
 
 export interface PostFormProps {
   title: string;
@@ -45,6 +57,7 @@ export interface PostFormProps {
   setPrice: ChangeEventHandler;
   images: File[] | undefined;
   setImages: ChangeEventHandler;
+  imagesGet?: Image;
   onSubmit: FormEventHandler;
   onCancel: MouseEventHandler<HTMLButtonElement>;
 }
@@ -218,6 +231,23 @@ export const PostForm = (props: PostFormProps) => {
             <h2 className="text-center text-xl font-medium text-gray-700">
               Photos
             </h2>
+            <div className="border-blueGray-200 my-10 border-y py-10 text-center">
+              {props.imagesGet && props.imagesGet.length > 0 ? (
+                <div className="mt-10 flex flex-wrap justify-center gap-4">
+                  {props.imagesGet.map((image, index) => (
+                    <div key={index} className="relative">
+                      <img
+                        src={image.url}
+                        alt="image"
+                        className="mx-auto h-32"
+                      />
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p>No image</p>
+              )}
+            </div>
             <div className="mt-2 flex flex-wrap justify-center gap-4">
               <FileInput multiple onChange={props.setImages}>
                 Upload Image

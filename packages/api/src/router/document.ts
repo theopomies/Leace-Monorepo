@@ -37,10 +37,8 @@ export const documentRouter = router({
   getSignedUserUrl: protectedProcedure([Role.TENANT, Role.AGENCY, Role.OWNER])
     .input(z.string().optional())
     .query(async ({ ctx, input }) => {
-      console.log("Ca passe");
       const userId = input ? input : ctx.auth.userId;
 
-      console.log("toto:", userId);
       const documents = await ctx.prisma.document.findMany({
         where: {
           userId: userId,
@@ -48,12 +46,8 @@ export const documentRouter = router({
       });
       if (!documents) throw new TRPCError({ code: "NOT_FOUND" });
 
-      console.log(documents);
       return await Promise.all(
         documents.map(async (document: Document) => {
-          console.log(
-            `users/${userId}/documents/${document.id}.${document.ext}`,
-          );
           const bucketParams = {
             Bucket: "leaceawsbucket",
             Key: `users/${userId}/documents/${document.id}.${document.ext}`,

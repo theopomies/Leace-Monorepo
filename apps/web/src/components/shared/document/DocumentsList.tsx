@@ -1,8 +1,15 @@
 /* eslint-disable @next/next/no-img-element */
 import { useState } from "react";
 import { DocumentModal } from "./DocumentModal";
-import { Check } from "../../moderation/Icons";
+import { Check, Cross } from "../../moderation/Icons";
+import Link from "next/link";
 
+type Document = {
+  id: string;
+  url: string;
+  valid: boolean;
+  ext: string;
+};
 export interface DocumentsListProps {
   documents: {
     id: string;
@@ -10,30 +17,43 @@ export interface DocumentsListProps {
     valid: boolean;
     ext: string;
   }[];
+  handleDeleteDoc: (id: string) => Promise<void>;
 }
 
-export const DocumentsList = ({ documents }: DocumentsListProps) => {
-  const [showModal, setShowModal] = useState(false);
+export const DocumentsList = ({
+  documents,
+  handleDeleteDoc,
+}: DocumentsListProps) => {
+  const [selectedDocument, setSelectedDocument] = useState<Document | null>();
+
+  const handleDocumentClick = (doc: Document) => {
+    setSelectedDocument(doc);
+  };
+
+  const handleModalClose = () => {
+    setSelectedDocument(null);
+  };
 
   return (
-    <div className="flex justify-center gap-4">
+    <div className="my-5 flex justify-center gap-4">
       {documents.map((doc, index) => (
         <div key={index} className="relative">
           {doc.ext === "pdf" ? (
-            <img
-              src="/pdfLogo.jpg"
-              referrerPolicy="no-referrer"
-              alt="document"
-              className="w-32 cursor-pointer"
-              onClick={() => setShowModal(true)}
-            />
+            <Link href={doc.url}>
+              <img
+                src="/pdfLogo.jpg"
+                referrerPolicy="no-referrer"
+                alt="document"
+                className="w-32 cursor-pointer"
+              />
+            </Link>
           ) : (
             <img
               src={doc.url}
               referrerPolicy="no-referrer"
               alt="document"
               className="w-32 cursor-pointer"
-              onClick={() => setShowModal(true)}
+              onClick={() => handleDocumentClick(doc)}
             />
           )}
           {doc.valid && (
@@ -41,11 +61,20 @@ export const DocumentsList = ({ documents }: DocumentsListProps) => {
               <Check />
             </div>
           )}
-          {showModal && (
-            <DocumentModal document={doc} setShowModal={setShowModal} />
-          )}
+          <div
+            onClick={() => handleDeleteDoc(doc.id)}
+            className="absolute -right-1 -top-1 inline-flex w-5 cursor-pointer items-center justify-center rounded-full bg-red-500 p-1 text-white"
+          >
+            <Cross />
+          </div>
         </div>
       ))}
+      {selectedDocument && (
+        <DocumentModal
+          document={selectedDocument}
+          setShowModal={handleModalClose}
+        />
+      )}
     </div>
   );
 };

@@ -4,24 +4,56 @@ import { Attribute, Post, Role } from "@prisma/client";
 import { Header } from "../users/Header";
 import Link from "next/link";
 import { DeletePostButton } from "../users/posts/DeletePostButton";
+import { motion } from "framer-motion";
+import { SlideShow } from "../home/stack/SlideShow";
+import { DeletePostImg } from "../shared/DeleteImgPost";
 
+type Image =
+  | {
+      url: string;
+      id: string;
+      ext: string;
+      postId: string | null;
+      createdAt: Date;
+      updatedAt: Date;
+    }[]
+  | undefined;
 interface DisplayPostProps {
   post: Post;
   attribute: Attribute;
+  images: Image;
   role: Role | undefined;
 }
 
-export function DisplayPost({ post, attribute, role }: DisplayPostProps) {
+export function DisplayPost({
+  post,
+  attribute,
+  images,
+  role,
+}: DisplayPostProps) {
   if (!post) {
     return <div>Not found</div>;
   }
 
   return (
-    <div className="w-full ">
+    <div className="w-full">
       <Header heading={post.title ?? "Annonce"} />
       <div className="flex justify-center">
         <div className="mx-12 flex justify-center rounded-lg bg-white p-12 shadow">
           <div>
+            <div className="flex justify-center">
+              {images && images.length > 0 && (
+                <motion.div
+                  layout
+                  className="relative flex h-[500px] max-w-[2/3] overflow-hidden rounded-md bg-gray-100"
+                >
+                  <div className="flex h-full w-full items-center justify-center">
+                    <SlideShow images={images.map((image) => image.url)} />
+                  </div>
+                </motion.div>
+              )}
+            </div>
+
             <div className="mb-4">
               <h2 className="text-xl">Lieu:</h2>
               <strong>{attribute.location}</strong>
@@ -64,6 +96,24 @@ export function DisplayPost({ post, attribute, role }: DisplayPostProps) {
             </div>
             <h2 className="mt-4 text-xl">Description:</h2>
             <p className="pt-1">{post.desc}</p>
+            <div className="border-blueGray-200 my-10 border-y py-10 text-center">
+              {images && images.length > 0 ? (
+                <div className="mt-10 flex flex-wrap justify-center gap-4">
+                  {images.map((image, index) => (
+                    <div key={index} className="relative">
+                      <img
+                        src={image.url}
+                        alt="image"
+                        className="mx-auto h-32"
+                      />
+                      <DeletePostImg postId={post.id} id={image.id} />
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p>No image</p>
+              )}
+            </div>
             <div className="mt-10 flex justify-center gap-6">
               {(role == Role.OWNER || role == Role.AGENCY) && (
                 <>

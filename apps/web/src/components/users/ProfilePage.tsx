@@ -14,7 +14,9 @@ export interface ProfilePageProps {
 export const ProfilePage = ({ userId }: ProfilePageProps) => {
   const { data: user, isLoading } = trpc.user.getUserById.useQuery({ userId });
   const { data: session } = trpc.auth.getSession.useQuery();
-  const { data: documents } = trpc.document.getSignedUserUrl.useQuery(userId);
+  const { data: documents, refetch: refetchImages } =
+    trpc.document.getSignedUserUrl.useQuery(userId);
+  const deleteDocument = trpc.document.deleteSignedUserUrl.useMutation();
 
   if (isLoading) {
     return <Loader />;
@@ -23,6 +25,11 @@ export const ProfilePage = ({ userId }: ProfilePageProps) => {
   if (!user) {
     return <div>Not found</div>;
   }
+
+  const handleDeleteDoc = async (id: string) => {
+    await deleteDocument.mutateAsync(id);
+    refetchImages();
+  };
 
   return (
     <div className="w-full">
@@ -202,7 +209,10 @@ export const ProfilePage = ({ userId }: ProfilePageProps) => {
                   </div>
                 )}
                 {documents && documents.length > 0 && (
-                  <DocumentsList documents={documents} />
+                  <DocumentsList
+                    documents={documents}
+                    handleDeleteDoc={handleDeleteDoc}
+                  />
                 )}
               </form>
               {session && userId == session.userId && (
