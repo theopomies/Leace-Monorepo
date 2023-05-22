@@ -1,6 +1,6 @@
 import { router, protectedProcedure } from "../trpc";
 import { z } from "zod";
-import { PostType, Role } from "@prisma/client";
+import { RelationType, PostType, Role } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { getId } from "../utils/getId";
 import { filterStrings } from "../utils/filter";
@@ -217,7 +217,7 @@ export const postRouter = router({
       const rs = await ctx.prisma.relationship.findMany({
         where: {
           userId: userId,
-          isMatch: true,
+          RelationType: RelationType.MATCH,
           post: { type: PostType.RENTED },
           lease: { isSigned: true },
         },

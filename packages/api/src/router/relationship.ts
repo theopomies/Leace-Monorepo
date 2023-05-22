@@ -1,4 +1,4 @@
-import { PostType, UserStatus } from "@prisma/client";
+import { RelationType, PostType, UserStatus } from "@prisma/client";
 import { Role } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
@@ -54,16 +54,17 @@ export const relationshipRouter = router({
           data: {
             userId: user.id,
             postId: post.id,
+            RelationType: RelationType.POST,
           },
         });
         if (!created) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
 
-        return created.isMatch;
+        return created.RelationType;
       }
 
       const updated = await ctx.prisma.relationship.update({
         where: { id: rs.id },
-        data: { isMatch: true },
+        data: { RelationType: RelationType.MATCH },
       });
 
       if (!updated) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
@@ -73,7 +74,7 @@ export const relationshipRouter = router({
       });
       if (!chat) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
 
-      return updated.isMatch;
+      return updated.RelationType;
     }),
   dislikeTenantForPost: protectedProcedure([Role.AGENCY, Role.OWNER])
     .input(
@@ -158,17 +159,18 @@ export const relationshipRouter = router({
           data: {
             userId: user.id,
             postId: post.id,
+            RelationType: RelationType.TENANT,
           },
         });
 
         if (!created) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
 
-        return created.isMatch;
+        return created.RelationType;
       }
 
       const updated = await ctx.prisma.relationship.update({
         where: { id: rs.id },
-        data: { isMatch: true },
+        data: { RelationType: RelationType.MATCH },
       });
 
       if (!updated) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
@@ -179,7 +181,7 @@ export const relationshipRouter = router({
 
       if (!chat) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
 
-      return updated.isMatch;
+      return updated.RelationType;
     }),
   dislikePostForTenant: protectedProcedure([Role.TENANT])
     .input(
@@ -234,7 +236,7 @@ export const relationshipRouter = router({
       if (user.role != Role.TENANT) throw new TRPCError({ code: "FORBIDDEN" });
 
       const relationShips = await ctx.prisma.relationship.findMany({
-        where: { isMatch: true, userId: userId },
+        where: { RelationType: RelationType.MATCH, userId: userId },
         include: {
           post: { include: { createdBy: true } },
           conversation: true,
@@ -274,7 +276,7 @@ export const relationshipRouter = router({
 
       const relationShips = await ctx.prisma.relationship.findMany({
         where: {
-          isMatch: true,
+          RelationType: RelationType.MATCH,
           postId: {
             in: postIds,
           },
@@ -316,7 +318,7 @@ export const relationshipRouter = router({
           message: "This user does not correspond to this relationship",
         });
 
-      if (!rs.isMatch)
+      if (rs.RelationType != RelationType.MATCH)
         throw new TRPCError({
           code: "FORBIDDEN",
           message: "This is not a match",
@@ -353,7 +355,7 @@ export const relationshipRouter = router({
           message: "This user does not correspond to this relationship",
         });
 
-      if (!rs.isMatch)
+      if (rs.RelationType != RelationType.MATCH)
         throw new TRPCError({
           code: "FORBIDDEN",
           message: "This is not a match",
@@ -380,7 +382,7 @@ export const relationshipRouter = router({
       if (user.role != Role.TENANT) throw new TRPCError({ code: "FORBIDDEN" });
 
       const relationShips = await ctx.prisma.relationship.findMany({
-        where: { isMatch: false, userId: userId },
+        where: { RelationType: RelationType.POST, userId: userId },
         include: {
           post: true,
         },
@@ -422,7 +424,7 @@ export const relationshipRouter = router({
 
       const relationShips = await ctx.prisma.relationship.findMany({
         where: {
-          isMatch: false,
+          RelationType: RelationType.TENANT,
           postId: {
             in: postIds,
           },

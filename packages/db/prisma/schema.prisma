@@ -24,6 +24,12 @@ enum ReportReason {
   OTHER
 }
 
+enum RelationType {
+  TENANT
+  POST
+  MATCH
+}
+
 enum ReportStatus {
   PENDING
   RESOLVED
@@ -255,8 +261,8 @@ model Relationship {
   post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId String
 
-  isMatch      Boolean?      @default(false)
   conversation Conversation?
+  RelationType RelationType
 
   lease Lease?
 
