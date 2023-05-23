@@ -1,5 +1,4 @@
 import { Role } from "@prisma/client";
-import { trpc } from "../../../utils/trpc";
 
 export function getLinks(userId: string): {
   href: string;
@@ -21,11 +20,6 @@ export function getLinks(userId: string): {
     {
       href: `/dashboard`,
       label: "Dashboard",
-      roles: [Role.AGENCY, Role.OWNER],
-    },
-    {
-      href: `/premium/potential-matches`,
-      label: "Potential matches",
       roles: [Role.AGENCY, Role.OWNER],
     },
     {
@@ -66,8 +60,7 @@ export function getLinks(userId: string): {
     {
       href: "/premium",
       label: "Premium",
-      roles: [Role.OWNER, Role.AGENCY, Role.TENANT],
-      hidePremium: true,
+      roles: [Role.OWNER, Role.AGENCY],
     },
   ];
 }
