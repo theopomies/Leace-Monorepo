@@ -1,4 +1,4 @@
-import { Role, ConversationType } from "@prisma/client";
+import { Role } from "@prisma/client";
 import { protectedProcedure, router } from "../../trpc";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
@@ -19,9 +19,6 @@ export const supportModeration = router({
       const supportRs = await ctx.prisma.supportRelationship.findMany({
         where: {
           supportId: userId,
-          conversation: {
-            type: { not: ConversationType.DONE },
-          },
         },
         include: {
           support: true,

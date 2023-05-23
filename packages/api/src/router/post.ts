@@ -1,8 +1,9 @@
 import { router, protectedProcedure } from "../trpc";
 import { z } from "zod";
-import { ConversationType, PostType, Role } from "@prisma/client";
+import { RelationType, PostType, Role } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { getId } from "../utils/getId";
+import { filterStrings } from "../utils/filter";
 
 export const postRouter = router({
   createPost: protectedProcedure([Role.AGENCY, Role.OWNER])
@@ -37,6 +38,12 @@ export const postRouter = router({
       });
 
       if (!post) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+      filterStrings({
+        ctx,
+        postId: post.id,
+        check: [input.title, input.content, input.desc],
+      });
 
       return post;
     }),
@@ -78,6 +85,12 @@ export const postRouter = router({
       });
 
       if (!updated) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+      filterStrings({
+        ctx,
+        postId: input.postId,
+        check: [input.title, input.content, input.desc],
+      });
     }),
   deletePostById: protectedProcedure([Role.AGENCY, Role.OWNER])
     .input(z.object({ postId: z.string() }))
@@ -132,7 +145,7 @@ export const postRouter = router({
       if (user.role != Role.AGENCY && user.role != Role.OWNER) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "User provided is cannot create post",
+          message: "User provided can't create post",
         });
       }
 
@@ -201,21 +214,25 @@ export const postRouter = router({
           message: "User provided does not fit in this scope",
         });
 
-      const rs = await ctx.prisma.relationship.findMany({
+      const relationship = await ctx.prisma.relationship.findMany({
         where: {
           userId: userId,
-          isMatch: true,
+          relationType: RelationType.MATCH,
           post: { type: PostType.RENTED },
-          conversation: { type: ConversationType.DONE },
+          lease: { isSigned: true },
         },
         include: { post: { include: { attribute: true } } },
       });
 
       let total = 0;
 
-      rs.map((rs) => {
-        if (rs.post && rs.post.attribute && rs.post.attribute.price)
-          total += rs.post.attribute.price;
+      relationship.map((relationship) => {
+        if (
+          relationship.post &&
+          relationship.post.attribute &&
+          relationship.post.attribute.price
+        )
+          total += relationship.post.attribute.price;
       });
 
       return total;

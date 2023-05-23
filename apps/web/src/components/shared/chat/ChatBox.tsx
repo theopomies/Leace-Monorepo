@@ -1,10 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 import { useEffect, useRef } from "react";
-import { Message, User, ConversationType, Conversation } from "@prisma/client";
+import { Message, User, Conversation } from "@prisma/client";
 import { ChatMessage } from "./ChatMessage";
 import { ChatInputMatch } from "./ChatInputMatch";
 import { ChatInputSupport } from "./ChatInputSupport";
-import { EndOfConversation } from "./EndOfConversation";
 
 export interface ChatBoxProps {
   userId: string;
@@ -43,13 +42,11 @@ export const ChatBox = ({
             {conversation.messages?.map((message) => (
               <ChatMessage key={message.id} userId={userId} message={message} />
             ))}
-            <EndOfConversation conversation={conversation} />
           </div>
         </div>
-        {conversation.type !== ConversationType.DONE &&
-          (isSupport
-            ? chatOn && <ChatInputSupport conversationId={conversation.id} />
-            : chatOn && <ChatInputMatch conversationId={conversation.id} />)}
+        {isSupport
+          ? chatOn && <ChatInputSupport conversationId={conversation.id} />
+          : chatOn && <ChatInputMatch conversationId={conversation.id} />}
       </div>
     </div>
   );
