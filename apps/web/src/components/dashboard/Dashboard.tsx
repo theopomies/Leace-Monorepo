@@ -1,4 +1,4 @@
-import { Post, PostType } from "@prisma/client";
+import { Post, PostType, User, Attribute } from "@prisma/client";
 import React, { useState, useEffect } from "react";
 import { trpc } from "../../utils/trpc";
 import { Header } from "../users/Header";
@@ -9,19 +9,22 @@ interface DashboardListProps {
 }
 
 interface MyPostsTableProps {
-  posts: Post[];
+  data: {
+    post: Post;
+    user: User | undefined;
+  }[];
 }
 
-export const MyPostsTable: React.FC<MyPostsTableProps> = ({ posts }) => {
+export const MyPostsTable: React.FC<MyPostsTableProps> = ({ data }) => {
   return (
     <div>
-      {posts.map((post) => (
+      {data.map((d) => (
         <MyPostBar
-          key={post.id}
-          postId={post.id}
-          title={post.title ?? "Title"}
-          desc={post.desc ?? "Description"}
-          type={post.type ?? PostType.TO_BE_RENTED}
+          key={d.post.id}
+          postId={d.post.id}
+          title={d.post.title ?? "Title"}
+          desc={d.post.desc ?? "Description"}
+          type={d.post.type ?? PostType.TO_BE_RENTED}
         />
       ))}
     </div>
@@ -29,17 +32,24 @@ export const MyPostsTable: React.FC<MyPostsTableProps> = ({ posts }) => {
 };
 
 export const Dashboard = ({ userId }: DashboardListProps) => {
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [posts, setPosts] = useState<{ post: Post; user: User | undefined }[]>(
+    [],
+  );
   const [filter, setFilter] = useState<PostType | "" | null>("");
   const [filteredCount, setFilteredCount] = useState<number>(0);
 
-  const { data: postsData } = trpc.post.getPostsByUserId.useQuery({ userId });
+  const { data: relationshipData } =
+    trpc.relationship.getClientsByUserId.useQuery({ userId });
 
   useEffect(() => {
-    if (postsData) {
-      setPosts(postsData);
+    if (relationshipData) {
+      setPosts(
+        relationshipData.map((data) => {
+          return { post: data.post, user: data?.user };
+        }),
+      );
     }
-  }, [postsData]);
+  }, [relationshipData]);
 
   useEffect(() => {
     const filteredPosts = sortPosts(posts);
@@ -47,11 +57,11 @@ export const Dashboard = ({ userId }: DashboardListProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter, posts]);
 
-  const sortPosts = (posts: Post[]) => {
+  const sortPosts = (data: { post: Post; user: User | undefined }[]) => {
     if (filter === null || filter === "") {
-      return posts;
+      return data;
     } else {
-      return posts.filter((post) => post.type === filter);
+      return posts.filter((d) => d.post.type === filter);
     }
   };
 
@@ -94,14 +104,14 @@ export const Dashboard = ({ userId }: DashboardListProps) => {
               value={filter || ""}
               onChange={handleFilterChange}
             >
-              <option value={PostType.RENTED}>RENTED</option>
-              <option value={PostType.TO_BE_RENTED}>TO BE RENTED</option>
+              <option value={PostType.RENTED}>Rented</option>
+              <option value={PostType.TO_BE_RENTED}>To be rented</option>
               <option value="">all</option>
             </select>
           </div>
         </div>
         <ul>
-          <MyPostsTable posts={sortedPosts} />
+          <MyPostsTable data={sortedPosts} />
         </ul>
       </div>
     </div>
