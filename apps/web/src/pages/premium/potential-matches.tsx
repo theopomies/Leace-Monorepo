@@ -1,7 +1,7 @@
 import { LoggedLayout } from "../../components/layout/LoggedLayout";
 import { Role } from "@prisma/client";
 import { trpc } from "../../utils/trpc";
-import { PotentialMatches } from "../../components/premium/PotentialMatches";
+import { PotentialMatches } from "../../components/premium/PotentialMatchesAgencyOwner";
 import { Loader } from "../../components/shared/Loader";
 import Premium from "../premium";
 
