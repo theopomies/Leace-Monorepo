@@ -18,7 +18,7 @@ export function getLinks(userId: string): {
       roles: [Role.OWNER, Role.AGENCY, Role.TENANT],
     },
     {
-      href: `/dashboard/main`,
+      href: `/dashboard`,
       label: "Dashboard",
       roles: [Role.AGENCY],
     },

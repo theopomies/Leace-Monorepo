@@ -1,8 +1,8 @@
 import { Post, PostType } from "@prisma/client";
 import React, { useState, useEffect } from "react";
 import { trpc } from "../../utils/trpc";
-import Link from "next/link";
-import { Header } from "../../components/users/Header";
+import { Header } from "../users/Header";
+import { MyPostBar } from "../users/posts/MyPostBar";
 
 interface DashboardListProps {
   userId: string;
@@ -14,44 +14,21 @@ interface MyPostsTableProps {
 
 export const MyPostsTable: React.FC<MyPostsTableProps> = ({ posts }) => {
   return (
-    <div className="flex items-center justify-center">
-      <table className="w-full table-auto border-collapse border border-green-800 md:w-1/2">
-        <thead>
-          <tr>
-            <th className="border border-green-600 px-4 py-2 text-green-800">
-              Title
-            </th>
-            <th className="border border-green-600 px-4 py-2 text-green-800">
-              Description
-            </th>
-            <th className="border border-green-600 px-4 py-2 text-green-800">
-              Type
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {posts.map((post) => (
-            <tr key={post.id}>
-              <td className="border border-green-600 px-4 py-2">
-                <Link href={`/posts/${post.id}`}>{post.title}</Link>
-              </td>
-              <td className="border border-green-600 px-4 py-2">
-                <Link href={`/posts/${post.id}`}>{post.desc}</Link>
-              </td>
-              <td className="border border-green-600 px-4 py-2">
-                <Link href={`/posts/${post.id}`}>
-                  {post.type === PostType.RENTED ? "Rented" : "To be rented"}
-                </Link>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div>
+      {posts.map((post) => (
+        <MyPostBar
+          key={post.id}
+          postId={post.id}
+          title={post.title ?? "Title"}
+          desc={post.desc ?? "Description"}
+          type={post.type ?? PostType.TO_BE_RENTED}
+        />
+      ))}
     </div>
   );
 };
 
-export const TestNew = ({ userId }: DashboardListProps) => {
+export const Dashboard = ({ userId }: DashboardListProps) => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [filter, setFilter] = useState<PostType | "" | null>("");
   const [filteredCount, setFilteredCount] = useState<number>(0);
@@ -67,6 +44,7 @@ export const TestNew = ({ userId }: DashboardListProps) => {
   useEffect(() => {
     const filteredPosts = sortPosts(posts);
     setFilteredCount(filteredPosts.length);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter, posts]);
 
   const sortPosts = (posts: Post[]) => {
@@ -93,18 +71,22 @@ export const TestNew = ({ userId }: DashboardListProps) => {
   return (
     <div className="container m-4 mx-auto flex flex-col">
       <Header heading="Dashboard" />
+
       <div className="container mx-auto mt-28 flex flex-col p-4">
-        <div className="flex items-center gap-2">
-          <h2 className="text-xl font-bold text-gray-400">Expenses: </h2>
-          <p>
-            <b>{expenses_get.data ?? " 0 $"}</b>
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <h2 className="text-xl font-bold text-gray-400">Income: </h2>
-          <p>
-            <b>{incomesList.data + " $" ?? " 0 $"}</b>
-          </p>
+        <div className="m-5 flex items-center justify-center">
+          <div className="m-1 flex h-32 w-32 items-center justify-center rounded-full bg-indigo-600 p-2 text-xl font-bold text-indigo-100">
+            <div className="text-center">
+              <p>Expense</p>
+              <p className="mt-1">{expenses_get.data ?? " 0 $"}</p>
+            </div>
+          </div>
+
+          <div className="m-1 flex h-32 w-32 items-center justify-center rounded-full bg-green-600 p-2 text-xl font-bold text-indigo-100">
+            <div className="text-center">
+              <p>Income</p>
+              <p className="mt-1">{incomesList.data + " $" ?? "0 $"}</p>
+            </div>
+          </div>
         </div>
         <div className="flex justify-center gap-40">
           <div className="mr-2">Total Count: {posts.length}</div>
