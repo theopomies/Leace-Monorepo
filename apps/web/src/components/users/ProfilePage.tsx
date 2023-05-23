@@ -5,6 +5,8 @@ import { Role } from "@prisma/client";
 import Link from "next/link";
 import { Loader } from "../shared/Loader";
 import { Button } from "../shared/button/Button";
+import { useRouter } from "next/router";
+import { useClerk } from "@clerk/nextjs";
 
 export interface ProfilePageProps {
   userId: string;
@@ -13,6 +15,17 @@ export interface ProfilePageProps {
 export const ProfilePage = ({ userId }: ProfilePageProps) => {
   const { data: user, isLoading } = trpc.user.getUserById.useQuery({ userId });
   const { data: session } = trpc.auth.getSession.useQuery();
+  const utils = trpc.useContext();
+  const router = useRouter();
+  const { signOut } = useClerk();
+
+  const deleteUser = trpc.user.deleteUserById.useMutation({
+    onSuccess() {
+      router.push("/");
+      utils.invalidate();
+      signOut();
+    },
+  });
 
   if (isLoading) {
     return <Loader />;
@@ -207,12 +220,15 @@ export const ProfilePage = ({ userId }: ProfilePageProps) => {
                   >
                     Modify
                   </Link>
-                  <Link
-                    className="rounded bg-indigo-500 px-4 py-3 font-bold text-white hover:bg-indigo-600 active:bg-indigo-700"
-                    href={`/users/${userId}/delete`}
+                  <Button
+                    className="scale-75 rounded bg-red-500 px-4 font-bold text-white hover:bg-red-600 active:bg-red-700"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      deleteUser.mutate({ userId });
+                    }}
                   >
                     Delete Account
-                  </Link>
+                  </Button>
                 </div>
               )}
             </div>
