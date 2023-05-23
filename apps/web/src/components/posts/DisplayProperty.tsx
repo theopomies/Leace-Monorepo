@@ -1,19 +1,26 @@
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
-import { Attribute, Post } from "@prisma/client";
+import { Attribute, Post, Role } from "@prisma/client";
 import { Header } from "../users/Header";
+import Link from "next/link";
+import { DeletePostButton } from "../users/posts/DeletePostButton";
 
 interface DisplayPostProps {
   post: Post;
   attribute: Attribute;
+  role: Role | undefined;
 }
 
-export function DisplayPost({ post, attribute }: DisplayPostProps) {
+export function DisplayPost({ post, attribute, role }: DisplayPostProps) {
+  if (!post) {
+    return <div>Not found</div>;
+  }
+
   return (
     <div className="w-full ">
       <Header heading={post.title ?? "Annonce"} />
       <div className="flex justify-center">
-        <div className="flex justify-center rounded-lg bg-white p-12 shadow">
+        <div className="mx-12 flex justify-center rounded-lg bg-white p-12 shadow">
           <div>
             <div className="mb-4">
               <h2 className="text-xl">Lieu:</h2>
@@ -57,6 +64,19 @@ export function DisplayPost({ post, attribute }: DisplayPostProps) {
             </div>
             <h2 className="mt-4 text-xl">Description:</h2>
             <p className="pt-1">{post.desc}</p>
+            <div className="mt-10 flex justify-center gap-6">
+              {(role == Role.OWNER || role == Role.AGENCY) && (
+                <>
+                  <Link
+                    className="rounded bg-indigo-500 px-4 py-3 font-bold text-white hover:bg-indigo-600 active:bg-indigo-700"
+                    href={`/posts/${post.id}/update`}
+                  >
+                    Update
+                  </Link>
+                  <DeletePostButton postId={post.id} />
+                </>
+              )}
+            </div>
           </div>
         </div>
       </div>

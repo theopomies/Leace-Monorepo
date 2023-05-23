@@ -14,6 +14,9 @@ const config = {
   eslint: {
     ignoreDuringBuilds: !!process.env.CI,
   },
+  images: {
+    domains: ["picsum.photos"],
+  },
 };
 
 export default config;
