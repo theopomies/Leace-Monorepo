@@ -116,7 +116,7 @@ export function DisplayPost({
             <h2 className="mt-4 text-xl">Description:</h2>
             <p className="pt-1">{post.desc}</p>
           </div>
-          {images && images.length > 0 && post.createdById === userId && (
+          {post.createdById === userId && images && images.length > 0 && (
             <div className="border-t py-5 text-center">
               <h2 className="mb-5 text-xl">Images:</h2>
               <div className="flex flex-wrap justify-center gap-4">
@@ -129,7 +129,7 @@ export function DisplayPost({
               </div>
             </div>
           )}
-          {documents && documents.length > 0 && post.createdById === userId && (
+          {documents && documents.length > 0 && (
             <div className="border-t py-5 text-center">
               <h2 className="mb-5 text-xl">Documents:</h2>
               <DocumentsList

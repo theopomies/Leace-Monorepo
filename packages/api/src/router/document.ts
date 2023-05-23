@@ -9,7 +9,6 @@ import {
 } from "@aws-sdk/client-s3";
 import { randomUUID } from "crypto";
 import { TRPCError } from "@trpc/server";
-import { getId } from "../utils/getId";
 
 export const documentRouter = router({
   putSignedUserUrl: protectedProcedure([Role.TENANT, Role.AGENCY, Role.OWNER])
@@ -38,7 +37,7 @@ export const documentRouter = router({
   getSignedUserUrl: protectedProcedure([Role.TENANT, Role.AGENCY, Role.OWNER])
     .input(z.string())
     .query(async ({ ctx, input }) => {
-      const userId = getId({ ctx, userId: input });
+      const userId = input ? input : ctx.auth.userId;
       const documents = await ctx.prisma.document.findMany({
         where: {
           userId: userId,
@@ -145,7 +144,7 @@ export const documentRouter = router({
     .query(async ({ ctx, input }) => {
       if (input.postId) {
         const getPost = await ctx.prisma.post.findFirst({
-          where: { id: input.postId, createdById: ctx.auth.userId },
+          where: { id: input.postId },
         });
         if (!getPost) throw new TRPCError({ code: "NOT_FOUND" });
         const documents = await ctx.prisma.document.findMany({
