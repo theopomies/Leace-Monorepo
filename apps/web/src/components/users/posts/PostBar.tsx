@@ -41,6 +41,7 @@ export const PostBar = ({
   const likePostForTenant = trpc.relationship.likePostForTenant.useMutation({
     onSuccess: () => {
       utils.relationship.getLikesForTenant.invalidate({ userId });
+      utils.relationship.getLikesForTenant.invalidate({ userId });
     },
   });
 

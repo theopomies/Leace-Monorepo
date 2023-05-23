@@ -46,6 +46,7 @@ export const TenantBar = ({
   const deleteMatchMutation =
     trpc.relationship.deleteRelationForOwner.useMutation({
       onSuccess: () => {
+        utils.relationship.getMatchesForOwner.invalidate({ userId });
         utils.relationship.getLikesForOwner.invalidate({ userId });
       },
     });
