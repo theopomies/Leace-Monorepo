@@ -32,18 +32,19 @@ export const PostBar = ({
 }: PostBarProps) => {
   const utils = trpc.useContext();
   const { data: img } = trpc.image.getSignedPostUrl.useQuery(postId);
+  const likePostForTenant = trpc.relationship.likePostForTenant.useMutation({
+    onSuccess: () => {
+      utils.relationship.getMatchesForTenant.invalidate({ userId });
+      utils.relationship.getLikesForTenant.invalidate({ userId });
+    },
+  });
   const deleteMatchMutation =
     trpc.relationship.deleteRelationForTenant.useMutation({
       onSuccess: () => {
         utils.relationship.getMatchesForTenant.invalidate({ userId });
+        utils.relationship.getLikesForTenant.invalidate({ userId });
       },
     });
-  const likePostForTenant = trpc.relationship.likePostForTenant.useMutation({
-    onSuccess: () => {
-      utils.relationship.getLikesForTenant.invalidate({ userId });
-      utils.relationship.getLikesForTenant.invalidate({ userId });
-    },
-  });
 
   const handleDeleteMatch = async () => {
     await deleteMatchMutation.mutateAsync({ userId, relationshipId });

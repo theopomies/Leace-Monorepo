@@ -39,6 +39,7 @@ export const TenantBar = ({
   const utils = trpc.useContext();
   const likeTenantForPost = trpc.relationship.likeTenantForPost.useMutation({
     onSuccess: () => {
+      utils.relationship.getMatchesForOwner.invalidate({ userId });
       utils.relationship.getLikesForOwner.invalidate({ userId });
     },
   });
