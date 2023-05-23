@@ -20,7 +20,7 @@ export const relationshipModeration = router({
         });
         if (!postIds) throw new TRPCError({ code: "NOT_FOUND" });
 
-        const rs = await ctx.prisma.relationship.findMany({
+        const relationship = await ctx.prisma.relationship.findMany({
           where: {
             relationType: RelationType.MATCH,
             postId: {
@@ -40,11 +40,11 @@ export const relationshipModeration = router({
           },
           orderBy: { updatedAt: "desc" },
         });
-        if (!rs) throw new TRPCError({ code: "NOT_FOUND" });
+        if (!relationship) throw new TRPCError({ code: "NOT_FOUND" });
 
-        return rs;
+        return relationship;
       }
-      const rs = await ctx.prisma.relationship.findMany({
+      const relationship = await ctx.prisma.relationship.findMany({
         where: {
           relationType: RelationType.MATCH,
           userId: user.id,
@@ -60,8 +60,8 @@ export const relationshipModeration = router({
         },
         orderBy: { updatedAt: "desc" },
       });
-      if (!rs) throw new TRPCError({ code: "NOT_FOUND" });
+      if (!relationship) throw new TRPCError({ code: "NOT_FOUND" });
 
-      return rs;
+      return relationship;
     }),
 });

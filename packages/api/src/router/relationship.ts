@@ -45,11 +45,11 @@ export const relationshipRouter = router({
       )
         throw new TRPCError({ code: "FORBIDDEN" });
 
-      const rs = await ctx.prisma.relationship.findFirst({
+      const relationship = await ctx.prisma.relationship.findFirst({
         where: { postId: post.id, userId: user.id },
       });
 
-      if (!rs) {
+      if (!relationship) {
         const created = await ctx.prisma.relationship.create({
           data: {
             userId: user.id,
@@ -63,7 +63,7 @@ export const relationshipRouter = router({
       }
 
       const updated = await ctx.prisma.relationship.update({
-        where: { id: rs.id },
+        where: { id: relationship.id },
         data: { relationType: RelationType.MATCH },
       });
 
@@ -109,14 +109,14 @@ export const relationshipRouter = router({
       )
         throw new TRPCError({ code: "FORBIDDEN" });
 
-      const rs = await ctx.prisma.relationship.findFirst({
+      const relationship = await ctx.prisma.relationship.findFirst({
         where: { postId: post.id, userId: user.id },
       });
 
-      if (!rs) return { missed: false, message: "Nothing to do" };
+      if (!relationship) return { missed: false, message: "Nothing to do" };
 
       const deleted = await ctx.prisma.relationship.delete({
-        where: { id: rs.id },
+        where: { id: relationship.id },
       });
 
       if (!deleted) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
@@ -150,11 +150,11 @@ export const relationshipRouter = router({
       if (post.type == PostType.RENTED)
         throw new TRPCError({ code: "FORBIDDEN" });
 
-      const rs = await ctx.prisma.relationship.findFirst({
+      const relationship = await ctx.prisma.relationship.findFirst({
         where: { postId: post.id, userId: user.id },
       });
 
-      if (!rs) {
+      if (!relationship) {
         const created = await ctx.prisma.relationship.create({
           data: {
             userId: user.id,
@@ -169,7 +169,7 @@ export const relationshipRouter = router({
       }
 
       const updated = await ctx.prisma.relationship.update({
-        where: { id: rs.id },
+        where: { id: relationship.id },
         data: { relationType: RelationType.MATCH },
       });
 
@@ -210,14 +210,14 @@ export const relationshipRouter = router({
       if (post.type == PostType.RENTED)
         throw new TRPCError({ code: "FORBIDDEN" });
 
-      const rs = await ctx.prisma.relationship.findFirst({
+      const relationship = await ctx.prisma.relationship.findFirst({
         where: { postId: post.id, userId: user.id },
       });
 
-      if (!rs) return { missed: false, message: "Nothing to do" };
+      if (!relationship) return { missed: false, message: "Nothing to do" };
 
       const deleted = await ctx.prisma.relationship.delete({
-        where: { id: rs.id },
+        where: { id: relationship.id },
       });
 
       if (!deleted) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
@@ -235,7 +235,7 @@ export const relationshipRouter = router({
 
       if (user.role != Role.TENANT) throw new TRPCError({ code: "FORBIDDEN" });
 
-      const relationShips = await ctx.prisma.relationship.findMany({
+      const relationships = await ctx.prisma.relationship.findMany({
         where: { relationType: RelationType.MATCH, userId: userId },
         include: {
           post: { include: { createdBy: true } },
@@ -245,9 +245,9 @@ export const relationshipRouter = router({
         orderBy: { updatedAt: "desc" },
       });
 
-      if (!relationShips) throw new TRPCError({ code: "NOT_FOUND" });
+      if (!relationships) throw new TRPCError({ code: "NOT_FOUND" });
 
-      return relationShips;
+      return relationships;
     }),
   getMatchesForOwner: protectedProcedure([Role.OWNER, Role.AGENCY])
     .input(z.object({ userId: z.string() }))
@@ -274,7 +274,7 @@ export const relationshipRouter = router({
 
       if (!postIds) throw new TRPCError({ code: "NOT_FOUND" });
 
-      const relationShips = await ctx.prisma.relationship.findMany({
+      const relationships = await ctx.prisma.relationship.findMany({
         where: {
           relationType: RelationType.MATCH,
           postId: {
@@ -289,9 +289,9 @@ export const relationshipRouter = router({
         orderBy: { updatedAt: "desc" },
       });
 
-      if (!relationShips) throw new TRPCError({ code: "NOT_FOUND" });
+      if (!relationships) throw new TRPCError({ code: "NOT_FOUND" });
 
-      return relationShips;
+      return relationships;
     }),
   deleteRelationForTenant: protectedProcedure([Role.TENANT])
     .input(z.object({ userId: z.string(), relationshipId: z.string() }))
@@ -304,22 +304,22 @@ export const relationshipRouter = router({
 
       if (user.role != Role.TENANT) throw new TRPCError({ code: "FORBIDDEN" });
 
-      const rs = await ctx.prisma.relationship.findUnique({
+      const relationship = await ctx.prisma.relationship.findUnique({
         where: {
           id: input.relationshipId,
         },
       });
 
-      if (!rs) throw new TRPCError({ code: "NOT_FOUND" });
+      if (!relationship) throw new TRPCError({ code: "NOT_FOUND" });
 
-      if (rs.userId != userId)
+      if (relationship.userId != userId)
         throw new TRPCError({
           code: "FORBIDDEN",
           message: "This user does not correspond to this relationship",
         });
 
       const deleted = await ctx.prisma.relationship.delete({
-        where: { id: rs.id },
+        where: { id: relationship.id },
       });
 
       if (!deleted) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
@@ -336,21 +336,21 @@ export const relationshipRouter = router({
       if (user.role != Role.AGENCY && user.role != Role.OWNER)
         throw new TRPCError({ code: "FORBIDDEN" });
 
-      const rs = await ctx.prisma.relationship.findUnique({
+      const relationship = await ctx.prisma.relationship.findUnique({
         where: { id: input.relationshipId },
         include: { post: true },
       });
 
-      if (!rs) throw new TRPCError({ code: "NOT_FOUND" });
+      if (!relationship) throw new TRPCError({ code: "NOT_FOUND" });
 
-      if (rs.post.createdById != userId)
+      if (relationship.post.createdById != userId)
         throw new TRPCError({
           code: "FORBIDDEN",
           message: "This user does not correspond to this relationship",
         });
 
       const deleted = await ctx.prisma.relationship.delete({
-        where: { id: rs.id },
+        where: { id: relationship.id },
       });
 
       if (!deleted) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
@@ -369,18 +369,19 @@ export const relationshipRouter = router({
 
       if (user.role != Role.TENANT) throw new TRPCError({ code: "FORBIDDEN" });
 
-      const relationShips = await ctx.prisma.relationship.findMany({
+      const relationships = await ctx.prisma.relationship.findMany({
         where: { relationType: RelationType.POST, userId: userId },
         include: {
           post: true,
         },
       });
 
-      if (!relationShips) throw new TRPCError({ code: "NOT_FOUND" });
+      if (!relationships) throw new TRPCError({ code: "NOT_FOUND" });
 
-      if (!user.isPremium) return { count: relationShips.length, rs: null };
+      if (!user.isPremium)
+        return { count: relationships.length, relationship: null };
 
-      return { count: relationShips.length, rs: relationShips };
+      return { count: relationships.length, relationship: relationships };
     }),
   getLikesForOwner: protectedProcedure([Role.OWNER, Role.AGENCY])
     .input(z.object({ userId: z.string() }))
@@ -410,7 +411,7 @@ export const relationshipRouter = router({
 
       if (!postIds) throw new TRPCError({ code: "NOT_FOUND" });
 
-      const relationShips = await ctx.prisma.relationship.findMany({
+      const relationships = await ctx.prisma.relationship.findMany({
         where: {
           relationType: RelationType.TENANT,
           postId: {
@@ -423,10 +424,11 @@ export const relationshipRouter = router({
         },
       });
 
-      if (!relationShips) throw new TRPCError({ code: "NOT_FOUND" });
+      if (!relationships) throw new TRPCError({ code: "NOT_FOUND" });
 
-      if (!user.isPremium) return { count: relationShips.length, rs: null };
+      if (!user.isPremium)
+        return { count: relationships.length, relationship: null };
 
-      return { count: relationShips.length, rs: relationShips };
+      return { count: relationships.length, relationship: relationships };
     }),
 });

@@ -9,7 +9,7 @@ export const leaseRouter = router({
   createLease: protectedProcedure([Role.AGENCY, Role.OWNER])
     .input(
       z.object({
-        relationShipId: z.string(),
+        relationshipId: z.string(),
         rentCost: z.number(),
         utilitiesCost: z.number(),
         startDate: z.date(),
@@ -17,14 +17,14 @@ export const leaseRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const rs = await ctx.prisma.relationship.findUnique({
-        where: { id: input.relationShipId },
+      const relationship = await ctx.prisma.relationship.findUnique({
+        where: { id: input.relationshipId },
       });
 
-      if (!rs) throw new TRPCError({ code: "NOT_FOUND" });
+      if (!relationship) throw new TRPCError({ code: "NOT_FOUND" });
 
       const post = await ctx.prisma.post.findUnique({
-        where: { id: rs.postId },
+        where: { id: relationship.postId },
       });
 
       if (!post) throw new TRPCError({ code: "NOT_FOUND" });
@@ -39,7 +39,7 @@ export const leaseRouter = router({
 
       const lease = await ctx.prisma.lease.create({
         data: {
-          relationShipId: rs.id,
+          relationshipId: relationship.id,
           rentCost: input.rentCost,
           utilitiesCost: input.utilitiesCost,
           startDate: input.startDate,
@@ -65,24 +65,24 @@ export const leaseRouter = router({
 
       if (!lease) throw new TRPCError({ code: "NOT_FOUND" });
 
-      const rs = await ctx.prisma.relationship.findUnique({
-        where: { id: lease.relationShipId },
+      const relationship = await ctx.prisma.relationship.findUnique({
+        where: { id: lease.relationshipId },
       });
 
-      if (!rs) throw new TRPCError({ code: "NOT_FOUND" });
+      if (!relationship) throw new TRPCError({ code: "NOT_FOUND" });
 
-      if (ctx.auth.userId != rs.userId) {
+      if (ctx.auth.userId != relationship.userId) {
         throw new TRPCError({ code: "FORBIDDEN" });
       }
 
       const conversation = await ctx.prisma.conversation.findUnique({
-        where: { relationId: rs.id },
+        where: { relationId: relationship.id },
       });
 
       if (!conversation) throw new TRPCError({ code: "NOT_FOUND" });
 
       const post = await ctx.prisma.post.findUnique({
-        where: { id: rs.postId },
+        where: { id: relationship.postId },
       });
 
       if (!post) throw new TRPCError({ code: "NOT_FOUND" });
@@ -96,14 +96,14 @@ export const leaseRouter = router({
       });
 
       const tenant = ctx.prisma.user.update({
-        where: { id: rs.userId },
+        where: { id: relationship.userId },
         data: { status: UserStatus.INACTIVE },
       });
 
       if (!tenant) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
 
       const updated = await ctx.prisma.post.update({
-        where: { id: rs.postId },
+        where: { id: relationship.postId },
         data: { type: PostType.RENTED },
       });
 
@@ -130,14 +130,14 @@ export const leaseRouter = router({
         if (!lease) throw new TRPCError({ code: "BAD_REQUEST" });
       }
 
-      const rs = await ctx.prisma.relationship.findUnique({
-        where: { id: lease.relationShipId },
+      const relationship = await ctx.prisma.relationship.findUnique({
+        where: { id: lease.relationshipId },
       });
 
-      if (!rs) throw new TRPCError({ code: "NOT_FOUND" });
+      if (!relationship) throw new TRPCError({ code: "NOT_FOUND" });
 
       const post = await ctx.prisma.post.findUnique({
-        where: { id: rs.postId },
+        where: { id: relationship.postId },
       });
 
       if (!post) throw new TRPCError({ code: "NOT_FOUND" });
@@ -171,14 +171,14 @@ export const leaseRouter = router({
 
       if (!lease) throw new TRPCError({ code: "NOT_FOUND" });
 
-      const rs = await ctx.prisma.relationship.findUnique({
-        where: { id: lease.relationShipId },
+      const relationship = await ctx.prisma.relationship.findUnique({
+        where: { id: lease.relationshipId },
       });
 
-      if (!rs) throw new TRPCError({ code: "NOT_FOUND" });
+      if (!relationship) throw new TRPCError({ code: "NOT_FOUND" });
 
       const post = await ctx.prisma.post.findUnique({
-        where: { id: rs.postId },
+        where: { id: relationship.postId },
       });
 
       if (!post) throw new TRPCError({ code: "NOT_FOUND" });
@@ -206,14 +206,14 @@ export const leaseRouter = router({
 
       if (!lease) throw new TRPCError({ code: "NOT_FOUND" });
 
-      const rs = await ctx.prisma.relationship.findUnique({
-        where: { id: lease.relationShipId },
+      const relationship = await ctx.prisma.relationship.findUnique({
+        where: { id: lease.relationshipId },
       });
 
-      if (!rs) throw new TRPCError({ code: "NOT_FOUND" });
+      if (!relationship) throw new TRPCError({ code: "NOT_FOUND" });
 
       const post = await ctx.prisma.post.findUnique({
-        where: { id: rs.postId },
+        where: { id: relationship.postId },
       });
 
       if (!post) throw new TRPCError({ code: "NOT_FOUND" });
@@ -222,7 +222,7 @@ export const leaseRouter = router({
         ctx.role != Role.MODERATOR &&
         ctx.role != Role.ADMIN &&
         ctx.auth.userId != post.createdById &&
-        ctx.auth.userId != rs.userId
+        ctx.auth.userId != relationship.userId
       ) {
         throw new TRPCError({ code: "FORBIDDEN" });
       }

@@ -214,7 +214,7 @@ export const postRouter = router({
           message: "User provided does not fit in this scope",
         });
 
-      const rs = await ctx.prisma.relationship.findMany({
+      const relationship = await ctx.prisma.relationship.findMany({
         where: {
           userId: userId,
           relationType: RelationType.MATCH,
@@ -226,9 +226,13 @@ export const postRouter = router({
 
       let total = 0;
 
-      rs.map((rs) => {
-        if (rs.post && rs.post.attribute && rs.post.attribute.price)
-          total += rs.post.attribute.price;
+      relationship.map((relationship) => {
+        if (
+          relationship.post &&
+          relationship.post.attribute &&
+          relationship.post.attribute.price
+        )
+          total += relationship.post.attribute.price;
       });
 
       return total;

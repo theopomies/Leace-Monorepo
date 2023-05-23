@@ -14,11 +14,11 @@ export const OccupiedClientList = ({ userId }: TenantListProps) => {
     userId: userId ?? "",
   });
 
-  if (relationships && relationships.rs) {
+  if (relationships && relationships.relationship) {
     return (
       <div className="container mx-auto p-4">
         <>
-          {relationships.rs.map(
+          {relationships.relationship.map(
             ({
               user: {
                 id: otherUserId,

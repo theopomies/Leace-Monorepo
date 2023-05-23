@@ -297,7 +297,7 @@ model SupportRelationship {
 model Conversation {
   id String @id @default(cuid())
 
-  rs         Relationship? @relation(fields: [relationId], references: [id], onDelete: Cascade)
+  relationship         Relationship? @relation(fields: [relationId], references: [id], onDelete: Cascade)
   relationId String?       @unique
 
   supportRs         SupportRelationship? @relation(fields: [supportRelationId], references: [id], onDelete: Cascade)
@@ -335,8 +335,8 @@ model Message {
 model Lease {
   id String @id @default(cuid())
 
-  relationShip   Relationship @relation(fields: [relationShipId], references: [id], onDelete: Cascade)
-  relationShipId String @unique
+  relationship   Relationship @relation(fields: [relationshipId], references: [id], onDelete: Cascade)
+  relationshipId String @unique
 
   isSigned Boolean @default(false)
   rentCost Int
@@ -349,7 +349,7 @@ model Lease {
   createdBy   User   @relation(fields: [createdById], references: [id], onDelete: Cascade)
   createdById String
 
-  @@index([relationShipId])
+  @@index([relationshipId])
   @@index([createdById])
 
 }
