@@ -1,6 +1,6 @@
-import { LoggedLayout } from "../components/layout/LoggedLayout";
+import { LoggedLayout } from "../../components/layout/LoggedLayout";
 import { Role } from "@prisma/client";
-import { Moderation } from "../components/moderation/Moderation";
+import { Moderation } from "../../components/moderation/Moderation";
 
 export default function ModerationPage() {
   return (
