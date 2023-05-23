@@ -431,4 +431,46 @@ export const relationshipRouter = router({
 
       return { count: relationships.length, relationship: relationships };
     }),
+  getClientsByUserId: protectedProcedure([Role.AGENCY, Role.OWNER])
+    .input(
+      z.object({
+        userId: z.string(),
+        postType: z.enum([PostType.RENTED, PostType.TO_BE_RENTED]).optional(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const userId = getId({ ctx, userId: input.userId });
+
+      const user = await ctx.prisma.user.findUnique({ where: { id: userId } });
+
+      if (!user) throw new TRPCError({ code: "NOT_FOUND" });
+
+      if (user.role != Role.AGENCY && user.role != Role.OWNER) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "User provided can't create post",
+        });
+      }
+
+      if (!input.postType) {
+        const relationship = await ctx.prisma.relationship.findMany({
+          where: { post: { createdById: userId } },
+          include: { post: { include: { attribute: true } }, user: true },
+        });
+
+        if (!relationship)
+          throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+        return relationship;
+      }
+
+      const relationship = await ctx.prisma.relationship.findMany({
+        where: { post: { createdById: userId, type: input.postType } },
+        include: { post: { include: { attribute: true } }, user: true },
+      });
+
+      if (!relationship) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+      return relationship;
+    }),
 });

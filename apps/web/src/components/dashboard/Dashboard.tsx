@@ -33,13 +33,18 @@ export const Dashboard = ({ userId }: DashboardListProps) => {
   const [filter, setFilter] = useState<PostType | "" | null>("");
   const [filteredCount, setFilteredCount] = useState<number>(0);
 
-  const { data: postsData } = trpc.post.getPostsByUserId.useQuery({ userId });
+  const { data: relationshipData } =
+    trpc.relationship.getClientsByUserId.useQuery({ userId });
 
   useEffect(() => {
-    if (postsData) {
-      setPosts(postsData);
+    if (relationshipData) {
+      setPosts(
+        relationshipData.map((relationship) => {
+          return relationship.post;
+        }),
+      );
     }
-  }, [postsData]);
+  }, [relationshipData]);
 
   useEffect(() => {
     const filteredPosts = sortPosts(posts);
