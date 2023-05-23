@@ -61,10 +61,7 @@ export const Dashboard = ({ userId }: DashboardListProps) => {
   };
 
   const sortedPosts = sortPosts(posts);
-  const expenses_get = trpc.post.getRentExpenseByUserId.useQuery({
-    userId: userId,
-  });
-  const incomesList = trpc.post.getRentIncomeByUserId.useQuery({
+  const { data: stats } = trpc.post.RentDataAgencyByUserId.useQuery({
     userId: userId,
   });
 
@@ -77,14 +74,14 @@ export const Dashboard = ({ userId }: DashboardListProps) => {
           <div className="m-1 flex h-32 w-32 items-center justify-center rounded-full bg-indigo-600 p-2 text-xl font-bold text-indigo-100">
             <div className="text-center">
               <p>Expense</p>
-              <p className="mt-1">{expenses_get.data ?? " 0 $"}</p>
+              <p className="mt-1">{stats?.expense + " $" ?? " 0 $"}</p>
             </div>
           </div>
 
           <div className="m-1 flex h-32 w-32 items-center justify-center rounded-full bg-green-600 p-2 text-xl font-bold text-indigo-100">
             <div className="text-center">
               <p>Income</p>
-              <p className="mt-1">{incomesList.data + " $" ?? "0 $"}</p>
+              <p className="mt-1">{stats?.income + " $" ?? "0 $"}</p>
             </div>
           </div>
         </div>
