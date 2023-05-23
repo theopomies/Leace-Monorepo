@@ -6,11 +6,11 @@ import { Role } from "@prisma/client";
 
 export function OwnerChat({
   userId,
-  conversationId,
+  conversationId = "",
   role,
 }: {
   userId: string;
-  conversationId: string;
+  conversationId?: string;
   role: Role;
 }) {
   const utils = trpc.useContext();
@@ -50,7 +50,7 @@ export function OwnerChat({
     <Chat
       userId={userId}
       messages={conversation.messages}
-      onSend={sendMessage}
+      onSend={conversationId !== "" ? sendMessage : undefined}
       relationships={relationships}
       supportRelationships={supportRelationships}
       role={role}

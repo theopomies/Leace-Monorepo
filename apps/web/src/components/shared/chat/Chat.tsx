@@ -10,7 +10,7 @@ export type ChatProps = {
   relationships?: Relationships;
   supportRelationships?: SupportRelationships;
   role: Role;
-  conversationId: string;
+  conversationId?: string;
   conversationLink?: string;
 };
 

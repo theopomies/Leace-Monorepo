@@ -28,7 +28,7 @@ export type SupportRelationships =
 
 export interface ChatListProps {
   userId: string;
-  conversationId: string;
+  conversationId?: string;
   role: Role;
   relationships?: Relationships;
   supportRelationships?: SupportRelationships;

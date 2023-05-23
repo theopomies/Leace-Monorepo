@@ -1,7 +1,7 @@
 import { Role } from "@prisma/client";
-import { LoggedLayout } from "../../../components/layout/LoggedLayout";
+import { LoggedLayout } from "../../../../components/layout/LoggedLayout";
 import { useRouter } from "next/router";
-import { AdminUserPage } from "../../../components/moderation/administration/AdminUserPage";
+import { AdminUserPage } from "../../../../components/moderation/administration/AdminUserPage";
 
 export default function AdminUserView() {
   const router = useRouter();
