@@ -61,6 +61,31 @@ export const documentRouter = router({
         }),
       );
     }),
+  deleteSignedUserUrl: protectedProcedure([
+    Role.TENANT,
+    Role.AGENCY,
+    Role.OWNER,
+  ])
+    .input(z.string())
+    .mutation(async ({ ctx, input }) => {
+      const document = await ctx.prisma.document.findFirst({
+        where: { id: input, userId: ctx.auth.userId },
+      });
+      if (!document) throw new TRPCError({ code: "NOT_FOUND" });
+
+      const deleted = await ctx.prisma.document.delete({
+        where: { id: document.id },
+      });
+      if (!deleted) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+      const bucketParams = {
+        Bucket: "leaceawsbucket",
+        Key: `users/${ctx.auth.userId}/documents/${document.id}.${document.ext}`,
+      };
+      const command = new DeleteObjectCommand(bucketParams);
+
+      return await getSignedUrl(ctx.s3Client, command);
+    }),
   putSignedUrl: protectedProcedure([Role.TENANT, Role.AGENCY, Role.OWNER])
     .input(
       z.object({
