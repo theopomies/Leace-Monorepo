@@ -61,6 +61,7 @@ export const documentRouter = router({
         }),
       );
     }),
+<<<<<<< HEAD
   deleteSignedUserUrl: protectedProcedure([
     Role.TENANT,
     Role.AGENCY,
@@ -86,6 +87,8 @@ export const documentRouter = router({
 
       return await getSignedUrl(ctx.s3Client, command);
     }),
+=======
+>>>>>>> dfd1c2053ed8adb89f617c75f9e768b566dd85be
   putSignedUrl: protectedProcedure([Role.TENANT, Role.AGENCY, Role.OWNER])
     .input(
       z.object({
