@@ -2,14 +2,14 @@
 
 import Link from "next/link";
 import { trpc } from "../../../utils/trpc";
-import { PostType } from "@prisma/client";
+import { PostType, RelationType } from "@prisma/client";
 import { Button } from "../../shared/button/Button";
 export interface PostBarProps {
   postId: string;
   title: string;
   desc: string;
   type: PostType;
-  isMatch: boolean;
+  relationType: RelationType;
   userId: string;
   relationshipId: string;
 }
@@ -19,7 +19,7 @@ export const PostBar = ({
   title,
   desc,
   type,
-  isMatch,
+  relationType,
   userId,
   relationshipId,
 }: PostBarProps) => {
@@ -67,7 +67,7 @@ export const PostBar = ({
         <Button theme="danger" onClick={handleDeleteMatch}>
           Delete Match
         </Button>
-        {isMatch && (
+        {relationType == RelationType.MATCH && (
           <Link
             className="rounded bg-indigo-500 px-4 py-3 font-bold text-white hover:bg-indigo-600 active:bg-indigo-700"
             href={`/chat/all`}

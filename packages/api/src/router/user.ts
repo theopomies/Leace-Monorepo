@@ -4,6 +4,7 @@ import { TRPCError } from "@trpc/server";
 import { Role, UserStatus } from "@prisma/client";
 import { isPossiblePhoneNumber } from "libphonenumber-js";
 import { getId } from "../utils/getId";
+import { filterStrings } from "../utils/filter";
 
 export const userRouter = router({
   /** Create a new user only for yourself,
@@ -121,6 +122,17 @@ export const userRouter = router({
       });
 
       if (!updated) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+      filterStrings({
+        ctx,
+        userId,
+        check: [
+          input.firstName,
+          input.lastName,
+          input.phoneNumber,
+          input.description,
+        ],
+      });
     }),
   /**  Retrieve one user's data with the given id, based on your authorizations. */
   getUserById: protectedProcedure([

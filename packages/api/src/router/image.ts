@@ -90,7 +90,7 @@ export const imageRouter = router({
 
       const bucketParams = {
         Bucket: "leaceawsbucket",
-        Key: `posts/${ctx.auth.userId}/images/${image.id}.${image.ext}`,
+        Key: `posts/${getPost.id}/images/${image.id}.${image.ext}`,
       };
       const command = new DeleteObjectCommand(bucketParams);
 
