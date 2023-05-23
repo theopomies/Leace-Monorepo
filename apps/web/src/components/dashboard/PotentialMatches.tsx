@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { trpc } from "../../utils/trpc";
 import { TenantBar } from "../users/UserBar";
+import { Header } from "../users/Header";
 
 export interface TenantListProps {
   userId: string;
 }
 
-export const OccupiedClientList = ({ userId }: TenantListProps) => {
+export const PotentialMatches = ({ userId }: TenantListProps) => {
   const { data: relationships } = trpc.relationship.getLikesForOwner.useQuery({
     userId,
   });
@@ -17,6 +18,7 @@ export const OccupiedClientList = ({ userId }: TenantListProps) => {
   if (relationships && relationships.relationship) {
     return (
       <div className="container mx-auto p-4">
+        <Header heading={"Potential Matches"} />
         <>
           {relationships.relationship.map(
             ({

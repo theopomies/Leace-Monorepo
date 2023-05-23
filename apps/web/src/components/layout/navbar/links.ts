@@ -23,6 +23,11 @@ export function getLinks(userId: string): {
       roles: [Role.AGENCY],
     },
     {
+      href: `/premium/potential-matches`,
+      label: "Premium",
+      roles: [Role.AGENCY],
+    },
+    {
       href: `/users/${userId}/matches`,
       label: "Matches",
       roles: [Role.OWNER, Role.AGENCY, Role.TENANT],
