@@ -1,6 +1,6 @@
 import { trpc } from "../../utils/trpc";
 import { Loader } from "../shared/Loader";
-import { DisplayPost } from "./DisplayProperty";
+import { DisplayPost } from "./DisplayPost";
 
 export interface PostPageProps {
   postId: string;
@@ -22,8 +22,6 @@ export const PostPage = ({ postId }: PostPageProps) => {
     return <div>Not logged in</div>;
   }
 
-  const role = session.role;
-
   const handleDeleteDoc = async (documentId: string) => {
     await deleteDocument.mutateAsync({ postId, documentId });
     refetchImages();
@@ -38,7 +36,7 @@ export const PostPage = ({ postId }: PostPageProps) => {
           images={images}
           documents={documents}
           handleDeleteDoc={handleDeleteDoc}
-          role={role}
+          userId={session.userId}
         />
       )}
     </div>

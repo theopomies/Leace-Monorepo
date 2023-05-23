@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
-import { Attribute, Post, Role } from "@prisma/client";
+import { Attribute, Post } from "@prisma/client";
 import { Header } from "../users/Header";
 import Link from "next/link";
 import { DeletePostButton } from "../users/posts/DeletePostButton";
@@ -40,7 +40,7 @@ interface DisplayPostProps {
   images: Image;
   documents: Document;
   handleDeleteDoc: (documentId: string) => Promise<void>;
-  role: Role | undefined;
+  userId: string;
 }
 
 export function DisplayPost({
@@ -49,7 +49,7 @@ export function DisplayPost({
   images,
   documents,
   handleDeleteDoc,
-  role,
+  userId,
 }: DisplayPostProps) {
   if (!post) {
     return <div>Not found</div>;
@@ -116,7 +116,7 @@ export function DisplayPost({
             <h2 className="mt-4 text-xl">Description:</h2>
             <p className="pt-1">{post.desc}</p>
           </div>
-          {images && images.length > 0 && (
+          {images && images.length > 0 && post.createdById === userId && (
             <div className="border-t py-5 text-center">
               <h2 className="mb-5 text-xl">Images:</h2>
               <div className="flex flex-wrap justify-center gap-4">
@@ -129,7 +129,7 @@ export function DisplayPost({
               </div>
             </div>
           )}
-          {documents && documents.length > 0 && (
+          {documents && documents.length > 0 && post.createdById === userId && (
             <div className="border-t py-5 text-center">
               <h2 className="mb-5 text-xl">Documents:</h2>
               <DocumentsList
@@ -139,7 +139,7 @@ export function DisplayPost({
             </div>
           )}
           <div className="mt-5 flex justify-center gap-6">
-            {(role == Role.OWNER || role == Role.AGENCY) && (
+            {post.createdById === userId && (
               <>
                 <Link
                   className="rounded bg-indigo-500 px-4 py-3 font-bold text-white hover:bg-indigo-600 active:bg-indigo-700"
