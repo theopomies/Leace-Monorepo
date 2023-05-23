@@ -1,11 +1,8 @@
-import React from 'react'
-import { Portal } from '../../components/Chat/Portal';
+import React from "react";
+import { Portal } from "../../components/Chat/Portal";
 
 const Chat = () => {
+  return <Portal />;
+};
 
-    return (
-        <Portal />
-    );
-}
-
-export default Chat
+export default Chat;

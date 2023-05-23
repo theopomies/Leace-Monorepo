@@ -1,25 +1,49 @@
 import { useNavigation } from "@react-navigation/native";
-import { View, Image, Text, TouchableOpacity, ImageSourcePropType } from "react-native";
-import { TabStackParamList } from '../../navigation/TabNavigator';
+import {
+  View,
+  Image,
+  Text,
+  TouchableOpacity,
+  ImageSourcePropType,
+} from "react-native";
+import { TabStackParamList } from "../../navigation/TabNavigator";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
-const ClientCard = ({ firstName, lastName, email, image }: { firstName: string | null, lastName: string | null, email: string | null, image: ImageSourcePropType }) => {
+const ClientCard = ({
+  firstName,
+  lastName,
+  email,
+  image,
+  id,
+}: {
+  firstName: string | null;
+  lastName: string | null;
+  email: string | null;
+  image: ImageSourcePropType;
+  id: string;
+}) => {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<TabStackParamList>>();
 
-    const navigation = useNavigation<NativeStackNavigationProp<TabStackParamList>>();
-
-    return (
-        <TouchableOpacity className="w-full max-w-400 rounded-2xl overflow-hidden border border-gray-300" onPress={() => navigation.navigate("Chat")}>
-            <View className="flex-row items-center p-2">
-                <Image source={image} className="w-20 h-20 rounded-full mr-10" />
-                <View className="flex-1">
-                    <Text className="text-18 font-bold mb-5">{firstName} {lastName}</Text>
-                    <Text className="text-14 text-gray-600 mb-5">{email}</Text>
-                </View>
-            </View>
-            <View className="overflow-hidden rounded-10 border-1 border-gray-300" />
-        </TouchableOpacity>
-    )
+  return (
+    <TouchableOpacity
+      className="max-w-400 w-full overflow-hidden rounded-2xl border border-gray-300"
+      onPress={() => {
+        navigation.navigate("Portal", { id: id });
+      }}
+    >
+      <View className="flex-row items-center p-2">
+        <Image source={image} className="mr-10 h-20 w-20 rounded-full" />
+        <View className="flex-1">
+          <Text className="text-18 mb-5 font-bold">
+            {firstName} {lastName}
+          </Text>
+          <Text className="text-14 mb-5 text-gray-600">{email}</Text>
+        </View>
+      </View>
+      <View className="rounded-10 border-1 overflow-hidden border-gray-300" />
+    </TouchableOpacity>
+  );
 };
 
-
-export default ClientCard
+export default ClientCard;

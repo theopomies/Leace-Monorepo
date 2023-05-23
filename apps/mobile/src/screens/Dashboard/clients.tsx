@@ -1,35 +1,50 @@
-import { View, Text, ScrollView } from 'react-native'
-import React from 'react'
+import { View, Text, ScrollView } from "react-native";
+import React from "react";
 
-import { trpc } from '../../utils/trpc';
+import { trpc } from "../../utils/trpc";
 
-import ShowProfile from '../../components/ShowProfile';
-import { ClientCard } from '../../components/Card';
+import ShowProfile from "../../components/ShowProfile";
+import { ClientCard } from "../../components/Card";
+import { useRoute, RouteProp } from "@react-navigation/native";
+import { TabStackParamList } from "../../navigation/TabNavigator";
 
 const Clients = () => {
+  const route = useRoute<RouteProp<TabStackParamList, "Clients">>();
+  const userId = route.params?.userId;
 
-    const rs = trpc.relationship.getMatch.useQuery()
+  const rs = trpc.relationship.getMatchesForOwner.useQuery({ userId });
 
-
-    return (
-        <ScrollView className="mt-20 mx-5" showsVerticalScrollIndicator={false}>
-            <View>
-                <View className="flex-row justify-center items-center ml-10">
-                    <Text className="text-center font-p font-bold text-3xl	text-custom mx-auto mb-10">CLIENTS</Text>
-                    <ShowProfile path={require("../../../assets/blank.png")} />
-                </View>
-                {rs.data ?
-                    rs.data.map(item => (
-                        <View key={item.id} className="mb-2 items-center">
-                            <ClientCard firstName={item.post.createdBy.firstName} lastName={item.post.createdBy.lastName} email={item.post.createdBy.email} image={require("../../../assets/blank.png")} />
-                        </View>
-                    ))
-                    :
-                    <></>
-                }
+  return (
+    <ScrollView className="mx-5 mt-20" showsVerticalScrollIndicator={false}>
+      <View>
+        <View className="ml-10 flex-row items-center justify-center">
+          <Text className="font-p text-custom mx-auto mb-10	text-center text-3xl font-bold">
+            CLIENTS
+          </Text>
+          <ShowProfile path={require("../../../assets/blank.png")} />
+        </View>
+        {rs.data ? (
+          rs.data.map((item) => (
+            <View key={item.id} className="mb-2 items-center">
+              <ClientCard
+                firstName={item.post.createdBy.firstName}
+                lastName={item.post.createdBy.lastName}
+                email={item.post.createdBy.email}
+                image={require("../../../assets/blank.png")}
+                id={item.id}
+              />
             </View>
-        </ScrollView>
-    )
-}
+          ))
+        ) : (
+          <View className="bottom-80 left-0 right-0 top-80 items-center justify-center">
+            <Text className="items-center justify-center text-center text-3xl font-bold">
+              No clients added
+            </Text>
+          </View>
+        )}
+      </View>
+    </ScrollView>
+  );
+};
 
-export default Clients
+export default Clients;

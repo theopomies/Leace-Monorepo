@@ -1,36 +1,54 @@
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 
-import { UserRoles } from '../utils/enum';
+import { UserRoles } from "../utils/enum";
 
 import { trpc } from "../utils/trpc";
 import { Tenant, Provider } from "../components/Navigation";
 import { View, ActivityIndicator } from "react-native";
+import { Button } from "../components/Button";
+import { useAuth } from "@clerk/clerk-expo";
+
+const SignOut = () => {
+  const { signOut } = useAuth();
+  return (
+    <View>
+      <Button
+        title="Sign Out"
+        onPress={() => {
+          signOut();
+        }}
+        color={"custom"}
+      />
+    </View>
+  );
+};
 
 export type TabStackParamList = {
   Role: undefined;
   Profile: undefined;
-  Stack: undefined;
+  Stack: { userId: string };
   Match: undefined;
-  Dashboard: undefined;
+  Dashboard: { userId: string };
 
   Notifications: undefined;
 
-  MatchChat: undefined;
+  MatchChat: { id: string };
 
-  CreatePost: undefined;
-  CreatePostAttributes: { postId: string };
-  ViewPost: undefined;
-  PostDetails: { postId: string };
+  CreatePost: { userId: string };
+  CreatePostAttributes: { postId: string; userId: string };
+  ViewPost: { userId: string };
+  PostDetails: { postId: string; userId: string };
 
-  Expenses: undefined;
-  Income: undefined;
-  Clients: undefined;
-  Occupied: undefined;
-  Available: undefined;
-  Chat: undefined;
+  Expenses: { userId: string };
+  Income: { userId: string };
+  Clients: { userId: string };
+  Occupied: { userId: string };
+  Available: { userId: string };
+  Chat: { id: string };
+  Portal: { id: string };
 
-  Contract: undefined;
+  Contract: { id: string };
 };
 
 const TabNavigator = () => {
@@ -48,24 +66,28 @@ const TabNavigator = () => {
 
   useEffect(() => {
     const getSession = async () => {
-      setRole(session?.role as keyof typeof UserRoles);
-
+      if (session) {
+        setRole(session.role as keyof typeof UserRoles);
+      }
     };
 
     getSession();
   }, [session]);
 
-  if (!session && !role) {
-    return <View className="flex-1 justify-center items-center">
-      <ActivityIndicator size="large" color={"#002642"} />
-    </View>;
+  if (!session || !role) {
+    return (
+      <View className="flex-1 items-center justify-center">
+        <ActivityIndicator size="large" color={"#002642"} />
+
+        <SignOut />
+      </View>
+    );
   }
 
   if (role === UserRoles.TENANT) {
-    return <Tenant role={role} />
+    return <Tenant role={role} />;
   }
-
-  return <Provider role={role} />
+  return <Provider role={role} userId={session?.userId as string} />;
 };
 
 export default TabNavigator;
