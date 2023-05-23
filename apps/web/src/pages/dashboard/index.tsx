@@ -9,7 +9,7 @@ export default function TestNewDashboard() {
 
   if (isLoading) return <Loader />;
   return (
-    <LoggedLayout title="Dashboard | Leace" roles={[Role.AGENCY]}>
+    <LoggedLayout title="Dashboard | Leace" roles={[Role.AGENCY, Role.OWNER]}>
       {!!session && <Dashboard userId={session.userId} />}
     </LoggedLayout>
   );

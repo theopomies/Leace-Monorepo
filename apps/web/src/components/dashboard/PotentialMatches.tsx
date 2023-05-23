@@ -14,7 +14,6 @@ export const PotentialMatches = ({ userId }: TenantListProps) => {
   const { data: user } = trpc.user.getUserById.useQuery({
     userId: userId ?? "",
   });
-
   if (relationships && relationships.relationship) {
     return (
       <div className="container mx-auto p-4">
