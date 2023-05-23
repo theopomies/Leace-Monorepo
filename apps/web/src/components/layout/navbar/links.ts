@@ -14,7 +14,7 @@ export function getLinks(userId: string): {
     {
       href: `/dashboard`,
       label: "Dashboard",
-      roles: [Role.AGENCY],
+      roles: [Role.AGENCY, Role.OWNER],
     },
     {
       href: `/users/${userId}/matches`,

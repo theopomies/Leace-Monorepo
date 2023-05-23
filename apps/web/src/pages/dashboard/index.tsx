@@ -6,15 +6,12 @@ import { Dashboard } from "../../components/dashboard/Dashboard";
 
 export default function DashboardPage() {
   const { data: session, isLoading } = trpc.auth.getSession.useQuery();
-  const { data: user } = trpc.user.getUserById.useQuery({
-    userId: session?.userId ?? "",
-  });
 
   if (isLoading) return <Loader />;
 
   return (
-    <LoggedLayout title="Dashboard | Leace" roles={[Role.AGENCY]}>
-      {!!session && <Dashboard user={user} />}
+    <LoggedLayout title="Dashboard | Leace" roles={[Role.AGENCY, Role.OWNER]}>
+      {!!session && <Dashboard userId={session.userId} />}
     </LoggedLayout>
   );
 }
