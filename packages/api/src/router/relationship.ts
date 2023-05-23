@@ -59,7 +59,7 @@ export const relationshipRouter = router({
         });
         if (!created) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
 
-        return created.relationType;
+        return created;
       }
 
       const updated = await ctx.prisma.relationship.update({
@@ -74,7 +74,7 @@ export const relationshipRouter = router({
       });
       if (!chat) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
 
-      return updated.relationType;
+      return updated;
     }),
   dislikeTenantForPost: protectedProcedure([Role.AGENCY, Role.OWNER])
     .input(
@@ -165,7 +165,7 @@ export const relationshipRouter = router({
 
         if (!created) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
 
-        return created.relationType;
+        return created;
       }
 
       const updated = await ctx.prisma.relationship.update({
@@ -181,7 +181,7 @@ export const relationshipRouter = router({
 
       if (!chat) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
 
-      return updated.relationType;
+      return updated;
     }),
   dislikePostForTenant: protectedProcedure([Role.TENANT])
     .input(
