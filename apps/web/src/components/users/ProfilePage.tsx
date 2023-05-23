@@ -4,6 +4,7 @@ import { trpc } from "../../utils/trpc";
 import { Role } from "@prisma/client";
 import Link from "next/link";
 import { Loader } from "../shared/Loader";
+import { Button } from "../shared/button/Button";
 
 export interface ProfilePageProps {
   userId: string;
@@ -199,12 +200,18 @@ export const ProfilePage = ({ userId }: ProfilePageProps) => {
                 )}
               </form>
               {session && userId == session.userId && (
-                <div>
+                <div className="space-x-4">
                   <Link
                     className="rounded bg-indigo-500 px-4 py-3 font-bold text-white hover:bg-indigo-600 active:bg-indigo-700"
                     href={`/users/${userId}/update`}
                   >
                     Modify
+                  </Link>
+                  <Link
+                    className="rounded bg-indigo-500 px-4 py-3 font-bold text-white hover:bg-indigo-600 active:bg-indigo-700"
+                    href={`/users/${userId}/delete`}
+                  >
+                    Delete Account
                   </Link>
                 </div>
               )}
