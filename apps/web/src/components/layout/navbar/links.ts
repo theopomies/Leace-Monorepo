@@ -18,9 +18,9 @@ export function getLinks(userId: string): {
       roles: [Role.OWNER, Role.AGENCY, Role.TENANT],
     },
     {
-      href: `/dashboard/main`,
+      href: `/dashboard`,
       label: "Dashboard",
-      roles: [Role.AGENCY],
+      roles: [Role.AGENCY, Role.OWNER],
     },
     {
       href: `/users/${userId}/matches`,
@@ -60,8 +60,7 @@ export function getLinks(userId: string): {
     {
       href: "/premium",
       label: "Premium",
-      roles: [Role.OWNER, Role.AGENCY, Role.TENANT],
-      hidePremium: true,
+      roles: [Role.OWNER, Role.AGENCY],
     },
   ];
 }

@@ -1,22 +1,23 @@
 import Link from "next/link";
 import { trpc } from "../../utils/trpc";
 import { TenantBar } from "../users/UserBar";
+import { Header } from "../users/Header";
 
 export interface TenantListProps {
   userId: string;
 }
 
-export const OccupiedClientList = ({ userId }: TenantListProps) => {
+export const PotentialMatches = ({ userId }: TenantListProps) => {
   const { data: relationships } = trpc.relationship.getLikesForOwner.useQuery({
     userId,
   });
   const { data: user } = trpc.user.getUserById.useQuery({
     userId: userId ?? "",
   });
-
   if (relationships && relationships.relationship) {
     return (
       <div className="container mx-auto p-4">
+        <Header heading={"Potential Matches"} />
         <>
           {relationships.relationship.map(
             ({
@@ -61,7 +62,7 @@ export const OccupiedClientList = ({ userId }: TenantListProps) => {
         </div>
         <Link
           className="bottom-0 left-0 right-0 flex items-center justify-center rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
-          href={`/dashboard/main`}
+          href={`/dashboard`}
         >
           Return
         </Link>
