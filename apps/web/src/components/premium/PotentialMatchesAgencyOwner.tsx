@@ -7,7 +7,7 @@ export interface TenantListProps {
   userId: string;
 }
 
-export const PotentialMatches = ({ userId }: TenantListProps) => {
+export const PotentialMatchesAgencyOwner = ({ userId }: TenantListProps) => {
   const { data: relationships } = trpc.relationship.getLikesForOwner.useQuery({
     userId,
   });
@@ -62,7 +62,7 @@ export const PotentialMatches = ({ userId }: TenantListProps) => {
         </div>
         <Link
           className="bottom-0 left-0 right-0 flex items-center justify-center rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
-          href={`/dashboard`}
+          href={`/`}
         >
           Return
         </Link>

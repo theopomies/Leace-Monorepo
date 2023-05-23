@@ -35,18 +35,18 @@ export const PostCard = ({ postId, setUserId }: PostProps) => {
       {post.title && (
         <p className="mb-2 text-3xl font-semibold">{post.title}</p>
       )}
-      <motion.div
-        layout
-        className="relative flex items-center justify-center overflow-hidden rounded-md bg-gray-100"
-      >
-        {/* for example */}
-        <SlideShow
-          images={[
-            "https://ca-times.brightspotcdn.com/dims4/default/b13999c/2147483647/strip/false/crop/2000x1310+0+0/resize/1486x973!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F64%2Ffa%2Fc73b21106f904cb4a6893bedbe7c%2Fla-home-of-the-week-20180425-005",
-            "https://foreignbuyerswatch.com/wp-content/uploads/2019/07/Capture-d%E2%80%99e%CC%81cran-2019-07-26-a%CC%80-13.14.52.png",
-          ]}
-        />
-      </motion.div>
+      <div className="flex justify-center">
+        {images && images.length > 0 && (
+          <motion.div
+            layout
+            className="relative flex h-[500px] max-w-[2/3] overflow-hidden rounded-md"
+          >
+            <div className="flex h-full w-full items-center justify-center">
+              <SlideShow images={images.map((image) => image.url)} />
+            </div>
+          </motion.div>
+        )}
+      </div>
       {post.attribute && (
         <div className="mt-2">
           <div className="flex justify-between">

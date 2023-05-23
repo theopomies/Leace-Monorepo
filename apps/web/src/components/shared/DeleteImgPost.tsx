@@ -1,7 +1,7 @@
 import axios from "axios";
-import { trpc } from "../../../utils/trpc";
-import { Cross } from "../Icons";
-import { Button } from "../../shared/button/Button";
+import { trpc } from "../../utils/trpc";
+import { Button } from "./button/Button";
+import { Cross } from "../moderation/Icons";
 
 export interface DeletePostImgProps {
   postId: string;
@@ -10,11 +10,14 @@ export interface DeletePostImgProps {
 
 export const DeletePostImg = ({ postId, id }: DeletePostImgProps) => {
   const utils = trpc.useContext();
-  const mut = trpc.moderation.image.deleteSignedPostUrl.useMutation();
+  const mut = trpc.image.deleteSignedPostUrl.useMutation({
+    onSuccess: () => {
+      utils.image.getSignedPostUrl.invalidate();
+    },
+  });
   const onClickDelete = async () => {
     await mut.mutateAsync({ postId: postId, imageId: id }).then(async (url) => {
       await axios.delete(url);
-      utils.moderation.image.getSignedPostUrl.invalidate();
     });
   };
 

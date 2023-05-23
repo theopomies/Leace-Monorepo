@@ -4,6 +4,7 @@ import Link from "next/link";
 import { trpc } from "../../../utils/trpc";
 import { PostType, RelationType } from "@prisma/client";
 import { Button } from "../../shared/button/Button";
+import { User, Attribute } from "@prisma/client";
 export interface PostBarProps {
   postId: string;
   title: string;
@@ -12,6 +13,11 @@ export interface PostBarProps {
   relationType: RelationType;
   userId: string;
   relationshipId: string;
+  user:
+    | (User & {
+        attribute: Attribute | null;
+      })
+    | undefined;
 }
 
 export const PostBar = ({
@@ -22,6 +28,7 @@ export const PostBar = ({
   relationType,
   userId,
   relationshipId,
+  user,
 }: PostBarProps) => {
   const utils = trpc.useContext();
   const { data: img } = trpc.image.getSignedPostUrl.useQuery(postId);
@@ -31,39 +38,49 @@ export const PostBar = ({
         utils.relationship.getMatchesForTenant.invalidate({ userId });
       },
     });
+  const likePostForTenant = trpc.relationship.likePostForTenant.useMutation({
+    onSuccess: () => {
+      utils.relationship.getLikesForTenant.invalidate({ userId });
+    },
+  });
 
   const handleDeleteMatch = async () => {
     await deleteMatchMutation.mutateAsync({ userId, relationshipId });
   };
+  const handleLikeMatch = async () => {
+    await likePostForTenant.mutateAsync({
+      userId: userId,
+      postId: postId,
+    });
+  };
 
   return (
     <div className="mx-auto my-5 max-w-md overflow-hidden rounded-xl bg-white shadow-md md:max-w-2xl">
-      <div className="md:flex">
-        {img && img[0] && (
-          <div className="md:shrink-0">
-            <img
-              className="h-48 w-full object-cover md:h-full md:w-48"
-              src={img[0].url}
-              alt="Modern building architecture"
-            />
-          </div>
-        )}
+      <Link href={`/posts/${postId}`}>
+        <div className="md:flex">
+          {img && img[0] && (
+            <div className="w-2/5">
+              <img
+                className="h-full object-cover"
+                src={img[0].url}
+                alt="Modern building architecture"
+              />
+            </div>
+          )}
 
-        <div className="p-8">
-          <div className="text-sm font-semibold uppercase tracking-wide text-indigo-500">
-            {title}
+          <div className="p-8">
+            <div className="text-sm font-semibold uppercase tracking-wide text-indigo-500">
+              {title}
+            </div>
+            <p className="mt-1 block text-lg font-medium leading-tight text-black">
+              {desc}
+            </p>
+            <p className="mt-2 text-slate-500">
+              {type == PostType.RENTED ? "Rented ✅" : "Available"}
+            </p>
           </div>
-          <Link
-            href={`/posts/${postId}`}
-            className="mt-1 block text-lg font-medium leading-tight text-black hover:underline"
-          >
-            {desc}
-          </Link>
-          <p className="mt-2 text-slate-500">
-            {type == PostType.RENTED ? "Rented ✅" : "Available"}
-          </p>
         </div>
-      </div>
+      </Link>
       <div className="flex items-center justify-between bg-gray-100 px-8 py-4">
         <Button theme="danger" onClick={handleDeleteMatch}>
           Delete Match
@@ -75,6 +92,11 @@ export const PostBar = ({
           >
             Chat with Match
           </Link>
+        )}
+        {user && user.isPremium && relationType != RelationType.MATCH && (
+          <Button theme="success" onClick={handleLikeMatch}>
+            Like Match
+          </Button>
         )}
       </div>
     </div>
