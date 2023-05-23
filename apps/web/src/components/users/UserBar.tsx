@@ -63,30 +63,29 @@ export const TenantBar = ({
 
   return (
     <div className="mx-auto my-5 max-w-md overflow-hidden rounded-xl bg-white shadow-md md:max-w-2xl">
-      <div className="md:flex">
-        <div className="md:shrink-0">
-          <img
-            className="h-48 w-full object-cover md:h-full md:w-48"
-            src={img}
-            alt="Modern building architecture"
-          />
-        </div>
-        <div className="p-8">
-          <div className="text-sm font-semibold uppercase tracking-wide text-indigo-500">
-            {firstname}
+      <Link href={`/users/${otherUserId}`}>
+        <div className="md:flex">
+          <div className="md:shrink-0">
+            <img
+              className="h-48 w-full object-cover md:h-full md:w-48"
+              src={img}
+              alt="Modern building architecture"
+            />
           </div>
-          <Link
-            href={`/users/${otherUserId}`}
-            className="mt-1 block text-lg font-medium leading-tight text-black hover:underline"
-          >
-            {lastName}
-          </Link>
-          <p className="mt-2 text-slate-500">{desc}</p>
+          <div className="p-8">
+            <div className="text-sm font-semibold uppercase tracking-wide text-indigo-500">
+              {firstname}
+            </div>
+            <p className="mt-1 block text-lg font-medium leading-tight text-black">
+              {lastName}
+            </p>
+            <p className="mt-2 text-slate-500">{desc}</p>
+          </div>
         </div>
-      </div>
-      <div className="flex text-sm font-semibold uppercase tracking-wide">
-        <p className="font-black text-black"> {title} </p>
-      </div>
+        <div className="flex text-sm font-semibold uppercase tracking-wide">
+          <p className="font-black text-black"> {title} </p>
+        </div>
+      </Link>
       <div className="flex items-center justify-between bg-gray-100 px-8 py-4">
         <Button theme="danger" onClick={handleDeleteMatch}>
           Delete Match

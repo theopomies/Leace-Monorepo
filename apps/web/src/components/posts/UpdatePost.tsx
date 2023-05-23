@@ -10,6 +10,7 @@ import { Header } from "../../components/users/Header";
 import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
 import { PostForm } from "./PostForm";
+import axios from "axios";
 
 export interface UpdatePostProps {
   postId: string;
@@ -38,6 +39,16 @@ export const UpdatePost = ({ postId }: UpdatePostProps) => {
   const [pool, setPool] = useState(false);
   const [size, setSize] = useState(0);
   const [price, setPrice] = useState(0);
+
+  const { data: imagesGet } = trpc.image.getSignedPostUrl.useQuery(postId);
+  const uploadImage = trpc.image.putSignedPostUrl.useMutation();
+  const [images, setImages] = useState<File[] | undefined>();
+
+  const { data: documentsGet } = trpc.document.getSignedUrl.useQuery({
+    postId,
+  });
+  const uploadDocument = trpc.document.putSignedUrl.useMutation();
+  const [documents, setDocuments] = useState<File[] | undefined>();
 
   useEffect(() => {
     if (post) {
@@ -83,7 +94,33 @@ export const UpdatePost = ({ postId }: UpdatePostProps) => {
       pool,
       disability,
     });
-    router.push(`/posts/${postId}`);
+    if (images && images.length > 0) {
+      images.map(async (image) => {
+        await uploadImage
+          .mutateAsync({
+            postId,
+            fileType: image.type,
+          })
+          .then((url) => {
+            axios.put(url, image);
+          });
+      });
+    }
+    if (documents && documents.length > 0) {
+      documents.map(async (document) => {
+        await uploadDocument
+          .mutateAsync({
+            postId,
+            fileType: document.type,
+          })
+          .then((url) => {
+            if (url) axios.put(url, document);
+          });
+      });
+    }
+    setTimeout(() => {
+      router.push(`/posts/${postId}`);
+    }, 500);
   };
 
   const handleChange =
@@ -108,6 +145,22 @@ export const UpdatePost = ({ postId }: UpdatePostProps) => {
     e.preventDefault();
     router.back();
   };
+
+  const handleImages =
+    (setter: Dispatch<SetStateAction<File[] | undefined>>) =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (event.target.files && event.target.files[0]) {
+        setter(Array.from(event.target.files));
+      }
+    };
+
+  const handleDocuments =
+    (setter: Dispatch<SetStateAction<File[] | undefined>>) =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (event.target.files && event.target.files[0]) {
+        setter(Array.from(event.target.files));
+      }
+    };
 
   return (
     <div className="w-full">
@@ -147,6 +200,12 @@ export const UpdatePost = ({ postId }: UpdatePostProps) => {
         size={size}
         setPrice={handleNumberChange(setPrice)}
         price={price}
+        setImages={handleImages(setImages)}
+        images={images}
+        imagesGet={imagesGet}
+        setDocuments={handleDocuments(setDocuments)}
+        documents={documents}
+        documentsGet={documentsGet}
       />
     </div>
   );

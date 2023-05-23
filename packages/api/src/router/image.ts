@@ -61,7 +61,8 @@ export const imageRouter = router({
             Key: `posts/${getPost.id}/images/${image.id}.${image.ext}`,
           };
           const command = new GetObjectCommand(bucketParams);
-          return { ...image, url: await getSignedUrl(ctx.s3Client, command) };
+          const url = await getSignedUrl(ctx.s3Client, command);
+          return { ...image, url };
         }),
       );
     }),
