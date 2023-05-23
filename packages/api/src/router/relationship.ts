@@ -445,32 +445,42 @@ export const relationshipRouter = router({
 
       if (!user) throw new TRPCError({ code: "NOT_FOUND" });
 
-      if (user.role != Role.AGENCY && user.role != Role.OWNER) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "User provided can't create post",
-        });
-      }
-
       if (!input.postType) {
-        const relationship = await ctx.prisma.relationship.findMany({
-          where: { post: { createdById: userId } },
-          include: { post: { include: { attribute: true } }, user: true },
+        const posts = await ctx.prisma.post.findMany({
+          where: { createdById: userId },
         });
+        if (!posts) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
 
-        if (!relationship)
-          throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+        const data = await Promise.all(
+          posts.map(async (post) => {
+            const relationship = await ctx.prisma.relationship.findFirst({
+              where: { postId: post.id, lease: { isSigned: true } },
+              include: { post: { include: { attribute: true } }, user: true },
+            });
 
-        return relationship;
+            return { post: post, user: relationship?.user };
+          }),
+        );
+
+        return data;
       }
 
-      const relationship = await ctx.prisma.relationship.findMany({
-        where: { post: { createdById: userId, type: input.postType } },
-        include: { post: { include: { attribute: true } }, user: true },
+      const posts = await ctx.prisma.post.findMany({
+        where: { createdById: userId, type: input.postType },
       });
+      if (!posts) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
 
-      if (!relationship) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+      const data = await Promise.all(
+        posts.map(async (post) => {
+          const relationship = await ctx.prisma.relationship.findFirst({
+            where: { postId: post.id, lease: { isSigned: true } },
+            include: { post: { include: { attribute: true } }, user: true },
+          });
 
-      return relationship;
+          return { post: post, user: relationship?.user };
+        }),
+      );
+
+      return data;
     }),
 });
