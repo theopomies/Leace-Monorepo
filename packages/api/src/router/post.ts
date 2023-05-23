@@ -169,7 +169,7 @@ export const postRouter = router({
 
       return posts;
     }),
-  getRentIncomeByUserId: protectedProcedure([Role.AGENCY, Role.OWNER])
+  RentDataAgencyByUserId: protectedProcedure([Role.AGENCY, Role.OWNER])
     .input(z.object({ userId: z.string() }))
     .query(async ({ ctx, input }) => {
       const userId = getId({ ctx, userId: input.userId });
@@ -178,26 +178,26 @@ export const postRouter = router({
 
       if (!user) throw new TRPCError({ code: "NOT_FOUND" });
 
-      if (user.role != Role.AGENCY && user.role != Role.OWNER)
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "User provided does not fit in this scope",
-        });
+      const currentDate = new Date();
 
-      const posts = await ctx.prisma.post.findMany({
-        where: { createdById: userId, type: PostType.RENTED },
-        include: { attribute: true },
+      const leases = await ctx.prisma.lease.findMany({
+        where: {
+          createdById: ctx.auth.userId,
+          isSigned: true,
+          endDate: { lte: currentDate },
+        },
       });
 
-      if (!posts) throw new TRPCError({ code: "NOT_FOUND" });
+      if (!leases) throw new TRPCError({ code: "NOT_FOUND" });
 
-      let total = 0;
-      posts.map((post) => {
-        if (post.attribute && post.attribute.price)
-          total += post.attribute.price;
+      let income = 0;
+      let expense = 0;
+      leases.map((lease) => {
+        income += lease.rentCost;
+        expense += lease.utilitiesCost;
       });
 
-      return total;
+      return { income, expense };
     }),
   getRentExpenseByUserId: protectedProcedure([Role.TENANT])
     .input(z.object({ userId: z.string() }))
@@ -208,33 +208,24 @@ export const postRouter = router({
 
       if (!user) throw new TRPCError({ code: "NOT_FOUND" });
 
-      if (user.role != Role.TENANT)
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "User provided does not fit in this scope",
-        });
+      const currentDate = new Date();
 
-      const relationship = await ctx.prisma.relationship.findMany({
+      const relationship = await ctx.prisma.relationship.findFirst({
         where: {
           userId: userId,
           relationType: RelationType.MATCH,
           post: { type: PostType.RENTED },
-          lease: { isSigned: true },
+          lease: { isSigned: true, endDate: { lte: currentDate } },
         },
-        include: { post: { include: { attribute: true } } },
+        include: { lease: true },
       });
 
-      let total = 0;
+      if (!relationship || !relationship.lease)
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
 
-      relationship.map((relationship) => {
-        if (
-          relationship.post &&
-          relationship.post.attribute &&
-          relationship.post.attribute.price
-        )
-          total += relationship.post.attribute.price;
-      });
-
-      return total;
+      return {
+        rentCost: relationship.lease.rentCost,
+        utilitiesCost: relationship.lease.utilitiesCost,
+      };
     }),
 });
