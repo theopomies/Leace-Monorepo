@@ -1,4 +1,4 @@
-import { Document, Role } from "@prisma/client";
+import { Document, Role, RelationType } from "@prisma/client";
 import { protectedProcedure, router } from "../trpc";
 import { z } from "zod";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
@@ -37,7 +37,27 @@ export const documentRouter = router({
   getSignedUserUrl: protectedProcedure([Role.TENANT, Role.AGENCY, Role.OWNER])
     .input(z.string())
     .query(async ({ ctx, input }) => {
-      const userId = input ? input : ctx.auth.userId;
+      const userId = input;
+
+      if (userId !== ctx.auth.userId) {
+        const getPost = await ctx.prisma.post.findFirst({
+          where: {
+            createdById: ctx.auth.userId,
+            relationships: { some: { userId: userId } },
+          },
+        });
+        if (!getPost) throw new TRPCError({ code: "NOT_FOUND" });
+
+        const relationShip = await ctx.prisma.relationship.findFirst({
+          where: { userId: input, postId: getPost.id },
+        });
+        if (!relationShip) throw new TRPCError({ code: "NOT_FOUND" });
+
+        if (relationShip.relationType !== RelationType.MATCH) {
+          throw new TRPCError({ code: "UNAUTHORIZED" });
+        }
+      }
+
       const documents = await ctx.prisma.document.findMany({
         where: {
           userId: userId,
@@ -105,6 +125,7 @@ export const documentRouter = router({
           where: { id: input.postId },
         });
         if (!getPost) throw new TRPCError({ code: "NOT_FOUND" });
+
         const created = await ctx.prisma.document.create({
           data: { id: id, postId: getPost.id, ext: ext },
         });
@@ -147,12 +168,25 @@ export const documentRouter = router({
           where: { id: input.postId },
         });
         if (!getPost) throw new TRPCError({ code: "NOT_FOUND" });
+
+        if (getPost.createdById !== ctx.auth.userId) {
+          const relationShip = await ctx.prisma.relationship.findFirst({
+            where: { userId: ctx.auth.userId, postId: getPost.id },
+          });
+          if (!relationShip) throw new TRPCError({ code: "NOT_FOUND" });
+
+          if (relationShip.relationType !== RelationType.MATCH) {
+            throw new TRPCError({ code: "UNAUTHORIZED" });
+          }
+        }
+
         const documents = await ctx.prisma.document.findMany({
           where: {
             postId: getPost.id,
           },
         });
         if (!documents) throw new TRPCError({ code: "NOT_FOUND" });
+
         return await Promise.all(
           documents.map(async (document: Document) => {
             const bucketParams = {
