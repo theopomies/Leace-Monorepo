@@ -4,6 +4,7 @@ import Link from "next/link";
 import { trpc } from "../../../utils/trpc";
 import { PostType, RelationType } from "@prisma/client";
 import { Button } from "../../shared/button/Button";
+import { User, Attribute } from "@prisma/client";
 export interface PostBarProps {
   postId: string;
   title: string;
@@ -12,6 +13,11 @@ export interface PostBarProps {
   relationType: RelationType;
   userId: string;
   relationshipId: string;
+  user:
+    | (User & {
+        attribute: Attribute | null;
+      })
+    | undefined;
 }
 
 export const PostBar = ({
@@ -22,6 +28,7 @@ export const PostBar = ({
   relationType,
   userId,
   relationshipId,
+  user,
 }: PostBarProps) => {
   const utils = trpc.useContext();
   const { data: img } = trpc.image.getSignedPostUrl.useQuery(postId);
@@ -31,9 +38,20 @@ export const PostBar = ({
         utils.relationship.getMatchesForTenant.invalidate({ userId });
       },
     });
+  const likePostForTenant = trpc.relationship.likePostForTenant.useMutation({
+    onSuccess: () => {
+      utils.relationship.getLikesForTenant.invalidate({ userId });
+    },
+  });
 
   const handleDeleteMatch = async () => {
     await deleteMatchMutation.mutateAsync({ userId, relationshipId });
+  };
+  const handleLikeMatch = async () => {
+    await likePostForTenant.mutateAsync({
+      userId: userId,
+      postId: postId,
+    });
   };
 
   return (
@@ -74,6 +92,11 @@ export const PostBar = ({
           >
             Chat with Match
           </Link>
+        )}
+        {user && user.isPremium && relationType != RelationType.MATCH && (
+          <Button theme="success" onClick={handleLikeMatch}>
+            Like Match
+          </Button>
         )}
       </div>
     </div>
