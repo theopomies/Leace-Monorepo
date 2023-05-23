@@ -30,7 +30,7 @@ const PremiumPage = () => {
 
   if (!me?.isPremium) {
     return <PremiumPageRaw userId={session.userId} />;
-  } else {
-    return <PotentialMatches userId={session.userId} />;
   }
+
+  return <PotentialMatches userId={session.userId} />;
 };
