@@ -215,19 +215,21 @@ export const ProfilePage = ({ userId }: ProfilePageProps) => {
             )}
           </form>
           {session && userId == session.userId && (
-            <Link href={`/users/${userId}/update`}>
-              <Button>Modify</Button>
-            </Link>
+            <>
+              <Link href={`/users/${userId}/update`}>
+                <Button>Modify</Button>
+              </Link>
+              <Button
+                className="scale-75 rounded bg-red-500 px-4 font-bold text-white hover:bg-red-600 active:bg-red-700"
+                onClick={(e) => {
+                  e.preventDefault();
+                  deleteUser.mutate({ userId });
+                }}
+              >
+                Delete Account
+              </Button>
+            </>
           )}
-          <Button
-            className="scale-75 rounded bg-red-500 px-4 font-bold text-white hover:bg-red-600 active:bg-red-700"
-            onClick={(e) => {
-              e.preventDefault();
-              deleteUser.mutate({ userId });
-            }}
-          >
-            Delete Account
-          </Button>
         </div>
       </div>
     </div>
