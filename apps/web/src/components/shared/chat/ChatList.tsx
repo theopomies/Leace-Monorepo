@@ -6,9 +6,8 @@ import {
   User,
   Role,
   Conversation,
-  ConversationType,
 } from "@prisma/client";
-import { SupportButton } from "./SupportButton";
+// import { SupportButton } from "./SupportButton";
 import Link from "next/link";
 
 export type Relationships =
@@ -30,7 +29,6 @@ export type SupportRelationships =
 export interface ChatListProps {
   userId: string;
   conversationId: string;
-  setConversationId: React.Dispatch<React.SetStateAction<string>>;
   role: Role;
   relationships?: Relationships;
   supportRelationships?: SupportRelationships;
@@ -40,7 +38,6 @@ export interface ChatListProps {
 export const ChatList = ({
   userId,
   conversationId,
-  setConversationId,
   relationships,
   supportRelationships,
   role,
@@ -85,50 +82,47 @@ export const ChatList = ({
           </div>
         </div>
         <div className="mt-4 flex h-full w-full flex-col space-y-1">
-          {supportRelationships
-            ?.filter((sr) => sr.conversation?.type !== ConversationType.DONE)
-            .map((supportRelationship) => (
-              <Link
-                href={conversationLink
-                  .replace("[userId]", userId)
-                  .replace(
-                    "[conversationId]",
-                    supportRelationship.conversation?.id || "",
-                  )}
+          {supportRelationships?.map((supportRelationship) => (
+            <Link
+              href={conversationLink
+                .replace("[userId]", userId)
+                .replace(
+                  "[conversationId]",
+                  supportRelationship.conversation?.id || "",
+                )}
+              key={supportRelationship.id}
+            >
+              <button
                 key={supportRelationship.id}
+                className={`flex w-full flex-row items-center rounded-xl p-2 hover:bg-gray-100 ${
+                  conversationId === supportRelationship.conversation?.id &&
+                  "bg-gray-100"
+                } focus:outline-none`}
               >
-                <button
-                  key={supportRelationship.id}
-                  className={`flex w-full flex-row items-center rounded-xl p-2 hover:bg-gray-100 ${
-                    conversationId === supportRelationship.conversation?.id &&
-                    "bg-gray-100"
-                  } focus:outline-none`}
-                >
-                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full uppercase">
-                    <img
-                      src={
-                        supportRelationship.user.id === userId
-                          ? supportRelationship.support.image || "/logo.png"
-                          : supportRelationship.user.image ||
-                            "/defaultImage.png"
-                      }
-                      referrerPolicy="no-referrer"
-                      alt="image"
-                      className="mx-auto h-full rounded-full"
-                    />
-                  </div>
-                  <div className="ml-2 text-sm font-semibold">
-                    {supportRelationship.user.id === userId ? (
-                      <span className=" text-indigo-500">
-                        {supportRelationship.support.firstName} Support Leace
-                      </span>
-                    ) : (
-                      `${supportRelationship.user.firstName} ${supportRelationship.user.lastName}`
-                    )}
-                  </div>
-                </button>
-              </Link>
-            ))}
+                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full uppercase">
+                  <img
+                    src={
+                      supportRelationship.user.id === userId
+                        ? supportRelationship.support.image || "/logo.png"
+                        : supportRelationship.user.image || "/defaultImage.png"
+                    }
+                    referrerPolicy="no-referrer"
+                    alt="image"
+                    className="mx-auto h-full rounded-full"
+                  />
+                </div>
+                <div className="ml-2 text-sm font-semibold">
+                  {supportRelationship.user.id === userId ? (
+                    <span className=" text-indigo-500">
+                      {supportRelationship.support.firstName} Support Leace
+                    </span>
+                  ) : (
+                    `${supportRelationship.user.firstName} ${supportRelationship.user.lastName}`
+                  )}
+                </div>
+              </button>
+            </Link>
+          ))}
           {relationships?.map((relationship) => (
             <Link
               href={conversationLink

@@ -14,11 +14,11 @@ export const OccupiedClientList = ({ userId }: TenantListProps) => {
     userId: userId ?? "",
   });
 
-  if (relationships && relationships.rs) {
+  if (relationships && relationships.relationship) {
     return (
       <div className="container mx-auto p-4">
         <>
-          {relationships.rs.map(
+          {relationships.relationship.map(
             ({
               user: {
                 id: otherUserId,
@@ -29,7 +29,7 @@ export const OccupiedClientList = ({ userId }: TenantListProps) => {
               },
               post: { id: postId, title },
               id,
-              isMatch,
+              relationType,
             }) => (
               <div key={id}>
                 <TenantBar
@@ -38,7 +38,7 @@ export const OccupiedClientList = ({ userId }: TenantListProps) => {
                   desc={description ?? ""}
                   firstname={firstName ?? ""}
                   lastName={lastName ?? ""}
-                  isMatch={isMatch ?? false}
+                  relationType={relationType}
                   userId={userId}
                   relationshipId={id}
                   postId={postId}
