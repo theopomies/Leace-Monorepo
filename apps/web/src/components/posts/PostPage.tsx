@@ -10,6 +10,9 @@ export const PostPage = ({ postId }: PostPageProps) => {
   const { data: post } = trpc.post.getPostById.useQuery({ postId });
   const { data: session, isLoading } = trpc.auth.getSession.useQuery();
   const { data: images } = trpc.image.getSignedPostUrl.useQuery(postId);
+  const { data: documents, refetch: refetchImages } =
+    trpc.document.getSignedUrl.useQuery({ postId });
+  const deleteDocument = trpc.document.deleteSignedUrl.useMutation();
 
   if (isLoading) {
     return <Loader />;
@@ -21,6 +24,11 @@ export const PostPage = ({ postId }: PostPageProps) => {
 
   const role = session.role;
 
+  const handleDeleteDoc = async (documentId: string) => {
+    await deleteDocument.mutateAsync({ postId, documentId });
+    refetchImages();
+  };
+
   return (
     <div className="h-full w-full bg-slate-100">
       {post && post.attribute && (
@@ -28,6 +36,8 @@ export const PostPage = ({ postId }: PostPageProps) => {
           post={post}
           attribute={post.attribute}
           images={images}
+          documents={documents}
+          handleDeleteDoc={handleDeleteDoc}
           role={role}
         />
       )}

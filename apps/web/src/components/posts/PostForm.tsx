@@ -22,6 +22,20 @@ type Image =
     }[]
   | undefined;
 
+type Document =
+  | {
+      url: string;
+      id: string;
+      userId: string | null;
+      leaseId: string | null;
+      postId: string | null;
+      valid: boolean;
+      ext: string;
+      createdAt: Date;
+      updatedAt: Date;
+    }[]
+  | undefined;
+
 export interface PostFormProps {
   title: string;
   setTitle: ChangeEventHandler;
@@ -58,6 +72,9 @@ export interface PostFormProps {
   images: File[] | undefined;
   setImages: ChangeEventHandler;
   imagesGet?: Image;
+  documents: File[] | undefined;
+  setDocuments: ChangeEventHandler;
+  documentsGet?: Document;
   onSubmit: FormEventHandler;
   onCancel: MouseEventHandler<HTMLButtonElement>;
 }
@@ -65,7 +82,7 @@ export interface PostFormProps {
 export const PostForm = (props: PostFormProps) => {
   return (
     <form className="flex justify-center" onSubmit={props.onSubmit}>
-      <div className="flex justify-center rounded-lg bg-white p-12 shadow">
+      <div className="my-10 flex justify-center rounded-lg bg-white p-12 shadow">
         <div className="h-auto">
           <div className="flex w-full">
             <label className="w-full">
@@ -227,27 +244,19 @@ export const PostForm = (props: PostFormProps) => {
               />
             </label>
           </div>
-          <div className="mt-6">
-            <h2 className="text-center text-xl font-medium text-gray-700">
+          <div className="mt-10 text-center">
+            <h2 className="mb-2 text-center text-xl font-medium text-gray-700">
               Photos
             </h2>
-            <div className="border-blueGray-200 my-10 border-y py-10 text-center">
-              {props.imagesGet && props.imagesGet.length > 0 ? (
-                <div className="mt-10 flex flex-wrap justify-center gap-4">
-                  {props.imagesGet.map((image, index) => (
-                    <div key={index} className="relative">
-                      <img
-                        src={image.url}
-                        alt="image"
-                        className="mx-auto h-32"
-                      />
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p>No image</p>
-              )}
-            </div>
+            {props.imagesGet && props.imagesGet.length > 0 && (
+              <div className="flex flex-wrap justify-center gap-4">
+                {props.imagesGet.map((image, index) => (
+                  <div key={index} className="relative">
+                    <img src={image.url} alt="image" className="mx-auto h-32" />
+                  </div>
+                ))}
+              </div>
+            )}
             <div className="mt-2 flex flex-wrap justify-center gap-4">
               <FileInput multiple onChange={props.setImages}>
                 Upload Image
@@ -257,7 +266,33 @@ export const PostForm = (props: PostFormProps) => {
               ))}
             </div>
           </div>
-          <div className="mt-6 flex justify-center gap-4">
+          <div className="mt-10">
+            <h2 className="mb-2 text-center text-xl font-bold text-gray-700">
+              Documents
+            </h2>
+            {props.documentsGet && props.documentsGet.length > 0 && (
+              <div className="flex flex-wrap justify-center gap-4">
+                {props.documentsGet.map((document, index) => (
+                  <div key={index} className="relative">
+                    <img
+                      src={document.url}
+                      alt="image"
+                      className="mx-auto h-32"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+            <div className="mt-2 flex flex-wrap justify-center gap-4">
+              <FileInput multiple onChange={props.setDocuments}>
+                Upload Document
+              </FileInput>
+              {props.documents?.map((document, index) => (
+                <p key={index}>{document.name}</p>
+              ))}
+            </div>
+          </div>
+          <div className="mt-10 flex justify-center gap-4">
             <Button type="button" theme="danger" onClick={props.onCancel}>
               Cancel
             </Button>

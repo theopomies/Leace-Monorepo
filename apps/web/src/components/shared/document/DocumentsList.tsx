@@ -3,6 +3,7 @@ import { useState } from "react";
 import { DocumentModal } from "./DocumentModal";
 import { Check, Cross } from "../../moderation/Icons";
 import Link from "next/link";
+import { Button } from "../button/Button";
 
 type Document = {
   id: string;
@@ -17,7 +18,7 @@ export interface DocumentsListProps {
     valid: boolean;
     ext: string;
   }[];
-  handleDeleteDoc: (id: string) => Promise<void>;
+  handleDeleteDoc: (documentId: string) => Promise<void>;
 }
 
 export const DocumentsList = ({
@@ -61,12 +62,14 @@ export const DocumentsList = ({
               <Check />
             </div>
           )}
-          <div
+          <Button
+            theme="danger"
             onClick={() => handleDeleteDoc(doc.id)}
-            className="absolute -right-1 -top-1 inline-flex w-5 cursor-pointer items-center justify-center rounded-full bg-red-500 p-1 text-white"
+            overrideStyles
+            className="absolute -right-1 -top-1 inline-flex items-center justify-center rounded-md bg-red-500 p-1 text-white hover:bg-white hover:text-red-500"
           >
             <Cross />
-          </div>
+          </Button>
         </div>
       ))}
       {selectedDocument && (

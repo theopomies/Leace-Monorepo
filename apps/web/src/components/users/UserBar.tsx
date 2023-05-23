@@ -76,7 +76,7 @@ export const TenantBar = ({
             <div className="text-sm font-semibold uppercase tracking-wide text-indigo-500">
               {firstname}
             </div>
-            <p className="mt-1 block text-lg font-medium leading-tight text-black hover:underline">
+            <p className="mt-1 block text-lg font-medium leading-tight text-black">
               {lastName}
             </p>
             <p className="mt-2 text-slate-500">{desc}</p>

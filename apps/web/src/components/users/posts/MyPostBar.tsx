@@ -32,7 +32,7 @@ export const MyPostBar = ({ postId, title, desc, type }: PostBarProps) => {
             <div className="text-sm font-semibold uppercase tracking-wide text-indigo-500">
               {title}
             </div>
-            <p className="mt-1 block text-lg font-medium leading-tight text-black hover:underline">
+            <p className="mt-1 block text-lg font-medium leading-tight text-black">
               {desc}
             </p>
             <p className="mt-2 text-slate-500">

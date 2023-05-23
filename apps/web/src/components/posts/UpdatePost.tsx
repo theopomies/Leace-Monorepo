@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
 import { PostForm } from "./PostForm";
 import axios from "axios";
+
 export interface UpdatePostProps {
   postId: string;
 }
@@ -42,6 +43,12 @@ export const UpdatePost = ({ postId }: UpdatePostProps) => {
   const { data: imagesGet } = trpc.image.getSignedPostUrl.useQuery(postId);
   const uploadImage = trpc.image.putSignedPostUrl.useMutation();
   const [images, setImages] = useState<File[] | undefined>();
+
+  const { data: documentsGet } = trpc.document.getSignedUrl.useQuery({
+    postId,
+  });
+  const uploadDocument = trpc.document.putSignedUrl.useMutation();
+  const [documents, setDocuments] = useState<File[] | undefined>();
 
   useEffect(() => {
     if (post) {
@@ -94,8 +101,20 @@ export const UpdatePost = ({ postId }: UpdatePostProps) => {
             postId,
             fileType: image.type,
           })
-          .then((url: string) => {
+          .then((url) => {
             axios.put(url, image);
+          });
+      });
+    }
+    if (documents && documents.length > 0) {
+      documents.map(async (document) => {
+        await uploadDocument
+          .mutateAsync({
+            postId,
+            fileType: document.type,
+          })
+          .then((url) => {
+            if (url) axios.put(url, document);
           });
       });
     }
@@ -126,7 +145,16 @@ export const UpdatePost = ({ postId }: UpdatePostProps) => {
     e.preventDefault();
     router.back();
   };
-  const handleImage =
+
+  const handleImages =
+    (setter: Dispatch<SetStateAction<File[] | undefined>>) =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (event.target.files && event.target.files[0]) {
+        setter(Array.from(event.target.files));
+      }
+    };
+
+  const handleDocuments =
     (setter: Dispatch<SetStateAction<File[] | undefined>>) =>
     (event: React.ChangeEvent<HTMLInputElement>) => {
       if (event.target.files && event.target.files[0]) {
@@ -172,9 +200,12 @@ export const UpdatePost = ({ postId }: UpdatePostProps) => {
         size={size}
         setPrice={handleNumberChange(setPrice)}
         price={price}
-        setImages={handleImage(setImages)}
+        setImages={handleImages(setImages)}
         images={images}
         imagesGet={imagesGet}
+        setDocuments={handleDocuments(setDocuments)}
+        documents={documents}
+        documentsGet={documentsGet}
       />
     </div>
   );

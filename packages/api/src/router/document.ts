@@ -82,7 +82,7 @@ export const documentRouter = router({
         });
         if (!getPost) throw new TRPCError({ code: "NOT_FOUND" });
         const created = await ctx.prisma.document.create({
-          data: { id: id, leaseId: getPost.id, ext: ext },
+          data: { id: id, postId: getPost.id, ext: ext },
         });
         if (!created) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
         const key = `posts/${getPost.id}/documents/${id}.${ext}`;
@@ -136,10 +136,8 @@ export const documentRouter = router({
               Key: `posts/${getPost.id}/documents/${document.id}.${document.ext}`,
             };
             const command = new GetObjectCommand(bucketParams);
-            return {
-              ...document,
-              url: await getSignedUrl(ctx.s3Client, command),
-            };
+            const url = await getSignedUrl(ctx.s3Client, command);
+            return { ...document, url };
           }),
         );
       } else if (input.leaseId) {

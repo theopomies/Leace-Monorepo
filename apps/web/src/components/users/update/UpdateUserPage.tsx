@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import {
   Dispatch,
   FormEventHandler,
@@ -51,6 +52,8 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
   const [elevator, setElevator] = useState(false);
   const [pool, setPool] = useState(false);
 
+  const { data: documentsGet } =
+    trpc.document.getSignedUserUrl.useQuery(userId);
   const uploadDocument = trpc.document.putSignedUserUrl.useMutation();
   const [documents, setDocuments] = useState<File[] | undefined>();
 
@@ -95,7 +98,9 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
           });
       });
     }
-    router.push(`/users/${userId}`);
+    setTimeout(() => {
+      router.push(`/users/${userId}`);
+    }, 500);
   };
 
   const handleChange =
@@ -270,10 +275,23 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
             {user?.role === Role.TENANT && (
               <AttributesForm {...attributesStates} />
             )}
-            <div className="mt-6">
-              <h2 className="text-center text-xl font-medium text-gray-700">
-                Document
+            <div className="mt-10">
+              <h2 className="mb-2 text-center text-xl font-bold text-gray-700">
+                Documents
               </h2>
+              {documentsGet && documentsGet.length > 0 && (
+                <div className="flex flex-wrap justify-center gap-4">
+                  {documentsGet.map((document, index) => (
+                    <div key={index} className="relative">
+                      <img
+                        src={document.url}
+                        alt="image"
+                        className="mx-auto h-32"
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
               <div className="mt-2 flex flex-wrap justify-center gap-4">
                 <FileInput multiple onChange={handleDocuments(setDocuments)}>
                   Upload Document
@@ -283,7 +301,7 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
                 ))}
               </div>
             </div>
-            <div className=" mt-4 flex justify-center gap-8 pt-4">
+            <div className="mt-10 flex justify-center gap-8">
               <Button theme="danger" onClick={handleCancel}>
                 Cancel
               </Button>

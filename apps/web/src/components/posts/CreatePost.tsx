@@ -36,6 +36,9 @@ export const CreatePost = () => {
   const uploadImage = trpc.image.putSignedPostUrl.useMutation();
   const [images, setImages] = useState<File[] | undefined>();
 
+  const uploadDocument = trpc.document.putSignedUrl.useMutation();
+  const [documents, setDocuments] = useState<File[] | undefined>();
+
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
     const { id: postId } = await post.mutateAsync({
@@ -72,7 +75,21 @@ export const CreatePost = () => {
           });
       });
     }
-    router.push(`/posts/${postId}`);
+    if (documents && documents.length > 0) {
+      documents.map(async (document) => {
+        await uploadDocument
+          .mutateAsync({
+            postId,
+            fileType: document.type,
+          })
+          .then((url) => {
+            if (url) axios.put(url, document);
+          });
+      });
+    }
+    setTimeout(() => {
+      router.push(`/posts/${postId}`);
+    }, 500);
   };
 
   const handleChange =
@@ -94,6 +111,14 @@ export const CreatePost = () => {
     };
 
   const handleImage =
+    (setter: Dispatch<SetStateAction<File[] | undefined>>) =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (event.target.files && event.target.files[0]) {
+        setter(Array.from(event.target.files));
+      }
+    };
+
+  const handleDocuments =
     (setter: Dispatch<SetStateAction<File[] | undefined>>) =>
     (event: React.ChangeEvent<HTMLInputElement>) => {
       if (event.target.files && event.target.files[0]) {
@@ -145,6 +170,8 @@ export const CreatePost = () => {
         setPrice={handleNumberChange(setPrice)}
         price={price}
         setImages={handleImage(setImages)}
+        setDocuments={handleDocuments(setDocuments)}
+        documents={documents}
         images={images}
       />
     </div>

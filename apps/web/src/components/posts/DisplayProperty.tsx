@@ -7,6 +7,7 @@ import { DeletePostButton } from "../users/posts/DeletePostButton";
 import { motion } from "framer-motion";
 import { SlideShow } from "../home/stack/SlideShow";
 import { DeletePostImg } from "../shared/DeleteImgPost";
+import { DocumentsList } from "../shared/document/DocumentsList";
 
 type Image =
   | {
@@ -18,10 +19,27 @@ type Image =
       updatedAt: Date;
     }[]
   | undefined;
+
+type Document =
+  | {
+      url: string;
+      id: string;
+      userId: string | null;
+      leaseId: string | null;
+      postId: string | null;
+      valid: boolean;
+      ext: string;
+      createdAt: Date;
+      updatedAt: Date;
+    }[]
+  | undefined;
+
 interface DisplayPostProps {
   post: Post;
   attribute: Attribute;
   images: Image;
+  documents: Document;
+  handleDeleteDoc: (documentId: string) => Promise<void>;
   role: Role | undefined;
 }
 
@@ -29,9 +47,10 @@ export function DisplayPost({
   post,
   attribute,
   images,
+  documents,
+  handleDeleteDoc,
   role,
 }: DisplayPostProps) {
-  console.log(images);
   if (!post) {
     return <div>Not found</div>;
   }
@@ -40,22 +59,22 @@ export function DisplayPost({
     <div className="w-full">
       <Header heading={post.title ?? "Annonce"} />
       <div className="flex justify-center">
-        <div className="mx-12 flex justify-center rounded-lg bg-white p-12 shadow">
-          <div>
-            <div className="flex justify-center">
-              {images && images.length > 0 && (
-                <motion.div
-                  layout
-                  className="relative flex h-[500px] max-w-[2/3] overflow-hidden rounded-md bg-gray-100"
-                >
-                  <div className="flex h-full w-full items-center justify-center">
-                    <SlideShow images={images.map((image) => image.url)} />
-                  </div>
-                </motion.div>
-              )}
-            </div>
+        <div className="my-10 flex flex-col justify-center rounded-lg bg-white p-10 shadow">
+          <div className="flex justify-center">
+            {images && images.length > 0 && (
+              <motion.div
+                layout
+                className="relative flex h-[500px] max-w-[2/3] overflow-hidden rounded-md bg-gray-100"
+              >
+                <div className="flex h-full w-full items-center justify-center">
+                  <SlideShow images={images.map((image) => image.url)} />
+                </div>
+              </motion.div>
+            )}
+          </div>
 
-            <div className="mb-4">
+          <div className="p-10">
+            <div>
               <h2 className="text-xl">Lieu:</h2>
               <strong>{attribute.location}</strong>
             </div>
@@ -79,55 +98,58 @@ export function DisplayPost({
               </div>
             </div>
             <div className="my-4">
-              <h2 className="center text-xl">Les chiffres</h2>
               <div className="flex flex-grow pt-1">
                 <div className="w-full">
-                  <h2>Le prix demandé:</h2>
+                  <h2 className="text-xl">Monthly price:</h2>
                   <b>{attribute.price} €</b>
                 </div>
                 <div className="w-full">
-                  <h2>Les charges:</h2>
+                  <h2 className="text-xl">Les charges:</h2>
                   <b>TODO €</b>
                 </div>
                 <div className="w-full">
-                  <h2>Surface:</h2>
+                  <h2 className="text-xl">Size:</h2>
                   <b>{attribute.size} m²</b>
                 </div>
               </div>
             </div>
             <h2 className="mt-4 text-xl">Description:</h2>
             <p className="pt-1">{post.desc}</p>
-            <div className="border-blueGray-200 my-10 border-y py-10 text-center">
-              {images && images.length > 0 ? (
-                <div className="mt-10 flex flex-wrap justify-center gap-4">
-                  {images.map((image, index) => (
-                    <div key={index} className="relative">
-                      <img
-                        src={image.url}
-                        alt="image"
-                        className="mx-auto h-32"
-                      />
-                      <DeletePostImg postId={post.id} id={image.id} />
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p>No image</p>
-              )}
+          </div>
+          {images && images.length > 0 && (
+            <div className="border-t py-5 text-center">
+              <h2 className="mb-5 text-xl">Images:</h2>
+              <div className="flex flex-wrap justify-center gap-4">
+                {images.map((image, index) => (
+                  <div key={index} className="relative">
+                    <img src={image.url} alt="image" className="mx-auto h-32" />
+                    <DeletePostImg postId={post.id} id={image.id} />
+                  </div>
+                ))}
+              </div>
             </div>
-            <div className="mt-10 flex justify-center gap-6">
-              {(role == Role.OWNER || role == Role.AGENCY) && (
-                <>
-                  <Link
-                    className="rounded bg-indigo-500 px-4 py-3 font-bold text-white hover:bg-indigo-600 active:bg-indigo-700"
-                    href={`/posts/${post.id}/update`}
-                  >
-                    Update
-                  </Link>
-                  <DeletePostButton postId={post.id} />
-                </>
-              )}
+          )}
+          {documents && documents.length > 0 && (
+            <div className="border-t py-5 text-center">
+              <h2 className="mb-5 text-xl">Documents:</h2>
+              <DocumentsList
+                documents={documents}
+                handleDeleteDoc={handleDeleteDoc}
+              />
             </div>
+          )}
+          <div className="mt-5 flex justify-center gap-6">
+            {(role == Role.OWNER || role == Role.AGENCY) && (
+              <>
+                <Link
+                  className="rounded bg-indigo-500 px-4 py-3 font-bold text-white hover:bg-indigo-600 active:bg-indigo-700"
+                  href={`/posts/${post.id}/update`}
+                >
+                  Update
+                </Link>
+                <DeletePostButton postId={post.id} />
+              </>
+            )}
           </div>
         </div>
       </div>
