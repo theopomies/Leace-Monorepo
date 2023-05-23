@@ -135,6 +135,7 @@ export function DisplayPost({
               <DocumentsList
                 documents={documents}
                 handleDeleteDoc={handleDeleteDoc}
+                isUserLogged={post.createdById === userId}
               />
             </div>
           )}
