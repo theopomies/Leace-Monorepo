@@ -3,8 +3,7 @@
 import Link from "next/link";
 import { Button } from "../shared/button/Button";
 import { trpc } from "../../utils/trpc";
-import { Attribute } from "@prisma/client";
-import { User } from "@leace/db";
+import { Attribute, User, RelationType } from "@prisma/client";
 
 export interface TenantBarProps {
   otherUserId: string;
@@ -12,7 +11,7 @@ export interface TenantBarProps {
   desc: string;
   firstname: string;
   lastName: string;
-  isMatch: boolean;
+  relationType: RelationType;
   userId: string;
   relationshipId: string;
   postId: string;
@@ -30,7 +29,7 @@ export const TenantBar = ({
   desc,
   firstname,
   lastName,
-  isMatch,
+  relationType,
   userId,
   relationshipId,
   postId,
@@ -91,7 +90,7 @@ export const TenantBar = ({
         <Button theme="danger" onClick={handleDeleteMatch}>
           Delete Match
         </Button>
-        {isMatch && (
+        {relationType == RelationType.MATCH && (
           <Link
             className="rounded bg-indigo-500 px-4 py-3 font-bold text-white hover:bg-indigo-600 active:bg-indigo-700"
             href={`/chat/all`}
@@ -99,7 +98,7 @@ export const TenantBar = ({
             Chat with Match
           </Link>
         )}
-        {user && user.isPremium && isMatch != true && (
+        {user && user.isPremium && relationType != RelationType.MATCH && (
           <Button theme="success" onClick={handleLikeMatch}>
             Like Match
           </Button>
