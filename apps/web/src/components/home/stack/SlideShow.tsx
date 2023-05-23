@@ -44,6 +44,10 @@ export const SlideShow = ({ images }: { images: string[] }) => {
     ]);
   };
 
+  if (page >= images.length) {
+    setPage([Math.max(images.length - 1, 0), direction]);
+  }
+
   return (
     <>
       <AnimatePresence initial={false} custom={direction}>
