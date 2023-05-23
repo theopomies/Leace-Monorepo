@@ -41,24 +41,29 @@ export async function getPostsWithAttribute(userId: string) {
     where: { userId: userId },
   });
 
+  // Return error if user has no lat, lng or range
+  if (!userAtt.lat || !userAtt.lng || !userAtt.range) {
+    throw new Error("User has no lat, lng or range");
+  }
+
   // Calculate max and min lat and lng with the range
   const maxLat =
-    (userAtt.lat ?? 0) + rad2deg((userAtt.range ?? 999999) / earthRadius);
+    (userAtt.lat) + rad2deg((userAtt.range) / earthRadius);
   const minLat =
-    (userAtt.lat ?? 0) - rad2deg((userAtt.range ?? 999999) / earthRadius);
+    (userAtt.lat) - rad2deg((userAtt.range) / earthRadius);
   const maxLng =
-    (userAtt.lng ?? 0) +
+    (userAtt.lng) +
     rad2deg(
-      (userAtt.range ?? 999999) /
+      (userAtt.range) /
         earthRadius /
-        Math.cos(deg2rad(userAtt.lat ?? 0)),
+        Math.cos(deg2rad(userAtt.lat)),
     );
   const minLng =
-    (userAtt.lng ?? 0) -
+    (userAtt.lng) -
     rad2deg(
-      (userAtt.range ?? 999999) /
+      (userAtt.range) /
         earthRadius /
-        Math.cos(deg2rad(userAtt.lat ?? 0)),
+        Math.cos(deg2rad(userAtt.lat)),
     );
 
   const posts = await prisma.post.findMany({
@@ -126,17 +131,22 @@ export async function getUsersWithAttribute(postId: string) {
     where: { postId: postId },
   });
 
+  // Return error if post has no lat, lng or range
+  if (!postAtt.lat || !postAtt.lng || !postAtt.range) {
+    throw new Error("User has no lat, lng or range");
+  }
+
   // Calculate max and min lat and lng with the range
   const maxLat =
-    (postAtt.lat ?? 0) + rad2deg((postAtt.range ?? 999999) / earthRadius);
+    (postAtt.lat) + rad2deg((postAtt.range) / earthRadius);
   const minLat =
-    (postAtt.lat ?? 0) - rad2deg((postAtt.range ?? 999999) / earthRadius);
+    (postAtt.lat) - rad2deg((postAtt.range) / earthRadius);
   const maxLng =
-    (postAtt.lng ?? 0) +
+    (postAtt.lng) +
     rad2deg(
-      (postAtt.range ?? 999999) /
+      (postAtt.range) /
         earthRadius /
-        Math.cos(deg2rad(postAtt.lat ?? 0)),
+        Math.cos(deg2rad(postAtt.lat)),
     );
   const minLng =
     (postAtt.lng ?? 0) -

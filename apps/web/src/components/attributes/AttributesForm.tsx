@@ -1,8 +1,8 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { ChangeEventHandler } from "react";
 import { Checkbox } from "../shared/forms/Checkbox";
-import { HomeType } from "../../utils/types";
-
+import { HomeType } from "../../types/homeType";
+import React from "react";
+import { AddressAutocomplete } from "../shared/forms/AddressAutocomplete";
 interface AttributesFormProps {
   location: string;
   handleLocationChange: ChangeEventHandler<HTMLInputElement>;
@@ -92,29 +92,10 @@ export function AttributesForm({ ...attributes }: AttributesFormProps) {
   return (
     <div className="flex justify-center">
       <div className="border-blueGray-200 mt-5 h-auto w-full border-t text-center">
-        <div className="sticky mt-5 flex w-full items-center justify-between rounded-full bg-white p-2 shadow-lg">
-          <input
-            className="focus:shadow-outline ml-2 w-full rounded-full bg-gray-100 py-4 pl-4 text-xs font-bold uppercase leading-tight text-gray-700 focus:outline-none lg:text-sm"
-            type="text"
-            placeholder="Search"
-            name="location"
-            onChange={attributes.handleLocationChange}
-            value={attributes.location}
-          />
-          <div className="mx-2 cursor-pointer rounded-full bg-gray-600 p-2 hover:bg-blue-400">
-            <svg
-              className="h-6 w-6 text-white"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fillRule="evenodd"
-                d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </div>
-        </div>
+        <AddressAutocomplete
+          location={attributes.location}
+          handleLocationChange={attributes.handleLocationChange}
+        />
         <div className="mt-5 px-16">
           <h2 className="pb-2 pt-4 text-xl font-bold text-gray-700">
             What are you looking for ?

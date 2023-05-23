@@ -155,8 +155,6 @@ export const relationshipRouter = router({
         throw new TRPCError({ code: "FORBIDDEN" });
       await movePostToSeen(ctx.auth.userId, post.id);
 
-      await movePostToSeen(ctx.auth.userId, post.id);
-
       const rs = await ctx.prisma.relationship.findFirst({
         where: { postId: post.id, userId: user.id },
       });
@@ -215,8 +213,6 @@ export const relationshipRouter = router({
 
       if (post.type == PostType.RENTED)
         throw new TRPCError({ code: "FORBIDDEN" });
-      await movePostToSeen(ctx.auth.userId, post.id);
-
       await movePostToSeen(ctx.auth.userId, post.id);
 
       const rs = await ctx.prisma.relationship.findFirst({

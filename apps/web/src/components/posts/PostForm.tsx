@@ -9,7 +9,8 @@ import { Checkbox } from "../shared/forms/Checkbox";
 import { TextArea } from "../shared/forms/TextArea";
 import { NumberInput } from "../shared/forms/NumberInput";
 import { FileInput } from "../shared/forms/FileInput";
-import { HomeType } from "../../utils/types";
+import { HomeType } from "../../types/homeType";
+import { AddressAutocomplete } from "../shared/forms/AddressAutocomplete";
 
 export interface PostFormProps {
   title: string;
@@ -66,13 +67,10 @@ export const PostForm = (props: PostFormProps) => {
           <div className="mt-6 flex w-full">
             <label className="w-full">
               <div className="text-lg font-medium">Location</div>
-              <Input
-                placeholder="Central Park, New York"
-                name="location"
-                onChange={props.setLocation}
-                value={props.location}
-                className="w-full"
-              />
+              <AddressAutocomplete
+                location={props.location}
+                handleLocationChange={props.setLocation}
+                ></AddressAutocomplete>
             </label>
           </div>
 

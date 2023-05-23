@@ -15,7 +15,7 @@ import { TextInput } from "../../shared/forms/TextInput";
 import { DateInput } from "../../shared/forms/DateInput";
 import { TextArea } from "../../shared/forms/TextArea";
 import { Button } from "../../shared/button/Button";
-import { HomeType } from "../../../utils/types";
+import { HomeType } from "../../../types/homeType";
 
 export interface UpdateUserPageProps {
   userId: string;

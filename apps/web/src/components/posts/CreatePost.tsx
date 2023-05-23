@@ -9,7 +9,7 @@ import { Header } from "../../components/users/Header";
 import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
 import { PostForm } from "./PostForm";
-import { HomeType } from "../../utils/types";
+import { HomeType } from "../../types/homeType";
 
 export const CreatePost = () => {
   const router = useRouter();
