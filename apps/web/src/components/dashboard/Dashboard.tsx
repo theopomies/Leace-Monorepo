@@ -2,7 +2,7 @@ import { Post, PostType, User } from "@prisma/client";
 import React, { useState, useEffect } from "react";
 import { trpc } from "../../utils/trpc";
 import { Header } from "../users/Header";
-import { MyDashboardBar } from "./MyDashboardBar";
+import { MyDashboardBar } from "./DashboardBar";
 
 interface DashboardListProps {
   userId: string;

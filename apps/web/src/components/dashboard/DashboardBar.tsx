@@ -31,7 +31,7 @@ export const MyDashboardBar = ({
         <Link href={`/posts/${postId}`}>
           <div className="md:flex">
             {img && img[0] && (
-              <div className="md:shrink-0">
+              <div className="p-2 md:shrink-0">
                 <img
                   className="h-48 w-full object-cover md:h-full md:w-48"
                   src={img[0].url}
