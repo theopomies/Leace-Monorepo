@@ -4,6 +4,7 @@ import { Loader } from "../Loader";
 import { Chat } from "./Chat";
 import { Role } from "@prisma/client";
 import { OwnerContractPopover } from "./contracts/OwnerContractPopover";
+import { ReportDialog } from "./ReportDialog";
 
 export function OwnerChat({
   userId,
@@ -30,6 +31,8 @@ export function OwnerChat({
   const sendMessage = (content: string) => {
     sendMutation.mutate({ conversationId, content });
   };
+
+  const report = trpc.report.reportUserById.useMutation();
 
   const isLoading = useMemo(
     () =>
@@ -65,7 +68,21 @@ export function OwnerChat({
       conversationId={conversationId}
       contact={relationship?.user}
       additionnalBarComponent={
-        <OwnerContractPopover relationship={relationship} />
+        <div className="flex items-center gap-8">
+          {relationship && (
+            <ReportDialog
+              title={relationship.user.firstName ?? "User"}
+              onReport={({ reason, description }) =>
+                report.mutate({
+                  userId: relationship.user.id,
+                  reason,
+                  desc: description,
+                })
+              }
+            />
+          )}
+          <OwnerContractPopover relationship={relationship} />
+        </div>
       }
     />
   );

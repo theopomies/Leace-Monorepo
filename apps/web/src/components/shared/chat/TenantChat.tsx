@@ -4,6 +4,7 @@ import { Loader } from "../Loader";
 import { Chat } from "./Chat";
 import { Role } from "@prisma/client";
 import { TenantContractPopover } from "./contracts/TenantContractPopover";
+import { ReportDialog } from "./ReportDialog";
 
 export function TenantChat({
   userId,
@@ -30,6 +31,8 @@ export function TenantChat({
   const sendMessage = (content: string) => {
     sendMutation.mutate({ conversationId, content });
   };
+
+  const report = trpc.report.reportPostById.useMutation();
 
   const isLoading = useMemo(
     () =>
@@ -65,7 +68,21 @@ export function TenantChat({
       conversationId={conversationId}
       contact={relationship?.post.createdBy}
       additionnalBarComponent={
-        <TenantContractPopover relationship={relationship} />
+        <div className="flex items-center gap-8">
+          {relationship && (
+            <ReportDialog
+              title={relationship.post.title ?? "title"}
+              onReport={({ reason, description }) =>
+                report.mutate({
+                  postId: relationship.post.id,
+                  reason,
+                  desc: description,
+                })
+              }
+            />
+          )}
+          <TenantContractPopover relationship={relationship} />
+        </div>
       }
     />
   );

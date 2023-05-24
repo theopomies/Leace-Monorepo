@@ -1,5 +1,5 @@
 import { RouterOutputs, trpc } from "../../../../utils/trpc";
-import { ContractPopover } from "./ContractPopover";
+import { Popover } from "./Popover";
 import { LeaseForm } from "./LeaseForm";
 
 export function OwnerContractPopover({
@@ -38,7 +38,7 @@ export function OwnerContractPopover({
 
   if (relationship.lease === null) {
     return (
-      <ContractPopover label="Create Lease Proposal">
+      <Popover label="Create Lease Proposal">
         <LeaseForm
           submitLabel="Create"
           onSubmit={(data) => {
@@ -48,14 +48,14 @@ export function OwnerContractPopover({
             });
           }}
         />
-      </ContractPopover>
+      </Popover>
     );
   }
 
   const leaseId = relationship.lease.id;
 
   return (
-    <ContractPopover label="Update Lease Proposal">
+    <Popover label="Update Lease Proposal">
       <LeaseForm
         submitLabel="Update"
         defaultValues={relationship.lease}
@@ -69,6 +69,6 @@ export function OwnerContractPopover({
           deleteLease.mutate({ leaseId });
         }}
       />
-    </ContractPopover>
+    </Popover>
   );
 }

@@ -1,6 +1,6 @@
 import { RouterOutputs, trpc } from "../../../../utils/trpc";
 import { Button } from "../../button/Button";
-import { ContractPopover } from "./ContractPopover";
+import { Popover } from "./Popover";
 
 export function TenantContractPopover({
   relationship,
@@ -29,7 +29,7 @@ export function TenantContractPopover({
   const lease = relationship.lease;
 
   return (
-    <ContractPopover label="View Lease Proposal">
+    <Popover label="View Lease Proposal">
       <div className="flex flex-col gap-8 rounded-md bg-white p-4 drop-shadow-2xl">
         <div className="flex gap-16">
           <div>
@@ -60,6 +60,6 @@ export function TenantContractPopover({
           </Button>
         </div>
       </div>
-    </ContractPopover>
+    </Popover>
   );
 }
