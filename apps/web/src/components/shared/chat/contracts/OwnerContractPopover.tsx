@@ -24,9 +24,18 @@ export function OwnerContractPopover({
     },
   });
 
-  if (!relationship || relationship.lease?.isSigned) {
+  if (!relationship) {
     return null;
   }
+
+  if (relationship.lease?.isSigned) {
+    return (
+      <div>
+        <p className="text-lg font-medium">Lease Signed ✅</p>
+      </div>
+    );
+  }
+
   if (relationship.lease === null) {
     return (
       <ContractPopover label="Create Lease Proposal">

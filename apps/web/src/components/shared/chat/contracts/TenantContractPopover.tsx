@@ -14,12 +14,16 @@ export function TenantContractPopover({
     },
   });
 
-  if (
-    !relationship ||
-    relationship.lease === null ||
-    relationship.lease?.isSigned
-  ) {
+  if (!relationship || relationship.lease === null) {
     return null;
+  }
+
+  if (relationship.lease?.isSigned) {
+    return (
+      <div>
+        <p className="text-lg font-medium">Lease Signed ✅</p>
+      </div>
+    );
   }
 
   const lease = relationship.lease;
