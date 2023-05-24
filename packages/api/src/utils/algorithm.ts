@@ -109,8 +109,6 @@ export async function getPostsWithAttribute(userId: string) {
     include: { attribute: true, images: { take: 1 } },
   });
 
-  console.log(posts);
-
   if (!posts) return [];
 
   // Shuffle posts with Fisher-Yates algorithm

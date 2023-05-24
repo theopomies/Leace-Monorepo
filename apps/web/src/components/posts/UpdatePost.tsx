@@ -91,6 +91,8 @@ export const UpdatePost = ({ postId }: UpdatePostProps) => {
       elevator,
       pool,
       disability,
+      price,
+      size,
     });
     if (images && images.length > 0) {
       images.map(async (image) => {

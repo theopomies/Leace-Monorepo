@@ -195,7 +195,6 @@ export const attributesRouter = router({
                 code: "BAD_REQUEST",
                 message: "Location not found",
               });
-              
             }
           } else {
             throw new TRPCError({
