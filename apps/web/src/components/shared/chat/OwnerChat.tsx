@@ -3,7 +3,6 @@ import { trpc } from "../../../utils/trpc";
 import { Loader } from "../Loader";
 import { Chat } from "./Chat";
 import { Role } from "@prisma/client";
-import { Button } from "../button/Button";
 import { OwnerContractPopover } from "./contracts/OwnerContractPopover";
 
 export function OwnerChat({

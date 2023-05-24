@@ -1,8 +1,9 @@
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { trpc } from "../../../utils/trpc";
 import { Loader } from "../Loader";
 import { Chat } from "./Chat";
 import { Role } from "@prisma/client";
+import { TenantContractPopover } from "./contracts/TenantContractPopover";
 
 export function TenantChat({
   userId,
@@ -63,6 +64,9 @@ export function TenantChat({
       role={role}
       conversationId={conversationId}
       contact={relationship?.post.createdBy}
+      additionnalBarComponent={
+        <TenantContractPopover relationship={relationship} />
+      }
     />
   );
 }
