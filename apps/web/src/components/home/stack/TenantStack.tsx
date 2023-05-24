@@ -1,48 +1,58 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Stack } from "./Stack";
 import { StackElementProps } from "./StackElement";
-
-const defaultPosts: StackElementProps[] = [];
-
-for (let i = 0; i < 10; i++) {
-  defaultPosts.push({
-    id: "" + i,
-    img: "/appart.jpg",
-    title: "Candidat " + i,
-    age: 22,
-    description:
-      "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Reiciendis doloremque blanditiis modi quos a eveniet, eligendi temporibus necessitatibus, eius consequatur, provident obcaecati reprehenderit possimus aliquam totam? Praesentium inventore facilis vero.",
-    onReport: () => console.log("Reported"),
-  });
-}
+import { useSession } from "@clerk/nextjs";
+import { trpc } from "../../../utils/trpc";
+import { calcAge } from "../../../utils/calcAge";
 
 export function TenantStack() {
-  const [posts, setPosts] = useState(defaultPosts);
-  const [lastPost, setLastPost] = useState<StackElementProps | null>(null);
+  const session = useSession();
+  const [posts, setPosts] = useState([] as StackElementProps[]);
+  const [lastPost, setLastPost] = useState<StackElementProps | null>();
+  const { data, status } = trpc.post.getUsersToBeSeen.useQuery(
+    { userId: session?.session?.user.id ?? "", postId: "1" },
+    { enabled: posts.length <= 3 },
+  );
+  const { mutateAsync: dislikeHandler } =
+    trpc.relationship.dislikePostForTenant.useMutation();
+  const { mutateAsync: likeHandler } =
+    trpc.relationship.likePostForTenant.useMutation();
+
+  useEffect(() => {
+    if (status === "success") {
+      const formatedData = data.map((post) => ({
+        id: post.id,
+        img: post.image ?? "/sample_image.avif",
+        title: post.firstName,
+        age: post.birthDate ? calcAge(post.birthDate) : null,
+        description: post.description,
+        onReport: () => console.log("Reported"),
+      }));
+      setPosts(formatedData as StackElementProps[]);
+    }
+  }, [data, status]);
 
   const removePost = (post: StackElementProps) => {
     setPosts((posts) => {
       const newPosts = posts.filter((p) => p.id !== post.id);
-      newPosts.push({
-        id: "" + (+(newPosts[newPosts.length - 1]?.id || "0") + 1),
-        img: "/sample_image.avif",
-        title: "Candidat " + (+(newPosts[newPosts.length - 1]?.id || "0") + 1),
-        age: 22,
-        description:
-          "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Reiciendis doloremque blanditiis modi quos a eveniet, eligendi temporibus necessitatibus, eius consequatur, provident obcaecati reprehenderit possimus aliquam totam? Praesentium inventore facilis vero.",
-        onReport: () => console.log("Reported"),
-      });
       return newPosts;
     });
   };
 
-  const onLike = (post: StackElementProps) => {
-    console.log("Liked post " + post.id);
+  const onLike = async (post: StackElementProps) => {
+    await likeHandler({
+      postId: post.id,
+      userId: session?.session?.user.id ?? "",
+    });
     removePost(post);
+    setLastPost(post);
   };
 
-  const onDislike = (post: StackElementProps) => {
-    console.log("Disliked post " + post.id);
+  const onDislike = async (post: StackElementProps) => {
+    await dislikeHandler({
+      postId: post.id,
+      userId: session?.session?.user.id ?? "",
+    });
     removePost(post);
     setLastPost(post);
   };

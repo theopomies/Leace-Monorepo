@@ -47,6 +47,7 @@ export function PostStack() {
       userId: session?.session?.user.id ?? "",
     });
     removePost(post);
+    setLastPost(post);
   };
 
   const onDislike = async (post: StackElementProps) => {
