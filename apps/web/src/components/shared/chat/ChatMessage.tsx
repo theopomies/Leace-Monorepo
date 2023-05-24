@@ -12,7 +12,7 @@ export interface ChatMessageProps {
 
 export const ChatMessage = ({ userId, message }: ChatMessageProps) => {
   return (
-    <div key={message.id} className="grid grid-cols-12 gap-y-2">
+    <div className="grid grid-cols-12 gap-y-2">
       {message.senderId === userId ? (
         <div className="col-start-6 col-end-13 rounded-lg p-3">
           <div className="flex flex-row-reverse items-center justify-start">

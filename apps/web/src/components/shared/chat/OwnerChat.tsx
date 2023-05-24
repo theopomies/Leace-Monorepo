@@ -3,6 +3,8 @@ import { trpc } from "../../../utils/trpc";
 import { Loader } from "../Loader";
 import { Chat } from "./Chat";
 import { Role } from "@prisma/client";
+import { Button } from "../button/Button";
+import { OwnerContractPopover } from "./contracts/OwnerContractPopover";
 
 export function OwnerChat({
   userId,
@@ -38,6 +40,13 @@ export function OwnerChat({
     [conversationIsLoading, relationshipsLoading, supportRelationshipsLoading],
   );
 
+  const relationship = useMemo(() => {
+    if (!relationships) {
+      return undefined;
+    }
+    return relationships.find((r) => r.id === conversation?.relationId);
+  }, [relationships, conversation]);
+
   if (isLoading) {
     return <Loader />;
   }
@@ -55,6 +64,10 @@ export function OwnerChat({
       supportRelationships={supportRelationships}
       role={role}
       conversationId={conversationId}
+      contact={relationship?.user}
+      additionnalBarComponent={
+        <OwnerContractPopover relationship={relationship} />
+      }
     />
   );
 }

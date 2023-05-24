@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { trpc } from "../../../utils/trpc";
 import { Loader } from "../Loader";
 import { Chat } from "./Chat";
@@ -38,6 +38,13 @@ export function TenantChat({
     [conversationIsLoading, relationshipsLoading, supportRelationshipsLoading],
   );
 
+  const relationship = useMemo(() => {
+    if (!relationships) {
+      return undefined;
+    }
+    return relationships.find((r) => r.id === conversation?.relationId);
+  }, [relationships, conversation]);
+
   if (isLoading) {
     return <Loader />;
   }
@@ -55,6 +62,7 @@ export function TenantChat({
       supportRelationships={supportRelationships}
       role={role}
       conversationId={conversationId}
+      contact={relationship?.post.createdBy}
     />
   );
 }

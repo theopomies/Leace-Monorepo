@@ -1,14 +1,23 @@
-import { useEffect, useRef } from "react";
+import { ReactNode, useEffect, useRef } from "react";
 import { ChatMessage, MessageWithSender } from "./ChatMessage";
 import { ChatInput } from "./ChatInput";
+import { User } from "@prisma/client";
 
 export interface ChatBoxProps {
   userId: string;
   messages: MessageWithSender[];
   onSend?: (content: string) => void;
+  contact?: User;
+  additionnalBarComponent?: ReactNode;
 }
 
-export const ChatBox = ({ userId, messages, onSend }: ChatBoxProps) => {
+export const ChatBox = ({
+  userId,
+  messages,
+  onSend,
+  contact,
+  additionnalBarComponent,
+}: ChatBoxProps) => {
   const msgRef = useRef<null | HTMLDivElement>(null);
 
   useEffect(() => {
@@ -22,16 +31,26 @@ export const ChatBox = ({ userId, messages, onSend }: ChatBoxProps) => {
   });
 
   return (
-    <div className="flex h-full w-full flex-auto flex-col p-6">
-      <div className="flex h-full w-full flex-auto flex-shrink-0 flex-col rounded-2xl bg-gray-100 p-4">
-        <div ref={msgRef} className="flex h-full w-full flex-col overflow-auto">
-          <div className="flex h-full flex-col">
-            {messages.map((message) => (
-              <ChatMessage key={message.id} userId={userId} message={message} />
-            ))}
+    <div className="flex flex-grow flex-col p-6">
+      {contact && (
+        <div className="flex items-center justify-between rounded-xl bg-white p-4">
+          <div>
+            {contact.firstName} {contact.lastName}
           </div>
+          <div>{additionnalBarComponent}</div>
         </div>
-        {onSend !== undefined && <ChatInput onSend={onSend} />}
+      )}
+      <div className="mt-4 flex flex-grow flex-col overflow-hidden rounded-2xl bg-gray-100 p-4">
+        <div ref={msgRef} className="flex-grow overflow-auto">
+          {messages.map((message) => (
+            <ChatMessage key={message.id} userId={userId} message={message} />
+          ))}
+        </div>
+        {onSend !== undefined && (
+          <div className="flex-shrink-0">
+            <ChatInput onSend={onSend} />
+          </div>
+        )}
       </div>
     </div>
   );
