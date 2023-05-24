@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import {
   Dispatch,
   FormEventHandler,
@@ -15,6 +16,8 @@ import { TextInput } from "../../shared/forms/TextInput";
 import { DateInput } from "../../shared/forms/DateInput";
 import { TextArea } from "../../shared/forms/TextArea";
 import { Button } from "../../shared/button/Button";
+import { FileInput } from "../../shared/forms/FileInput";
+import axios from "axios";
 
 export interface UpdateUserPageProps {
   userId: string;
@@ -49,6 +52,11 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
   const [elevator, setElevator] = useState(false);
   const [pool, setPool] = useState(false);
 
+  const { data: documentsGet } =
+    trpc.document.getSignedUserUrl.useQuery(userId);
+  const uploadDocument = trpc.document.putSignedUserUrl.useMutation();
+  const [documents, setDocuments] = useState<File[] | undefined>();
+
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
     await updateUser.mutateAsync({
@@ -79,7 +87,20 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
         pool,
       });
     }
-    router.push(`/users/${userId}`);
+    if (documents && documents.length > 0) {
+      documents.map(async (document) => {
+        await uploadDocument
+          .mutateAsync({
+            fileType: document.type,
+          })
+          .then((url) => {
+            axios.put(url, document);
+          });
+      });
+    }
+    setTimeout(() => {
+      router.push(`/users/${userId}`);
+    }, 500);
   };
 
   const handleChange =
@@ -98,6 +119,14 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
     (setter: Dispatch<SetStateAction<number>>) =>
     (event: React.ChangeEvent<HTMLInputElement>) => {
       setter(event.target.valueAsNumber);
+    };
+
+  const handleDocuments =
+    (setter: Dispatch<SetStateAction<File[] | undefined>>) =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (event.target.files && event.target.files[0]) {
+        setter(Array.from(event.target.files));
+      }
     };
 
   const handleCancel: MouseEventHandler<HTMLButtonElement> = (e) => {
@@ -211,9 +240,7 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
             <div>
               {/* eslint-disable-next-line @next/next/no-img-element*/}
               <img
-                src={
-                  "https://demos.creative-tim.com/notus-js/assets/img/team-2-800x800.jpg"
-                }
+                src={user && user.image ? user.image : "/defaultImage.png"}
                 referrerPolicy="no-referrer"
                 alt="image"
                 className="mx-auto h-32 rounded-full shadow-xl"
@@ -248,14 +275,38 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
             {user?.role === Role.TENANT && (
               <AttributesForm {...attributesStates} />
             )}
-            {
-              <div className=" mt-4 flex justify-center gap-8 pt-4">
-                <Button theme="danger" onClick={handleCancel}>
-                  Cancel
-                </Button>
-                <Button theme="primary">Update</Button>
+            <div className="mt-10">
+              <h2 className="mb-2 text-center text-xl font-bold text-gray-700">
+                Documents
+              </h2>
+              {documentsGet && documentsGet.length > 0 && (
+                <div className="flex flex-wrap justify-center gap-4">
+                  {documentsGet.map((document, index) => (
+                    <div key={index} className="relative">
+                      <img
+                        src={document.url}
+                        alt="image"
+                        className="mx-auto h-32"
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
+              <div className="mt-2 flex flex-wrap justify-center gap-4">
+                <FileInput multiple onChange={handleDocuments(setDocuments)}>
+                  Upload Document
+                </FileInput>
+                {documents?.map((document, index) => (
+                  <p key={index}>{document.name}</p>
+                ))}
               </div>
-            }
+            </div>
+            <div className="mt-10 flex justify-center gap-8">
+              <Button theme="danger" onClick={handleCancel}>
+                Cancel
+              </Button>
+              <Button theme="primary">Update</Button>
+            </div>
           </div>
         </form>
       </div>

@@ -1,6 +1,6 @@
 import { trpc } from "../../utils/trpc";
 import { Loader } from "../shared/Loader";
-import { DisplayPost } from "./DisplayProperty";
+import { DisplayPost } from "./DisplayPost";
 
 export interface PostPageProps {
   postId: string;
@@ -9,6 +9,10 @@ export interface PostPageProps {
 export const PostPage = ({ postId }: PostPageProps) => {
   const { data: post } = trpc.post.getPostById.useQuery({ postId });
   const { data: session, isLoading } = trpc.auth.getSession.useQuery();
+  const { data: images } = trpc.image.getSignedPostUrl.useQuery(postId);
+  const { data: documents, refetch: refetchImages } =
+    trpc.document.getSignedUrl.useQuery({ postId });
+  const deleteDocument = trpc.document.deleteSignedUrl.useMutation();
 
   if (isLoading) {
     return <Loader />;
@@ -18,7 +22,10 @@ export const PostPage = ({ postId }: PostPageProps) => {
     return <div>Not logged in</div>;
   }
 
-  const role = session.role;
+  const handleDeleteDoc = async (documentId: string) => {
+    await deleteDocument.mutateAsync({ postId, documentId });
+    refetchImages();
+  };
 
   return (
     <div className="h-full w-full bg-slate-100">
@@ -26,7 +33,10 @@ export const PostPage = ({ postId }: PostPageProps) => {
         <DisplayPost
           post={post}
           attribute={post.attribute}
-          role={role}
+          images={images}
+          documents={documents}
+          handleDeleteDoc={handleDeleteDoc}
+          userId={session.userId}
         />
       )}
     </div>

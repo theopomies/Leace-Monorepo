@@ -42,16 +42,22 @@ export const imageModeration = router({
         images.map(async (image: Image) => {
           const bucketParams = {
             Bucket: "leaceawsbucket",
-            Key: `${getPost.id}/images/${image.id}.${image.ext}`,
+            Key: `posts/${getPost.id}/images/${image.id}.${image.ext}`,
           };
           const command = new GetObjectCommand(bucketParams);
-          return { ...image, url: await getSignedUrl(ctx.s3Client, command) };
+          const url = await getSignedUrl(ctx.s3Client, command);
+          return { ...image, url };
         }),
       );
     }),
   deleteSignedPostUrl: protectedProcedure([Role.ADMIN, Role.MODERATOR])
     .input(z.object({ postId: z.string(), imageId: z.string() }))
     .mutation(async ({ ctx, input }) => {
+      const getPost = await ctx.prisma.post.findUnique({
+        where: { id: input.postId },
+      });
+      if (!getPost) throw new TRPCError({ code: "NOT_FOUND" });
+
       const image = await ctx.prisma.image.findFirst({
         where: { id: input.imageId, postId: input.postId },
       });
@@ -64,7 +70,7 @@ export const imageModeration = router({
 
       const bucketParams = {
         Bucket: "leaceawsbucket",
-        Key: `${ctx.auth.userId}/images/${image.id}.${image.ext}`,
+        Key: `posts/${getPost.id}/images/${image.id}.${image.ext}`,
       };
       const command = new DeleteObjectCommand(bucketParams);
 
