@@ -102,7 +102,7 @@ export const PostForm = (props: PostFormProps) => {
               <AddressAutocomplete
                 location={props.location}
                 handleLocationChange={props.setLocation}
-                ></AddressAutocomplete>
+              ></AddressAutocomplete>
             </label>
           </div>
 
@@ -116,7 +116,7 @@ export const PostForm = (props: PostFormProps) => {
                   name="homeType"
                   onChange={props.setHomeType}
                   checked={props.homeType === "HOUSE"}
-                  value={'HOUSE'}
+                  value={"HOUSE"}
                 >
                   Maison
                 </Checkbox>
@@ -126,7 +126,7 @@ export const PostForm = (props: PostFormProps) => {
                   name="homeType"
                   onChange={props.setHomeType}
                   checked={props.homeType === "APARTMENT"}
-                  value={'APARTMENT'}
+                  value={"APARTMENT"}
                 >
                   Appartement
                 </Checkbox>
@@ -232,15 +232,6 @@ export const PostForm = (props: PostFormProps) => {
                 name="price"
                 onChange={props.setPrice}
                 value={props.price}
-                unit="€"
-              />
-            </label>
-            <label>
-              <div>Charges</div>
-              <NumberInput
-                placeholder="Charge"
-                aria-describedby="amount-prefix"
-                name="maxPrice"
                 unit="€"
               />
             </label>

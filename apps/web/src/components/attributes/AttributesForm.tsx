@@ -89,11 +89,6 @@ export function AttributesForm({ ...attributes }: AttributesFormProps) {
       label: "Pool",
       handleChange: attributes.handlePoolChange,
     },
-    {
-      name: "minPrice",
-      label: "Min Price",
-      handleChange: attributes.handleMinPriceChange,
-    },
   ];
 
   return (

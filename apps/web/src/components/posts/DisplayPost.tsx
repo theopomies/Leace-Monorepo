@@ -107,10 +107,6 @@ export function DisplayPost({
                   <b>{attribute.price} €</b>
                 </div>
                 <div className="w-full">
-                  <h2 className="text-xl">Les charges:</h2>
-                  <b>TODO €</b>
-                </div>
-                <div className="w-full">
                   <h2 className="text-xl">Size:</h2>
                   <b>{attribute.size} m²</b>
                 </div>
