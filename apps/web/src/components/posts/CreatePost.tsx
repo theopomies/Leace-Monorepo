@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
 import { PostForm } from "./PostForm";
 import { HomeType } from "../../types/homeType";
+import axios from "axios";
 
 export const CreatePost = () => {
   const router = useRouter();
@@ -32,6 +33,12 @@ export const CreatePost = () => {
   const [size, setSize] = useState(0);
   const [price, setPrice] = useState(0);
 
+  const uploadImage = trpc.image.putSignedPostUrl.useMutation();
+  const [images, setImages] = useState<File[] | undefined>();
+
+  const uploadDocument = trpc.document.putSignedUrl.useMutation();
+  const [documents, setDocuments] = useState<File[] | undefined>();
+
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
     const { id: postId } = await post.mutateAsync({
@@ -52,8 +59,36 @@ export const CreatePost = () => {
       elevator,
       pool,
       disability,
+      size,
+      price,
     });
-    router.push(`/posts/${postId}`);
+    if (images && images.length > 0) {
+      images.map(async (image) => {
+        await uploadImage
+          .mutateAsync({
+            postId,
+            fileType: image.type,
+          })
+          .then((url) => {
+            axios.put(url, image);
+          });
+      });
+    }
+    if (documents && documents.length > 0) {
+      documents.map(async (document) => {
+        await uploadDocument
+          .mutateAsync({
+            postId,
+            fileType: document.type,
+          })
+          .then((url) => {
+            if (url) axios.put(url, document);
+          });
+      });
+    }
+    setTimeout(() => {
+      router.push(`/posts/${postId}`);
+    }, 500);
   };
 
   const handleChange =
@@ -78,6 +113,22 @@ export const CreatePost = () => {
     (setter: Dispatch<SetStateAction<HomeType | undefined>>) =>
     (event: React.ChangeEvent<HTMLInputElement>) => {
       setter(event.target.value as HomeType);
+    };
+
+  const handleImage =
+    (setter: Dispatch<SetStateAction<File[] | undefined>>) =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (event.target.files && event.target.files[0]) {
+        setter(Array.from(event.target.files));
+      }
+    };
+
+  const handleDocuments =
+    (setter: Dispatch<SetStateAction<File[] | undefined>>) =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (event.target.files && event.target.files[0]) {
+        setter(Array.from(event.target.files));
+      }
     };
 
   const handleCancel: MouseEventHandler<HTMLButtonElement> = (e) => {
@@ -121,6 +172,10 @@ export const CreatePost = () => {
         size={size}
         setPrice={handleNumberChange(setPrice)}
         price={price}
+        setImages={handleImage(setImages)}
+        setDocuments={handleDocuments(setDocuments)}
+        documents={documents}
+        images={images}
       />
     </div>
   );

@@ -3,6 +3,8 @@ import { Checkbox } from "../shared/forms/Checkbox";
 import { HomeType } from "../../types/homeType";
 import React from "react";
 import { AddressAutocomplete } from "../shared/forms/AddressAutocomplete";
+import { NumberInput } from "../shared/forms/NumberInput";
+
 interface AttributesFormProps {
   location: string;
   handleLocationChange: ChangeEventHandler<HTMLInputElement>;
@@ -87,6 +89,11 @@ export function AttributesForm({ ...attributes }: AttributesFormProps) {
       label: "Pool",
       handleChange: attributes.handlePoolChange,
     },
+    {
+      name: "minPrice",
+      label: "Min Price",
+      handleChange: attributes.handleMinPriceChange,
+    },
   ];
 
   return (
@@ -141,6 +148,54 @@ export function AttributesForm({ ...attributes }: AttributesFormProps) {
               </Checkbox>
             ))}
           </div>
+        </div>
+        <div className="mt-6 flex flex-wrap justify-around gap-4">
+          <label>
+            <div>Min price</div>
+            <NumberInput
+              placeholder="500"
+              aria-describedby="amount-prefix"
+              name="size"
+              onChange={attributes.handleMinPriceChange}
+              value={attributes.minPrice}
+              unit="$"
+            />
+          </label>
+          <label>
+            <div>Max price</div>
+            <NumberInput
+              placeholder="2000"
+              aria-describedby="amount-prefix"
+              name="size"
+              onChange={attributes.handleMaxPriceChange}
+              value={attributes.maxPrice}
+              unit="$"
+            />
+          </label>
+        </div>
+        <div className="mt-6 flex flex-wrap justify-around gap-4">
+          <label>
+            <div>Min size</div>
+            <NumberInput
+              placeholder="10"
+              aria-describedby="amount-prefix"
+              name="size"
+              onChange={attributes.handleMinSizeChange}
+              value={attributes.minSize}
+              unit="m²"
+            />
+          </label>
+          <label>
+            <div>Max size</div>
+            <NumberInput
+              placeholder="100"
+              aria-describedby="amount-prefix"
+              name="size"
+              onChange={attributes.handleMaxSizeChange}
+              value={attributes.maxSize}
+              unit="m²"
+            />
+          </label>
         </div>
       </div>
     </div>

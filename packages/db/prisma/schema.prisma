@@ -24,18 +24,16 @@ enum ReportReason {
   OTHER
 }
 
+enum RelationType {
+  TENANT
+  POST
+  MATCH
+}
+
 enum ReportStatus {
   PENDING
   RESOLVED
   REJECTED
-}
-
-enum ConversationType {
-  NONE
-  TENANT
-  OWNER
-  AGENCY
-  DONE
 }
 
 enum Role {
@@ -88,6 +86,8 @@ model User {
 
   bans        Ban[] @relation("banned")
   bansCreated Ban[] @relation("bans_created")
+
+  LeaseCreated Lease[]
 
   reports        Report[] @relation("reported")
   reportsCreated Report[] @relation("reports_created")
@@ -240,6 +240,9 @@ model Document {
   user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String?
 
+  lease Lease? @relation(fields: [leaseId], references: [id], onDelete: Cascade)
+  leaseId String?
+
   post   Post?   @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId String?
 
@@ -250,6 +253,7 @@ model Document {
   updatedAt DateTime @updatedAt
 
   @@index([userId])
+  @@index([leaseId])
   @@index([postId])
   @@map("documents")
 }
@@ -278,8 +282,10 @@ model Relationship {
   post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId String
 
-  isMatch      Boolean?      @default(false)
   conversation Conversation?
+  relationType RelationType
+
+  lease Lease?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -312,13 +318,12 @@ model SupportRelationship {
 model Conversation {
   id String @id @default(cuid())
 
-  rs         Relationship? @relation(fields: [relationId], references: [id], onDelete: Cascade)
+  relationship         Relationship? @relation(fields: [relationId], references: [id], onDelete: Cascade)
   relationId String?       @unique
 
   supportRs         SupportRelationship? @relation(fields: [supportRelationId], references: [id], onDelete: Cascade)
   supportRelationId String?              @unique
 
-  type     ConversationType? @default(NONE)
   messages Message[]
 
   createdAt DateTime @default(now())
@@ -346,4 +351,26 @@ model Message {
   @@index([conversationId])
   @@index([senderId])
   @@map("messages")
+}
+
+model Lease {
+  id String @id @default(cuid())
+
+  relationship   Relationship @relation(fields: [relationshipId], references: [id], onDelete: Cascade)
+  relationshipId String @unique
+
+  isSigned Boolean @default(false)
+  rentCost Int
+  utilitiesCost Int
+  startDate DateTime
+  endDate DateTime
+
+  documents Document[]
+
+  createdBy   User   @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  createdById String
+
+  @@index([relationshipId])
+  @@index([createdById])
+
 }

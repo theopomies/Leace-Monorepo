@@ -1,6 +1,6 @@
 import { router, protectedProcedure } from "../../trpc";
 import { z } from "zod";
-import { Role } from "@prisma/client";
+import { Role, RelationType } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 
 export const relationshipModeration = router({
@@ -20,9 +20,9 @@ export const relationshipModeration = router({
         });
         if (!postIds) throw new TRPCError({ code: "NOT_FOUND" });
 
-        const rs = await ctx.prisma.relationship.findMany({
+        const relationship = await ctx.prisma.relationship.findMany({
           where: {
-            isMatch: true,
+            relationType: RelationType.MATCH,
             postId: {
               in: postIds.map((postObj) => {
                 return postObj.id;
@@ -40,13 +40,13 @@ export const relationshipModeration = router({
           },
           orderBy: { updatedAt: "desc" },
         });
-        if (!rs) throw new TRPCError({ code: "NOT_FOUND" });
+        if (!relationship) throw new TRPCError({ code: "NOT_FOUND" });
 
-        return rs;
+        return relationship;
       }
-      const rs = await ctx.prisma.relationship.findMany({
+      const relationship = await ctx.prisma.relationship.findMany({
         where: {
-          isMatch: true,
+          relationType: RelationType.MATCH,
           userId: user.id,
         },
         include: {
@@ -60,8 +60,8 @@ export const relationshipModeration = router({
         },
         orderBy: { updatedAt: "desc" },
       });
-      if (!rs) throw new TRPCError({ code: "NOT_FOUND" });
+      if (!relationship) throw new TRPCError({ code: "NOT_FOUND" });
 
-      return rs;
+      return relationship;
     }),
 });

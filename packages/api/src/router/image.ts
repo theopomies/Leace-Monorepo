@@ -30,7 +30,7 @@ export const imageRouter = router({
       });
       if (!created) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
 
-      const key = `${getPost.id}/images/${id}.${ext}`;
+      const key = `posts/${getPost.id}/images/${id}.${ext}`;
       const bucketParams = {
         Bucket: "leaceawsbucket",
         Key: key,
@@ -58,10 +58,11 @@ export const imageRouter = router({
         images.map(async (image: Image) => {
           const bucketParams = {
             Bucket: "leaceawsbucket",
-            Key: `${getPost.id}/images/${image.id}.${image.ext}`,
+            Key: `posts/${getPost.id}/images/${image.id}.${image.ext}`,
           };
           const command = new GetObjectCommand(bucketParams);
-          return { ...image, url: await getSignedUrl(ctx.s3Client, command) };
+          const url = await getSignedUrl(ctx.s3Client, command);
+          return { ...image, url };
         }),
       );
     }),
@@ -89,7 +90,7 @@ export const imageRouter = router({
 
       const bucketParams = {
         Bucket: "leaceawsbucket",
-        Key: `${ctx.auth.userId}/images/${image.id}.${image.ext}`,
+        Key: `posts/${getPost.id}/images/${image.id}.${image.ext}`,
       };
       const command = new DeleteObjectCommand(bucketParams);
 

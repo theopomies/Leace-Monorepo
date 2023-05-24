@@ -22,7 +22,7 @@ export const documentModeration = router({
         documents.map(async (document: Document) => {
           const bucketParams = {
             Bucket: "leaceawsbucket",
-            Key: `${userId}/document/${document.id}.${document.ext}`,
+            Key: `users/${userId}/documents/${document.id}.${document.ext}`,
           };
           const command = new GetObjectCommand(bucketParams);
 
@@ -52,13 +52,11 @@ export const documentModeration = router({
         documents.map(async (document: Document) => {
           const bucketParams = {
             Bucket: "leaceawsbucket",
-            Key: `${getPost.id}/documents/${document.id}.${document.ext}`,
+            Key: `posts/${getPost.id}/documents/${document.id}.${document.ext}`,
           };
           const command = new GetObjectCommand(bucketParams);
-          return {
-            ...document,
-            url: await getSignedUrl(ctx.s3Client, command),
-          };
+          const url = await getSignedUrl(ctx.s3Client, command);
+          return { ...document, url };
         }),
       );
     }),

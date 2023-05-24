@@ -9,21 +9,38 @@ export const TenantList = ({ userId }: TenantListProps) => {
   const { data: relationships } = trpc.relationship.getMatchesForOwner.useQuery(
     { userId },
   );
-  if (relationships) {
-    return (
-      <>
-        {relationships.map(
-          ({ user: { image, description, firstName, lastName } }) => {
+  const { data: user } = trpc.user.getUserById.useQuery({
+    userId: userId ?? "",
+  });
+
+  if (!relationships) return <></>;
+
+  return (
+    <>
+      {relationships.map(
+        ({
+          user: { id: otherUserId, image, description, firstName, lastName },
+          post: { id: postId, title },
+          id,
+          relationType,
+        }) => (
+          <div key={id}>
             <TenantBar
+              otherUserId={otherUserId}
               img={image ?? ""}
               desc={description ?? ""}
               firstname={firstName ?? ""}
               lastName={lastName ?? ""}
-            />;
-          },
-        )}
-      </>
-    );
-  }
-  return <></>;
+              relationType={relationType}
+              userId={userId}
+              postId={postId}
+              title={title ?? ""}
+              relationshipId={id}
+              user={user}
+            />
+          </div>
+        ),
+      )}
+    </>
+  );
 };

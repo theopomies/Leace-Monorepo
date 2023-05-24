@@ -4,6 +4,7 @@ import { Role } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { getId } from "../utils/getId";
 import axios from "axios";
+import { checkLocation, filterStrings } from "../utils/filter";
 
 export const attributesRouter = router({
   updateUserAttributes: protectedProcedure([Role.TENANT])
@@ -102,6 +103,9 @@ export const attributesRouter = router({
         });
 
         if (!created) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+        filterStrings({ ctx, userId: input.userId, check: [input.location] });
+        checkLocation({ ctx, userId: input.userId, check: [input.location] });
 
         return;
       }
@@ -259,5 +263,8 @@ export const attributesRouter = router({
       });
 
       if (!updated) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+      filterStrings({ ctx, postId: input.postId, check: [input.location] });
+      checkLocation({ ctx, postId: input.postId, check: [input.location] });
     }),
 });

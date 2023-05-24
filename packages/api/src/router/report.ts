@@ -25,7 +25,7 @@ export const reportRouter = router({
 
       if (!user) throw new TRPCError({ code: "NOT_FOUND" });
 
-      const updated = await ctx.prisma.report.create({
+      const report = await ctx.prisma.report.create({
         data: {
           createdById,
           userId,
@@ -35,7 +35,7 @@ export const reportRouter = router({
         },
       });
 
-      if (!updated) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+      if (!report) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
     }),
 
   reportPostById: protectedProcedure([Role.TENANT])

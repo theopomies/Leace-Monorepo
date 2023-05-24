@@ -9,6 +9,7 @@ import { relationshipRouter } from "./relationship";
 import { documentRouter } from "./document";
 import { imageRouter } from "./image";
 import { conversationRouter } from "./conversation";
+import { leaseRouter } from "./lease";
 import { supportRouter } from "./support";
 import { geocoderRouter } from "./geocoder";
 
@@ -22,6 +23,7 @@ export const appRouter = router({
   document: documentRouter,
   image: imageRouter,
   conversation: conversationRouter,
+  lease: leaseRouter,
   support: supportRouter,
   moderation: moderationRouter,
   geocoder: geocoderRouter,
