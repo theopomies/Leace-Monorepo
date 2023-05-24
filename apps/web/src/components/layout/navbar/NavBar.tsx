@@ -17,19 +17,13 @@ export function NavBar({ userId }: NavBarProps) {
     href,
     label,
     roles,
-    hidePremium = false,
   }: {
     href: string;
     label: string;
     roles: Role[];
-    hidePremium?: boolean;
   }) => {
     if (me) {
-      if (
-        ((hidePremium && !me.isPremium) || !hidePremium) &&
-        me.role &&
-        roles.includes(me.role)
-      ) {
+      if (me.role && roles.includes(me.role)) {
         return (
           <li key={label}>
             <Link

@@ -20,6 +20,7 @@ export const TenantList = ({ userId }: TenantListProps) => {
             user: { id: otherUserId, image, description, firstName, lastName },
             post: { id: postId, title },
             id,
+            conversation,
             relationType,
           }) => (
             <div key={id}>
@@ -34,17 +35,22 @@ export const TenantList = ({ userId }: TenantListProps) => {
                 postId={postId}
                 title={title ?? ""}
                 relationshipId={id}
+                conversationId={conversation?.id}
                 user={user}
               />
             </div>
           ),
         )
       ) : (
-        <div className="flex flex-col items-center justify-center mt-8">
-          <h1 className="text-2xl font-bold text-gray-700">No matches yet :(</h1>
+        <div className="mt-8 flex flex-col items-center justify-center">
+          <h1 className="text-2xl font-bold text-gray-700">
+            No matches yet :(
+          </h1>
 
           <div className="mt-4 flex flex-col items-center justify-center">
-            <p className="text-gray-500">Go swipe to find your dream tenant !</p>
+            <p className="text-gray-500">
+              Go swipe to find your dream tenant !
+            </p>
           </div>
         </div>
       )}

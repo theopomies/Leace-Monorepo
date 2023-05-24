@@ -21,6 +21,7 @@ export interface TenantBarProps {
         attribute: Attribute | null;
       })
     | undefined;
+  conversationId?: string;
 }
 
 export const TenantBar = ({
@@ -35,6 +36,7 @@ export const TenantBar = ({
   postId,
   title,
   user,
+  conversationId,
 }: TenantBarProps) => {
   const utils = trpc.useContext();
   const likeTenantForPost = trpc.relationship.likeTenantForPost.useMutation({
@@ -92,10 +94,10 @@ export const TenantBar = ({
         <Button theme="danger" onClick={handleDeleteMatch}>
           Delete Match
         </Button>
-        {relationType == RelationType.MATCH && (
+        {relationType == RelationType.MATCH && conversationId && (
           <Link
             className="rounded bg-indigo-500 px-4 py-3 font-bold text-white hover:bg-indigo-600 active:bg-indigo-700"
-            href={`/chat/all`}
+            href={`/users/${userId}/matches/${conversationId}`}
           >
             Chat with Match
           </Link>
