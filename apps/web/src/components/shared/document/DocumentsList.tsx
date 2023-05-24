@@ -19,11 +19,13 @@ export interface DocumentsListProps {
     ext: string;
   }[];
   handleDeleteDoc: (documentId: string) => Promise<void>;
+  isUserLogged?: boolean;
 }
 
 export const DocumentsList = ({
   documents,
   handleDeleteDoc,
+  isUserLogged,
 }: DocumentsListProps) => {
   const [selectedDocument, setSelectedDocument] = useState<Document | null>();
 
@@ -62,14 +64,16 @@ export const DocumentsList = ({
               <Check />
             </div>
           )}
-          <Button
-            theme="danger"
-            onClick={() => handleDeleteDoc(doc.id)}
-            overrideStyles
-            className="absolute -right-1 -top-1 inline-flex items-center justify-center rounded-md bg-red-500 p-1 text-white hover:bg-white hover:text-red-500"
-          >
-            <Cross />
-          </Button>
+          {isUserLogged && (
+            <Button
+              theme="danger"
+              onClick={() => handleDeleteDoc(doc.id)}
+              overrideStyles
+              className="absolute -right-1 -top-1 inline-flex items-center justify-center rounded-md bg-red-500 p-1 text-white hover:bg-white hover:text-red-500"
+            >
+              <Cross />
+            </Button>
+          )}
         </div>
       ))}
       {selectedDocument && (

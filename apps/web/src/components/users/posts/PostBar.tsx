@@ -13,6 +13,7 @@ export interface PostBarProps {
   relationType: RelationType;
   userId: string;
   relationshipId: string;
+  conversationId?: string;
   user:
     | (User & {
         attribute: Attribute | null;
@@ -28,21 +29,24 @@ export const PostBar = ({
   relationType,
   userId,
   relationshipId,
+  conversationId,
   user,
 }: PostBarProps) => {
   const utils = trpc.useContext();
   const { data: img } = trpc.image.getSignedPostUrl.useQuery(postId);
+  const likePostForTenant = trpc.relationship.likePostForTenant.useMutation({
+    onSuccess: () => {
+      utils.relationship.getMatchesForTenant.invalidate({ userId });
+      utils.relationship.getLikesForTenant.invalidate({ userId });
+    },
+  });
   const deleteMatchMutation =
     trpc.relationship.deleteRelationForTenant.useMutation({
       onSuccess: () => {
         utils.relationship.getMatchesForTenant.invalidate({ userId });
+        utils.relationship.getLikesForTenant.invalidate({ userId });
       },
     });
-  const likePostForTenant = trpc.relationship.likePostForTenant.useMutation({
-    onSuccess: () => {
-      utils.relationship.getLikesForTenant.invalidate({ userId });
-    },
-  });
 
   const handleDeleteMatch = async () => {
     await deleteMatchMutation.mutateAsync({ userId, relationshipId });
@@ -85,10 +89,10 @@ export const PostBar = ({
         <Button theme="danger" onClick={handleDeleteMatch}>
           Delete Match
         </Button>
-        {relationType == RelationType.MATCH && (
+        {relationType == RelationType.MATCH && conversationId && (
           <Link
             className="rounded bg-indigo-500 px-4 py-3 font-bold text-white hover:bg-indigo-600 active:bg-indigo-700"
-            href={`/chat/all`}
+            href={`/users/${userId}/matches/${conversationId}`}
           >
             Chat with Match
           </Link>

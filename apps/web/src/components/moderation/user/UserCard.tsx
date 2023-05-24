@@ -2,10 +2,11 @@
 import { trpc } from "../../../utils/trpc";
 import { Loader } from "../../shared/Loader";
 import { Documents } from "../documents";
-import { ChatModal } from "../ChatModal";
 import { displayDate } from "../../../utils/displayDate";
 import { DisplayReports } from "../report/DisplayReports";
 import { DeleteUserImg } from "./DeleteUserImg";
+import Link from "next/link";
+import { Button } from "../../shared/button/Button";
 
 export interface UserCardProps {
   userId: string;
@@ -58,11 +59,16 @@ export const UserCard = ({ userId }: UserCardProps) => {
           </p>
         </div>
       </div>
-      <ChatModal userId={user.id} />
+      <div className="mt-4 flex justify-center">
+        <Link href={`/administration/users/${userId}/conversations`}>
+          <Button theme="primary">View conversations</Button>
+        </Link>
+      </div>
       <div className="border-blueGray-200 my-10 border-y py-10 text-center">
         <p className="px-10 text-gray-600">
           {user.description ? user.description : "No description"}
         </p>
+        L
       </div>
       <Documents userId={user.id} />
       <DisplayReports reports={user.reports} />

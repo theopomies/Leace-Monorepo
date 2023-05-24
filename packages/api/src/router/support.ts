@@ -39,7 +39,7 @@ export const supportRouter = router({
 
       await ctx.prisma.message.create({
         data: {
-          content: "What can the best mechanic in LS do for you ?",
+          content: `Hi! I'm ${support.firstName}. What can I do for you today?`,
           conversationId: conversation.id,
           senderId: support.id,
         },

@@ -191,7 +191,7 @@ export const leaseRouter = router({
         throw new TRPCError({ code: "FORBIDDEN" });
       }
 
-      const deleted = await ctx.prisma.post.delete({
+      const deleted = await ctx.prisma.lease.delete({
         where: { id: input.leaseId },
       });
 

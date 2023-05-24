@@ -4,18 +4,12 @@ export function getLinks(userId: string): {
   href: string;
   label: string;
   roles: Role[];
-  hidePremium?: boolean;
 }[] {
   return [
     {
       href: "/",
       label: "Home",
       roles: [Role.OWNER, Role.AGENCY, Role.TENANT, Role.ADMIN],
-    },
-    {
-      href: "/chat/all",
-      label: "Chat",
-      roles: [Role.OWNER, Role.AGENCY, Role.TENANT],
     },
     {
       href: `/dashboard`,

@@ -204,12 +204,13 @@ export const ProfilePage = ({ userId }: ProfilePageProps) => {
                 </div>
               </div>
             )}
-            {documents && documents.length > 0 && (
+            {session && documents && documents.length > 0 && (
               <div className="border-t p-5">
                 <h2 className="text-xl font-bold text-gray-400">Documents:</h2>
                 <DocumentsList
                   documents={documents}
                   handleDeleteDoc={handleDeleteDoc}
+                  isUserLogged={userId == session.userId}
                 />
               </div>
             )}

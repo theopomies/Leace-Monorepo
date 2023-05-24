@@ -1,26 +1,22 @@
-/* eslint-disable @next/next/no-img-element */
-import { useEffect, useRef } from "react";
-import { Message, User, Conversation } from "@prisma/client";
-import { ChatMessage } from "./ChatMessage";
-import { ChatInputMatch } from "./ChatInputMatch";
-import { ChatInputSupport } from "./ChatInputSupport";
+import { ReactNode, useEffect, useRef } from "react";
+import { ChatMessage, MessageWithSender } from "./ChatMessage";
+import { ChatInput } from "./ChatInput";
+import { User } from "@prisma/client";
 
 export interface ChatBoxProps {
   userId: string;
-  conversation: Conversation & {
-    messages: (Message & {
-      sender: User;
-    })[];
-  };
-  chatOn?: boolean;
-  isSupport?: boolean;
+  messages: MessageWithSender[];
+  onSend?: (content: string) => void;
+  contact?: User;
+  additionnalBarComponent?: ReactNode;
 }
 
 export const ChatBox = ({
   userId,
-  conversation,
-  chatOn = false,
-  isSupport = false,
+  messages,
+  onSend,
+  contact,
+  additionnalBarComponent,
 }: ChatBoxProps) => {
   const msgRef = useRef<null | HTMLDivElement>(null);
 
@@ -35,18 +31,26 @@ export const ChatBox = ({
   });
 
   return (
-    <div className="flex h-full w-full flex-auto flex-col p-6">
-      <div className="flex h-full w-full flex-auto flex-shrink-0 flex-col rounded-2xl bg-gray-100 p-4">
-        <div ref={msgRef} className="flex h-full w-full flex-col overflow-auto">
-          <div className="flex h-full flex-col">
-            {conversation.messages?.map((message) => (
-              <ChatMessage key={message.id} userId={userId} message={message} />
-            ))}
+    <div className="flex flex-grow flex-col p-6">
+      {contact && (
+        <div className="flex items-center justify-between rounded-xl bg-white p-4">
+          <div>
+            {contact.firstName} {contact.lastName}
           </div>
+          <div>{additionnalBarComponent}</div>
         </div>
-        {isSupport
-          ? chatOn && <ChatInputSupport conversationId={conversation.id} />
-          : chatOn && <ChatInputMatch conversationId={conversation.id} />}
+      )}
+      <div className="mt-4 flex flex-grow flex-col overflow-hidden rounded-2xl bg-gray-100 p-4">
+        <div ref={msgRef} className="flex-grow overflow-auto">
+          {messages.map((message) => (
+            <ChatMessage key={message.id} userId={userId} message={message} />
+          ))}
+        </div>
+        {onSend !== undefined && (
+          <div className="flex-shrink-0">
+            <ChatInput onSend={onSend} />
+          </div>
+        )}
       </div>
     </div>
   );
