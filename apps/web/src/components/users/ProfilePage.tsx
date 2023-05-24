@@ -8,6 +8,7 @@ import { Button } from "../shared/button/Button";
 import { useRouter } from "next/router";
 import { useClerk } from "@clerk/nextjs";
 import { DocumentsList } from "../shared/document/DocumentsList";
+import { DeleteProfileDialog } from "./DeleteProfileDialog";
 
 export interface ProfilePageProps {
   userId: string;
@@ -216,20 +217,16 @@ export const ProfilePage = ({ userId }: ProfilePageProps) => {
             )}
           </form>
           {session && userId == session.userId && (
-            <>
+            <div className="flex gap-4">
               <Link href={`/users/${userId}/update`}>
                 <Button>Modify</Button>
               </Link>
-              <Button
-                className="scale-75 rounded bg-red-500 px-4 font-bold text-white hover:bg-red-600 active:bg-red-700"
-                onClick={(e) => {
-                  e.preventDefault();
+              <DeleteProfileDialog
+                onDelete={() => {
                   deleteUser.mutate({ userId });
                 }}
-              >
-                Delete Account
-              </Button>
-            </>
+              />
+            </div>
           )}
         </div>
       </div>
