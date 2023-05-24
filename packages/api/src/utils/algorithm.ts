@@ -47,24 +47,14 @@ export async function getPostsWithAttribute(userId: string) {
   }
 
   // Calculate max and min lat and lng with the range
-  const maxLat =
-    (userAtt.lat) + rad2deg((userAtt.range) / earthRadius);
-  const minLat =
-    (userAtt.lat) - rad2deg((userAtt.range) / earthRadius);
+  const maxLat = userAtt.lat + rad2deg(userAtt.range / earthRadius);
+  const minLat = userAtt.lat - rad2deg(userAtt.range / earthRadius);
   const maxLng =
-    (userAtt.lng) +
-    rad2deg(
-      (userAtt.range) /
-        earthRadius /
-        Math.cos(deg2rad(userAtt.lat)),
-    );
+    userAtt.lng +
+    rad2deg(userAtt.range / earthRadius / Math.cos(deg2rad(userAtt.lat)));
   const minLng =
-    (userAtt.lng) -
-    rad2deg(
-      (userAtt.range) /
-        earthRadius /
-        Math.cos(deg2rad(userAtt.lat)),
-    );
+    userAtt.lng -
+    rad2deg(userAtt.range / earthRadius / Math.cos(deg2rad(userAtt.lat)));
 
   const posts = await prisma.post.findMany({
     where: {
@@ -73,14 +63,14 @@ export async function getPostsWithAttribute(userId: string) {
         AND: [
           {
             price: {
-              gte: userAtt.minPrice ?? 0,
-              lte: userAtt.maxPrice ?? 999999,
+              gte: userAtt.minPrice ?? undefined,
+              lte: userAtt.maxPrice ?? undefined,
             },
           },
           {
             size: {
-              gte: userAtt.minSize ?? 0,
-              lte: userAtt.maxSize ?? 999999,
+              gte: userAtt.minSize ?? undefined,
+              lte: userAtt.maxSize ?? undefined,
             },
           },
           { furnished: userAtt.furnished ?? undefined },
@@ -116,7 +106,7 @@ export async function getPostsWithAttribute(userId: string) {
         ],
       },
     },
-    include: { attribute: true },
+    include: { attribute: true, images: { take: 1 } },
   });
 
   if (!posts) return [];
@@ -137,17 +127,11 @@ export async function getUsersWithAttribute(postId: string) {
   }
 
   // Calculate max and min lat and lng with the range
-  const maxLat =
-    (postAtt.lat) + rad2deg((postAtt.range) / earthRadius);
-  const minLat =
-    (postAtt.lat) - rad2deg((postAtt.range) / earthRadius);
+  const maxLat = postAtt.lat + rad2deg(postAtt.range / earthRadius);
+  const minLat = postAtt.lat - rad2deg(postAtt.range / earthRadius);
   const maxLng =
-    (postAtt.lng) +
-    rad2deg(
-      (postAtt.range) /
-        earthRadius /
-        Math.cos(deg2rad(postAtt.lat)),
-    );
+    postAtt.lng +
+    rad2deg(postAtt.range / earthRadius / Math.cos(deg2rad(postAtt.lat)));
   const minLng =
     (postAtt.lng ?? 0) -
     rad2deg(

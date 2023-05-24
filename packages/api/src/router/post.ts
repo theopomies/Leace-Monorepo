@@ -204,31 +204,38 @@ export const postRouter = router({
 
       return { income, expense };
     }),
-  getPostsToBeSeen: protectedProcedure([Role.TENANT]).query(async ({ ctx }) => {
-    const user = await ctx.prisma.user.findUniqueOrThrow({
-      where: { id: ctx.auth.userId },
-      include: { postsToBeSeen: true },
-    });
-    // If less or equal than 3 posts, add more
-    if (user.postsToBeSeen.length <= 3) {
-      const newPosts = await getPostsWithAttribute(user.id);
-      if (newPosts.length === 0) return user.postsToBeSeen;
-      const updatedUser = await ctx.prisma.user.update({
-        where: { id: user.id },
-        data: {
-          postsToBeSeen: {
-            connect: newPosts.map((post) => ({ id: post.id })),
-          },
-        },
-        include: { postsToBeSeen: true },
+  getPostsToBeSeen: protectedProcedure([Role.TENANT])
+    .input(z.object({ userId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      if (input.userId !== ctx.auth.userId) {
+        throw new TRPCError({ code: "FORBIDDEN" });
+      }
+
+      const user = await ctx.prisma.user.findUniqueOrThrow({
+        where: { id: input.userId },
+        include: { postsToBeSeen: { include: { images: true, attribute:true } } },
       });
-      shuffle(updatedUser.postsToBeSeen);
-      return updatedUser.postsToBeSeen;
-    }
-    // If more than 3 posts, return the list
-    shuffle(user.postsToBeSeen);
-    return user.postsToBeSeen;
-  }),
+
+      // If less or equal than 3 posts, add more
+      if (user.postsToBeSeen.length <= 3) {
+        const newPosts = await getPostsWithAttribute(user.id);
+        if (newPosts.length === 0) return user.postsToBeSeen;
+        const updatedUser = await ctx.prisma.user.update({
+          where: { id: user.id },
+          data: {
+            postsToBeSeen: {
+              connect: newPosts.map((post) => ({ id: post.id })),
+            },
+          },
+          include: { postsToBeSeen: {include: {images: true, attribute: true }}},
+        });
+        shuffle(updatedUser.postsToBeSeen);
+        return updatedUser.postsToBeSeen;
+      }
+      // If more than 3 posts, return the list
+      shuffle(user.postsToBeSeen);
+      return user.postsToBeSeen;
+    }),
   getUsersToBeSeen: protectedProcedure([Role.AGENCY, Role.OWNER])
     .input(z.object({ userId: z.string(), postId: z.string() }))
     .query(async ({ ctx, input }) => {
@@ -240,10 +247,6 @@ export const postRouter = router({
         where: { id: input.postId },
         include: { usersToBeSeen: true },
       });
-
-      if (post.createdById !== input.userId) {
-        throw new TRPCError({ code: "FORBIDDEN" });
-      }
 
       // If less or equal than 3 posts, add more
       if (post.usersToBeSeen.length <= 3) {

@@ -8,15 +8,16 @@ export interface PostListProps {
 }
 
 export const PostList = ({ userId }: PostListProps) => {
-  const { data: relationships } =
+  const { data: relationships, status } =
     trpc.relationship.getMatchesForTenant.useQuery({ userId });
   const { data: user } = trpc.user.getUserById.useQuery({
     userId: userId ?? "",
   });
-  if (relationships && relationships.length > 0) {
-    return (
-      <>
-        {relationships.map(({ post, id, relationType }) => (
+
+  return (
+    <>
+      {(status == "success" && relationships.length) ? (
+        relationships.map(({ post, id, relationType }) => (
           <PostBar
             key={id}
             postId={post.id}
@@ -28,9 +29,16 @@ export const PostList = ({ userId }: PostListProps) => {
             relationshipId={id}
             user={user}
           />
-        ))}
-      </>
-    );
-  }
-  return <></>;
+        ))
+      ) : (
+        <div className="flex flex-col items-center justify-center mt-8">
+          <h1 className="text-2xl font-bold text-gray-700">No matches yet :(</h1>
+
+          <div className="mt-4 flex flex-col items-center justify-center">
+            <p className="text-gray-500">Go swipe to find your dream apartment !</p>
+          </div>
+        </div>
+      )}
+    </>
+  );
 };
