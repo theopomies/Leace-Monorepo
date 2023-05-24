@@ -14,7 +14,9 @@ export const Moderation = () => {
 
   if (report.isLoading) {
     return <Loader />;
-  } else if (report && report.data && !report.error) {
+  }
+
+  if (report && report.data && !report.error) {
     return (
       <div className="flex w-full">
         <div className="flex w-1/5 items-center justify-center"></div>
@@ -30,11 +32,10 @@ export const Moderation = () => {
         </div>
       </div>
     );
-  } else {
-    return (
-      <div className="flex w-full items-center justify-center">
-        <p>No user or post reported</p>
-      </div>
-    );
   }
+  return (
+    <div className="flex w-full items-center justify-center">
+      <p>No user or post reported</p>
+    </div>
+  );
 };

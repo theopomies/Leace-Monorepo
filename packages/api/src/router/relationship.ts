@@ -241,6 +241,7 @@ export const relationshipRouter = router({
           post: { include: { createdBy: true } },
           conversation: true,
           user: true,
+          lease: true,
         },
         orderBy: { updatedAt: "desc" },
       });
@@ -285,6 +286,7 @@ export const relationshipRouter = router({
           post: { include: { createdBy: true } },
           conversation: true,
           user: true,
+          lease: true,
         },
         orderBy: { updatedAt: "desc" },
       });

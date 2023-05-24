@@ -17,6 +17,8 @@
     "@leace/api": "*",
     "@leace/db": "*",
     "@leace/tailwind-config": "*",
+    "@radix-ui/react-dialog": "^1.0.3",
+    "@radix-ui/react-popover": "^1.0.5",
     "@tanstack/react-query": "^4.16.1",
     "@trpc/client": "^10.1.0",
     "@trpc/next": "^10.1.0",
