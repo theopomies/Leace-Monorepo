@@ -81,7 +81,10 @@ export function DisplayPost({
             <div className="my-4">
               <h2 className="text-xl">Type de logement:</h2>
               <strong>
-                {attribute.house === true ? "Maison" : "Appartement"}
+                {attribute.homeType
+                  ? attribute.homeType.charAt(0) +
+                    attribute.homeType.slice(1).toLowerCase()
+                  : "Whatever"}
               </strong>
             </div>
             <div className="my-4">
