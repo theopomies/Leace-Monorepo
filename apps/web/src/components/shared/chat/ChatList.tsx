@@ -7,8 +7,8 @@ import {
   Role,
   Conversation,
 } from "@prisma/client";
-// import { SupportButton } from "./SupportButton";
 import Link from "next/link";
+import { SupportButton } from "./SupportButton";
 
 export type Relationships =
   | (Relationship & {
@@ -162,15 +162,14 @@ export const ChatList = ({
           ))}
         </div>
       </div>
-      {/* {supportRelationships?.every(
-        (sr) => sr.conversation?.type === ConversationType.DONE,
-      ) && (
-        <SupportButton
-          userId={userId}
-          role={role}
-          setConversationId={setConversationId}
-        />
-      )} */}
+      {supportRelationships === undefined ||
+        (supportRelationships.length === 0 && (
+          <SupportButton
+            userId={userId}
+            role={role}
+            conversationLink={conversationLink}
+          />
+        ))}
     </div>
   );
 };

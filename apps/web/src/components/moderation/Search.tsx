@@ -1,13 +1,8 @@
 import Link from "next/link";
 import { useUUIDSearch } from "./administration/useUUIDSearch";
-import { useEffect } from "react";
 
 export const Search = () => {
   const { setUUID, uuid, isLoading, type } = useUUIDSearch();
-
-  useEffect(() => {
-    console.log(type);
-  }, [type]);
 
   return (
     <div className="flex w-full items-center justify-center">
