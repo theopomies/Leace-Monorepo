@@ -9,6 +9,7 @@ import { Header } from "../../components/users/Header";
 import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
 import { PostForm } from "./PostForm";
+import { HomeType } from "../../types/homeType";
 import axios from "axios";
 
 export const CreatePost = () => {
@@ -20,8 +21,7 @@ export const CreatePost = () => {
   const updatePost = trpc.attribute.updatePostAttributes.useMutation();
   const [location, setLocation] = useState("");
   const [furnished, setFurnished] = useState(false);
-  const [house, setHouse] = useState(false);
-  const [appartment, setAppartment] = useState(false);
+  const [homeType, setHomeType] = useState<HomeType | undefined>();
   const [terrace, setTerrace] = useState(false);
   const [pets, setPets] = useState(false);
   const [smoker, setSmoker] = useState(false);
@@ -50,8 +50,7 @@ export const CreatePost = () => {
       postId,
       location,
       furnished,
-      house,
-      appartment,
+      homeType,
       terrace,
       pets,
       smoker,
@@ -110,6 +109,12 @@ export const CreatePost = () => {
       setter(event.target.valueAsNumber);
     };
 
+  const handleHomeTypeChange =
+    (setter: Dispatch<SetStateAction<HomeType | undefined>>) =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setter(event.target.value as HomeType);
+    };
+
   const handleImage =
     (setter: Dispatch<SetStateAction<File[] | undefined>>) =>
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -141,10 +146,8 @@ export const CreatePost = () => {
         title={title}
         setLocation={handleChange(setLocation)}
         location={location}
-        setHouse={handleBooleanChange(setHouse)}
-        house={house}
-        setAppartment={handleBooleanChange(setAppartment)}
-        appartment={appartment}
+        setHomeType={handleHomeTypeChange(setHomeType)}
+        homeType={homeType}
         setDescription={handleChange(setDescription)}
         description={description}
         setFurnished={handleBooleanChange(setFurnished)}

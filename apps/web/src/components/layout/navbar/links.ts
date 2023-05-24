@@ -37,11 +37,6 @@ export function getLinks(userId: string): {
       roles: [Role.OWNER, Role.AGENCY],
     },
     {
-      href: "#",
-      label: "Notifications",
-      roles: [Role.OWNER, Role.AGENCY, Role.TENANT],
-    },
-    {
       href: "/moderation",
       label: "Moderation",
       roles: [Role.ADMIN],

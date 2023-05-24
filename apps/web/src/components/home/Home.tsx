@@ -3,7 +3,6 @@ import { trpc } from "../../utils/trpc";
 import { RoleSelector } from "../users/RoleSelector";
 import { PostStack } from "./stack/PostStack";
 import { TenantStack } from "./stack/TenantStack";
-import { Administration } from "../moderation/Administration";
 import { Moderation } from "../moderation/Moderation";
 import { Loader } from "../shared/Loader";
 import { useRouter } from "next/router";
