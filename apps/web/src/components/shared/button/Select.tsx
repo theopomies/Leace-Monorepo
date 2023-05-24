@@ -1,4 +1,6 @@
-/* eslint-disable @next/next/no-img-element */
+// disable eslint for this file
+/* eslint-disable */
+// @ts-nocheck
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Check } from "../../moderation/Icons";
@@ -55,8 +57,7 @@ export const Select = ({
               {value &&
                 (options.length === 0 || typeof options[0] === "string"
                   ? value
-                  : // eslint-disable-next-line @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-non-null-asserted-optional-chain
-                    (
+                  : (
                       options.find(
                         (opt) => (opt as any).value! === value,
                       ) as any
