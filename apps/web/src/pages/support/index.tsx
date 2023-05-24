@@ -1,12 +1,11 @@
 import { Role } from "@prisma/client";
 import { LoggedLayout } from "../../components/layout/LoggedLayout";
+import { SupportPage } from "../../components/moderation/SupportPage";
 
-// TODO
-
-export default function SupportPage() {
+export default function Support() {
   return (
     <LoggedLayout title="Support | Leace" roles={[Role.ADMIN]}>
-      Lol
+      <SupportPage />
     </LoggedLayout>
   );
 }

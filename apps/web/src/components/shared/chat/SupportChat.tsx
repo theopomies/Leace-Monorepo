@@ -10,13 +10,13 @@ export function SupportChat({
   role,
 }: {
   userId: string;
-  conversationId: string;
+  conversationId?: string;
   role: Role;
 }) {
   const utils = trpc.useContext();
   const { data: conversation, isLoading: conversationIsLoading } =
     trpc.moderation.support.getConversation.useQuery({
-      conversationId,
+      conversationId: conversationId ?? "",
     });
   const sendMutation = trpc.moderation.support.sendMessage.useMutation({
     onSuccess() {
@@ -27,6 +27,9 @@ export function SupportChat({
     trpc.moderation.support.getRelationships.useQuery({ userId });
 
   const sendMessage = (content: string) => {
+    if (!conversationId) {
+      return;
+    }
     sendMutation.mutate({ conversationId, content });
   };
 
@@ -39,15 +42,11 @@ export function SupportChat({
     return <Loader />;
   }
 
-  if (!conversation) {
-    return <div>Conversation not found</div>; // TODO: 404
-  }
-
   return (
     <Chat
       userId={userId}
-      messages={conversation.messages}
-      onSend={sendMessage}
+      messages={conversation?.messages}
+      onSend={conversationId !== "" ? sendMessage : undefined}
       supportRelationships={supportRelationships}
       role={role}
       conversationId={conversationId}
