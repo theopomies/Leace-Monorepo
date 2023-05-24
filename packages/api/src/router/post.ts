@@ -213,7 +213,9 @@ export const postRouter = router({
 
       const user = await ctx.prisma.user.findUniqueOrThrow({
         where: { id: input.userId },
-        include: { postsToBeSeen: { include: { images: true, attribute:true } } },
+        include: {
+          postsToBeSeen: { include: { images: true, attribute: true } },
+        },
       });
 
       // If less or equal than 3 posts, add more
@@ -227,7 +229,9 @@ export const postRouter = router({
               connect: newPosts.map((post) => ({ id: post.id })),
             },
           },
-          include: { postsToBeSeen: {include: {images: true, attribute: true }}},
+          include: {
+            postsToBeSeen: { include: { images: true, attribute: true } },
+          },
         });
         shuffle(updatedUser.postsToBeSeen);
         return updatedUser.postsToBeSeen;
@@ -237,12 +241,8 @@ export const postRouter = router({
       return user.postsToBeSeen;
     }),
   getUsersToBeSeen: protectedProcedure([Role.AGENCY, Role.OWNER])
-    .input(z.object({ userId: z.string(), postId: z.string() }))
+    .input(z.object({ postId: z.string() }))
     .query(async ({ ctx, input }) => {
-      if (input.userId !== ctx.auth.userId) {
-        throw new TRPCError({ code: "FORBIDDEN" });
-      }
-
       const post = await ctx.prisma.post.findUniqueOrThrow({
         where: { id: input.postId },
         include: { usersToBeSeen: true },

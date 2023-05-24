@@ -109,6 +109,8 @@ export async function getPostsWithAttribute(userId: string) {
     include: { attribute: true, images: { take: 1 } },
   });
 
+  console.log(posts);
+
   if (!posts) return [];
 
   // Shuffle posts with Fisher-Yates algorithm
@@ -146,14 +148,14 @@ export async function getUsersWithAttribute(postId: string) {
         AND: [
           {
             price: {
-              gte: postAtt.minPrice ?? 0,
-              lte: postAtt.maxPrice ?? 999999,
+              gte: postAtt.minPrice ?? undefined,
+              lte: postAtt.maxPrice ?? undefined,
             },
           },
           {
             size: {
-              gte: postAtt.minSize ?? 0,
-              lte: postAtt.maxSize ?? 999999,
+              gte: postAtt.minSize ?? undefined,
+              lte: postAtt.maxSize ?? undefined,
             },
           },
           { furnished: postAtt.furnished ?? undefined },

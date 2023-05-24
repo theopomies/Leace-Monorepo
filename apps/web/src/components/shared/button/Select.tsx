@@ -5,14 +5,22 @@ import { Check } from "../../moderation/Icons";
 
 export interface SelectProps {
   label?: string;
-  value: string;
-  options: string[];
+  value?: string;
+  options: string[] | { label: string; value: string }[];
   onChange: (value: string) => void;
+  placeholder?: string;
 }
 
-export const Select = ({ label, value, options, onChange }: SelectProps) => {
+export const Select = ({
+  label,
+  value,
+  options,
+  onChange,
+  placeholder,
+}: SelectProps) => {
   const [open, setOpen] = useState(false);
   const selectRef = useRef<HTMLDivElement>(null);
+  console.log(options);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -43,7 +51,18 @@ export const Select = ({ label, value, options, onChange }: SelectProps) => {
           onClick={() => setOpen(!open)}
         >
           <span className="flex items-center">
-            <span className="ml-3 block truncate">{value}</span>
+            <span className="ml-3 block truncate">
+              {value &&
+                (options.length === 0 || typeof options[0] === "string"
+                  ? value
+                  : // eslint-disable-next-line @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-non-null-asserted-optional-chain
+                    (
+                      options.find(
+                        (opt) => (opt as any).value! === value,
+                      ) as any
+                    )?.label ?? value)}
+              {(!value && placeholder) ?? "Select an option"}
+            </span>
           </span>
           <span className="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
             <svg
@@ -75,7 +94,9 @@ export const Select = ({ label, value, options, onChange }: SelectProps) => {
                   className="group relative cursor-default select-none rounded-md py-2 pl-3 pr-9 text-gray-900 hover:bg-indigo-600 hover:text-white"
                   id="listbox-option-0"
                   onClick={() => {
-                    onChange(option);
+                    onChange(
+                      typeof option === "string" ? option : option.value,
+                    );
                     setOpen(false);
                   }}
                 >
@@ -85,7 +106,7 @@ export const Select = ({ label, value, options, onChange }: SelectProps) => {
                         option === value ? "font-semibold" : "font-normal"
                       }`}
                     >
-                      {option}
+                      {typeof option === "string" ? option : option.label}
                     </span>
                   </div>
                   {option === value && (

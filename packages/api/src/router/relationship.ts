@@ -46,7 +46,7 @@ export const relationshipRouter = router({
       )
         throw new TRPCError({ code: "FORBIDDEN" });
 
-      await moveUserToSeen(ctx.auth.userId, post.id);
+      await moveUserToSeen(user.id, post.id);
 
       const relationship = await ctx.prisma.relationship.findFirst({
         where: { postId: post.id, userId: user.id },
@@ -63,6 +63,13 @@ export const relationshipRouter = router({
         if (!created) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
 
         return created;
+      }
+
+      if (relationship.relationType == RelationType.POST) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "This post already liked this user",
+        });
       }
 
       const updated = await ctx.prisma.relationship.update({
@@ -112,13 +119,20 @@ export const relationshipRouter = router({
       )
         throw new TRPCError({ code: "FORBIDDEN" });
 
-      await moveUserToSeen(ctx.auth.userId, post.id);
+      await moveUserToSeen(user.id, post.id);
 
       const relationship = await ctx.prisma.relationship.findFirst({
         where: { postId: post.id, userId: user.id },
       });
 
       if (!relationship) return { missed: false, message: "Nothing to do" };
+
+      if (relationship.relationType == RelationType.POST) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "This post already liked this user",
+        });
+      }
 
       const deleted = await ctx.prisma.relationship.delete({
         where: { id: relationship.id },

@@ -1,22 +1,28 @@
 import { useEffect, useState } from "react";
 import { Stack } from "./Stack";
 import { StackElementProps } from "./StackElement";
-import { useSession } from "@clerk/nextjs";
 import { trpc } from "../../../utils/trpc";
 import { calcAge } from "../../../utils/calcAge";
+import { Select } from "../../shared/button/Select";
+import { Loader } from "../../shared/Loader";
+import { PostType } from "@prisma/client";
 
 export function TenantStack() {
-  const session = useSession();
-  const [posts, setPosts] = useState([] as StackElementProps[]);
-  const [lastPost, setLastPost] = useState<StackElementProps | null>();
+  const { data: session } = trpc.auth.getSession.useQuery();
+  const { data: posts, isLoading } = trpc.post.getPostsByUserId.useQuery({
+    userId: session?.userId ?? "",
+  });
+  const [postId, setPostId] = useState<string>("");
+  const [users, setUsers] = useState([] as StackElementProps[]);
+  const [lastUser, setLastUser] = useState<StackElementProps | null>();
   const { data, status } = trpc.post.getUsersToBeSeen.useQuery(
-    { userId: session?.session?.user.id ?? "", postId: "1" },
-    { enabled: posts.length <= 3 },
+    { postId },
+    { enabled: users.length <= 3 },
   );
   const { mutateAsync: dislikeHandler } =
-    trpc.relationship.dislikePostForTenant.useMutation();
+    trpc.relationship.dislikeTenantForPost.useMutation();
   const { mutateAsync: likeHandler } =
-    trpc.relationship.likePostForTenant.useMutation();
+    trpc.relationship.likeTenantForPost.useMutation();
 
   useEffect(() => {
     if (status === "success") {
@@ -28,50 +34,78 @@ export function TenantStack() {
         description: post.description,
         onReport: () => console.log("Reported"),
       }));
-      setPosts(formatedData as StackElementProps[]);
+      setUsers(formatedData as StackElementProps[]);
     }
   }, [data, status]);
 
-  const removePost = (post: StackElementProps) => {
-    setPosts((posts) => {
-      const newPosts = posts.filter((p) => p.id !== post.id);
-      return newPosts;
+  const removeUser = (user: StackElementProps) => {
+    setUsers((users) => {
+      const newUsers = users.filter((u) => u.id !== user.id);
+      return newUsers;
     });
   };
 
-  const onLike = async (post: StackElementProps) => {
+  const onLike = async (user: StackElementProps) => {
     await likeHandler({
-      postId: post.id,
-      userId: session?.session?.user.id ?? "",
+      postId,
+      userId: user.id,
     });
-    removePost(post);
-    setLastPost(post);
+    removeUser(user);
+    setLastUser(user);
   };
 
-  const onDislike = async (post: StackElementProps) => {
+  const onDislike = async (user: StackElementProps) => {
     await dislikeHandler({
-      postId: post.id,
-      userId: session?.session?.user.id ?? "",
+      postId,
+      userId: user.id,
     });
-    removePost(post);
-    setLastPost(post);
+    removeUser(user);
+    setLastUser(user);
   };
 
   const onRewind = () => {
-    if (lastPost) {
-      setPosts((posts) => [lastPost, ...posts]);
-      setLastPost(null);
+    if (lastUser) {
+      setUsers((users) => [lastUser, ...users]);
+      setLastUser(null);
     }
   };
 
+  if (isLoading) return <Loader />;
+
+  if (!posts)
+    return (
+      <div className="flex flex-grow items-center justify-center">
+        <h1 className="text-2xl font-bold">
+          No posts found, please create a post
+        </h1>
+      </div>
+    );
+
   return (
-    <div className="flex w-full items-center justify-center">
-      <Stack
-        posts={posts}
-        onDislike={onDislike}
-        onLike={onLike}
-        onRewind={onRewind}
-      />
+    <div className="flex flex-grow flex-col p-8">
+      <div className="flex-grow-0">
+        <Select
+          options={
+            posts
+              ?.filter((post) => post.type === PostType.TO_BE_RENTED)
+              .map((post) => ({
+                label: post.title ?? "title",
+                value: post.id,
+              })) ?? []
+          }
+          value={postId}
+          onChange={(value) => setPostId(value)}
+          placeholder="Select a post"
+        />
+      </div>
+      <div className="flex flex-grow items-center justify-center">
+        <Stack
+          posts={users}
+          onDislike={onDislike}
+          onLike={onLike}
+          onRewind={onRewind}
+        />
+      </div>
     </div>
   );
 }

@@ -128,8 +128,12 @@ export function Stack({ posts, onLike, onDislike, onRewind }: StackProps) {
           <h1 className="text-2xl font-bold text-gray-700">No results :(</h1>
 
           <div className="mt-4 flex flex-col items-center justify-center">
-            <p className="text-gray-500">It seems that one match your current criterias ...</p>
-            <p className="text-gray-500">Try to modify them or come back later !</p>
+            <p className="text-gray-500">
+              It seems that no one matches your current criterias ...
+            </p>
+            <p className="text-gray-500">
+              Try to modify them or come back later !
+            </p>
           </div>
         </div>
       )}
