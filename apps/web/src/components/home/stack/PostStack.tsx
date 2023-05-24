@@ -23,7 +23,7 @@ export function PostStack() {
     if (status === "success") {
       const formatedData = data.map((post) => ({
         id: post.id,
-        img: "/sample_image.avif",
+        img: "/appart.jpg",
         title: post.title,
         description: post.content,
         onReport: () => console.log("Reported"),
