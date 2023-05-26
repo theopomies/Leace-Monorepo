@@ -1,7 +1,6 @@
 import { trpc } from "../../../utils/trpc";
+import { PostBar } from "../../shared/post/PostBar";
 import { Header } from "../Header";
-import { MyPostBar } from "./MyPostBar";
-import { PostType } from "@prisma/client";
 
 export interface UserPostsListProps {
   userId: string;
@@ -15,13 +14,7 @@ export function UserPostsList({ userId }: UserPostsListProps) {
       <Header heading={"Post"} />
       {posts &&
         posts.map((post) => (
-          <MyPostBar
-            key={post.id}
-            postId={post.id}
-            title={post.title ?? "Title"}
-            desc={post.desc ?? "Description"}
-            type={post.type ?? PostType.TO_BE_RENTED}
-          />
+          <PostBar key={post.id} post={post} postLink="/posts/[postId]" />
         ))}
     </div>
   );

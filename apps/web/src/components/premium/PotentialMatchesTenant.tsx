@@ -1,36 +1,54 @@
 import Link from "next/link";
 import { trpc } from "../../utils/trpc";
 import { Header } from "../users/Header";
-import { PostBar } from "../users/posts/PostBar";
-import { PostType } from "@prisma/client";
+import { PostBar } from "../shared/post/PostBar";
 
 export interface PostListProps {
   userId: string;
 }
 
 export const PotentialMatchesTenant = ({ userId }: PostListProps) => {
-  const { data: relationships } = trpc.relationship.getLikesForTenant.useQuery({
-    userId,
+  const { data: relationships, refetch: refetchLikesForTenant } =
+    trpc.relationship.getLikesForTenant.useQuery({ userId });
+  const { data: user } = trpc.user.getUserById.useQuery({ userId });
+
+  const likePostForTenant = trpc.relationship.likePostForTenant.useMutation({
+    onSuccess: () => {
+      refetchLikesForTenant();
+    },
   });
-  const { data: user } = trpc.user.getUserById.useQuery({
-    userId: userId ?? "",
-  });
-  if (relationships && relationships.relationship) {
+  const deleteMatchMutation =
+    trpc.relationship.deleteRelationForTenant.useMutation({
+      onSuccess: () => {
+        refetchLikesForTenant();
+      },
+    });
+
+  const OnDeleteMatch = async (relationshipId: string) => {
+    await deleteMatchMutation.mutateAsync({ userId, relationshipId });
+  };
+  const OnLikeMatch = async (postId: string) => {
+    await likePostForTenant.mutateAsync({
+      userId: userId,
+      postId: postId,
+    });
+  };
+
+  if (relationships && relationships.relationship && user) {
     return (
       <div className="container mx-auto p-4">
         <Header heading={"Potential Matches"} />
         <>
           {relationships.relationship.map(({ post, id, relationType }) => (
             <PostBar
-              key={id}
-              postId={post.id}
-              title={post.title ?? "Title"}
-              desc={post.desc ?? "Description"}
+              key={post.id}
+              post={post}
+              postLink="/posts/[postId]"
               relationType={relationType}
-              type={post.type ?? PostType.TO_BE_RENTED}
-              userId={userId}
               relationshipId={id}
               user={user}
+              OnDeleteMatch={OnDeleteMatch}
+              OnLikeMatch={OnLikeMatch}
             />
           ))}
         </>

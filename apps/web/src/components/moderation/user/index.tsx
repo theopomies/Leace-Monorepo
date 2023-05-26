@@ -24,9 +24,7 @@ export const User = ({ userId }: PostProps) => {
         </Button>
       )}
       {viewProfile && userId && <UserCard userId={userId} />}
-      {userId && !viewProfile && (
-        <PostList userId={userId} setPostId={setPostId} />
-      )}
+      {userId && !viewProfile && <PostList userId={userId} />}
       {postId && !viewProfile && <PostCard postId={postId} />}
     </div>
   );
