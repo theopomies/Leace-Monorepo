@@ -39,7 +39,13 @@ export const imageRouter = router({
 
       return await getSignedUrl(ctx.s3Client, command);
     }),
-  getSignedPostUrl: protectedProcedure([Role.TENANT, Role.AGENCY, Role.OWNER])
+  getSignedPostUrl: protectedProcedure([
+    Role.TENANT,
+    Role.AGENCY,
+    Role.OWNER,
+    Role.ADMIN,
+    Role.MODERATOR,
+  ])
     .input(z.string())
     .query(async ({ ctx, input }) => {
       const getPost = await ctx.prisma.post.findUnique({
