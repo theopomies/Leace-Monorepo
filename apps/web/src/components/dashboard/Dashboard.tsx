@@ -2,39 +2,13 @@ import { Post, PostType, User } from "@prisma/client";
 import React, { useState, useEffect } from "react";
 import { trpc } from "../../utils/trpc";
 import { Header } from "../users/Header";
-import { DashboardBar } from "./DashboardBar";
+import { PostBar } from "../shared/post/PostBar";
 
-interface DashboardListProps {
+interface DashboardProps {
   userId: string;
 }
 
-interface MyPostsTableProps {
-  data: {
-    post: Post;
-    user: User | undefined;
-  }[];
-}
-
-export const MyPostsTable: React.FC<MyPostsTableProps> = ({ data }) => {
-  return (
-    <div>
-      {data.map((d) => (
-        <DashboardBar
-          key={d.post.id}
-          postId={d.post.id}
-          title={d.post.title ?? "Title"}
-          desc={d.post.desc ?? "Description"}
-          type={d.post.type ?? PostType.TO_BE_RENTED}
-          userId={d.user?.id ?? ""}
-          userFirstName={d.user?.firstName ?? ""}
-          userLastName={d.user?.lastName ?? ""}
-        />
-      ))}
-    </div>
-  );
-};
-
-export const Dashboard = ({ userId }: DashboardListProps) => {
+export const Dashboard = ({ userId }: DashboardProps) => {
   const [posts, setPosts] = useState<{ post: Post; user: User | undefined }[]>(
     [],
   );
@@ -114,7 +88,15 @@ export const Dashboard = ({ userId }: DashboardListProps) => {
           </div>
         </div>
         <ul>
-          <MyPostsTable data={sortedPosts} />
+          {sortedPosts.map((d) => (
+            <PostBar
+              key={d.post.id}
+              post={d.post}
+              postLink="/posts/[postId]"
+              user={d.user}
+              userLink="/users/[userId]"
+            />
+          ))}
         </ul>
       </div>
     </div>

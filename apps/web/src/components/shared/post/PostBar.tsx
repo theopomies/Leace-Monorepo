@@ -3,6 +3,7 @@ import Link from "next/link";
 import { trpc } from "../../../utils/trpc";
 import { Post, PostType, RelationType, User } from "@prisma/client";
 import { PostBarActions } from "./PostBarActions";
+import { PostBarUser } from "./PostBarUser";
 
 export interface PostBarProps {
   post: Post;
@@ -11,6 +12,7 @@ export interface PostBarProps {
   relationshipId?: string;
   conversationId?: string;
   user?: User;
+  userLink?: string;
   OnDeleteMatch?: (relationshipId: string) => void;
   OnLikeMatch?: (postId: string) => void;
 }
@@ -22,35 +24,39 @@ export const PostBar = ({
   relationshipId,
   conversationId,
   user,
+  userLink,
   OnDeleteMatch,
   OnLikeMatch,
 }: PostBarProps) => {
   const { data: img } = trpc.image.getSignedPostUrl.useQuery(post.id);
 
   return (
-    <div className="flex w-full cursor-pointer overflow-hidden rounded-xl bg-white shadow-md">
-      <Link href={postLink.replace("[postId]", post.id)} className="flex">
-        {img && img[0] && (
-          <div className="w-2/5">
-            <img
-              className="h-full object-cover"
-              src={img[0].url}
-              alt="Modern building architecture"
-            />
+    <div className="mx-auto flex cursor-pointer flex-col overflow-hidden rounded-xl bg-white shadow-md md:max-w-2xl">
+      <div className="flex">
+        <Link href={postLink.replace("[postId]", post.id)} className="flex">
+          {img && img[0] && (
+            <div className="w-2/5">
+              <img
+                className="h-full object-cover"
+                src={img[0].url}
+                alt="Modern building architecture"
+              />
+            </div>
+          )}
+          <div className="w-3/5 p-5">
+            <div className="text-sm font-semibold uppercase tracking-wide text-indigo-500">
+              {post.title}
+            </div>
+            <div className="mt-1 text-lg font-medium leading-tight text-black">
+              {post.desc}
+            </div>
+            <p className="mt-2 text-slate-500">
+              {post.type == PostType.RENTED ? "Rented ✅" : "Available"}
+            </p>
           </div>
-        )}
-        <div className="w-3/5 p-5">
-          <div className="text-sm font-semibold uppercase tracking-wide text-indigo-500">
-            {post.title}
-          </div>
-          <div className="mt-1 text-lg font-medium leading-tight text-black">
-            {post.desc}
-          </div>
-          <p className="mt-2 text-slate-500">
-            {post.type == PostType.RENTED ? "Rented ✅" : "Available"}
-          </p>
-        </div>
-      </Link>
+        </Link>
+        {user && userLink && <PostBarUser user={user} userLink={userLink} />}
+      </div>
       {relationshipId && OnDeleteMatch && (
         <PostBarActions
           postId={post.id}

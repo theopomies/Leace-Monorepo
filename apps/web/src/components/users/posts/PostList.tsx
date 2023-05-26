@@ -27,7 +27,7 @@ export const PostList = ({ userId }: PostListProps) => {
   };
 
   if (status == "success" && relationships.length) {
-    return relationships.map(({ post, id, relationType, conversation }) => {
+    return relationships.map(({ post, id, relationType, conversation }) => (
       <PostBar
         key={post.id}
         post={post}
@@ -37,8 +37,8 @@ export const PostList = ({ userId }: PostListProps) => {
         conversationId={conversation?.id}
         user={user}
         OnDeleteMatch={OnDeleteMatch}
-      />;
-    });
+      />
+    ));
   }
   return (
     <div className="mt-8 flex flex-col items-center justify-center">
