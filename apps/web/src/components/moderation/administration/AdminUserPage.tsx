@@ -19,17 +19,17 @@ export function AdminUserPage({ userId }: { userId: string }) {
     return (
       <div className="w-full">
         <Search />
-        {user.data.posts[0] && (
-          <Link href={`/administration/posts/${user.data.posts[0].id}`}>
-            <Button className="w-full">View posts</Button>
-          </Link>
-        )}
         <div className="flex py-5">
-          <div className="flex w-5/6">
-            {user.data && <UserCard userId={userId} />}
+          <div className="flex w-5/6 flex-col">
+            {user.data.posts[0] && (
+              <Link href={`/administration/posts/${user.data.posts[0].id}`}>
+                <Button className="w-full">View posts</Button>
+              </Link>
+            )}
+            <UserCard userId={userId} />
           </div>
           <div className="my-auto h-screen w-1/6">
-            {user.data && <Ban userId={userId} />}
+            <Ban userId={userId} />
           </div>
         </div>
       </div>

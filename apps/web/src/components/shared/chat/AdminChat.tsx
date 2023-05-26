@@ -51,8 +51,12 @@ export function AdminChat({
     return <div>User not found</div>;
   }
 
-  if (user.role !== Role.TENANT && user.role !== Role.OWNER) {
-    return <div>User is not a tenant or owner</div>;
+  if (
+    user.role !== Role.TENANT &&
+    user.role !== Role.OWNER &&
+    user.role !== Role.AGENCY
+  ) {
+    return <div>User is not a tenant or owner/agency</div>;
   }
 
   return (

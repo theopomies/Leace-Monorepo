@@ -37,7 +37,7 @@ export function getLinks(userId: string): {
       roles: [Role.OWNER, Role.AGENCY],
     },
     {
-      href: "/moderation",
+      href: "/moderation/reports",
       label: "Moderation",
       roles: [Role.ADMIN],
     },

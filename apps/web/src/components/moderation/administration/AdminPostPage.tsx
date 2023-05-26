@@ -20,16 +20,21 @@ export function AdminPostPage({ postId }: { postId: string }) {
     return (
       <div className="w-full">
         <Search />
-        <Link href={`/administration/users/${post.data.createdById}`}>
-          <Button className="w-full">View profile</Button>
-        </Link>
         <div className="flex py-5">
-          <div className="flex w-5/6">
-            {post.data && <PostList userId={post.data.createdById} />}
-            {post.data && <PostCard postId={postId} />}
+          <div className="flex w-5/6 flex-col">
+            <Link href={`/administration/users/${post.data.createdById}`}>
+              <Button className="w-full">View profile</Button>
+            </Link>
+            <div className="flex">
+              <PostList
+                userId={post.data.createdById}
+                postLink="/administration/posts/[postId]"
+              />
+              <PostCard postId={postId} />
+            </div>
           </div>
           <div className="my-auto h-screen w-1/6">
-            {post.data && <BanPostAuthor postId={postId} />}
+            <BanPostAuthor postId={postId} />
           </div>
         </div>
       </div>
