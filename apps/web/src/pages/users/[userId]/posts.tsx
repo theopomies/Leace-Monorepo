@@ -7,14 +7,15 @@ const Posts = () => {
   const router = useRouter();
   const { userId } = router.query;
 
-  const children =
-    userId && typeof userId == "string" ? (
-      <UserPostsList userId={userId as string} />
-    ) : (
-      <div>Please enter a valid userId</div>
-    );
+  if (typeof userId != "string" || !userId) {
+    return <div>Invalid userId</div>;
+  }
 
-  return <LoggedLayout title="Post | Leace">{children}</LoggedLayout>;
+  return (
+    <LoggedLayout title="Post | Leace">
+      <UserPostsList userId={userId as string} />
+    </LoggedLayout>
+  );
 };
 
 export default Posts;

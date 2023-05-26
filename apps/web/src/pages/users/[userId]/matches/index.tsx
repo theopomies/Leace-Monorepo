@@ -1,5 +1,4 @@
 import { LoggedLayout } from "../../../../components/layout/LoggedLayout";
-import { Role } from "@prisma/client";
 import { MatchesPage } from "../../../../components/users/matches/MatchesPage";
 import { useRouter } from "next/router";
 
@@ -7,19 +6,13 @@ const Matches = () => {
   const router = useRouter();
   const { userId } = router.query;
 
-  const children =
-    userId && typeof userId == "string" ? (
-      <MatchesPage userId={userId} />
-    ) : (
-      <>UserId is required</>
-    );
+  if (typeof userId != "string" || !userId) {
+    return <div>UserId is required</div>;
+  }
 
   return (
-    <LoggedLayout
-      title="Mes Matchs"
-      roles={[Role.AGENCY, Role.OWNER, Role.TENANT, Role.ADMIN]}
-    >
-      {children}
+    <LoggedLayout title="Mes Matchs">
+      <MatchesPage userId={userId} />
     </LoggedLayout>
   );
 };

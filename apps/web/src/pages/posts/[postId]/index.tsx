@@ -7,14 +7,15 @@ const Index = () => {
   const router = useRouter();
   const { postId } = router.query;
 
-  const children =
-    postId && typeof postId == "string" ? (
-      <PostPage postId={postId} />
-    ) : (
-      <div>Please enter a valid postId</div>
-    );
+  if (typeof postId != "string" || !postId) {
+    return <div>Invalid postId</div>;
+  }
 
-  return <LoggedLayout title="Post | Leace">{children}</LoggedLayout>;
+  return (
+    <LoggedLayout title="Post | Leace">
+      <PostPage postId={postId} />
+    </LoggedLayout>
+  );
 };
 
 export default Index;
