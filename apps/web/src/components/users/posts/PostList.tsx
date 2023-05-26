@@ -26,27 +26,33 @@ export const PostList = ({ userId }: PostListProps) => {
     await deleteMatchMutation.mutateAsync({ userId, relationshipId });
   };
 
-  if (status == "success" && relationships.length) {
-    return relationships.map(({ post, id, relationType, conversation }) => (
-      <PostBar
-        key={post.id}
-        post={post}
-        postLink="/posts/[postId]"
-        relationType={relationType}
-        relationshipId={id}
-        conversationId={conversation?.id}
-        user={user}
-        OnDeleteMatch={OnDeleteMatch}
-      />
-    ));
-  }
   return (
-    <div className="mt-8 flex flex-col items-center justify-center">
-      <h1 className="text-2xl font-bold text-gray-700">No matches yet :(</h1>
-
-      <div className="mt-4 flex flex-col items-center justify-center">
-        <p className="text-gray-500">Go swipe to find your dream apartment !</p>
-      </div>
-    </div>
+    <>
+      {status == "success" && relationships.length ? (
+        relationships.map(({ post, id, relationType, conversation }) => (
+          <PostBar
+            key={post.id}
+            post={post}
+            postLink="/posts/[postId]"
+            relationType={relationType}
+            relationshipId={id}
+            conversationId={conversation?.id}
+            user={user}
+            OnDeleteMatch={OnDeleteMatch}
+          />
+        ))
+      ) : (
+        <div className="mt-8 flex flex-col items-center justify-center">
+          <h1 className="text-2xl font-bold text-gray-700">
+            No matches yet :(
+          </h1>
+          <div className="mt-4 flex flex-col items-center justify-center">
+            <p className="text-gray-500">
+              Go swipe to find your dream apartment !
+            </p>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
