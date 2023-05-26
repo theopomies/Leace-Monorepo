@@ -10,6 +10,7 @@ import { Header } from "../../components/users/Header";
 import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
 import { PostForm } from "./PostForm";
+import { HomeType } from "../../types/homeType";
 import axios from "axios";
 
 export interface UpdatePostProps {
@@ -27,8 +28,7 @@ export const UpdatePost = ({ postId }: UpdatePostProps) => {
     trpc.attribute.updatePostAttributes.useMutation();
   const [location, setLocation] = useState("");
   const [furnished, setFurnished] = useState(false);
-  const [house, setHouse] = useState(false);
-  const [appartment, setAppartment] = useState(false);
+  const [homeType, setHomeType] = useState<HomeType | undefined>();
   const [terrace, setTerrace] = useState(false);
   const [pets, setPets] = useState(false);
   const [smoker, setSmoker] = useState(false);
@@ -56,8 +56,7 @@ export const UpdatePost = ({ postId }: UpdatePostProps) => {
       setDescription((description) => post.desc ?? description);
       setLocation((location) => post.attribute?.location ?? location);
       setFurnished((furnished) => post.attribute?.furnished ?? furnished);
-      setHouse((house) => post.attribute?.house ?? house);
-      setAppartment((appartment) => post.attribute?.appartment ?? appartment);
+      setHomeType((homeType) => post.attribute?.homeType ?? homeType);
       setTerrace((terrace) => post.attribute?.terrace ?? terrace);
       setPets((pets) => post.attribute?.pets ?? pets);
       setSmoker((smoker) => post.attribute?.smoker ?? smoker);
@@ -83,8 +82,7 @@ export const UpdatePost = ({ postId }: UpdatePostProps) => {
       postId,
       location,
       furnished,
-      house,
-      appartment,
+      homeType,
       terrace,
       pets,
       smoker,
@@ -93,6 +91,8 @@ export const UpdatePost = ({ postId }: UpdatePostProps) => {
       elevator,
       pool,
       disability,
+      price,
+      size,
     });
     if (images && images.length > 0) {
       images.map(async (image) => {
@@ -141,6 +141,12 @@ export const UpdatePost = ({ postId }: UpdatePostProps) => {
       setter(event.target.valueAsNumber);
     };
 
+  const handleHomeTypeChange =
+    (setter: Dispatch<SetStateAction<HomeType | undefined>>) =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setter(event.target.value as HomeType);
+    };
+
   const handleCancel: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.preventDefault();
     router.back();
@@ -172,10 +178,8 @@ export const UpdatePost = ({ postId }: UpdatePostProps) => {
         title={title}
         setLocation={handleChange(setLocation)}
         location={location}
-        setHouse={handleBooleanChange(setHouse)}
-        house={house}
-        setAppartment={handleBooleanChange(setAppartment)}
-        appartment={appartment}
+        setHomeType={handleHomeTypeChange(setHomeType)}
+        homeType={homeType}
         setDescription={handleChange(setDescription)}
         description={description}
         setFurnished={handleBooleanChange(setFurnished)}

@@ -10,6 +10,8 @@ import { Checkbox } from "../shared/forms/Checkbox";
 import { TextArea } from "../shared/forms/TextArea";
 import { NumberInput } from "../shared/forms/NumberInput";
 import { FileInput } from "../shared/forms/FileInput";
+import { HomeType } from "../../types/homeType";
+import { AddressAutocomplete } from "../shared/forms/AddressAutocomplete";
 
 type Image =
   | {
@@ -45,10 +47,8 @@ export interface PostFormProps {
   setLocation: ChangeEventHandler;
   furnished: boolean;
   setFurnished: ChangeEventHandler;
-  house: boolean;
-  setHouse: ChangeEventHandler;
-  appartment: boolean;
-  setAppartment: ChangeEventHandler;
+  homeType: HomeType | undefined;
+  setHomeType: ChangeEventHandler;
   terrace: boolean;
   setTerrace: ChangeEventHandler;
   pets: boolean;
@@ -99,13 +99,10 @@ export const PostForm = (props: PostFormProps) => {
           <div className="mt-6 flex w-full">
             <label className="w-full">
               <div className="text-lg font-medium">Location</div>
-              <Input
-                placeholder="Central Park, New York"
-                name="location"
-                onChange={props.setLocation}
-                value={props.location}
-                className="w-full"
-              />
+              <AddressAutocomplete
+                location={props.location}
+                handleLocationChange={props.setLocation}
+              ></AddressAutocomplete>
             </label>
           </div>
 
@@ -114,22 +111,26 @@ export const PostForm = (props: PostFormProps) => {
               Type de logement
             </h2>
             <div className="flex justify-center gap-4 p-4">
-              <Checkbox
-                type="checkbox"
-                name="house"
-                onChange={props.setHouse}
-                checked={props.house}
-              >
-                Maison
-              </Checkbox>
-              <Checkbox
-                type="checkbox"
-                name="appartment"
-                onChange={props.setAppartment}
-                checked={props.appartment}
-              >
-                Appartement
-              </Checkbox>
+              <label>
+                <Checkbox
+                  name="homeType"
+                  onChange={props.setHomeType}
+                  checked={props.homeType === "HOUSE"}
+                  value={"HOUSE"}
+                >
+                  Maison
+                </Checkbox>
+              </label>
+              <label>
+                <Checkbox
+                  name="homeType"
+                  onChange={props.setHomeType}
+                  checked={props.homeType === "APARTMENT"}
+                  value={"APARTMENT"}
+                >
+                  Appartement
+                </Checkbox>
+              </label>
             </div>
           </div>
           <div>
@@ -231,15 +232,6 @@ export const PostForm = (props: PostFormProps) => {
                 name="price"
                 onChange={props.setPrice}
                 value={props.price}
-                unit="€"
-              />
-            </label>
-            <label>
-              <div>Charges</div>
-              <NumberInput
-                placeholder="Charge"
-                aria-describedby="amount-prefix"
-                name="maxPrice"
                 unit="€"
               />
             </label>

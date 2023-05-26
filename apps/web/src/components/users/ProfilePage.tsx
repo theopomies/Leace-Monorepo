@@ -5,7 +5,10 @@ import { Role } from "@prisma/client";
 import Link from "next/link";
 import { Loader } from "../shared/Loader";
 import { Button } from "../shared/button/Button";
+import { useRouter } from "next/router";
+import { useClerk } from "@clerk/nextjs";
 import { DocumentsList } from "../shared/document/DocumentsList";
+import { DeleteProfileDialog } from "./DeleteProfileDialog";
 
 export interface ProfilePageProps {
   userId: string;
@@ -14,6 +17,17 @@ export interface ProfilePageProps {
 export const ProfilePage = ({ userId }: ProfilePageProps) => {
   const { data: user, isLoading } = trpc.user.getUserById.useQuery({ userId });
   const { data: session } = trpc.auth.getSession.useQuery();
+  const utils = trpc.useContext();
+  const router = useRouter();
+  const { signOut } = useClerk();
+
+  const deleteUser = trpc.user.deleteUserById.useMutation({
+    onSuccess() {
+      router.push("/");
+      utils.invalidate();
+      signOut();
+    },
+  });
   const { data: documents, refetch: refetchImages } =
     trpc.document.getSignedUserUrl.useQuery(userId);
   const deleteDocument = trpc.document.deleteSignedUrl.useMutation();
@@ -95,11 +109,12 @@ export const ProfilePage = ({ userId }: ProfilePageProps) => {
                     </h2>
                     <div>
                       <b>
-                        {user.attribute.house === true ? (
-                          <p>House</p>
-                        ) : (
-                          <p>Appartment</p>
-                        )}
+                        <p>
+                          {user.attribute.homeType
+                            ? user.attribute.homeType.charAt(0) +
+                              user.attribute.homeType.slice(1).toLowerCase()
+                            : "Whatever"}
+                        </p>
                       </b>
                     </div>
                   </div>
@@ -203,9 +218,16 @@ export const ProfilePage = ({ userId }: ProfilePageProps) => {
             )}
           </form>
           {session && userId == session.userId && (
-            <Link href={`/users/${userId}/update`}>
-              <Button>Modify</Button>
-            </Link>
+            <div className="flex gap-4">
+              <Link href={`/users/${userId}/update`}>
+                <Button>Modify</Button>
+              </Link>
+              <DeleteProfileDialog
+                onDelete={() => {
+                  deleteUser.mutate({ userId });
+                }}
+              />
+            </div>
           )}
         </div>
       </div>

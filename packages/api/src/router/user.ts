@@ -173,5 +173,7 @@ export const userRouter = router({
       });
 
       if (!deleted) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+      ctx.clerkClient.users.deleteUser(userId);
     }),
 });

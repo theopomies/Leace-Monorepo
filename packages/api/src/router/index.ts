@@ -11,6 +11,7 @@ import { imageRouter } from "./image";
 import { conversationRouter } from "./conversation";
 import { leaseRouter } from "./lease";
 import { supportRouter } from "./support";
+import { geocoderRouter } from "./geocoder";
 
 export const appRouter = router({
   auth: authRouter,
@@ -25,6 +26,7 @@ export const appRouter = router({
   lease: leaseRouter,
   support: supportRouter,
   moderation: moderationRouter,
+  geocoder: geocoderRouter,
 });
 
 // export type definition of API

@@ -9,6 +9,10 @@
       "inputs": ["prisma/schema.prisma"],
       "cache": false
     },
+    "db-push-accept": {
+      "inputs": ["prisma/schema.prisma"],
+      "cache": false
+    },
     "prisma:validate": {
       "inputs": ["prisma/schema.prisma"],
       "cache": false
