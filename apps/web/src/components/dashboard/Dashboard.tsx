@@ -2,7 +2,7 @@ import { Post, PostType, User } from "@prisma/client";
 import React, { useState, useEffect } from "react";
 import { trpc } from "../../utils/trpc";
 import { Header } from "../users/Header";
-import { MyDashboardBar } from "./DashboardBar";
+import { DashboardBar } from "./DashboardBar";
 
 interface DashboardListProps {
   userId: string;
@@ -19,7 +19,7 @@ export const MyPostsTable: React.FC<MyPostsTableProps> = ({ data }) => {
   return (
     <div>
       {data.map((d) => (
-        <MyDashboardBar
+        <DashboardBar
           key={d.post.id}
           postId={d.post.id}
           title={d.post.title ?? "Title"}

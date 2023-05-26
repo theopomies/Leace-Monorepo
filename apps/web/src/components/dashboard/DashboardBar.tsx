@@ -4,7 +4,7 @@ import Link from "next/link";
 import { PostType } from "@prisma/client";
 import { trpc } from "../../utils/trpc";
 
-export interface PostBarProps {
+export interface DashboardBarProps {
   postId: string;
   title: string;
   desc: string;
@@ -14,7 +14,7 @@ export interface PostBarProps {
   userLastName?: string;
 }
 
-export const MyDashboardBar = ({
+export const DashboardBar = ({
   postId,
   title,
   desc,
@@ -22,7 +22,7 @@ export const MyDashboardBar = ({
   userId,
   userFirstName,
   userLastName,
-}: PostBarProps) => {
+}: DashboardBarProps) => {
   const { data: img } = trpc.image.getSignedPostUrl.useQuery(postId);
 
   return (
