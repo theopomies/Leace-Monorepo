@@ -2,6 +2,7 @@ import { Role } from "@prisma/client";
 import { trpc } from "../../../utils/trpc";
 import { Loader } from "../Loader";
 import { Chat } from "./Chat";
+import { useMemo } from "react";
 
 export function AdminChat({
   userId,
@@ -10,7 +11,7 @@ export function AdminChat({
   userId: string;
   conversationId?: string;
 }) {
-  const { data: user, isLoading } =
+  const { data: user, isLoading: userLoading } =
     trpc.moderation.user.getUserById.useQuery(userId);
 
   const { data: relationships, isLoading: relationshipsLoading } =
@@ -20,14 +21,29 @@ export function AdminChat({
     trpc.moderation.support.getRelationships.useQuery({ userId });
 
   const { data: conversation, isLoading: conversationIsLoading } =
-    trpc.moderation.conversation.getConversation.useQuery({ conversationId });
+    trpc.moderation.conversation.getConversation.useQuery(
+      { conversationId },
+      {
+        refetchOnWindowFocus: false,
+        retry: false,
+      },
+    );
 
-  if (
-    isLoading ||
-    relationshipsLoading ||
-    supportRelationshipsLoading ||
-    conversationIsLoading
-  ) {
+  const isLoading = useMemo(
+    () =>
+      userLoading ||
+      relationshipsLoading ||
+      supportRelationshipsLoading ||
+      conversationIsLoading,
+    [
+      userLoading,
+      relationshipsLoading,
+      supportRelationshipsLoading,
+      conversationIsLoading,
+    ],
+  );
+
+  if (isLoading) {
     return <Loader />;
   }
 
