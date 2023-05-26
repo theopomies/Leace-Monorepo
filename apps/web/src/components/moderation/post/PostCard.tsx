@@ -2,7 +2,6 @@
 import { trpc } from "../../../utils/trpc";
 import { SlideShow } from "../../home/stack/SlideShow";
 import { motion } from "framer-motion";
-import { useEffect } from "react";
 import { Documents } from "../documents";
 import { displayDate } from "../../../utils/displayDate";
 import { GreenCheck } from "./GreenCheck";
@@ -13,18 +12,13 @@ import { DeletePostImg } from "./DeletePostImg";
 
 export interface PostProps {
   postId: string;
-  setUserId?: (user: string) => void;
 }
 
-export const PostCard = ({ postId, setUserId }: PostProps) => {
+export const PostCard = ({ postId }: PostProps) => {
   const { data: post, isLoading: postLoading } =
     trpc.moderation.post.getPost.useQuery({ postId });
   const { data: images } =
     trpc.moderation.image.getSignedPostUrl.useQuery(postId);
-
-  useEffect(() => {
-    if (post && setUserId) setUserId(post.createdById);
-  }, [post, setUserId]);
 
   if (postLoading) return <Loader />;
 

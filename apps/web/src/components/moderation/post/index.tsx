@@ -1,3 +1,4 @@
+//DELETE THIS FILE
 import { Button } from "../../shared/button/Button";
 import { UserCard } from "../user/UserCard";
 import { PostCard } from "./PostCard";
@@ -16,9 +17,7 @@ export const Post = ({ postId }: PostProps) => {
       <Button onClick={() => setViewProfile(!viewProfile)} className="mb-2">
         {viewProfile ? "View post" : "View profile"}
       </Button>
-      {postId && !viewProfile && (
-        <PostCard postId={postId} setUserId={setUserId} />
-      )}
+      {postId && !viewProfile && <PostCard postId={postId} />}
       {viewProfile && userId && <UserCard userId={userId} />}
     </div>
   );

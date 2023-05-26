@@ -1,28 +1,36 @@
+import Link from "next/link";
 import { trpc } from "../../../utils/trpc";
 import { Loader } from "../../shared/Loader";
+import { Button } from "../../shared/button/Button";
 import { Search } from "../Search";
 import { BanPostAuthor } from "../ban/BanPostAuthor";
-import { Post } from "../post";
+import { PostList } from "../post/PostList";
+import { PostCard } from "../post/PostCard";
 
 export function AdminPostPage({ postId }: { postId: string }) {
-  const user = trpc.moderation.post.getPostById.useQuery(postId, {
+  const post = trpc.moderation.post.getPostById.useQuery(postId, {
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     refetchOnReconnect: false,
     retry: false,
   });
 
-  if (user.isLoading) return <Loader />;
-  if (user && user.data && !user.error) {
+  if (post.isLoading) return <Loader />;
+  if (post && post.data && !post.error) {
     return (
-      <div className="flex w-full">
-        <div className="flex w-1/5 items-center justify-center"></div>
-        <div className="w-3/5 py-5">
-          <Search />
-          {user.data && <Post postId={postId} />}
-        </div>
-        <div className="flex h-screen w-1/5 flex-col items-center justify-center gap-5 px-10">
-          {user.data && <BanPostAuthor postId={postId} />}
+      <div className="w-full">
+        <Search />
+        <Link href={`/administration/users/${post.data.createdById}`}>
+          <Button className="w-full">View profile</Button>
+        </Link>
+        <div className="flex py-5">
+          <div className="flex w-5/6">
+            {post.data && <PostList userId={post.data.createdById} />}
+            {post.data && <PostCard postId={postId} />}
+          </div>
+          <div className="my-auto h-screen w-1/6">
+            {post.data && <BanPostAuthor postId={postId} />}
+          </div>
         </div>
       </div>
     );
@@ -32,7 +40,7 @@ export function AdminPostPage({ postId }: { postId: string }) {
       <div className="w-3/5">
         <Search />
         <p className="flex w-full items-center justify-center">
-          User not found
+          Post not found
         </p>
       </div>
     </div>

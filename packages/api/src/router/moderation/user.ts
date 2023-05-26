@@ -8,6 +8,11 @@ export const userModeration = router({
     .query(({ ctx, input }) => {
       return ctx.prisma.user.findFirstOrThrow({
         where: { id: input },
+        include: {
+          posts: {
+            select: { id: true },
+          },
+        },
       });
     }),
   getUser: protectedProcedure([Role.ADMIN, Role.MODERATOR])
