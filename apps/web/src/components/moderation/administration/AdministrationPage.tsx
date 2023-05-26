@@ -1,6 +1,6 @@
-import { Search } from "./Search";
+import { Search } from "../Search";
 
-export const Administration = () => {
+export const AdministrationPage = () => {
   return (
     <div className="flex w-full items-center justify-center">
       <div className="w-3/5">
