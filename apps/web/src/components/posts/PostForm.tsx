@@ -276,7 +276,7 @@ export const PostForm = (props: PostFormProps) => {
               </div>
             )}
             <div className="mt-2 flex flex-wrap justify-center gap-4">
-              <FileInput multiple onChange={props.setDocuments}>
+              <FileInput multiple onChange={props.setDocuments} accept=".pdf">
                 Upload Document
               </FileInput>
               {props.documents?.map((document, index) => (

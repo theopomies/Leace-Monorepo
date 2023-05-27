@@ -294,7 +294,11 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
                 </div>
               )}
               <div className="mt-2 flex flex-wrap justify-center gap-4">
-                <FileInput multiple onChange={handleDocuments(setDocuments)}>
+                <FileInput
+                  multiple
+                  onChange={handleDocuments(setDocuments)}
+                  accept=".pdf"
+                >
                   Upload Document
                 </FileInput>
                 {documents?.map((document, index) => (
