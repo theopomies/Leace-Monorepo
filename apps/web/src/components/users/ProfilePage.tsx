@@ -28,7 +28,7 @@ export const ProfilePage = ({ userId }: ProfilePageProps) => {
       signOut();
     },
   });
-  const { data: documents, refetch: refetchImages } =
+  const { data: documents, refetch: refetchDocuments } =
     trpc.document.getSignedUserUrl.useQuery(userId);
   const deleteDocument = trpc.document.deleteSignedUrl.useMutation();
 
@@ -42,7 +42,7 @@ export const ProfilePage = ({ userId }: ProfilePageProps) => {
 
   const handleDeleteDoc = async (documentId: string) => {
     await deleteDocument.mutateAsync({ userId: user.id, documentId });
-    refetchImages();
+    refetchDocuments();
   };
 
   return (
@@ -211,7 +211,7 @@ export const ProfilePage = ({ userId }: ProfilePageProps) => {
                 <h2 className="text-xl font-bold text-gray-400">Documents:</h2>
                 <DocumentsList
                   documents={documents}
-                  handleDeleteDoc={handleDeleteDoc}
+                  OnDelete={handleDeleteDoc}
                   isUserLogged={userId == session.userId}
                 />
               </div>

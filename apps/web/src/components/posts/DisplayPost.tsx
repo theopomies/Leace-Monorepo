@@ -133,7 +133,7 @@ export function DisplayPost({
               <h2 className="mb-5 text-xl">Documents:</h2>
               <DocumentsList
                 documents={documents}
-                handleDeleteDoc={handleDeleteDoc}
+                OnDelete={handleDeleteDoc}
                 isUserLogged={post.createdById === userId}
               />
             </div>

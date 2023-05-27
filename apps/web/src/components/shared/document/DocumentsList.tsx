@@ -11,6 +11,7 @@ type Document = {
   valid: boolean;
   ext: string;
 };
+
 export interface DocumentsListProps {
   documents: {
     id: string;
@@ -18,14 +19,16 @@ export interface DocumentsListProps {
     valid: boolean;
     ext: string;
   }[];
-  handleDeleteDoc: (documentId: string) => Promise<void>;
   isUserLogged?: boolean;
+  OnDelete: (documentId: string) => Promise<void>;
+  OnValidation?: (document: Document) => void;
 }
 
 export const DocumentsList = ({
   documents,
-  handleDeleteDoc,
   isUserLogged,
+  OnDelete,
+  OnValidation,
 }: DocumentsListProps) => {
   const [selectedDocument, setSelectedDocument] = useState<Document | null>();
 
@@ -48,6 +51,7 @@ export const DocumentsList = ({
                 referrerPolicy="no-referrer"
                 alt="document"
                 className="w-32 cursor-pointer"
+                onClick={() => handleDocumentClick(doc)}
               />
             </Link>
           ) : (
@@ -67,7 +71,7 @@ export const DocumentsList = ({
           {isUserLogged && (
             <Button
               theme="danger"
-              onClick={() => handleDeleteDoc(doc.id)}
+              onClick={() => OnDelete(doc.id)}
               overrideStyles
               className="absolute -right-1 -top-1 inline-flex items-center justify-center rounded-md bg-red-500 p-1 text-white hover:bg-white hover:text-red-500"
             >
@@ -80,6 +84,7 @@ export const DocumentsList = ({
         <DocumentModal
           document={selectedDocument}
           setShowModal={handleModalClose}
+          OnValidation={OnValidation}
         />
       )}
     </div>
