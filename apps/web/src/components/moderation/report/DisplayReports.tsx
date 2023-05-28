@@ -8,7 +8,7 @@ export interface DisplayReportsProps {
 
 export const DisplayReports = ({ reports }: DisplayReportsProps) => {
   return reports.length > 0 ? (
-    <div className="border-blueGray-200 mt-10 border-t pt-10">
+    <div className="border-t pt-10">
       <p className="mb-2 text-lg">Reports :</p>
       <div className="flex flex-wrap">
         {reports.map((report, index) => (
@@ -23,7 +23,7 @@ export const DisplayReports = ({ reports }: DisplayReportsProps) => {
       </div>
     </div>
   ) : (
-    <div className="border-blueGray-200 mt-10 flex justify-center border-t pt-10">
+    <div className="mt-10 flex justify-center border-t pt-10">
       <p className="mb-2">No report</p>
     </div>
   );

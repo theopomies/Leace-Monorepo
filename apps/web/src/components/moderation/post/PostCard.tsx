@@ -1,29 +1,34 @@
 /* eslint-disable @next/next/no-img-element */
-import { trpc } from "../../../utils/trpc";
 import { SlideShow } from "../../home/stack/SlideShow";
 import { motion } from "framer-motion";
-import { Documents } from "../documents";
 import { displayDate } from "../../../utils/displayDate";
 import { GreenCheck } from "./GreenCheck";
 import { RedUncheck } from "./RedUncheck";
-import { Loader } from "../../shared/Loader";
 import { DisplayReports } from "../report/DisplayReports";
-import { DeletePostImg } from "./DeletePostImg";
+import { ImagesList } from "../../shared/ImagesList";
+import { DocumentsList } from "../../shared/document/DocumentsList";
+import { Post, Attribute, Report, Image, Document } from "@prisma/client";
 
-export interface PostProps {
-  postId: string;
+export interface PostCardProps {
+  post: Post & {
+    attribute: Attribute | null;
+    reports: Report[];
+  };
+  images: (Image & { url: string })[] | undefined;
+  OnImgDelete: (imageId: string) => Promise<void>;
+  documents: (Document & { url: string })[] | undefined;
+  OnDocDelete: (documentId: string) => Promise<void>;
+  OnDocValidation: (document: Document & { url: string }) => Promise<void>;
 }
 
-export const PostCard = ({ postId }: PostProps) => {
-  const { data: post, isLoading: postLoading } =
-    trpc.moderation.post.getPost.useQuery({ postId });
-  const { data: images } =
-    trpc.moderation.image.getSignedPostUrl.useQuery(postId);
-
-  if (postLoading) return <Loader />;
-
-  if (!post) return <p>Something went wrong</p>;
-
+export const PostCard = ({
+  post,
+  images,
+  OnImgDelete,
+  documents,
+  OnDocDelete,
+  OnDocValidation,
+}: PostCardProps) => {
   return (
     <div className="flex w-full flex-col overflow-auto rounded-lg bg-white p-8 shadow">
       {post.title && (
@@ -43,26 +48,28 @@ export const PostCard = ({ postId }: PostProps) => {
       </div>
       {post.attribute && (
         <div className="mt-2">
-          <div className="flex justify-between">
-            <p className="text-2xl uppercase">{post.attribute.location}</p>
-            <p className="text-2xl">{post.attribute.price}$/month</p>
+          <div className="py-10">
+            <div className="flex justify-between">
+              <p className="text-2xl uppercase">{post.attribute.location}</p>
+              <p className="text-2xl">{post.attribute.price}$/month</p>
+            </div>
+            <p className="text-2x">{post.attribute.size}m²</p>
+            <p className="text-2x">
+              Available on{" "}
+              {post.attribute.rentStartDate &&
+                displayDate(post.attribute.rentStartDate)}{" "}
+              to{" "}
+              {post.attribute.rentEndDate &&
+                displayDate(post.attribute.rentEndDate)}
+            </p>
+            <p className="text-l">Posted on {displayDate(post.createdAt)}</p>
           </div>
-          <p className="text-2x">{post.attribute.size}m²</p>
-          <p className="text-2x">
-            Available on{" "}
-            {post.attribute.rentStartDate &&
-              displayDate(post.attribute.rentStartDate)}{" "}
-            to{" "}
-            {post.attribute.rentEndDate &&
-              displayDate(post.attribute.rentEndDate)}
-          </p>
-          <p className="text-l">Posted on {displayDate(post.createdAt)}</p>
-          <div className="border-blueGray-200 my-10 border-y py-10">
+          <div className="border-t py-10">
             <p className="text-gray-600">
               {post.desc ? post.desc : "Pas de description"}
             </p>
           </div>
-          <div className="px-auto justify-center">
+          <div className="px-auto justify-center border-t py-10">
             <p className="bold mb-5 text-xl font-semibold">
               What this place offer
             </p>
@@ -85,21 +92,13 @@ export const PostCard = ({ postId }: PostProps) => {
           </div>
         </div>
       )}
-      <div className="border-blueGray-200 my-10 border-y py-10 text-center">
-        {images && images.length > 0 ? (
-          <div className="mt-10 flex flex-wrap justify-center gap-4">
-            {images.map((image, index) => (
-              <div key={index} className="relative">
-                <img src={image.url} alt="image" className="mx-auto h-32" />
-                <DeletePostImg postId={post.id} id={image.id} />
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p>No image</p>
-        )}
-      </div>
-      <Documents postId={postId} />
+      <ImagesList images={images} OnDelete={OnImgDelete} />
+      <DocumentsList
+        documents={documents}
+        isLoggedInOrAdmin={true}
+        OnDelete={OnDocDelete}
+        OnValidation={OnDocValidation}
+      />
       <DisplayReports reports={post.reports} />
     </div>
   );

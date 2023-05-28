@@ -2,7 +2,7 @@ import { trpc } from "../../../utils/trpc";
 import { Loader } from "../../shared/Loader";
 import { Button } from "../../shared/button/Button";
 import Link from "next/link";
-import { UserCard } from "../user/UserCard";
+import { User } from "../user";
 import { Report } from "../report";
 
 export function ModerationUserPage({
@@ -31,7 +31,7 @@ export function ModerationUserPage({
               <Button className="w-full">View posts</Button>
             </Link>
           )}
-          <UserCard userId={userId} />
+          <User userId={userId} />
         </div>
         <div className="h-screen w-1/6">
           <div className="flex h-full flex-col items-center justify-center gap-4 px-2">

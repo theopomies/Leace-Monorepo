@@ -5,7 +5,7 @@ import { Button } from "../../shared/button/Button";
 import { Search } from "../Search";
 import { BanPostAuthor } from "../ban/BanPostAuthor";
 import { PostList } from "../post/PostList";
-import { PostCard } from "../post/PostCard";
+import { Post } from "../post";
 
 export function AdminPostPage({ postId }: { postId: string }) {
   const post = trpc.moderation.post.getPostById.useQuery(postId, {
@@ -18,7 +18,7 @@ export function AdminPostPage({ postId }: { postId: string }) {
   if (post.isLoading) return <Loader />;
   if (post && post.data && !post.error) {
     return (
-      <div className="flex w-full py-5">
+      <div className="flex w-full">
         <div className="flex w-5/6 flex-col">
           <Search />
           <Link href={`/administration/users/${post.data.createdById}`}>
@@ -29,7 +29,7 @@ export function AdminPostPage({ postId }: { postId: string }) {
               userId={post.data.createdById}
               postLink="/administration/posts/[postId]"
             />
-            <PostCard postId={postId} />
+            <Post postId={postId} />
           </div>
         </div>
         <div className="h-screen w-1/6">

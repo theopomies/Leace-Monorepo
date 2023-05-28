@@ -93,7 +93,7 @@ export function AttributesForm({ ...attributes }: AttributesFormProps) {
 
   return (
     <div className="flex justify-center">
-      <div className="border-blueGray-200 mt-5 h-auto w-full border-t text-center">
+      <div className="mt-5 h-auto w-full border-t text-center">
         <AddressAutocomplete
           location={attributes.location}
           handleLocationChange={attributes.handleLocationChange}

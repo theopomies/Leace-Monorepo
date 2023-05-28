@@ -4,7 +4,7 @@ import { Search } from "../Search";
 import { Ban } from "../ban";
 import { Button } from "../../shared/button/Button";
 import Link from "next/link";
-import { UserCard } from "../user/UserCard";
+import { User } from "../user";
 
 export function AdminUserPage({ userId }: { userId: string }) {
   const user = trpc.moderation.user.getUserById.useQuery(userId, {
@@ -25,7 +25,7 @@ export function AdminUserPage({ userId }: { userId: string }) {
               <Button className="w-full">View posts</Button>
             </Link>
           )}
-          <UserCard userId={userId} />
+          <User userId={userId} />
         </div>
         <div className="h-screen w-1/6">
           <div className="flex h-full flex-col items-center justify-center gap-4 px-2">

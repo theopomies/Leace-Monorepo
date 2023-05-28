@@ -3,7 +3,7 @@ import { trpc } from "../../../utils/trpc";
 import { Loader } from "../../shared/Loader";
 import { Button } from "../../shared/button/Button";
 import { PostList } from "../post/PostList";
-import { PostCard } from "../post/PostCard";
+import { Post } from "../post";
 import { Report } from "../report";
 
 export function ModeratioPostPage({
@@ -23,7 +23,7 @@ export function ModeratioPostPage({
   if (post.isLoading) return <Loader />;
   if (post && post.data && !post.error) {
     return (
-      <div className="flex w-full py-5">
+      <div className="flex w-full">
         <div className="flex w-5/6 flex-col">
           <Link
             href={`/moderation/reports/${reportId}/users/${post.data.createdById}`}
@@ -35,7 +35,7 @@ export function ModeratioPostPage({
               userId={post.data.createdById}
               postLink={`/moderation/reports/${reportId}/posts/[postId]`}
             />
-            <PostCard postId={postId} />
+            <Post postId={postId} />
           </div>
         </div>
         <div className="h-screen w-1/6">

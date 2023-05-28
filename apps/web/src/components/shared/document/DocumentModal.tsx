@@ -1,18 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
 import { Button } from "../../shared/button/Button";
-
-type Document = {
-  id: string;
-  url: string;
-  valid: boolean;
-  ext: string;
-};
+import { Document } from "@prisma/client";
 
 export interface DocumentModalProps {
-  document: Document;
+  document: Document & { url: string };
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
-  OnValidation?: (document: Document) => void;
+  OnValidation?: (document: Document & { url: string }) => Promise<void>;
 }
 
 export const DocumentModal = ({
@@ -55,7 +49,10 @@ export const DocumentModal = ({
             <Button onClick={() => setShowModal(false)}>Close</Button>
             {OnValidation && (
               <Button
-                onClick={() => OnValidation(document)}
+                onClick={() => {
+                  OnValidation(document);
+                  setShowModal(false);
+                }}
                 theme={document.valid ? "danger" : "success"}
               >
                 {document.valid ? "Unverify" : "Verify"}

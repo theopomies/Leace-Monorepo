@@ -6,7 +6,7 @@ import Link from "next/link";
 import { DeletePostButton } from "../users/posts/DeletePostButton";
 import { motion } from "framer-motion";
 import { SlideShow } from "../home/stack/SlideShow";
-import { DeletePostImg } from "../shared/DeleteImgPost";
+import { ImagesList } from "../shared/ImagesList";
 import { DocumentsList } from "../shared/document/DocumentsList";
 
 type Image =
@@ -38,6 +38,7 @@ interface DisplayPostProps {
   post: Post;
   attribute: Attribute;
   images: Image;
+  handleDeleteImg: (imageId: string) => Promise<void>;
   documents: Document;
   handleDeleteDoc: (documentId: string) => Promise<void>;
   userId: string;
@@ -47,6 +48,7 @@ export function DisplayPost({
   post,
   attribute,
   images,
+  handleDeleteImg,
   documents,
   handleDeleteDoc,
   userId,
@@ -115,29 +117,14 @@ export function DisplayPost({
             <h2 className="mt-4 text-xl">Description:</h2>
             <p className="pt-1">{post.desc}</p>
           </div>
-          {post.createdById === userId && images && images.length > 0 && (
-            <div className="border-t py-5 text-center">
-              <h2 className="mb-5 text-xl">Images:</h2>
-              <div className="flex flex-wrap justify-center gap-4">
-                {images.map((image, index) => (
-                  <div key={index} className="relative">
-                    <img src={image.url} alt="image" className="mx-auto h-32" />
-                    <DeletePostImg postId={post.id} id={image.id} />
-                  </div>
-                ))}
-              </div>
-            </div>
+          {post.createdById === userId && (
+            <ImagesList images={images} OnDelete={handleDeleteImg} />
           )}
-          {documents && documents.length > 0 && (
-            <div className="border-t py-5 text-center">
-              <h2 className="mb-5 text-xl">Documents:</h2>
-              <DocumentsList
-                documents={documents}
-                OnDelete={handleDeleteDoc}
-                isUserLogged={post.createdById === userId}
-              />
-            </div>
-          )}
+          <DocumentsList
+            documents={documents}
+            OnDelete={handleDeleteDoc}
+            isLoggedInOrAdmin={post.createdById === userId}
+          />
           <div className="mt-5 flex justify-center gap-6">
             {post.createdById === userId && (
               <>

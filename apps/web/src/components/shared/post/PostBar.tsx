@@ -32,23 +32,16 @@ export const PostBar = ({
 
   return (
     <div className="mx-auto flex cursor-pointer flex-col overflow-hidden rounded-xl bg-white shadow-md md:max-w-2xl">
-      <div className="flex">
+      <div className="flex items-center">
         <Link href={postLink.replace("[postId]", post.id)} className="flex">
           {img && img[0] && (
-            <div className="w-2/5">
-              <img
-                className="h-full object-cover"
-                src={img[0].url}
-                alt="Modern building architecture"
-              />
+            <div className="h-full w-2/5">
+              <img src={img[0].url} alt="Post image" className="object-cover" />
             </div>
           )}
-          <div className="w-3/5 p-5">
-            <div className="text-sm font-semibold uppercase tracking-wide text-indigo-500">
+          <div className="my-auto mx-5 w-3/5">
+            <div className=" font-semibold uppercase tracking-wide text-indigo-500">
               {post.title}
-            </div>
-            <div className="mt-1 text-lg font-medium leading-tight text-black">
-              {post.desc}
             </div>
             <p className="mt-2 text-slate-500">
               {post.type == PostType.RENTED ? "Rented ✅" : "Available"}

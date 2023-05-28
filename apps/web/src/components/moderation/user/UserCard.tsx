@@ -1,24 +1,28 @@
 /* eslint-disable @next/next/no-img-element */
-import { trpc } from "../../../utils/trpc";
-import { Loader } from "../../shared/Loader";
-import { Documents } from "../documents";
 import { displayDate } from "../../../utils/displayDate";
 import { DisplayReports } from "../report/DisplayReports";
 import { DeleteUserImg } from "./DeleteUserImg";
+import { DocumentsList } from "../../shared/document/DocumentsList";
+import { User, Attribute, Report, Document } from "@prisma/client";
 
 export interface UserCardProps {
-  userId: string;
+  user: User & {
+    attribute: Attribute | null;
+    reports: Report[];
+  };
+  isBan?: boolean;
+  documents: (Document & { url: string })[] | undefined;
+  OnDocDelete: (documentId: string) => Promise<void>;
+  OnDocValidation: (document: Document & { url: string }) => Promise<void>;
 }
 
-export const UserCard = ({ userId }: UserCardProps) => {
-  const { data: user, isLoading: userLoading } =
-    trpc.moderation.user.getUser.useQuery({ userId });
-  const { data: isBan } = trpc.moderation.ban.getIsBan.useQuery({ userId });
-
-  if (userLoading) return <Loader />;
-
-  if (!user) return <p>Something went wrong</p>;
-
+export const UserCard = ({
+  user,
+  isBan,
+  documents,
+  OnDocDelete,
+  OnDocValidation,
+}: UserCardProps) => {
   return (
     <div className="flex w-full flex-col overflow-auto rounded-lg bg-white p-8 shadow">
       <div className="flex justify-center">
@@ -29,10 +33,10 @@ export const UserCard = ({ userId }: UserCardProps) => {
             alt="image"
             className="mx-auto h-32 rounded-full shadow-xl"
           />
-          {user.image && <DeleteUserImg userId={userId} />}
+          {user.image && <DeleteUserImg userId={user.id} />}
         </div>
       </div>
-      <div className="mt-2 px-16 text-center">
+      <div className="mt-2 px-16 pb-10 text-center">
         <h3 className="font-semibold">{user.role}</h3>
         <h3 className=" text-4xl font-semibold">
           {user.firstName ? user.firstName : "FirstName"}{" "}
@@ -57,13 +61,17 @@ export const UserCard = ({ userId }: UserCardProps) => {
           </p>
         </div>
       </div>
-      <div className="border-blueGray-200 my-10 border-y py-10 text-center">
+      <div className="border-t py-10 text-center">
         <p className="px-10 text-gray-600">
           {user.description ? user.description : "No description"}
         </p>
-        L
       </div>
-      <Documents userId={user.id} />
+      <DocumentsList
+        documents={documents}
+        isLoggedInOrAdmin={true}
+        OnDelete={OnDocDelete}
+        OnValidation={OnDocValidation}
+      />
       <DisplayReports reports={user.reports} />
     </div>
   );

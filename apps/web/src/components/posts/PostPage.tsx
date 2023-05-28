@@ -1,3 +1,4 @@
+import axios from "axios";
 import { trpc } from "../../utils/trpc";
 import { Loader } from "../shared/Loader";
 import { DisplayPost } from "./DisplayPost";
@@ -9,10 +10,13 @@ export interface PostPageProps {
 export const PostPage = ({ postId }: PostPageProps) => {
   const { data: post } = trpc.post.getPostById.useQuery({ postId });
   const { data: session, isLoading } = trpc.auth.getSession.useQuery();
-  const { data: images } = trpc.image.getSignedPostUrl.useQuery(postId);
-  const { data: documents, refetch: refetchImages } =
+  const { data: images, refetch: refetchImages } =
+    trpc.image.getSignedPostUrl.useQuery(postId);
+  const { data: documents, refetch: refetchDocuments } =
     trpc.document.getSignedUrl.useQuery({ postId });
+
   const deleteDocument = trpc.document.deleteSignedUrl.useMutation();
+  const deleteImage = trpc.image.deleteSignedPostUrl.useMutation();
 
   if (isLoading) {
     return <Loader />;
@@ -24,6 +28,13 @@ export const PostPage = ({ postId }: PostPageProps) => {
 
   const handleDeleteDoc = async (documentId: string) => {
     await deleteDocument.mutateAsync({ postId, documentId });
+    refetchDocuments();
+  };
+
+  const handleDeleteImg = async (imageId: string) => {
+    await deleteImage.mutateAsync({ postId, imageId }).then(async (url) => {
+      await axios.delete(url);
+    });
     refetchImages();
   };
 
@@ -34,6 +45,7 @@ export const PostPage = ({ postId }: PostPageProps) => {
           post={post}
           attribute={post.attribute}
           images={images}
+          handleDeleteImg={handleDeleteImg}
           documents={documents}
           handleDeleteDoc={handleDeleteDoc}
           userId={session.userId}
