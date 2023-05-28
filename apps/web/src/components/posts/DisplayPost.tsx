@@ -6,7 +6,7 @@ import Link from "next/link";
 import { DeletePostButton } from "../users/posts/DeletePostButton";
 import { motion } from "framer-motion";
 import { SlideShow } from "../home/stack/SlideShow";
-import { ImagesList } from "../shared/ImagesList";
+import { ImagesList } from "../shared/post/ImagesList";
 import { DocumentsList } from "../shared/document/DocumentsList";
 
 type Image =

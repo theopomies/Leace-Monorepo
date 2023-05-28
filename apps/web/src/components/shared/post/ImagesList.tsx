@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
-import { Button } from "./button/Button";
-import { Cross } from "../moderation/Icons";
+import { Button } from "../button/Button";
+import { Cross } from "../../moderation/Icons";
 import { Image } from "@prisma/client";
 
 export interface ImagesListProps {

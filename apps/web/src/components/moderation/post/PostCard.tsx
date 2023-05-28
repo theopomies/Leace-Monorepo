@@ -5,7 +5,7 @@ import { displayDate } from "../../../utils/displayDate";
 import { GreenCheck } from "./GreenCheck";
 import { RedUncheck } from "./RedUncheck";
 import { DisplayReports } from "../report/DisplayReports";
-import { ImagesList } from "../../shared/ImagesList";
+import { ImagesList } from "../../shared/post/ImagesList";
 import { DocumentsList } from "../../shared/document/DocumentsList";
 import { Post, Attribute, Report, Image, Document } from "@prisma/client";
 
