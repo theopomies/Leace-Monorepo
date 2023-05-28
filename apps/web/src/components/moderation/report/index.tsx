@@ -22,6 +22,7 @@ export const Report = ({ userId, reportId, postId }: ReportProps) => {
     return (
       <>
         <ReportButton reportId={reportId} />
+        <div className="w-full border-b border-black" />
         <div className="flex w-full flex-row justify-between">
           <BanPostAuthor postId={postId} />
           <RejectPostReports postId={postId} />

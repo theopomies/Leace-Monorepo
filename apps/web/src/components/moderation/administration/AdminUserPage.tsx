@@ -17,18 +17,23 @@ export function AdminUserPage({ userId }: { userId: string }) {
   if (user.isLoading) return <Loader />;
   if (user && user.data && !user.error) {
     return (
-      <div className="w-full">
-        <Search />
-        <div className="flex py-5">
-          <div className="flex w-5/6 flex-col">
-            {user.data.posts[0] && (
-              <Link href={`/administration/posts/${user.data.posts[0].id}`}>
-                <Button className="w-full">View posts</Button>
-              </Link>
-            )}
-            <UserCard userId={userId} />
-          </div>
-          <div className="my-auto h-screen w-1/6">
+      <div className="flex w-full py-5">
+        <div className="flex w-5/6 flex-col">
+          <Search />
+          {user.data.posts[0] && (
+            <Link href={`/administration/posts/${user.data.posts[0].id}`}>
+              <Button className="w-full">View posts</Button>
+            </Link>
+          )}
+          <UserCard userId={userId} />
+        </div>
+        <div className="h-screen w-1/6">
+          <div className="flex h-full flex-col items-center justify-center gap-4 px-2">
+            <Link href={`/administration/users/${userId}/conversations`}>
+              <Button theme="primary">View conversations</Button>
+            </Link>
+            <div className="w-full border-b border-black" />
+
             <Ban userId={userId} />
           </div>
         </div>

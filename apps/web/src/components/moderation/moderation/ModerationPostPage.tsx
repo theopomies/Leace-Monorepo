@@ -38,8 +38,16 @@ export function ModeratioPostPage({
             <PostCard postId={postId} />
           </div>
         </div>
-        <div className="my-auto h-screen w-1/6">
-          <Report reportId={reportId} postId={postId} />
+        <div className="h-screen w-1/6">
+          <div className="flex h-full flex-col items-center justify-center gap-4 px-2">
+            <Link
+              href={`/moderation/reports/${reportId}/users/${post.data.createdById}/conversations`}
+            >
+              <Button theme="primary">View conversations</Button>
+            </Link>
+            <div className="w-full border-b border-black" />
+            <Report reportId={reportId} postId={postId} />
+          </div>
         </div>
       </div>
     );

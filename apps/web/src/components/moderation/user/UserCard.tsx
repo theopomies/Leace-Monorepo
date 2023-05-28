@@ -5,8 +5,6 @@ import { Documents } from "../documents";
 import { displayDate } from "../../../utils/displayDate";
 import { DisplayReports } from "../report/DisplayReports";
 import { DeleteUserImg } from "./DeleteUserImg";
-import Link from "next/link";
-import { Button } from "../../shared/button/Button";
 
 export interface UserCardProps {
   userId: string;
@@ -58,11 +56,6 @@ export const UserCard = ({ userId }: UserCardProps) => {
             {user.country ? user.country : "No country"}
           </p>
         </div>
-      </div>
-      <div className="mt-4 flex justify-center">
-        <Link href={`/administration/users/${userId}/conversations`}>
-          <Button theme="primary">View conversations</Button>
-        </Link>
       </div>
       <div className="border-blueGray-200 my-10 border-y py-10 text-center">
         <p className="px-10 text-gray-600">

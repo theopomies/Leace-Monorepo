@@ -22,7 +22,7 @@ export function ModerationUserPage({
   if (user.isLoading) return <Loader />;
   if (user && user.data && !user.error) {
     return (
-      <div className="flex w-full py-5">
+      <div className="flex w-full">
         <div className="flex w-5/6 flex-col">
           {user.data.posts[0] && (
             <Link
@@ -33,8 +33,16 @@ export function ModerationUserPage({
           )}
           <UserCard userId={userId} />
         </div>
-        <div className="my-auto h-screen w-1/6">
-          <Report userId={userId} />
+        <div className="h-screen w-1/6">
+          <div className="flex h-full flex-col items-center justify-center gap-4 px-2">
+            <Link
+              href={`/moderation/reports/${reportId}/users/${userId}/conversations`}
+            >
+              <Button theme="primary">View conversations</Button>
+            </Link>
+            <div className="w-full border-b border-black" />
+            <Report userId={userId} />
+          </div>
         </div>
       </div>
     );
