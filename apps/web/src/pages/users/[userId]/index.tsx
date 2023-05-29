@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { LoggedLayout } from "../../../components/layout/LoggedLayout";
-import { ProfilePage } from "../../../components/users/ProfilePage";
+import { UserPage } from "../../../components/users/UserPage";
 
 const Index = () => {
   const router = useRouter();
@@ -12,7 +12,7 @@ const Index = () => {
 
   return (
     <LoggedLayout title="Profile Page | Leace">
-      <ProfilePage userId={userId} />
+      <UserPage userId={userId} />
     </LoggedLayout>
   );
 };

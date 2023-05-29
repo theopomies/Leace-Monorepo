@@ -5,7 +5,7 @@ import React, {
   SetStateAction,
   useState,
 } from "react";
-import { Header } from "../../components/users/Header";
+import { Header } from "../shared/Header";
 import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
 import { PostForm } from "./PostForm";

@@ -1,7 +1,7 @@
 import { Post, PostType, User } from "@prisma/client";
 import React, { useState, useEffect } from "react";
 import { trpc } from "../../utils/trpc";
-import { Header } from "../users/Header";
+import { Header } from "../shared/Header";
 import { PostBar } from "../shared/post/PostBar";
 
 interface DashboardProps {

@@ -26,10 +26,10 @@ export const PostList = ({ userId }: PostListProps) => {
     await deleteMatchMutation.mutateAsync({ userId, relationshipId });
   };
 
-  return (
-    <>
-      {status == "success" && relationships.length ? (
-        relationships.map(({ post, id, relationType, conversation }) => (
+  if (status == "success" && relationships.length) {
+    return (
+      <div className="flex flex-row gap-4">
+        {relationships.map(({ post, id, relationType, conversation }) => (
           <PostBar
             key={post.id}
             post={post}
@@ -40,19 +40,16 @@ export const PostList = ({ userId }: PostListProps) => {
             user={user}
             OnDeleteMatch={OnDeleteMatch}
           />
-        ))
-      ) : (
-        <div className="mt-8 flex flex-col items-center justify-center">
-          <h1 className="text-2xl font-bold text-gray-700">
-            No matches yet :(
-          </h1>
-          <div className="mt-4 flex flex-col items-center justify-center">
-            <p className="text-gray-500">
-              Go swipe to find your dream apartment !
-            </p>
-          </div>
-        </div>
-      )}
-    </>
+        ))}
+      </div>
+    );
+  }
+  return (
+    <div className="mt-8 flex flex-col items-center justify-center">
+      <h1 className="text-2xl font-bold text-gray-700">No matches yet :(</h1>
+      <div className="mt-4 flex flex-col items-center justify-center">
+        <p className="text-gray-500">Go swipe to find your dream apartment !</p>
+      </div>
+    </div>
   );
 };

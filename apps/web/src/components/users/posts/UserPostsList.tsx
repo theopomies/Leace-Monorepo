@@ -1,6 +1,6 @@
 import { trpc } from "../../../utils/trpc";
 import { PostBar } from "../../shared/post/PostBar";
-import { Header } from "../Header";
+import { Header } from "../../shared/Header";
 
 export interface UserPostsListProps {
   userId: string;

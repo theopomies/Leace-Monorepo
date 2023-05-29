@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { trpc } from "../../utils/trpc";
 import { TenantBar } from "../users/UserBar";
-import { Header } from "../users/Header";
+import { Header } from "../shared/Header";
 
 export interface TenantListProps {
   userId: string;

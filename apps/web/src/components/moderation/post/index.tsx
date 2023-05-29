@@ -3,7 +3,7 @@ import { trpc } from "../../../utils/trpc";
 import { Loader } from "../../shared/Loader";
 import axios from "axios";
 import { useMemo } from "react";
-import { PostCard } from "./PostCard";
+import { PostCard } from "../../shared/post/PostCard";
 import { Document } from "@prisma/client";
 
 export interface PostProps {
@@ -28,6 +28,10 @@ export const Post = ({ postId }: PostProps) => {
   const deleteDocument = trpc.document.deleteSignedUrl.useMutation();
   const documentValidation =
     trpc.moderation.document.documentValidation.useMutation();
+
+  const handleDeletePost = async () => {
+    console.log("TODO");
+  };
 
   const handleDeleteImg = async (imageId: string) => {
     await deleteImage.mutateAsync({ postId, imageId }).then(async (url) => {
@@ -62,11 +66,14 @@ export const Post = ({ postId }: PostProps) => {
   return (
     <PostCard
       post={post}
+      OnPostDelete={handleDeletePost}
       images={images}
       OnImgDelete={handleDeleteImg}
       documents={documents}
       OnDocDelete={handleDeleteDoc}
       OnDocValidation={handleDocValidation}
+      updateLink="/moderation/reports" // TODO: change this link
+      isAdmin={true}
     />
   );
 };

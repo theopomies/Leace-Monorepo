@@ -1,5 +1,5 @@
 import { Role } from "@prisma/client";
-import { Header } from "../Header";
+import { Header } from "../../shared/Header";
 import { TenantList } from "../TenantList";
 import { PostList } from "../posts/PostList";
 import { trpc } from "../../../utils/trpc";

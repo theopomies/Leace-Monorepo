@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { trpc } from "../../utils/trpc";
-import { Header } from "../users/Header";
+import { Header } from "../shared/Header";
 import { PostBar } from "../shared/post/PostBar";
 
 export interface PostListProps {

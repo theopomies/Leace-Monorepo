@@ -9,7 +9,7 @@ import {
 } from "react";
 import { trpc } from "../../../utils/trpc";
 import { Role } from "@prisma/client";
-import { Header } from "../Header";
+import { Header } from "../../shared/Header";
 import { AttributesForm } from "../../attributes/AttributesForm";
 import { useRouter } from "next/router";
 import { TextInput } from "../../shared/forms/TextInput";
