@@ -2,10 +2,10 @@ import Link from "next/link";
 import { trpc } from "../../../utils/trpc";
 import { Loader } from "../../shared/Loader";
 import { Button } from "../../shared/button/Button";
-import { Search } from "../Search";
-import { BanPostAuthor } from "../ban/BanPostAuthor";
+import { Search } from "./Search";
 import { PostList } from "../post/PostList";
 import { Post } from "../post";
+import { ActionButtons } from "../ActionButtons";
 
 export function AdminPostPage({ postId }: { postId: string }) {
   const post = trpc.moderation.post.getPostById.useQuery(postId, {
@@ -33,15 +33,10 @@ export function AdminPostPage({ postId }: { postId: string }) {
           </div>
         </div>
         <div className="h-screen w-1/6">
-          <div className="flex h-full flex-col items-center justify-center gap-4 px-2">
-            <Link
-              href={`/administration/users/${post.data.createdById}/conversations`}
-            >
-              <Button theme="primary">View conversations</Button>
-            </Link>
-            <div className="w-full border-b border-black" />
-            <BanPostAuthor postId={postId} />
-          </div>
+          <ActionButtons
+            userId={post.data.createdById}
+            conversationLink={`/administration/users/${post.data.createdById}/conversations`}
+          />
         </div>
       </div>
     );

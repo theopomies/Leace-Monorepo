@@ -3,7 +3,7 @@ import { Loader } from "../../shared/Loader";
 import { Button } from "../../shared/button/Button";
 import Link from "next/link";
 import { User } from "../user";
-import { Report } from "../report";
+import { ActionButtons } from "../ActionButtons";
 
 export function ModerationUserPage({
   reportId,
@@ -34,15 +34,11 @@ export function ModerationUserPage({
           <User userId={userId} />
         </div>
         <div className="h-screen w-1/6">
-          <div className="flex h-full flex-col items-center justify-center gap-4 px-2">
-            <Link
-              href={`/moderation/reports/${reportId}/users/${userId}/conversations`}
-            >
-              <Button theme="primary">View conversations</Button>
-            </Link>
-            <div className="w-full border-b border-black" />
-            <Report userId={userId} />
-          </div>
+          <ActionButtons
+            reportId={reportId}
+            userId={userId}
+            conversationLink={`/moderation/reports/${reportId}/users/${userId}/conversations`}
+          />
         </div>
       </div>
     );

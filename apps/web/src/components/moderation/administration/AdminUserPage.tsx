@@ -1,10 +1,10 @@
 import { trpc } from "../../../utils/trpc";
 import { Loader } from "../../shared/Loader";
-import { Search } from "../Search";
-import { Ban } from "../ban";
+import { Search } from "./Search";
 import { Button } from "../../shared/button/Button";
 import Link from "next/link";
 import { User } from "../user";
+import { ActionButtons } from "../ActionButtons";
 
 export function AdminUserPage({ userId }: { userId: string }) {
   const user = trpc.moderation.user.getUserById.useQuery(userId, {
@@ -28,14 +28,10 @@ export function AdminUserPage({ userId }: { userId: string }) {
           <User userId={userId} />
         </div>
         <div className="h-screen w-1/6">
-          <div className="flex h-full flex-col items-center justify-center gap-4 px-2">
-            <Link href={`/administration/users/${userId}/conversations`}>
-              <Button theme="primary">View conversations</Button>
-            </Link>
-            <div className="w-full border-b border-black" />
-
-            <Ban userId={userId} />
-          </div>
+          <ActionButtons
+            userId={userId}
+            conversationLink={`/administration/users/${userId}/conversations`}
+          />
         </div>
       </div>
     );

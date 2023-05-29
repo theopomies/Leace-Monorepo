@@ -4,7 +4,7 @@ import { Loader } from "../../shared/Loader";
 import { Button } from "../../shared/button/Button";
 import { PostList } from "../post/PostList";
 import { Post } from "../post";
-import { Report } from "../report";
+import { ActionButtons } from "../ActionButtons";
 
 export function ModeratioPostPage({
   reportId,
@@ -39,15 +39,11 @@ export function ModeratioPostPage({
           </div>
         </div>
         <div className="h-screen w-1/6">
-          <div className="flex h-full flex-col items-center justify-center gap-4 px-2">
-            <Link
-              href={`/moderation/reports/${reportId}/users/${post.data.createdById}/conversations`}
-            >
-              <Button theme="primary">View conversations</Button>
-            </Link>
-            <div className="w-full border-b border-black" />
-            <Report reportId={reportId} postId={postId} />
-          </div>
+          <ActionButtons
+            reportId={reportId}
+            userId={post.data.createdById}
+            conversationLink={`/moderation/reports/${reportId}/users/${post.data.createdById}/conversations`}
+          />
         </div>
       </div>
     );
