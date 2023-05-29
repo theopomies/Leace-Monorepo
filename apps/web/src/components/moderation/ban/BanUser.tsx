@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import { RouterInputs, trpc } from "../../../utils/trpc";
 import { BanModal } from "./BanModal";
 
@@ -6,10 +7,13 @@ export interface BanUserProps {
 }
 
 export const BanUser = ({ userId }: BanUserProps) => {
+  const router = useRouter();
   const utils = trpc.useContext();
-  const mutation = trpc.moderation.ban.createBan.useMutation({
+  const banUser = trpc.moderation.ban.createBan.useMutation({
     onSuccess() {
-      utils.moderation.report.getReport.invalidate();
+      if (router.pathname.includes("/moderation")) {
+        router.push("/moderation/reports");
+      }
       utils.moderation.user.getUser.invalidate();
       utils.moderation.ban.getIsBan.invalidate();
     },
@@ -19,7 +23,7 @@ export const BanUser = ({ userId }: BanUserProps) => {
   });
 
   const OnBan = (banData: RouterInputs["moderation"]["ban"]["createBan"]) => {
-    mutation.mutate(banData);
+    banUser.mutateAsync(banData);
   };
 
   if (!reports) {
