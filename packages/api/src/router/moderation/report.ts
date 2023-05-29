@@ -6,10 +6,11 @@ import { TRPCError } from "@trpc/server";
 export const reportModeration = router({
   getReport: protectedProcedure([Role.ADMIN, Role.MODERATOR]).query(
     ({ ctx }) => {
-      return ctx.prisma.report.findFirstOrThrow({
+      const report = ctx.prisma.report.findFirst({
         orderBy: { createdAt: "desc" },
         where: { status: ReportStatus.PENDING },
       });
+      return report;
     },
   ),
   getReportsByUserId: protectedProcedure([Role.ADMIN, Role.MODERATOR])
@@ -22,7 +23,7 @@ export const reportModeration = router({
   updateReport: protectedProcedure([Role.ADMIN, Role.MODERATOR])
     .input(
       z.object({
-        id: z.string(),
+        reportId: z.string(),
         reason: z.enum([
           ReportReason.SCAM,
           ReportReason.SPAM,
@@ -33,57 +34,35 @@ export const reportModeration = router({
     )
     .mutation(({ ctx, input }) => {
       return ctx.prisma.report.update({
-        where: { id: input.id },
+        where: { id: input.reportId },
         data: {
           reason: input.reason,
           status: ReportStatus.RESOLVED,
         },
       });
     }),
-  rejectUserReports: protectedProcedure([Role.ADMIN, Role.MODERATOR])
-    .input(z.object({ userId: z.string() }))
+  rejectReports: protectedProcedure([Role.ADMIN, Role.MODERATOR])
+    .input(z.object({ reportId: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      //utile ? si non une seule procédure pour rejectReports
-      const user = await ctx.prisma.user.findUnique({
-        where: { id: input.userId },
+      const report = await ctx.prisma.report.findUnique({
+        where: { id: input.reportId },
       });
-      if (!user) throw new TRPCError({ code: "NOT_FOUND" });
-      //
-      const reports = await ctx.prisma.report.findMany({
-        where: { userId: input.userId, status: ReportStatus.PENDING },
+      if (!report) throw new TRPCError({ code: "NOT_FOUND" });
+
+      const relatedReports = await ctx.prisma.report.findMany({
+        where: {
+          OR: [{ userId: report.userId }, { postId: report.postId }],
+          status: ReportStatus.PENDING,
+        },
       });
-      if (reports.length === 0) {
+      if (relatedReports.length === 0) {
         throw new TRPCError({
           code: "CONFLICT",
           message: "No reports to reject",
         });
       }
 
-      reports.forEach(async (report) => {
-        await ctx.prisma.report.update({
-          where: { id: report.id },
-          data: { status: ReportStatus.REJECTED },
-        });
-      });
-    }),
-  rejectPostReports: protectedProcedure([Role.ADMIN, Role.MODERATOR])
-    .input(z.object({ postId: z.string() }))
-    .mutation(async ({ ctx, input }) => {
-      const post = await ctx.prisma.post.findUnique({
-        where: { id: input.postId },
-      });
-      if (!post) throw new TRPCError({ code: "NOT_FOUND" });
-
-      const reports = await ctx.prisma.report.findMany({
-        where: { postId: input.postId, status: ReportStatus.PENDING },
-      });
-      if (reports.length === 0) {
-        throw new TRPCError({
-          code: "CONFLICT",
-          message: "No reports to reject",
-        });
-      }
-      reports.forEach(async (report) => {
+      relatedReports.forEach(async (report) => {
         await ctx.prisma.report.update({
           where: { id: report.id },
           data: { status: ReportStatus.REJECTED },
