@@ -5,7 +5,7 @@ import { Image } from "@prisma/client";
 
 export interface ImagesListProps {
   images: (Image & { url: string })[] | undefined;
-  OnDelete: (imageId: string) => Promise<void>;
+  OnDelete?: (imageId: string) => Promise<void>;
 }
 
 export const ImagesList = ({ images, OnDelete }: ImagesListProps) => {
@@ -18,14 +18,16 @@ export const ImagesList = ({ images, OnDelete }: ImagesListProps) => {
         {images.map((image, index) => (
           <div key={index} className="relative">
             <img src={image.url} alt="image" className="mx-auto h-32" />
-            <Button
-              theme="danger"
-              onClick={() => OnDelete(image.id)}
-              overrideStyles
-              className="absolute -right-1 -top-1 inline-flex items-center justify-center rounded-md bg-red-500 p-1 text-white hover:bg-white hover:text-red-500"
-            >
-              <Cross />
-            </Button>
+            {OnDelete && (
+              <Button
+                theme="danger"
+                onClick={() => OnDelete(image.id)}
+                overrideStyles
+                className="absolute -right-1 -top-1 inline-flex items-center justify-center rounded-md bg-red-500 p-1 text-white hover:bg-white hover:text-red-500"
+              >
+                <Cross />
+              </Button>
+            )}
           </div>
         ))}
       </div>

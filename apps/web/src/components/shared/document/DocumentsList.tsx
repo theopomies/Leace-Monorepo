@@ -11,7 +11,7 @@ type DocumentWithUrl = Document & { url: string };
 export interface DocumentsListProps {
   documents: DocumentWithUrl[] | undefined;
   isLoggedInOrAdmin?: boolean;
-  OnDelete: (documentId: string) => Promise<void>;
+  OnDelete?: (documentId: string) => Promise<void>;
   OnValidation?: (document: DocumentWithUrl) => Promise<void>;
 }
 
@@ -64,7 +64,7 @@ export const DocumentsList = ({
                 <Check />
               </div>
             )}
-            {isLoggedInOrAdmin && (
+            {isLoggedInOrAdmin && OnDelete && (
               <Button
                 theme="danger"
                 onClick={() => OnDelete(doc.id)}

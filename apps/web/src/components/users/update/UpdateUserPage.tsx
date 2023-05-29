@@ -19,6 +19,7 @@ import { Button } from "../../shared/button/Button";
 import { HomeType } from "../../../types/homeType";
 import { FileInput } from "../../shared/forms/FileInput";
 import axios from "axios";
+import { DocumentsList } from "../../shared/document/DocumentsList";
 
 export interface UpdateUserPageProps {
   userId: string;
@@ -277,22 +278,7 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
               <AttributesForm {...attributesStates} />
             )}
             <div className="mt-10">
-              <h2 className="mb-2 text-center text-xl font-bold text-gray-700">
-                Documents
-              </h2>
-              {documentsGet && documentsGet.length > 0 && (
-                <div className="flex flex-wrap justify-center gap-4">
-                  {documentsGet.map((document, index) => (
-                    <div key={index} className="relative">
-                      <img
-                        src={document.url}
-                        alt="image"
-                        className="mx-auto h-32"
-                      />
-                    </div>
-                  ))}
-                </div>
-              )}
+              <DocumentsList documents={documentsGet} />
               <div className="mt-2 flex flex-wrap justify-center gap-4">
                 <FileInput
                   multiple

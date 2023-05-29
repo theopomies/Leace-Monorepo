@@ -12,6 +12,8 @@ import { NumberInput } from "../shared/forms/NumberInput";
 import { FileInput } from "../shared/forms/FileInput";
 import { HomeType } from "../../types/homeType";
 import { AddressAutocomplete } from "../shared/forms/AddressAutocomplete";
+import { DocumentsList } from "../shared/document/DocumentsList";
+import { ImagesList } from "../shared/post/ImagesList";
 
 type Image =
   | {
@@ -237,18 +239,7 @@ export const PostForm = (props: PostFormProps) => {
             </label>
           </div>
           <div className="mt-10 text-center">
-            <h2 className="mb-2 text-center text-xl font-medium text-gray-700">
-              Photos
-            </h2>
-            {props.imagesGet && props.imagesGet.length > 0 && (
-              <div className="flex flex-wrap justify-center gap-4">
-                {props.imagesGet.map((image, index) => (
-                  <div key={index} className="relative">
-                    <img src={image.url} alt="image" className="mx-auto h-32" />
-                  </div>
-                ))}
-              </div>
-            )}
+            <ImagesList images={props.imagesGet} />
             <div className="mt-2 flex flex-wrap justify-center gap-4">
               <FileInput multiple onChange={props.setImages}>
                 Upload Image
@@ -259,22 +250,7 @@ export const PostForm = (props: PostFormProps) => {
             </div>
           </div>
           <div className="mt-10">
-            <h2 className="mb-2 text-center text-xl font-bold text-gray-700">
-              Documents
-            </h2>
-            {props.documentsGet && props.documentsGet.length > 0 && (
-              <div className="flex flex-wrap justify-center gap-4">
-                {props.documentsGet.map((document, index) => (
-                  <div key={index} className="relative">
-                    <img
-                      src={document.url}
-                      alt="image"
-                      className="mx-auto h-32"
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
+            <DocumentsList documents={props.documentsGet} />
             <div className="mt-2 flex flex-wrap justify-center gap-4">
               <FileInput multiple onChange={props.setDocuments} accept=".pdf">
                 Upload Document
