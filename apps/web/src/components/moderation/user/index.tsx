@@ -12,6 +12,7 @@ export interface UserProps {
 export const User = ({ userId }: UserProps) => {
   const { data: session, isLoading: sessionLoading } =
     trpc.auth.getSession.useQuery();
+  const { data: isBanned } = trpc.moderation.ban.getIsBan.useQuery({ userId });
   const {
     data: user,
     isLoading: userLoading,
@@ -66,6 +67,7 @@ export const User = ({ userId }: UserProps) => {
     <UserCard
       session={session}
       user={user}
+      isBanned={isBanned}
       OnImgDelete={handleDeleteImg}
       documents={documents}
       OnDocDelete={handleDeleteDoc}

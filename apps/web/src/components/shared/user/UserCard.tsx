@@ -14,6 +14,7 @@ export interface UserCardProps {
     attribute: Attribute | null;
     reports?: Report[];
   };
+  isBanned?: boolean;
   OnUserDelete?: () => Promise<void>;
   OnImgDelete?: () => Promise<void>;
   documents: (Document & { url: string })[] | undefined;
@@ -25,6 +26,7 @@ export interface UserCardProps {
 export const UserCard = ({
   session,
   user,
+  isBanned,
   OnUserDelete,
   OnImgDelete,
   documents,
@@ -60,8 +62,14 @@ export const UserCard = ({
           {user.firstName ? user.firstName : "FirstName"}{" "}
           {user.lastName ? user.lastName : "LastName"}
         </h3>
-        <p className={`${!session.ban ? "text-green-500" : "text-red-500"}`}>
-          {!session.ban ? user.status : `BANNED for ${session.ban.reason}`}
+        <p
+          className={`${
+            !isBanned || !session.ban ? "text-green-500" : "text-red-500"
+          }`}
+        >
+          {!isBanned || !session.ban
+            ? user.status
+            : `BANNED for ${session.ban.reason}`}
         </p>
         <p className="my-5 text-lg text-amber-400">
           {user.isPremium ? "Premium" : "No premium"}
