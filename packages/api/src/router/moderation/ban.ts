@@ -4,7 +4,13 @@ import { ReportReason, ReportStatus, Role } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 
 export const banModeration = router({
-  getIsBan: protectedProcedure([Role.ADMIN, Role.MODERATOR])
+  getIsBan: protectedProcedure([
+    Role.ADMIN,
+    Role.MODERATOR,
+    Role.TENANT,
+    Role.OWNER,
+    Role.AGENCY,
+  ])
     .input(z.object({ userId: z.string() }))
     .query(async ({ ctx, input }) => {
       const lastBan = await ctx.prisma.ban.findFirst({

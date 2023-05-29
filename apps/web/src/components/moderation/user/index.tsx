@@ -12,7 +12,8 @@ export interface UserProps {
 export const User = ({ userId }: UserProps) => {
   const { data: session, isLoading: sessionLoading } =
     trpc.auth.getSession.useQuery();
-  const { data: isBanned } = trpc.moderation.ban.getIsBan.useQuery({ userId });
+  const { data: isBanned, isLoading: isBannedLoading } =
+    trpc.moderation.ban.getIsBan.useQuery({ userId });
   const {
     data: user,
     isLoading: userLoading,
@@ -30,8 +31,8 @@ export const User = ({ userId }: UserProps) => {
     trpc.moderation.document.documentValidation.useMutation();
 
   const isLoading = useMemo(() => {
-    return sessionLoading || userLoading || documentsLoading;
-  }, [sessionLoading, userLoading, documentsLoading]);
+    return sessionLoading || isBannedLoading || userLoading || documentsLoading;
+  }, [sessionLoading, isBannedLoading, userLoading, documentsLoading]);
 
   if (!session) {
     return <div>Not logged in</div>;

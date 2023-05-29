@@ -16,14 +16,14 @@ export const DisplayReports = ({ reports }: DisplayReportsProps) => {
             <div key={index} className="flex items-center gap-2">
               <StatusSpan report={report} />
               <p>
-                {displayDate(report.createdAt)}, reported for {report.reason} by
+                {displayDate(report.createdAt)}, reported for {report.reason} by{" "}
                 {report.createdById}
               </p>
             </div>
           ))}
         </div>
       ) : (
-        <p className="mb-5">No report</p>
+        <p>No report</p>
       )}
     </div>
   );

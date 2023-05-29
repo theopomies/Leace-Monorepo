@@ -3,18 +3,18 @@ import Link from "next/link";
 import { displayDate } from "../../../utils/displayDate";
 import { DisplayReports } from "../../moderation/report/DisplayReports";
 import { DocumentsList } from "../document/DocumentsList";
-import { User, Attribute, Report, Document, Role, Ban } from "@prisma/client";
+import { User, Attribute, Report, Document, Role } from "@prisma/client";
 import { Button } from "../button/Button";
 import { DeleteProfileDialog } from "../../users/DeleteProfileDialog";
 import { Cross } from "../../moderation/Icons";
 
 export interface UserCardProps {
-  session: { userId: string; role: Role | undefined; ban: Ban | null };
+  session: { userId: string; role: Role | undefined };
   user: User & {
     attribute: Attribute | null;
     reports?: Report[];
   };
-  isBanned?: boolean;
+  isBanned: boolean | undefined;
   OnUserDelete?: () => Promise<void>;
   OnImgDelete?: () => Promise<void>;
   documents: (Document & { url: string })[] | undefined;
@@ -62,14 +62,8 @@ export const UserCard = ({
           {user.firstName ? user.firstName : "FirstName"}{" "}
           {user.lastName ? user.lastName : "LastName"}
         </h3>
-        <p
-          className={`${
-            !isBanned || !session.ban ? "text-green-500" : "text-red-500"
-          }`}
-        >
-          {!isBanned || !session.ban
-            ? user.status
-            : `BANNED for ${session.ban.reason}`}
+        <p className={`${!isBanned ? "text-green-500" : "text-red-500"}`}>
+          {!isBanned ? user.status : "BANNED"}
         </p>
         <p className="my-5 text-lg text-amber-400">
           {user.isPremium ? "Premium" : "No premium"}
