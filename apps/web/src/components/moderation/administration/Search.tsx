@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { useUUIDSearch } from "./administration/useUUIDSearch";
+import { useUUIDSearch } from "./useUUIDSearch";
 
 export const Search = () => {
   const { setUUID, uuid, isLoading, type } = useUUIDSearch();
