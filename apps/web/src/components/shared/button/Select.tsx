@@ -110,7 +110,7 @@ export const Select = ({
                     </span>
                   </div>
                   {option === value && (
-                    <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-indigo-600 group-hover:text-white">
+                    <span className="absolute inset-y-0 right-0 flex w-5 items-center stroke-indigo-600 group-hover:stroke-white">
                       <CheckSvg />
                     </span>
                   )}

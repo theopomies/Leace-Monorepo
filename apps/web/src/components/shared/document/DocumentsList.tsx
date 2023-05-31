@@ -61,7 +61,7 @@ export const DocumentsList = ({
               />
             )}
             {doc.valid && (
-              <div className="absolute -right-1 -bottom-1 inline-flex w-5 items-center justify-center rounded-full bg-green-500 p-1 text-white">
+              <div className="absolute -right-1 -bottom-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-green-500 stroke-white p-1">
                 <CheckSvg />
               </div>
             )}
