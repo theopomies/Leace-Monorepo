@@ -26,7 +26,7 @@ export const User = ({ userId }: UserProps) => {
   } = trpc.moderation.document.getSignedUrl.useQuery({ userId });
 
   const deleteImage = trpc.moderation.image.deleteUserImage.useMutation();
-  const deleteDocument = trpc.document.deleteSignedUrl.useMutation();
+  const deleteDocument = trpc.moderation.document.deleteSignedUrl.useMutation();
   const documentValidation =
     trpc.moderation.document.documentValidation.useMutation();
 

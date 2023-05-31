@@ -58,12 +58,14 @@ export const documentModeration = router({
           where: { id: input.leaseId },
         });
         if (!getLease) throw new TRPCError({ code: "NOT_FOUND" });
+
         const documents = await ctx.prisma.document.findMany({
           where: {
             leaseId: getLease.id,
           },
         });
         if (!documents) throw new TRPCError({ code: "NOT_FOUND" });
+
         return await Promise.all(
           documents.map(async (document: Document) => {
             const bucketParams = {
@@ -102,7 +104,7 @@ export const documentModeration = router({
 
         const bucketParams = {
           Bucket: "leaceawsbucket",
-          Key: `users/${ctx.auth.userId}/documents/${document.id}.${document.ext}`,
+          Key: `users/${input.userId}/documents/${document.id}.${document.ext}`,
         };
         const command = new DeleteObjectCommand(bucketParams);
 

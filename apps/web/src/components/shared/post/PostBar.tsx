@@ -33,13 +33,20 @@ export const PostBar = ({
   return (
     <div className="mx-auto flex cursor-pointer flex-col overflow-hidden rounded-xl bg-white shadow-md md:max-w-2xl">
       <div className="flex items-center">
-        <Link href={postLink.replace("[postId]", post.id)} className="flex">
+        <Link
+          href={postLink.replace("[postId]", post.id)}
+          className="flex w-full"
+        >
           {img && img[0] && (
             <div className="h-full w-2/5">
               <img src={img[0].url} alt="Post image" className="object-cover" />
             </div>
           )}
-          <div className="my-auto mx-5 w-3/5">
+          <div
+            className={`my-auto mx-5 w-3/5 min-w-max ${
+              (!img || !img[0]) && "py-6"
+            }`}
+          >
             <div className=" font-semibold uppercase tracking-wide text-indigo-500">
               {post.title}
             </div>

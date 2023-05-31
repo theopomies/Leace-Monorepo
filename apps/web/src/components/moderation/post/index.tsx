@@ -11,6 +11,7 @@ export interface PostProps {
 }
 
 export const Post = ({ postId }: PostProps) => {
+  const utils = trpc.useContext();
   const { data: post, isLoading: postLoading } =
     trpc.moderation.post.getPost.useQuery({ postId });
   const {
@@ -24,8 +25,12 @@ export const Post = ({ postId }: PostProps) => {
     refetch: refetchDocuments,
   } = trpc.moderation.document.getSignedUrl.useQuery({ postId });
 
-  const deleteImage = trpc.moderation.image.deleteSignedPostUrl.useMutation();
-  const deleteDocument = trpc.document.deleteSignedUrl.useMutation();
+  const deleteImage = trpc.moderation.image.deleteSignedPostUrl.useMutation({
+    onSuccess() {
+      utils.image.getSignedPostUrl.invalidate();
+    },
+  });
+  const deleteDocument = trpc.moderation.document.deleteSignedUrl.useMutation();
   const documentValidation =
     trpc.moderation.document.documentValidation.useMutation();
 
