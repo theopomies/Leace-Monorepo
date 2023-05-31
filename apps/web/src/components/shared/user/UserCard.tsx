@@ -6,7 +6,7 @@ import { DocumentsList } from "../document/DocumentsList";
 import { User, Attribute, Report, Document } from "@prisma/client";
 import { Button } from "../button/Button";
 import { DeleteProfileDialog } from "../../users/DeleteProfileDialog";
-import { Cross } from "../../moderation/Icons";
+import { CrossSvg } from "../icons/CrossSvg";
 
 export interface UserCardProps {
   user: User & {
@@ -51,9 +51,9 @@ export const UserCard = ({
               theme="danger"
               onClick={OnImgDelete}
               overrideStyles
-              className="absolute right-0 top-0 inline-flex items-center justify-center rounded-md bg-red-500 p-1 text-white hover:bg-white hover:text-red-500"
+              className="absolute right-0 top-0 inline-flex h-7 w-7 items-center justify-center rounded-md bg-red-500 stroke-white p-1.5 hover:bg-red-700 "
             >
-              <Cross />
+              <CrossSvg />
             </Button>
           )}
         </div>

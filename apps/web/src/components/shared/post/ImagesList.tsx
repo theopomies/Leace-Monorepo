@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { Button } from "../button/Button";
-import { Cross } from "../../moderation/Icons";
 import { Image } from "@prisma/client";
+import { CrossSvg } from "../icons/CrossSvg";
 
 export interface ImagesListProps {
   images: (Image & { url: string })[] | undefined;
@@ -23,9 +23,9 @@ export const ImagesList = ({ images, OnDelete }: ImagesListProps) => {
                 theme="danger"
                 onClick={() => OnDelete(image.id)}
                 overrideStyles
-                className="absolute -right-1 -top-1 inline-flex items-center justify-center rounded-md bg-red-500 p-1 text-white hover:bg-white hover:text-red-500"
+                className="absolute -right-1 -top-1 inline-flex h-7 w-7 items-center justify-center rounded-md bg-red-500 stroke-white p-1.5 hover:bg-red-700 "
               >
-                <Cross />
+                <CrossSvg />
               </Button>
             )}
           </div>

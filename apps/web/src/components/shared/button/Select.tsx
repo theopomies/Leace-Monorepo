@@ -3,7 +3,7 @@
 // @ts-nocheck
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { Check } from "../../moderation/Icons";
+import { CheckSvg } from "../icons/CheckSvg";
 
 export interface SelectProps {
   label?: string;
@@ -111,7 +111,7 @@ export const Select = ({
                   </div>
                   {option === value && (
                     <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-indigo-600 group-hover:text-white">
-                      <Check />
+                      <CheckSvg />
                     </span>
                   )}
                 </li>

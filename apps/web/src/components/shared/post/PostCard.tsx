@@ -88,11 +88,11 @@ export const PostCard = ({
           <div className="px-auto justify-center border-t py-10">
             <p className="mb-5 text-xl font-semibold">What this place offer</p>
             <div className="grid grid-cols-3 gap-4">
-              <div>
+              <div className="flex items-center">
                 {post.attribute.terrace ? <GreenCheck /> : <RedUncheck />}
                 Terrace
               </div>
-              <div>
+              <div className="flex items-center">
                 {post.attribute.smoker ? <GreenCheck /> : <RedUncheck />}
                 Smoker
               </div>

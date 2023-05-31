@@ -1,10 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 import { useState } from "react";
 import { DocumentModal } from "./DocumentModal";
-import { Check, Cross } from "../../moderation/Icons";
 import Link from "next/link";
 import { Button } from "../button/Button";
 import { Document } from "@prisma/client";
+import { CrossSvg } from "../icons/CrossSvg";
+import { CheckSvg } from "../icons/CheckSvg";
 
 type DocumentWithUrl = Document & { url: string };
 
@@ -61,7 +62,7 @@ export const DocumentsList = ({
             )}
             {doc.valid && (
               <div className="absolute -right-1 -bottom-1 inline-flex w-5 items-center justify-center rounded-full bg-green-500 p-1 text-white">
-                <Check />
+                <CheckSvg />
               </div>
             )}
             {isLoggedInOrAdmin && OnDelete && (
@@ -69,9 +70,9 @@ export const DocumentsList = ({
                 theme="danger"
                 onClick={() => OnDelete(doc.id)}
                 overrideStyles
-                className="absolute -right-1 -top-1 inline-flex items-center justify-center rounded-md bg-red-500 p-1 text-white hover:bg-white hover:text-red-500"
+                className="absolute -right-1 -top-1 inline-flex h-7 w-7 items-center justify-center rounded-md bg-red-500 stroke-white p-1.5 hover:bg-red-700 "
               >
-                <Cross />
+                <CrossSvg />
               </Button>
             )}
           </div>
