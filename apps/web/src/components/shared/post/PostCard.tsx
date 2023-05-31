@@ -16,13 +16,13 @@ export interface PostCardProps {
     attribute: Attribute | null;
     reports?: Report[];
   };
-  OnPostDelete: () => Promise<void>;
+  OnPostDelete?: () => Promise<void>;
   images: (Image & { url: string })[] | undefined;
   OnImgDelete: (imageId: string) => Promise<void>;
   documents: (Document & { url: string })[] | undefined;
   OnDocDelete: (documentId: string) => Promise<void>;
   OnDocValidation?: (document: Document & { url: string }) => Promise<void>;
-  updateLink: string;
+  updateLink?: string;
   isLoggedIn?: boolean;
   isAdmin?: boolean;
 }
@@ -118,17 +118,19 @@ export const PostCard = ({
       {isAdmin && <DisplayReports reports={post.reports} />}
       {isLoggedIn && (
         <div className="flex justify-between">
-          <>
+          {updateLink && (
             <Link
               className="rounded bg-indigo-500 px-4 py-3 font-bold text-white hover:bg-indigo-600 active:bg-indigo-700"
               href={updateLink.replace("[postId]", post.id)}
             >
               Update
             </Link>
+          )}
+          {OnPostDelete && (
             <Button theme="danger" onClick={OnPostDelete}>
               Delete
             </Button>
-          </>
+          )}
         </div>
       )}
     </div>

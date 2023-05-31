@@ -66,14 +66,13 @@ export const User = ({ userId }: UserProps) => {
 
   return (
     <UserCard
-      session={session}
       user={user}
       isBanned={isBanned}
       OnImgDelete={handleDeleteImg}
       documents={documents}
       OnDocDelete={handleDeleteDoc}
       OnDocValidation={handleDocValidation}
-      updateLink="/moderation/reports" // TODO change this link
+      isAdmin
     />
   );
 };

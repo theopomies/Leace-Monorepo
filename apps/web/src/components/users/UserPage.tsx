@@ -56,13 +56,13 @@ export const UserPage = ({ userId }: UserPageProps) => {
   return (
     <div className="m-auto w-1/2 py-5">
       <UserCard
-        session={session}
         user={user}
         isBanned={isBanned}
         OnUserDelete={handleDeleteUser}
         documents={documents}
         OnDocDelete={handleDeleteDoc}
         updateLink="/users/[userId]/update"
+        isLoggedIn={userId === session.userId}
       />
     </div>
   );

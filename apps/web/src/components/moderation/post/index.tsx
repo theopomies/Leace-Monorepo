@@ -29,10 +29,6 @@ export const Post = ({ postId }: PostProps) => {
   const documentValidation =
     trpc.moderation.document.documentValidation.useMutation();
 
-  const handleDeletePost = async () => {
-    console.log("TODO");
-  };
-
   const handleDeleteImg = async (imageId: string) => {
     await deleteImage.mutateAsync({ postId, imageId }).then(async (url) => {
       await axios.delete(url);
@@ -66,14 +62,12 @@ export const Post = ({ postId }: PostProps) => {
   return (
     <PostCard
       post={post}
-      OnPostDelete={handleDeletePost}
       images={images}
       OnImgDelete={handleDeleteImg}
       documents={documents}
       OnDocDelete={handleDeleteDoc}
       OnDocValidation={handleDocValidation}
-      updateLink="/moderation/reports" // TODO: change this link
-      isAdmin={true}
+      isAdmin
     />
   );
 };

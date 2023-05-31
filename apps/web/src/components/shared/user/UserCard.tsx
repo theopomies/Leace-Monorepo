@@ -3,13 +3,12 @@ import Link from "next/link";
 import { displayDate } from "../../../utils/displayDate";
 import { DisplayReports } from "../../moderation/report/DisplayReports";
 import { DocumentsList } from "../document/DocumentsList";
-import { User, Attribute, Report, Document, Role } from "@prisma/client";
+import { User, Attribute, Report, Document } from "@prisma/client";
 import { Button } from "../button/Button";
 import { DeleteProfileDialog } from "../../users/DeleteProfileDialog";
 import { Cross } from "../../moderation/Icons";
 
 export interface UserCardProps {
-  session: { userId: string; role: Role | undefined };
   user: User & {
     attribute: Attribute | null;
     reports?: Report[];
@@ -20,11 +19,12 @@ export interface UserCardProps {
   documents: (Document & { url: string })[] | undefined;
   OnDocDelete: (documentId: string) => Promise<void>;
   OnDocValidation?: (document: Document & { url: string }) => Promise<void>;
-  updateLink: string;
+  updateLink?: string;
+  isLoggedIn?: boolean;
+  isAdmin?: boolean;
 }
 
 export const UserCard = ({
-  session,
   user,
   isBanned,
   OnUserDelete,
@@ -33,6 +33,8 @@ export const UserCard = ({
   OnDocDelete,
   OnDocValidation,
   updateLink,
+  isLoggedIn,
+  isAdmin,
 }: UserCardProps) => {
   return (
     <div className="flex w-full flex-col overflow-auto rounded-lg bg-white p-8 shadow">
@@ -44,7 +46,7 @@ export const UserCard = ({
             alt="image"
             className="mx-auto h-32 rounded-full shadow-xl"
           />
-          {user.image && session.role === Role.ADMIN && (
+          {user.image && isAdmin && (
             <Button
               theme="danger"
               onClick={OnImgDelete}
@@ -86,9 +88,9 @@ export const UserCard = ({
           {user.description ? user.description : "No description"}
         </p>
       </div>
-      {session.role == Role.TENANT && user.attribute && (
-        <div className="w-full">
-          <div className="flex h-full justify-between border-t p-5">
+      {user.attribute && (
+        <div>
+          <div className="flex justify-between border-t p-5">
             <div>
               <h2 className="text-xl">What you are looking for</h2>
               <p>
@@ -103,7 +105,7 @@ export const UserCard = ({
               <p>{user.attribute.location}</p>
             </div>
           </div>
-          <div className="h-full justify-center border-t p-5">
+          <div className="justify-center border-t p-5">
             <h2 className="text-xl">Criterials:</h2>
             <div className="grid grid-cols-3 gap-4 pt-2">
               <div>Terrace:{user.attribute.terrace ? "✅" : "❌"}</div>
@@ -140,18 +142,18 @@ export const UserCard = ({
       )}
       <DocumentsList
         documents={documents}
-        isLoggedInOrAdmin={
-          session.userId === user.id || session.role === Role.ADMIN
-        }
+        isLoggedInOrAdmin={isLoggedIn || isAdmin}
         OnDelete={OnDocDelete}
         OnValidation={OnDocValidation}
       />
-      {session.role === Role.ADMIN && <DisplayReports reports={user.reports} />}
-      {session && user.id == session.userId && (
+      {isAdmin && <DisplayReports reports={user.reports} />}
+      {isLoggedIn && (
         <div className="flex justify-between">
-          <Link href={updateLink.replace("[userId]", user.id)}>
-            <Button>Modify</Button>
-          </Link>
+          {updateLink && (
+            <Link href={updateLink.replace("[userId]", user.id)}>
+              <Button>Modify</Button>
+            </Link>
+          )}
           {OnUserDelete && <DeleteProfileDialog onDelete={OnUserDelete} />}
         </div>
       )}
