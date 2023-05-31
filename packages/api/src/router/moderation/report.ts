@@ -6,11 +6,10 @@ import { TRPCError } from "@trpc/server";
 export const reportModeration = router({
   getReport: protectedProcedure([Role.ADMIN, Role.MODERATOR]).query(
     ({ ctx }) => {
-      const report = ctx.prisma.report.findFirst({
+      return ctx.prisma.report.findFirst({
         orderBy: { createdAt: "desc" },
         where: { status: ReportStatus.PENDING },
       });
-      return report;
     },
   ),
   getReportsByUserId: protectedProcedure([Role.ADMIN, Role.MODERATOR])
