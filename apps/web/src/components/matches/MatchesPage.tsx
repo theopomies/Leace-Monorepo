@@ -1,9 +1,9 @@
 import { Role } from "@prisma/client";
-import { Header } from "../../shared/Header";
-import { TenantList } from "../TenantList";
+import { Header } from "../shared/Header";
+import { UserList } from "../users/UserList";
 import { PostList } from "../posts/PostList";
-import { trpc } from "../../../utils/trpc";
-import { Loader } from "../../shared/Loader";
+import { trpc } from "../../utils/trpc";
+import { Loader } from "../shared/Loader";
 
 export interface MatchesPageProps {
   userId: string;
@@ -27,7 +27,7 @@ export function MatchesPage({ userId }: MatchesPageProps) {
       <Header heading="My Matches" />
       {role == Role.TENANT && <PostList userId={userId} />}
       {(role == Role.OWNER || role == Role.AGENCY) && (
-        <TenantList userId={userId} />
+        <UserList userId={userId} />
       )}
     </div>
   );

@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
-import { trpc } from "../../../utils/trpc";
-import { PostBar } from "../../shared/post/PostBar";
+import { trpc } from "../../utils/trpc";
+import { PostBar } from "../shared/post/PostBar";
 
 export interface PostListProps {
   userId: string;

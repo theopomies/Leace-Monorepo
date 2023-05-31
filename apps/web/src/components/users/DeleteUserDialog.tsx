@@ -1,11 +1,11 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import { Button } from "../shared/button/Button";
 
-export interface DeleteProfileDialogProps {
+export interface DeleteUserDialogProps {
   onDelete: () => Promise<void>;
 }
 
-export function DeleteProfileDialog({ onDelete }: DeleteProfileDialogProps) {
+export function DeleteUserDialog({ onDelete }: DeleteUserDialogProps) {
   return (
     <Dialog.Root>
       <Dialog.Trigger asChild>

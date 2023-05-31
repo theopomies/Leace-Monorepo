@@ -5,7 +5,7 @@ import { Button } from "../shared/button/Button";
 import { trpc } from "../../utils/trpc";
 import { Attribute, User, RelationType } from "@prisma/client";
 
-export interface TenantBarProps {
+export interface UserBarProps {
   otherUserId: string;
   img: string;
   desc: string;
@@ -24,7 +24,7 @@ export interface TenantBarProps {
   conversationId?: string;
 }
 
-export const TenantBar = ({
+export const UserBar = ({
   otherUserId,
   img,
   desc,
@@ -37,7 +37,7 @@ export const TenantBar = ({
   title,
   user,
   conversationId,
-}: TenantBarProps) => {
+}: UserBarProps) => {
   const utils = trpc.useContext();
   const likeTenantForPost = trpc.relationship.likeTenantForPost.useMutation({
     onSuccess: () => {

@@ -1,12 +1,12 @@
-import { trpc } from "../../../utils/trpc";
-import { PostBar } from "../../shared/post/PostBar";
-import { Header } from "../../shared/Header";
+import { trpc } from "../../utils/trpc";
+import { PostBar } from "../shared/post/PostBar";
+import { Header } from "../shared/Header";
 
-export interface UserPostsListProps {
+export interface UserPostListProps {
   userId: string;
 }
 
-export function UserPostsList({ userId }: UserPostsListProps) {
+export function UserPostList({ userId }: UserPostListProps) {
   const { data: posts } = trpc.post.getPostsByUserId.useQuery({ userId });
 
   return (

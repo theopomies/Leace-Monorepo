@@ -1,5 +1,5 @@
 import { LoggedLayout } from "../../../../components/layout/LoggedLayout";
-import { MatchesPage } from "../../../../components/users/matches/MatchesPage";
+import { MatchesPage } from "../../../../components/matches/MatchesPage";
 import { useRouter } from "next/router";
 
 const Matches = () => {

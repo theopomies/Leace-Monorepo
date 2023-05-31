@@ -1,11 +1,11 @@
 import { trpc } from "../../utils/trpc";
-import { TenantBar } from "./UserBar";
+import { UserBar } from "./UserBar";
 
-export interface TenantListProps {
+export interface UserListProps {
   userId: string;
 }
 
-export const TenantList = ({ userId }: TenantListProps) => {
+export const UserList = ({ userId }: UserListProps) => {
   const { data: relationships, status } =
     trpc.relationship.getMatchesForOwner.useQuery({ userId });
   const { data: user } = trpc.user.getUserById.useQuery({
@@ -24,7 +24,7 @@ export const TenantList = ({ userId }: TenantListProps) => {
             relationType,
           }) => (
             <div key={id}>
-              <TenantBar
+              <UserBar
                 otherUserId={otherUserId}
                 img={image ?? ""}
                 desc={description ?? ""}

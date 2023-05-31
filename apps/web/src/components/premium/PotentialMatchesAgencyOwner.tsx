@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { trpc } from "../../utils/trpc";
-import { TenantBar } from "../users/UserBar";
+import { UserBar } from "../users/UserBar";
 import { Header } from "../shared/Header";
 
 export interface TenantListProps {
@@ -33,7 +33,7 @@ export const PotentialMatchesAgencyOwner = ({ userId }: TenantListProps) => {
               relationType,
             }) => (
               <div key={id}>
-                <TenantBar
+                <UserBar
                   otherUserId={otherUserId}
                   img={image ?? ""}
                   desc={description ?? ""}

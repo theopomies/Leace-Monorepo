@@ -5,7 +5,7 @@ import { DisplayReports } from "../../moderation/report/DisplayReports";
 import { DocumentsList } from "../document/DocumentsList";
 import { User, Attribute, Report, Document } from "@prisma/client";
 import { Button } from "../button/Button";
-import { DeleteProfileDialog } from "../../users/DeleteProfileDialog";
+import { DeleteUserDialog } from "../../users/DeleteUserDialog";
 import { CrossSvg } from "../icons/CrossSvg";
 
 export interface UserCardProps {
@@ -154,7 +154,7 @@ export const UserCard = ({
               <Button>Modify</Button>
             </Link>
           )}
-          {OnUserDelete && <DeleteProfileDialog onDelete={OnUserDelete} />}
+          {OnUserDelete && <DeleteUserDialog onDelete={OnUserDelete} />}
         </div>
       )}
     </div>

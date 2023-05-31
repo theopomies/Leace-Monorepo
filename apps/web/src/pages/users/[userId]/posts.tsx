@@ -1,6 +1,6 @@
 import React from "react";
 import { LoggedLayout } from "../../../components/layout/LoggedLayout";
-import { UserPostsList } from "../../../components/users/posts/UserPostsList";
+import { UserPostList } from "../../../components/users/UserPostList";
 import { useRouter } from "next/router";
 
 const Posts = () => {
@@ -13,7 +13,7 @@ const Posts = () => {
 
   return (
     <LoggedLayout title="Post | Leace">
-      <UserPostsList userId={userId as string} />
+      <UserPostList userId={userId as string} />
     </LoggedLayout>
   );
 };
