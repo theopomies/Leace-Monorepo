@@ -7,19 +7,13 @@ import {
   useEffect,
   useState,
 } from "react";
-import { trpc } from "../../../utils/trpc";
+import { trpc } from "../../utils/trpc";
 import { Role } from "@prisma/client";
-import { Header } from "../../shared/Header";
-import { AttributesUserForm } from "../../attributes/AttributesUserForm";
+import { Header } from "../shared/Header";
 import { useRouter } from "next/router";
-import { TextInput } from "../../shared/forms/TextInput";
-import { DateInput } from "../../shared/forms/DateInput";
-import { TextArea } from "../../shared/forms/TextArea";
-import { Button } from "../../shared/button/Button";
-import { HomeType } from "../../../types/homeType";
-import { FileInput } from "../../shared/forms/FileInput";
+import { HomeType } from "../../types/homeType";
 import axios from "axios";
-import { DocumentsList } from "../../shared/document/DocumentsList";
+import { UserForm } from "../shared/user/UserForm";
 
 export interface UpdateUserPageProps {
   userId: string;
@@ -197,110 +191,55 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
     setPool,
   ]);
 
-  const attributesStates = {
-    location,
-    handleLocationChange: handleChange(setLocation),
-    maxPrice,
-    handleMaxPriceChange: handleNumberChange(setMaxPrice),
-    minPrice,
-    handleMinPriceChange: handleNumberChange(setMinPrice),
-    maxSize,
-    handleMaxSizeChange: handleNumberChange(setMaxSize),
-    minSize,
-    handleMinSizeChange: handleNumberChange(setMinSize),
-    furnished,
-    handleFurnishedChange: handleBooleanChange(setFurnished),
-    homeType,
-    handleHomeTypeChange: handleHomeTypeChange(setHomeType),
-    terrace,
-    handleTerraceChange: handleBooleanChange(setTerrace),
-    pets,
-    handlePetsChange: handleBooleanChange(setPets),
-    smoker,
-    handleSmokerChange: handleBooleanChange(setSmoker),
-    disability,
-    handleDisabilityChange: handleBooleanChange(setDisability),
-    garden,
-    handleGardenChange: handleBooleanChange(setGarden),
-    parking,
-    handleParkingChange: handleBooleanChange(setParking),
-    elevator,
-    handleElevatorChange: handleBooleanChange(setElevator),
-    pool,
-    handlePoolChange: handleBooleanChange(setPool),
-  };
-
   return (
     <div className="w-full">
       <Header heading="Update Profile" />
-      <div className="flex justify-center p-5">
-        <form
-          className="mx-40 mt-14 flex w-full justify-center rounded-lg bg-white p-12 shadow"
-          onSubmit={handleSubmit}
-        >
-          <div>
-            <div>
-              {/* eslint-disable-next-line @next/next/no-img-element*/}
-              <img
-                src={user && user.image ? user.image : "/defaultImage.png"}
-                referrerPolicy="no-referrer"
-                alt="image"
-                className="mx-auto h-32 rounded-full shadow-xl"
-              />
-              <div className="m-4 flex h-full flex-col gap-5">
-                <div className="flex justify-center gap-5">
-                  <TextInput
-                    required
-                    placeholder="First Name"
-                    onChange={handleChange(setFirstName)}
-                    value={firstName}
-                  />
-                  <TextInput
-                    required
-                    placeholder="Last Name"
-                    onChange={handleChange(setLastName)}
-                    value={lastName}
-                  />
-                  <DateInput
-                    required
-                    value={birthDate}
-                    onChange={handleChange(setBirthDate)}
-                  />
-                </div>
-                <TextArea
-                  placeholder="Description"
-                  onChange={handleChange(setDescription)}
-                  value={description}
-                />
-              </div>
-            </div>
-            {user?.role === Role.TENANT && (
-              <AttributesUserForm {...attributesStates} />
-            )}
-            <div className="mt-10">
-              <DocumentsList documents={documentsGet} />
-              <div className="mt-2 flex flex-wrap justify-center gap-4">
-                <FileInput
-                  multiple
-                  onChange={handleDocuments(setDocuments)}
-                  accept=".pdf"
-                >
-                  Upload Document
-                </FileInput>
-                {documents?.map((document, index) => (
-                  <p key={index}>{document.name}</p>
-                ))}
-              </div>
-            </div>
-            <div className="mt-10 flex justify-center gap-8">
-              <Button theme="danger" onClick={handleCancel}>
-                Cancel
-              </Button>
-              <Button theme="primary">Update</Button>
-            </div>
-          </div>
-        </form>
-      </div>
+      <UserForm
+        onSubmit={handleSubmit}
+        onCancel={handleCancel}
+        user={user}
+        setFirstName={handleChange(setFirstName)}
+        firstName={firstName}
+        setLastName={handleChange(setLastName)}
+        lastName={lastName}
+        setBirthDate={handleChange(setBirthDate)}
+        birthDate={birthDate}
+        setLocation={handleChange(setLocation)}
+        location={location}
+        setHomeType={handleHomeTypeChange(setHomeType)}
+        homeType={homeType}
+        setDescription={handleChange(setDescription)}
+        description={description}
+        setFurnished={handleBooleanChange(setFurnished)}
+        furnished={furnished}
+        setPool={handleBooleanChange(setPool)}
+        pool={pool}
+        setSmoker={handleBooleanChange(setSmoker)}
+        smoker={smoker}
+        setTerrace={handleBooleanChange(setTerrace)}
+        terrace={terrace}
+        setElevator={handleBooleanChange(setElevator)}
+        elevator={elevator}
+        setParking={handleBooleanChange(setParking)}
+        parking={parking}
+        setGarden={handleBooleanChange(setGarden)}
+        garden={garden}
+        setPets={handleBooleanChange(setPets)}
+        pets={pets}
+        setDisability={handleBooleanChange(setDisability)}
+        disability={disability}
+        setMaxSize={handleNumberChange(setMaxSize)}
+        maxSize={maxSize}
+        setMinSize={handleNumberChange(setMinSize)}
+        minSize={minSize}
+        setMaxPrice={handleNumberChange(setMaxPrice)}
+        maxPrice={maxPrice}
+        setMinPrice={handleNumberChange(setMinPrice)}
+        minPrice={minPrice}
+        setDocuments={handleDocuments(setDocuments)}
+        documents={documents}
+        documentsGet={documentsGet}
+      />
     </div>
   );
 }
