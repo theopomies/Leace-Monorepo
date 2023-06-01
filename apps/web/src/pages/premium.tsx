@@ -5,6 +5,7 @@ import { trpc } from "../utils/trpc";
 import { PotentialMatchesAgencyOwner } from "../components/premium/PotentialMatchesAgencyOwner";
 import { PotentialMatchesTenant } from "../components/premium/PotentialMatchesTenant";
 import { Role } from "@prisma/client";
+import { Header } from "../components/shared/Header";
 
 const Premium = () => {
   return (
@@ -33,8 +34,16 @@ const PremiumPage = () => {
   if (!me?.isPremium) {
     return <PremiumPageRaw userId={session.userId} />;
   }
-  if (role == Role.OWNER || role == Role.AGENCY) {
-    return <PotentialMatchesAgencyOwner userId={session.userId} />;
-  }
-  return <PotentialMatchesTenant userId={session.userId} />;
+
+  return (
+    <div className="w-full">
+      <Header heading="Potential Matches" />
+      {role == Role.TENANT && (
+        <PotentialMatchesTenant userId={session.userId} />
+      )}
+      {(role == Role.OWNER || role == Role.AGENCY) && (
+        <PotentialMatchesAgencyOwner userId={session.userId} />
+      )}
+    </div>
+  );
 };
