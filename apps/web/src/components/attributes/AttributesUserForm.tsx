@@ -5,7 +5,7 @@ import React from "react";
 import { AddressAutocomplete } from "../shared/forms/AddressAutocomplete";
 import { NumberInput } from "../shared/forms/NumberInput";
 
-interface AttributesFormProps {
+interface AttributesUserFormProps {
   location: string;
   handleLocationChange: ChangeEventHandler<HTMLInputElement>;
   maxPrice: number;
@@ -38,7 +38,7 @@ interface AttributesFormProps {
   handlePoolChange: ChangeEventHandler<HTMLInputElement>;
 }
 
-export function AttributesForm({ ...attributes }: AttributesFormProps) {
+export function AttributesUserForm({ ...attributes }: AttributesUserFormProps) {
   const attributesList: {
     label: string;
     name: string;

@@ -10,7 +10,7 @@ import {
 import { trpc } from "../../../utils/trpc";
 import { Role } from "@prisma/client";
 import { Header } from "../../shared/Header";
-import { AttributesForm } from "../../attributes/AttributesForm";
+import { AttributesUserForm } from "../../attributes/AttributesUserForm";
 import { useRouter } from "next/router";
 import { TextInput } from "../../shared/forms/TextInput";
 import { DateInput } from "../../shared/forms/DateInput";
@@ -247,7 +247,7 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
                 alt="image"
                 className="mx-auto h-32 rounded-full shadow-xl"
               />
-              <div className="m-4 flex h-full flex-col">
+              <div className="m-4 flex h-full flex-col gap-5">
                 <div className="flex justify-center gap-5">
                   <TextInput
                     required
@@ -275,7 +275,7 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
               </div>
             </div>
             {user?.role === Role.TENANT && (
-              <AttributesForm {...attributesStates} />
+              <AttributesUserForm {...attributesStates} />
             )}
             <div className="mt-10">
               <DocumentsList documents={documentsGet} />
