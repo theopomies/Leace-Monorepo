@@ -1,5 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
+import { useMemo } from "react";
 import { trpc } from "../../utils/trpc";
+import { Loader } from "../shared/Loader";
 import { PostBar } from "../shared/post/PostBar";
 
 export interface PostListProps {
@@ -10,10 +12,12 @@ export const PostList = ({ userId }: PostListProps) => {
   const {
     data: relationships,
     status,
+    isLoading: matchesForTenantLoading,
     refetch: refetchMatchesForTenant,
   } = trpc.relationship.getMatchesForTenant.useQuery({ userId });
-
-  const { data: user } = trpc.user.getUserById.useQuery({ userId });
+  const { data: user, isLoading: userLoading } = trpc.user.getUserById.useQuery(
+    { userId },
+  );
 
   const deleteMatchMutation =
     trpc.relationship.deleteRelationForTenant.useMutation({
@@ -21,6 +25,14 @@ export const PostList = ({ userId }: PostListProps) => {
         refetchMatchesForTenant();
       },
     });
+
+  const isLoading = useMemo(() => {
+    return matchesForTenantLoading || userLoading;
+  }, [matchesForTenantLoading, userLoading]);
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   const OnDeleteMatch = async (relationshipId: string) => {
     await deleteMatchMutation.mutateAsync({ userId, relationshipId });

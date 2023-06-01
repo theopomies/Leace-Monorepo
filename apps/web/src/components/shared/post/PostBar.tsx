@@ -31,7 +31,7 @@ export const PostBar = ({
   const { data: img } = trpc.image.getSignedPostUrl.useQuery(post.id);
 
   return (
-    <div className="mx-auto flex cursor-pointer flex-col overflow-hidden rounded-xl bg-white shadow-md md:max-w-2xl">
+    <div className="mx-auto flex flex-grow cursor-pointer flex-col overflow-hidden rounded-xl bg-white shadow-md md:max-w-2xl">
       <div className="flex items-center">
         <Link
           href={postLink.replace("[postId]", post.id)}

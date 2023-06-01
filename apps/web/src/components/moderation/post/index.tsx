@@ -26,9 +26,7 @@ export const Post = ({ postId }: PostProps) => {
   } = trpc.moderation.document.getSignedUrl.useQuery({ postId });
 
   const deleteImage = trpc.moderation.image.deleteSignedPostUrl.useMutation({
-    onSuccess() {
-      utils.image.getSignedPostUrl.invalidate();
-    },
+    onSuccess: () => utils.image.getSignedPostUrl.invalidate(),
   });
   const deleteDocument = trpc.moderation.document.deleteSignedUrl.useMutation();
   const documentValidation =

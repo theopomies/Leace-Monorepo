@@ -1,74 +1,76 @@
-import Link from "next/link";
 import { trpc } from "../../utils/trpc";
-import { Header } from "../shared/Header";
 import { PostBar } from "../shared/post/PostBar";
+import { useMemo } from "react";
+import { Loader } from "../shared/Loader";
 
 export interface PostListProps {
   userId: string;
 }
 
 export const PotentialMatchesTenant = ({ userId }: PostListProps) => {
-  const { data: relationships, refetch: refetchLikesForTenant } =
-    trpc.relationship.getLikesForTenant.useQuery({ userId });
-  const { data: user } = trpc.user.getUserById.useQuery({ userId });
+  const {
+    data: relationships,
+    isLoading: likesForTenantLoading,
+    refetch: refetchLikesForTenant,
+  } = trpc.relationship.getLikesForTenant.useQuery({ userId });
+  const { data: user, isLoading: userLoading } = trpc.user.getUserById.useQuery(
+    { userId },
+  );
 
   const likePostForTenant = trpc.relationship.likePostForTenant.useMutation({
-    onSuccess: () => {
-      refetchLikesForTenant();
-    },
+    onSuccess: () => refetchLikesForTenant(),
   });
   const deleteMatchMutation =
     trpc.relationship.deleteRelationForTenant.useMutation({
-      onSuccess: () => {
-        refetchLikesForTenant();
-      },
+      onSuccess: () => refetchLikesForTenant(),
     });
+
+  const isLoading = useMemo(() => {
+    return likesForTenantLoading || userLoading;
+  }, [likesForTenantLoading, userLoading]);
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   const OnDeleteMatch = async (relationshipId: string) => {
     await deleteMatchMutation.mutateAsync({ userId, relationshipId });
   };
   const OnLikeMatch = async (postId: string) => {
-    await likePostForTenant.mutateAsync({
-      userId: userId,
-      postId: postId,
-    });
+    await likePostForTenant.mutateAsync({ userId, postId });
   };
 
-  if (relationships && relationships.relationship && user) {
+  if (
+    relationships &&
+    relationships.relationship &&
+    relationships.relationship.length > 0 &&
+    user
+  ) {
     return (
-      <div className="container mx-auto p-4">
-        <Header heading={"Potential Matches"} />
-        <>
-          {relationships.relationship.map(({ post, id, relationType }) => (
-            <PostBar
-              key={post.id}
-              post={post}
-              postLink="/posts/[postId]"
-              relationType={relationType}
-              relationshipId={id}
-              user={user}
-              OnDeleteMatch={OnDeleteMatch}
-              OnLikeMatch={OnLikeMatch}
-            />
-          ))}
-        </>
-      </div>
-    );
-  } else {
-    return (
-      <div className="container mx-auto p-4">
-        <div className="bottom-80 left-0 right-0 top-80 items-center justify-center">
-          <div className="items-center justify-center text-center text-3xl font-bold">
-            No client has liked your post yet!
-          </div>
-        </div>
-        <Link
-          className="bottom-0 left-0 right-0 flex items-center justify-center rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
-          href={`/`}
-        >
-          Return
-        </Link>
+      <div className="flex flex-row gap-4">
+        {relationships.relationship.map(({ post, id, relationType }) => (
+          <PostBar
+            key={post.id}
+            post={post}
+            postLink="/posts/[postId]"
+            relationType={relationType}
+            relationshipId={id}
+            user={user}
+            OnDeleteMatch={OnDeleteMatch}
+            OnLikeMatch={OnLikeMatch}
+          />
+        ))}
       </div>
     );
   }
+  return (
+    <div className="mt-8 flex flex-col items-center justify-center">
+      <h1 className="text-2xl font-bold text-gray-700">
+        No client has liked your post yet :(
+      </h1>
+      <div className="mt-4 flex flex-col items-center justify-center">
+        <p className="text-gray-500">Wait, clients are coming to you !</p>
+      </div>
+    </div>
+  );
 };
