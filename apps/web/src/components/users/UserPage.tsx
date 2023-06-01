@@ -31,12 +31,12 @@ export const UserPage = ({ userId }: UserPageProps) => {
     return sessionLoading || isBannedLoading || userLoading || documentsLoading;
   }, [sessionLoading, isBannedLoading, userLoading, documentsLoading]);
 
-  if (!session) {
-    return <div>Not logged in</div>;
-  }
-
   if (isLoading) {
     return <Loader />;
+  }
+
+  if (!session) {
+    return <div>Not logged in</div>;
   }
 
   if (!user) {

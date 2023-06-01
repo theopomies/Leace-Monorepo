@@ -34,12 +34,12 @@ export const User = ({ userId }: UserProps) => {
     return sessionLoading || isBannedLoading || userLoading || documentsLoading;
   }, [sessionLoading, isBannedLoading, userLoading, documentsLoading]);
 
-  if (!session) {
-    return <div>Not logged in</div>;
-  }
-
   if (isLoading) {
     return <Loader />;
+  }
+
+  if (!session) {
+    return <div>Not logged in</div>;
   }
 
   if (!user) return <p>Something went wrong</p>;
