@@ -14,31 +14,7 @@ import { HomeType } from "../../types/homeType";
 import { AddressAutocomplete } from "../shared/forms/AddressAutocomplete";
 import { DocumentsList } from "../shared/document/DocumentsList";
 import { ImagesList } from "../shared/post/ImagesList";
-
-type Image =
-  | {
-      url: string;
-      id: string;
-      ext: string;
-      postId: string | null;
-      createdAt: Date;
-      updatedAt: Date;
-    }[]
-  | undefined;
-
-type Document =
-  | {
-      url: string;
-      id: string;
-      userId: string | null;
-      leaseId: string | null;
-      postId: string | null;
-      valid: boolean;
-      ext: string;
-      createdAt: Date;
-      updatedAt: Date;
-    }[]
-  | undefined;
+import { Image, Document } from "@prisma/client";
 
 export interface PostFormProps {
   title: string;
@@ -73,10 +49,10 @@ export interface PostFormProps {
   setPrice: ChangeEventHandler;
   images: File[] | undefined;
   setImages: ChangeEventHandler;
-  imagesGet?: Image;
+  imagesGet?: (Image & { url: string })[] | undefined;
   documents: File[] | undefined;
   setDocuments: ChangeEventHandler;
-  documentsGet?: Document;
+  documentsGet?: (Document & { url: string })[] | undefined;
   onSubmit: FormEventHandler;
   onCancel: MouseEventHandler<HTMLButtonElement>;
 }
