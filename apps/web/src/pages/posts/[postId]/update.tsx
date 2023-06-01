@@ -1,6 +1,6 @@
 import { LoggedLayout } from "../../../components/layout/LoggedLayout";
 import { useRouter } from "next/router";
-import { UpdatePost } from "../../../components/posts/UpdatePost";
+import { UpdatePostPage } from "../../../components/posts/UpdatePostPage";
 import { Role } from "@prisma/client";
 
 const Update = () => {
@@ -16,7 +16,7 @@ const Update = () => {
       title="Update Post | Leace"
       roles={[Role.ADMIN, Role.OWNER, Role.AGENCY]}
     >
-      <UpdatePost postId={postId} />
+      <UpdatePostPage postId={postId} />
     </LoggedLayout>
   );
 };

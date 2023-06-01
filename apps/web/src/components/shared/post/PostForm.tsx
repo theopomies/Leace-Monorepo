@@ -4,15 +4,15 @@ import React, {
   FormEventHandler,
   MouseEventHandler,
 } from "react";
-import { Button } from "../shared/button/Button";
-import { Input } from "../shared/forms/Input";
-import { TextArea } from "../shared/forms/TextArea";
-import { FileInput } from "../shared/forms/FileInput";
-import { HomeType } from "../../types/homeType";
-import { DocumentsList } from "../shared/document/DocumentsList";
-import { ImagesList } from "../shared/post/ImagesList";
+import { Button } from "../button/Button";
+import { Input } from "../forms/Input";
+import { TextArea } from "../forms/TextArea";
+import { FileInput } from "../forms/FileInput";
+import { HomeType } from "../../../types/homeType";
+import { DocumentsList } from "../document/DocumentsList";
+import { ImagesList } from "./ImagesList";
 import { Image, Document } from "@prisma/client";
-import { AttributesPostForm } from "../attributes/AttributesPostForm";
+import { AttributesPostForm } from "../../attributes/AttributesPostForm";
 
 export interface PostFormProps {
   title: string;
@@ -86,58 +86,59 @@ export const PostForm = (props: PostFormProps) => {
   };
 
   return (
-    <form className="flex justify-center" onSubmit={props.onSubmit}>
-      <div className="my-10 flex justify-center rounded-lg bg-white p-12 shadow">
-        <div className="h-auto">
-          <div>
-            <label className="text-lg font-medium">Title</label>
-            <Input
-              placeholder="Appartment in Central Park"
-              name="title"
-              onChange={props.setTitle}
-              value={props.title}
-              className="w-full"
-            />
+    <form
+      className="m-auto my-5 flex w-fit flex-col justify-center rounded-lg bg-white p-12 shadow"
+      onSubmit={props.onSubmit}
+    >
+      <div className="h-auto">
+        <div>
+          <label className="text-lg font-medium">Title</label>
+          <Input
+            placeholder="Appartment in Central Park"
+            name="title"
+            onChange={props.setTitle}
+            value={props.title}
+            className="w-full"
+          />
+        </div>
+        <div className="mt-5">
+          <label>Description</label>
+          <TextArea
+            placeholder="Description"
+            name="description"
+            onChange={props.setDescription}
+            value={props.description}
+            className="w-full"
+          />
+        </div>
+        <AttributesPostForm {...attributesStates} />
+        <div className="mt-10 text-center">
+          <ImagesList images={props.imagesGet} />
+          <div className="mt-2 flex flex-wrap justify-center gap-4">
+            <FileInput multiple onChange={props.setImages}>
+              Upload Image
+            </FileInput>
+            {props.images?.map((image, index) => (
+              <p key={index}>{image.name}</p>
+            ))}
           </div>
-          <div className="mt-5">
-            <label>Description</label>
-            <TextArea
-              placeholder="Description"
-              name="description"
-              onChange={props.setDescription}
-              value={props.description}
-              className="w-full"
-            />
+        </div>
+        <div className="mt-10">
+          <DocumentsList documents={props.documentsGet} />
+          <div className="mt-2 flex flex-wrap justify-center gap-4">
+            <FileInput multiple onChange={props.setDocuments} accept=".pdf">
+              Upload Document
+            </FileInput>
+            {props.documents?.map((document, index) => (
+              <p key={index}>{document.name}</p>
+            ))}
           </div>
-          <AttributesPostForm {...attributesStates} />
-          <div className="mt-10 text-center">
-            <ImagesList images={props.imagesGet} />
-            <div className="mt-2 flex flex-wrap justify-center gap-4">
-              <FileInput multiple onChange={props.setImages}>
-                Upload Image
-              </FileInput>
-              {props.images?.map((image, index) => (
-                <p key={index}>{image.name}</p>
-              ))}
-            </div>
-          </div>
-          <div className="mt-10">
-            <DocumentsList documents={props.documentsGet} />
-            <div className="mt-2 flex flex-wrap justify-center gap-4">
-              <FileInput multiple onChange={props.setDocuments} accept=".pdf">
-                Upload Document
-              </FileInput>
-              {props.documents?.map((document, index) => (
-                <p key={index}>{document.name}</p>
-              ))}
-            </div>
-          </div>
-          <div className="mt-10 flex justify-center gap-4">
-            <Button type="button" theme="danger" onClick={props.onCancel}>
-              Cancel
-            </Button>
-            <Button>Submit</Button>
-          </div>
+        </div>
+        <div className="mt-10 flex justify-center gap-4">
+          <Button type="button" theme="danger" onClick={props.onCancel}>
+            Cancel
+          </Button>
+          <Button>Submit</Button>
         </div>
       </div>
     </form>

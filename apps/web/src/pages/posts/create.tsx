@@ -1,6 +1,6 @@
 import { LoggedLayout } from "../../components/layout/LoggedLayout";
 import { Role } from "@prisma/client";
-import { CreatePost } from "../../components/posts/CreatePost";
+import { CreatePostPage } from "../../components/posts/CreatePostPage";
 
 const Create = () => {
   return (
@@ -8,7 +8,7 @@ const Create = () => {
       title="Profile Page | Leace"
       roles={[Role.ADMIN, Role.AGENCY, Role.OWNER]}
     >
-      <CreatePost />
+      <CreatePostPage />
     </LoggedLayout>
   );
 };

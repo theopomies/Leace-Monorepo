@@ -8,11 +8,11 @@ import React, {
 import { Header } from "../shared/Header";
 import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
-import { PostForm } from "./PostForm";
+import { PostForm } from "../shared/post/PostForm";
 import { HomeType } from "../../types/homeType";
 import axios from "axios";
 
-export const CreatePost = () => {
+export const CreatePostPage = () => {
   const router = useRouter();
   const post = trpc.post.createPost.useMutation();
   const [title, setTitle] = useState("");
@@ -138,7 +138,7 @@ export const CreatePost = () => {
 
   return (
     <div className="w-full">
-      <Header heading={"Création d'une annonce"} />
+      <Header heading={"Create Post"} />
       <PostForm
         onSubmit={handleSubmit}
         onCancel={handleCancel}

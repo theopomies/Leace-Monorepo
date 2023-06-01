@@ -9,7 +9,7 @@ import React, {
 import { Header } from "../shared/Header";
 import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
-import { PostForm } from "./PostForm";
+import { PostForm } from "../shared/post/PostForm";
 import { HomeType } from "../../types/homeType";
 import axios from "axios";
 
@@ -17,7 +17,7 @@ export interface UpdatePostProps {
   postId: string;
 }
 
-export const UpdatePost = ({ postId }: UpdatePostProps) => {
+export const UpdatePostPage = ({ postId }: UpdatePostProps) => {
   const router = useRouter();
   const { data: post } = trpc.post.getPostById.useQuery({ postId });
   const updatePost = trpc.post.updatePostById.useMutation();
@@ -170,7 +170,7 @@ export const UpdatePost = ({ postId }: UpdatePostProps) => {
 
   return (
     <div className="w-full">
-      <Header heading={"Création d'une annonce"} />
+      <Header heading={"Update Post"} />
       <PostForm
         onSubmit={handleSubmit}
         onCancel={handleCancel}
