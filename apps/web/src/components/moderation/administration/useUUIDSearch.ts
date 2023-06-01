@@ -32,17 +32,11 @@ export function useUUIDSearch(): UseUUIDSearchReturnType {
 
   const { data: user, isLoading: userIsLoading } =
     trpc.moderation.user.getUserById.useQuery(uuid, {
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
       retry: false,
     });
 
   const { data: post, isLoading: postIsLoading } =
     trpc.moderation.post.getPostById.useQuery(uuid, {
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
       retry: false,
     });
 

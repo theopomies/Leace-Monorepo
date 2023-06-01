@@ -13,12 +13,7 @@ export function ModeratioPostPage({
   reportId: string;
   postId: string;
 }) {
-  const post = trpc.moderation.post.getPostById.useQuery(postId, {
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    refetchOnReconnect: false,
-    retry: false,
-  });
+  const post = trpc.moderation.post.getPostById.useQuery(postId);
 
   if (post.isLoading) return <Loader />;
   if (post && post.data && !post.error) {

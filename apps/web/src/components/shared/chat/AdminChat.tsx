@@ -24,7 +24,6 @@ export function AdminChat({
     trpc.moderation.conversation.getConversation.useQuery(
       { conversationId },
       {
-        refetchOnWindowFocus: false,
         retry: false,
       },
     );

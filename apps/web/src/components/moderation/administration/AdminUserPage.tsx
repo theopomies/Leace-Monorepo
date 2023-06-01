@@ -7,12 +7,7 @@ import { User } from "../user";
 import { ActionButtons } from "../ActionButtons";
 
 export function AdminUserPage({ userId }: { userId: string }) {
-  const user = trpc.moderation.user.getUserById.useQuery(userId, {
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    refetchOnReconnect: false,
-    retry: false,
-  });
+  const user = trpc.moderation.user.getUserById.useQuery(userId);
 
   if (user.isLoading) return <Loader />;
   if (user && user.data && !user.error) {

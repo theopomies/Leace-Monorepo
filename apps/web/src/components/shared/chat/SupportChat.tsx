@@ -23,7 +23,6 @@ export function SupportChat({
   } = trpc.moderation.support.getConversation.useQuery(
     { conversationId },
     {
-      refetchOnWindowFocus: false,
       retry: false,
     },
   );

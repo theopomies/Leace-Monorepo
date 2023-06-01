@@ -16,6 +16,13 @@ export const trpc = createTRPCNext<AppRouter>({
   config() {
     return {
       transformer,
+      queryClientConfig: {
+        defaultOptions: {
+          queries: {
+            refetchOnWindowFocus: false,
+          },
+        },
+      },
       links: [
         loggerLink({
           enabled: (opts) =>
