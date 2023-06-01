@@ -23,14 +23,12 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
   const router = useRouter();
   const { data: user } = trpc.user.getUserById.useQuery({ userId });
   const updateUser = trpc.user.updateUserById.useMutation();
-
   const [birthDate, setBirthDate] = useState<string>("");
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
 
   const updateAttributes = trpc.attribute.updateUserAttributes.useMutation();
-
   const [location, setLocation] = useState("");
   const [maxPrice, setMaxPrice] = useState(0);
   const [minPrice, setMinPrice] = useState(0);
@@ -51,6 +49,43 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
     trpc.document.getSignedUserUrl.useQuery(userId);
   const uploadDocument = trpc.document.putSignedUserUrl.useMutation();
   const [documents, setDocuments] = useState<File[] | undefined>();
+
+  useEffect(() => {
+    if (user) {
+      const date = user.birthDate
+        ? `${user.birthDate.getUTCFullYear()}-${
+            user.birthDate.getUTCMonth() + 1 > 9
+              ? user.birthDate.getUTCMonth() + 1
+              : "0" + (user.birthDate.getUTCMonth() + 1)
+          }-${
+            user.birthDate.getUTCDate() > 9
+              ? user.birthDate.getUTCDate()
+              : "0" + user.birthDate.getUTCDate()
+          }`
+        : "";
+      setBirthDate(date);
+      setFirstName(user.firstName ?? "");
+      setLastName(user.lastName ?? "");
+      setDescription(user.description ?? "");
+      if (user.role === Role.TENANT) {
+        setLocation(user.attribute?.location ?? "");
+        setHomeType(user.attribute?.homeType ?? undefined);
+        setMaxPrice(user.attribute?.maxPrice ?? 0);
+        setMinPrice(user.attribute?.minPrice ?? 0);
+        setMaxSize(user.attribute?.maxSize ?? 0);
+        setMinSize(user.attribute?.minSize ?? 0);
+        setFurnished(user.attribute?.furnished ?? false);
+        setTerrace(user.attribute?.terrace ?? false);
+        setPets(user.attribute?.pets ?? false);
+        setSmoker(user.attribute?.smoker ?? false);
+        setDisability(user.attribute?.disability ?? false);
+        setGarden(user.attribute?.garden ?? false);
+        setParking(user.attribute?.parking ?? false);
+        setElevator(user.attribute?.elevator ?? false);
+        setPool(user.attribute?.pool ?? false);
+      }
+    }
+  }, [user]);
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
@@ -133,63 +168,6 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
     e.preventDefault();
     router.back();
   };
-
-  useEffect(() => {
-    if (user) {
-      const date = user.birthDate
-        ? `${user.birthDate.getUTCFullYear()}-${
-            user.birthDate.getUTCMonth() + 1 > 9
-              ? user.birthDate.getUTCMonth() + 1
-              : "0" + (user.birthDate.getUTCMonth() + 1)
-          }-${
-            user.birthDate.getUTCDate() > 9
-              ? user.birthDate.getUTCDate()
-              : "0" + user.birthDate.getUTCDate()
-          }`
-        : "";
-      setBirthDate(date);
-      setFirstName(user.firstName ?? "");
-      setLastName(user.lastName ?? "");
-      setDescription(user.description ?? "");
-    }
-  }, [user]);
-
-  useEffect(() => {
-    if (user?.attribute) {
-      setLocation(user.attribute.location || "");
-      setMaxPrice(user.attribute.maxPrice || 0);
-      setMinPrice(user.attribute.minPrice || 0);
-      setMaxSize(user.attribute.maxSize || 0);
-      setMinSize(user.attribute.minSize || 0);
-      setHomeType(user.attribute.homeType || undefined);
-      setFurnished(user.attribute.furnished || false);
-      setTerrace(user.attribute.terrace || false);
-      setPets(user.attribute.pets || false);
-      setSmoker(user.attribute.smoker || false);
-      setDisability(user.attribute.disability || false);
-      setGarden(user.attribute.garden || false);
-      setParking(user.attribute.parking || false);
-      setElevator(user.attribute.elevator || false);
-      setPool(user.attribute.pool || false);
-    }
-  }, [
-    user,
-    setLocation,
-    setMaxPrice,
-    setMinPrice,
-    setMaxSize,
-    setMinSize,
-    setHomeType,
-    setFurnished,
-    setTerrace,
-    setPets,
-    setSmoker,
-    setDisability,
-    setGarden,
-    setParking,
-    setElevator,
-    setPool,
-  ]);
 
   return (
     <div className="w-full">
