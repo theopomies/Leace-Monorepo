@@ -69,8 +69,8 @@ export const CreatePostPage = () => {
             postId,
             fileType: image.type,
           })
-          .then((url) => {
-            axios.put(url, image);
+          .then(async (url) => {
+            await axios.put(url, image);
           });
       });
     }
@@ -81,14 +81,12 @@ export const CreatePostPage = () => {
             postId,
             fileType: document.type,
           })
-          .then((url) => {
-            if (url) axios.put(url, document);
+          .then(async (url) => {
+            if (url) await axios.put(url, document);
           });
       });
     }
-    setTimeout(() => {
-      router.push(`/posts/${postId}`);
-    }, 500);
+    router.push(`/posts/${postId}`);
   };
 
   const handleChange =

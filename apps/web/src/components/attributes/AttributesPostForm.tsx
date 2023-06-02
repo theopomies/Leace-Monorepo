@@ -89,7 +89,7 @@ export function AttributesPostForm({ ...attributes }: AttributesPostFormProps) {
 
   return (
     <div className="flex justify-center">
-      <div className="mt-5 h-auto w-full border-t text-center">
+      <div className="h-auto w-full border-t py-5 text-center">
         <AddressAutocomplete
           location={attributes.location}
           handleLocationChange={attributes.handleLocationChange}

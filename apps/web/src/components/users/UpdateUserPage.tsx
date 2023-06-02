@@ -48,7 +48,7 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
   const { data: documentsGet, refetch: refetchDocumentsGet } =
     trpc.document.getSignedUserUrl.useQuery(userId);
   const uploadDocument = trpc.document.putSignedUserUrl.useMutation();
-  const deleteDocument = trpc.document.deleteSignedUserUrl.useMutation();
+  const deleteDocument = trpc.document.deleteSignedUrl.useMutation();
 
   useEffect(() => {
     if (user) {
@@ -159,7 +159,7 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
   };
 
   const handleDeleteDoc = async (documentId: string) => {
-    await deleteDocument.mutateAsync(documentId);
+    await deleteDocument.mutateAsync({ userId, documentId });
     refetchDocumentsGet();
   };
 

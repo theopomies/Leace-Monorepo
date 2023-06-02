@@ -48,8 +48,10 @@ export interface PostFormProps {
   images: File[] | undefined;
   setImages: ChangeEventHandler;
   imagesGet?: (Image & { url: string })[] | undefined;
-  documents: File[] | undefined;
-  setDocuments: ChangeEventHandler;
+  documents?: File[] | undefined;
+  setDocuments?: ChangeEventHandler;
+  OnDocsUpload?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  OnDocDelete?: (documentId: string) => Promise<void>;
   documentsGet?: (Document & { url: string })[] | undefined;
   onSubmit: FormEventHandler;
   onCancel: MouseEventHandler<HTMLButtonElement>;
@@ -112,27 +114,31 @@ export const PostForm = (props: PostFormProps) => {
           />
         </div>
         <AttributesPostForm {...attributesStates} />
-        <div className="mt-10 text-center">
-          <ImagesList images={props.imagesGet} />
-          <div className="mt-2 flex flex-wrap justify-center gap-4">
-            <FileInput multiple onChange={props.setImages}>
-              Upload Image
-            </FileInput>
-            {props.images?.map((image, index) => (
-              <p key={index}>{image.name}</p>
-            ))}
-          </div>
+        <ImagesList images={props.imagesGet} />
+        <div className="mt-2 mb-5 flex flex-wrap justify-center gap-4">
+          <FileInput multiple onChange={props.setImages}>
+            Upload Image
+          </FileInput>
+          {props.images?.map((image, index) => (
+            <p key={index}>{image.name}</p>
+          ))}
         </div>
-        <div className="mt-10">
-          <DocumentsList documents={props.documentsGet} />
-          <div className="mt-2 flex flex-wrap justify-center gap-4">
-            <FileInput multiple onChange={props.setDocuments} accept=".pdf">
-              Upload Document
-            </FileInput>
-            {props.documents?.map((document, index) => (
-              <p key={index}>{document.name}</p>
-            ))}
-          </div>
+        <DocumentsList
+          documents={props.documentsGet}
+          OnDelete={props.OnDocDelete}
+          isLoggedInOrAdmin
+        />
+        <div className="mt-2 flex flex-wrap justify-center gap-4">
+          <FileInput
+            multiple
+            onChange={props.setDocuments || props.OnDocsUpload}
+            accept=".pdf"
+          >
+            Upload Document
+          </FileInput>
+          {props.documents?.map((document, index) => (
+            <p key={index}>{document.name}</p>
+          ))}
         </div>
         <div className="mt-10 flex justify-center gap-4">
           <Button type="button" theme="danger" onClick={props.onCancel}>
