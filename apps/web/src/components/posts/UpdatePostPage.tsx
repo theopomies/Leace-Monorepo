@@ -40,9 +40,10 @@ export const UpdatePostPage = ({ postId }: UpdatePostProps) => {
   const [size, setSize] = useState(0);
   const [price, setPrice] = useState(0);
 
-  const { data: imagesGet } = trpc.image.getSignedPostUrl.useQuery(postId);
+  const { data: imagesGet, refetch: refetchImagesGet } =
+    trpc.image.getSignedPostUrl.useQuery(postId);
   const uploadImage = trpc.image.putSignedPostUrl.useMutation();
-  const [images, setImages] = useState<File[] | undefined>();
+  const deleteImage = trpc.image.deleteSignedPostUrl.useMutation();
 
   const { data: documentsGet, refetch: refetchDocumentsGet } =
     trpc.document.getSignedUrl.useQuery({
@@ -95,18 +96,6 @@ export const UpdatePostPage = ({ postId }: UpdatePostProps) => {
       price,
       size,
     });
-    if (images && images.length > 0) {
-      images.map(async (image) => {
-        await uploadImage
-          .mutateAsync({
-            postId,
-            fileType: image.type,
-          })
-          .then((url) => {
-            axios.put(url, image);
-          });
-      });
-    }
     router.push(`/posts/${postId}`);
   };
 
@@ -139,13 +128,26 @@ export const UpdatePostPage = ({ postId }: UpdatePostProps) => {
     router.back();
   };
 
-  const handleImages =
-    (setter: Dispatch<SetStateAction<File[] | undefined>>) =>
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      if (event.target.files && event.target.files[0]) {
-        setter(Array.from(event.target.files));
-      }
-    };
+  const handleUploadImages = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      Array.from(event.target.files).map(async (image) => {
+        await uploadImage
+          .mutateAsync({
+            postId,
+            fileType: image.type,
+          })
+          .then(async (url) => {
+            await axios.put(url, image);
+            refetchImagesGet();
+          });
+      });
+    }
+  };
+
+  const handleDeleteImage = async (imageId: string) => {
+    await deleteImage.mutateAsync({ postId, imageId });
+    refetchImagesGet();
+  };
 
   const handleUploadDocs = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
@@ -206,8 +208,8 @@ export const UpdatePostPage = ({ postId }: UpdatePostProps) => {
         size={size}
         setPrice={handleNumberChange(setPrice)}
         price={price}
-        setImages={handleImages(setImages)}
-        images={images}
+        OnImgsUpload={handleUploadImages}
+        OnImgDelete={handleDeleteImage}
         imagesGet={imagesGet}
         OnDocsUpload={handleUploadDocs}
         OnDocDelete={handleDeleteDoc}
