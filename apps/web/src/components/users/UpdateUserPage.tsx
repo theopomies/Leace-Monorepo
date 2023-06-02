@@ -45,10 +45,10 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
   const [elevator, setElevator] = useState(false);
   const [pool, setPool] = useState(false);
 
-  const { data: documentsGet } =
+  const { data: documentsGet, refetch: refetchDocumentsGet } =
     trpc.document.getSignedUserUrl.useQuery(userId);
   const uploadDocument = trpc.document.putSignedUserUrl.useMutation();
-  const [documents, setDocuments] = useState<File[] | undefined>();
+  const deleteDocument = trpc.document.deleteSignedUserUrl.useMutation();
 
   useEffect(() => {
     if (user) {
@@ -116,20 +116,7 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
         pool,
       });
     }
-    if (documents && documents.length > 0) {
-      documents.map(async (document) => {
-        await uploadDocument
-          .mutateAsync({
-            fileType: document.type,
-          })
-          .then((url) => {
-            axios.put(url, document);
-          });
-      });
-    }
-    setTimeout(() => {
-      router.push(`/users/${userId}`);
-    }, 500);
+    router.push(`/users/${userId}`);
   };
 
   const handleChange =
@@ -156,13 +143,25 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
       setter(event.target.value as HomeType);
     };
 
-  const handleDocuments =
-    (setter: Dispatch<SetStateAction<File[] | undefined>>) =>
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      if (event.target.files && event.target.files[0]) {
-        setter(Array.from(event.target.files));
-      }
-    };
+  const handleUploadDocs = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      Array.from(event.target.files).map(async (document) => {
+        await uploadDocument
+          .mutateAsync({
+            fileType: document.type,
+          })
+          .then(async (url) => {
+            await axios.put(url, document);
+            refetchDocumentsGet();
+          });
+      });
+    }
+  };
+
+  const handleDeleteDoc = async (documentId: string) => {
+    await deleteDocument.mutateAsync(documentId);
+    refetchDocumentsGet();
+  };
 
   const handleCancel: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.preventDefault();
@@ -214,8 +213,8 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
         maxPrice={maxPrice}
         setMinPrice={handleNumberChange(setMinPrice)}
         minPrice={minPrice}
-        setDocuments={handleDocuments(setDocuments)}
-        documents={documents}
+        OnDocsUpload={handleUploadDocs}
+        OnDocDelete={handleDeleteDoc}
         documentsGet={documentsGet}
       />
     </div>

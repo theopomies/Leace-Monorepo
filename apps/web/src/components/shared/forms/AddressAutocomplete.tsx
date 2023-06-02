@@ -69,7 +69,7 @@ export const AddressAutocomplete = (props: AddressAutocompleteProps) => {
 
   return (
     <>
-      <div className="sticky mt-5 flex w-full items-center justify-between rounded-full bg-white p-2 shadow-lg">
+      <div className="sticky flex w-full items-center justify-between rounded-full bg-white p-2 shadow-lg">
         <input
           ref={inputRef}
           className="focus:shadow-outline ml-2 w-full rounded-full bg-gray-100 py-4 pl-4 text-xs font-bold uppercase leading-tight text-gray-700 focus:outline-none lg:text-sm"

@@ -55,9 +55,9 @@ export interface UserFormProps {
   setElevator: ChangeEventHandler;
   pool: boolean;
   setPool: ChangeEventHandler;
-  documents: File[] | undefined;
-  setDocuments: ChangeEventHandler;
-  documentsGet?: (Document & { url: string })[] | undefined;
+  OnDocsUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  OnDocDelete: (documentId: string) => Promise<void>;
+  documentsGet: (Document & { url: string })[] | undefined;
   onSubmit: FormEventHandler;
   onCancel: MouseEventHandler<HTMLButtonElement>;
 }
@@ -112,7 +112,7 @@ export const UserForm = (props: UserFormProps) => {
           alt="image"
           className="mx-auto h-32 rounded-full shadow-xl"
         />
-        <div className="m-4 flex h-full flex-col gap-5">
+        <div className="flex h-full flex-col gap-5 py-5">
           <div className="flex justify-center gap-5">
             <TextInput
               required
@@ -142,16 +142,15 @@ export const UserForm = (props: UserFormProps) => {
       {props.user?.role === Role.TENANT && (
         <AttributesUserForm {...attributesStates} />
       )}
-      <div className="mt-10">
-        <DocumentsList documents={props.documentsGet} />
-        <div className="mt-2 flex flex-wrap justify-center gap-4">
-          <FileInput multiple onChange={props.setDocuments} accept=".pdf">
-            Upload Document
-          </FileInput>
-          {props.documents?.map((document, index) => (
-            <p key={index}>{document.name}</p>
-          ))}
-        </div>
+      <DocumentsList
+        documents={props.documentsGet}
+        OnDelete={props.OnDocDelete}
+        isLoggedInOrAdmin
+      />
+      <div className="mx-auto">
+        <FileInput multiple onChange={props.OnDocsUpload} accept=".pdf">
+          Upload Document
+        </FileInput>
       </div>
       <div className="mt-10 flex justify-center gap-8">
         <Button theme="danger" onClick={props.onCancel}>

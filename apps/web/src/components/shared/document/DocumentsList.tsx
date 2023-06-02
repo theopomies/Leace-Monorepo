@@ -68,7 +68,10 @@ export const DocumentsList = ({
             {isLoggedInOrAdmin && OnDelete && (
               <Button
                 theme="danger"
-                onClick={() => OnDelete(doc.id)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  OnDelete(doc.id);
+                }}
                 overrideStyles
                 className="absolute -right-1 -top-1 inline-flex h-7 w-7 items-center justify-center rounded-md bg-red-500 stroke-white p-1.5 hover:bg-red-700 "
               >
