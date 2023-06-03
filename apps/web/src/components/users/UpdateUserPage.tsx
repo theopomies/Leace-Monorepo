@@ -19,8 +19,8 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
   const updateAttributes = trpc.attribute.updateUserAttributes.useMutation();
 
   const { data: documentsGet, refetch: refetchDocumentsGet } =
-    trpc.document.getSignedUserUrl.useQuery(userId);
-  const uploadDocument = trpc.document.putSignedUserUrl.useMutation();
+    trpc.document.getSignedUrl.useQuery({ userId });
+  const uploadDocument = trpc.document.putSignedUrl.useMutation();
   const deleteDocument = trpc.document.deleteSignedUrl.useMutation();
 
   const handleSubmit = async (data: UserFormData) => {
@@ -62,12 +62,14 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
             fileType: document.type,
           })
           .then(async (url) => {
-            await axios.put(url, document, {
-              headers: {
-                "Content-Type": document.type,
-              },
-            });
-            refetchDocumentsGet();
+            if (url) {
+              await axios.put(url, document, {
+                headers: {
+                  "Content-Type": document.type,
+                },
+              });
+              refetchDocumentsGet();
+            }
           });
       });
     }

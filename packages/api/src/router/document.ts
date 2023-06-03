@@ -11,104 +11,10 @@ import { randomUUID } from "crypto";
 import { TRPCError } from "@trpc/server";
 
 export const documentRouter = router({
-  putSignedUserUrl: protectedProcedure([Role.TENANT, Role.AGENCY, Role.OWNER])
-    .input(z.object({ fileType: z.string() }))
-    .mutation(async ({ ctx, input }) => {
-      const id = randomUUID();
-
-      const ext = input.fileType.split("/")[1];
-      if (!ext || (ext != "png" && ext != "jpeg" && ext != "pdf"))
-        throw new TRPCError({ code: "BAD_REQUEST" });
-
-      const created = await ctx.prisma.document.create({
-        data: { id: id, userId: ctx.auth.userId, ext: ext },
-      });
-      if (!created) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
-
-      const key = `users/${ctx.auth.userId}/documents/${id}.${ext}`;
-      const bucketParams = {
-        Bucket: "leaceawsbucket",
-        Key: key,
-        ContentType: input.fileType,
-      };
-      const command = new PutObjectCommand(bucketParams);
-
-      return await getSignedUrl(ctx.s3Client, command);
-    }),
-  getSignedUserUrl: protectedProcedure([Role.TENANT, Role.AGENCY, Role.OWNER])
-    .input(z.string())
-    .query(async ({ ctx, input }) => {
-      const userId = input;
-
-      if (userId !== ctx.auth.userId) {
-        const getPost = await ctx.prisma.post.findFirst({
-          where: {
-            createdById: ctx.auth.userId,
-            relationships: { some: { userId: userId } },
-          },
-        });
-        if (!getPost) throw new TRPCError({ code: "NOT_FOUND" });
-
-        const relationShip = await ctx.prisma.relationship.findFirst({
-          where: { userId: input, postId: getPost.id },
-        });
-        if (!relationShip) throw new TRPCError({ code: "NOT_FOUND" });
-
-        if (relationShip.relationType !== RelationType.MATCH) {
-          throw new TRPCError({ code: "UNAUTHORIZED" });
-        }
-      }
-
-      const documents = await ctx.prisma.document.findMany({
-        where: {
-          userId: userId,
-        },
-      });
-      if (!documents) throw new TRPCError({ code: "NOT_FOUND" });
-
-      return await Promise.all(
-        documents.map(async (document: Document) => {
-          const bucketParams = {
-            Bucket: "leaceawsbucket",
-            Key: `users/${userId}/documents/${document.id}.${document.ext}`,
-          };
-          const command = new GetObjectCommand(bucketParams);
-
-          return {
-            ...document,
-            url: await getSignedUrl(ctx.s3Client, command),
-          };
-        }),
-      );
-    }),
-  deleteSignedUserUrl: protectedProcedure([
-    Role.TENANT,
-    Role.AGENCY,
-    Role.OWNER,
-  ])
-    .input(z.string())
-    .mutation(async ({ ctx, input }) => {
-      const document = await ctx.prisma.document.findFirst({
-        where: { id: input, userId: ctx.auth.userId },
-      });
-      if (!document) throw new TRPCError({ code: "NOT_FOUND" });
-
-      const deleted = await ctx.prisma.document.delete({
-        where: { id: document.id },
-      });
-      if (!deleted) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
-
-      const bucketParams = {
-        Bucket: "leaceawsbucket",
-        Key: `users/${ctx.auth.userId}/documents/${document.id}.${document.ext}`,
-      };
-      const command = new DeleteObjectCommand(bucketParams);
-
-      return await getSignedUrl(ctx.s3Client, command);
-    }),
   putSignedUrl: protectedProcedure([Role.TENANT, Role.AGENCY, Role.OWNER])
     .input(
       z.object({
+        userId: z.string().optional(),
         postId: z.string().optional(),
         leaseId: z.string().optional(),
         fileType: z.string(),
@@ -121,7 +27,27 @@ export const documentRouter = router({
       if (!ext || (ext != "png" && ext != "jpeg" && ext != "pdf"))
         throw new TRPCError({ code: "BAD_REQUEST" });
 
-      if (input.postId) {
+      if (input.userId) {
+        const getUser = await ctx.prisma.user.findUnique({
+          where: { id: input.userId },
+        });
+        if (!getUser) throw new TRPCError({ code: "NOT_FOUND" });
+
+        const created = await ctx.prisma.document.create({
+          data: { id: id, userId: ctx.auth.userId, ext: ext },
+        });
+        if (!created) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+        const key = `users/${ctx.auth.userId}/documents/${id}.${ext}`;
+        const bucketParams = {
+          Bucket: "leaceawsbucket",
+          Key: key,
+          ContentType: input.fileType,
+        };
+        const command = new PutObjectCommand(bucketParams);
+
+        return await getSignedUrl(ctx.s3Client, command);
+      } else if (input.postId) {
         const getPost = await ctx.prisma.post.findUnique({
           where: { id: input.postId },
         });
@@ -160,12 +86,59 @@ export const documentRouter = router({
   getSignedUrl: protectedProcedure([Role.TENANT, Role.AGENCY, Role.OWNER])
     .input(
       z.object({
+        userId: z.string().optional(),
         postId: z.string().optional(),
         leaseId: z.string().optional(),
       }),
     )
     .query(async ({ ctx, input }) => {
-      if (input.postId) {
+      if (input.userId) {
+        const getUser = await ctx.prisma.user.findUnique({
+          where: { id: input.userId },
+        });
+        if (!getUser) throw new TRPCError({ code: "NOT_FOUND" });
+
+        if (input.userId !== ctx.auth.userId) {
+          const getPost = await ctx.prisma.post.findFirst({
+            where: {
+              createdById: ctx.auth.userId,
+              relationships: { some: { userId: getUser.id } },
+            },
+          });
+          if (!getPost) throw new TRPCError({ code: "NOT_FOUND" });
+
+          const relationShip = await ctx.prisma.relationship.findFirst({
+            where: { userId: getUser.id, postId: getPost.id },
+          });
+          if (!relationShip) throw new TRPCError({ code: "NOT_FOUND" });
+
+          if (relationShip.relationType !== RelationType.MATCH) {
+            throw new TRPCError({ code: "UNAUTHORIZED" });
+          }
+        }
+
+        const documents = await ctx.prisma.document.findMany({
+          where: {
+            userId: getUser.id,
+          },
+        });
+        if (!documents) throw new TRPCError({ code: "NOT_FOUND" });
+
+        return await Promise.all(
+          documents.map(async (document: Document) => {
+            const bucketParams = {
+              Bucket: "leaceawsbucket",
+              Key: `users/${getUser.id}/documents/${document.id}.${document.ext}`,
+            };
+            const command = new GetObjectCommand(bucketParams);
+
+            return {
+              ...document,
+              url: await getSignedUrl(ctx.s3Client, command),
+            };
+          }),
+        );
+      } else if (input.postId) {
         const getPost = await ctx.prisma.post.findFirst({
           where: { id: input.postId },
         });

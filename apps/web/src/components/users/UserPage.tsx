@@ -22,7 +22,7 @@ export const UserPage = ({ userId }: UserPageProps) => {
     data: documents,
     isLoading: documentsLoading,
     refetch: refetchDocuments,
-  } = trpc.document.getSignedUserUrl.useQuery(userId);
+  } = trpc.document.getSignedUrl.useQuery({ userId });
 
   const deleteUser = trpc.user.deleteUserById.useMutation();
   const deleteDocument = trpc.document.deleteSignedUrl.useMutation();
