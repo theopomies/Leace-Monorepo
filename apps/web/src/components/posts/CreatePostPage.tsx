@@ -1,6 +1,5 @@
 import React, {
   Dispatch,
-  FormEventHandler,
   MouseEventHandler,
   SetStateAction,
   useState,
@@ -8,30 +7,14 @@ import React, {
 import { Header } from "../shared/Header";
 import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
-import { PostForm } from "../shared/post/PostForm";
-import { HomeType } from "../../types/homeType";
+import { PostForm, PostFormData } from "../shared/post/PostForm";
 import axios from "axios";
 
 export const CreatePostPage = () => {
   const router = useRouter();
   const post = trpc.post.createPost.useMutation();
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
 
   const updatePost = trpc.attribute.updatePostAttributes.useMutation();
-  const [location, setLocation] = useState("");
-  const [furnished, setFurnished] = useState(false);
-  const [homeType, setHomeType] = useState<HomeType | undefined>();
-  const [terrace, setTerrace] = useState(false);
-  const [pets, setPets] = useState(false);
-  const [smoker, setSmoker] = useState(false);
-  const [garden, setGarden] = useState(false);
-  const [parking, setParking] = useState(false);
-  const [elevator, setElevator] = useState(false);
-  const [disability, setDisability] = useState(false);
-  const [pool, setPool] = useState(false);
-  const [size, setSize] = useState(0);
-  const [price, setPrice] = useState(0);
 
   const uploadImage = trpc.image.putSignedPostUrl.useMutation();
   const [images, setImages] = useState<File[] | undefined>();
@@ -39,28 +22,27 @@ export const CreatePostPage = () => {
   const uploadDocument = trpc.document.putSignedUrl.useMutation();
   const [documents, setDocuments] = useState<File[] | undefined>();
 
-  const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (data: PostFormData) => {
     const { id: postId } = await post.mutateAsync({
-      title,
-      desc: description,
+      title: data.title,
+      desc: data.description,
       content: "",
     });
     await updatePost.mutateAsync({
       postId,
-      location,
-      furnished,
-      homeType,
-      terrace,
-      pets,
-      smoker,
-      garden,
-      parking,
-      elevator,
-      pool,
-      disability,
-      size,
-      price,
+      location: data.location,
+      homeType: data.homeType,
+      furnished: data.furnished,
+      terrace: data.terrace,
+      pets: data.pets,
+      smoker: data.smoker,
+      garden: data.garden,
+      parking: data.parking,
+      elevator: data.elevator,
+      pool: data.pool,
+      disability: data.disability,
+      size: data.size,
+      price: data.price,
     });
     if (images && images.length > 0) {
       images.map(async (image) => {
@@ -82,36 +64,17 @@ export const CreatePostPage = () => {
             fileType: document.type,
           })
           .then(async (url) => {
-            if (url) await axios.put(url, document);
+            if (url)
+              await axios.put(url, document, {
+                headers: {
+                  "Content-Type": document.type,
+                },
+              });
           });
       });
     }
     router.push(`/posts/${postId}`);
   };
-
-  const handleChange =
-    (setter: Dispatch<SetStateAction<string>>) =>
-    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      setter(event.target.value);
-    };
-
-  const handleBooleanChange =
-    (setter: Dispatch<SetStateAction<boolean>>) =>
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      setter(event.target.checked);
-    };
-
-  const handleNumberChange =
-    (setter: Dispatch<SetStateAction<number>>) =>
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      setter(event.target.valueAsNumber);
-    };
-
-  const handleHomeTypeChange =
-    (setter: Dispatch<SetStateAction<HomeType | undefined>>) =>
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      setter(event.target.value as HomeType);
-    };
 
   const handleImage =
     (setter: Dispatch<SetStateAction<File[] | undefined>>) =>
@@ -138,38 +101,8 @@ export const CreatePostPage = () => {
     <div className="w-full">
       <Header heading={"Create Post"} />
       <PostForm
-        onSubmit={handleSubmit}
-        onCancel={handleCancel}
-        setTitle={handleChange(setTitle)}
-        title={title}
-        setLocation={handleChange(setLocation)}
-        location={location}
-        setHomeType={handleHomeTypeChange(setHomeType)}
-        homeType={homeType}
-        setDescription={handleChange(setDescription)}
-        description={description}
-        setFurnished={handleBooleanChange(setFurnished)}
-        furnished={furnished}
-        setPool={handleBooleanChange(setPool)}
-        pool={pool}
-        setSmoker={handleBooleanChange(setSmoker)}
-        smoker={smoker}
-        setTerrace={handleBooleanChange(setTerrace)}
-        terrace={terrace}
-        setElevator={handleBooleanChange(setElevator)}
-        elevator={elevator}
-        setParking={handleBooleanChange(setParking)}
-        parking={parking}
-        setGarden={handleBooleanChange(setGarden)}
-        garden={garden}
-        setPets={handleBooleanChange(setPets)}
-        pets={pets}
-        setDisability={handleBooleanChange(setDisability)}
-        disability={disability}
-        setSize={handleNumberChange(setSize)}
-        size={size}
-        setPrice={handleNumberChange(setPrice)}
-        price={price}
+        OnSubmit={handleSubmit}
+        OnCancel={handleCancel}
         setImages={handleImage(setImages)}
         setDocuments={handleDocuments(setDocuments)}
         documents={documents}

@@ -1,8 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
 import React, {
   ChangeEventHandler,
+  Dispatch,
   FormEventHandler,
   MouseEventHandler,
+  SetStateAction,
+  useEffect,
+  useState,
 } from "react";
 import { Button } from "../button/Button";
 import { Input } from "../forms/Input";
@@ -11,40 +15,29 @@ import { FileInput } from "../forms/FileInput";
 import { HomeType } from "../../../types/homeType";
 import { DocumentsList } from "../document/DocumentsList";
 import { ImagesList } from "./ImagesList";
-import { Image, Document } from "@prisma/client";
+import { Post, Attribute, Image, Document } from "@prisma/client";
 import { AttributesPostForm } from "../../attributes/AttributesPostForm";
 
-export interface PostFormProps {
+export type PostFormData = {
   title: string;
-  setTitle: ChangeEventHandler;
   description: string;
-  setDescription: ChangeEventHandler;
   location: string;
-  setLocation: ChangeEventHandler;
-  furnished: boolean;
-  setFurnished: ChangeEventHandler;
-  homeType: HomeType | undefined;
-  setHomeType: ChangeEventHandler;
-  terrace: boolean;
-  setTerrace: ChangeEventHandler;
-  pets: boolean;
-  setPets: ChangeEventHandler;
-  smoker: boolean;
-  setSmoker: ChangeEventHandler;
-  garden: boolean;
-  setGarden: ChangeEventHandler;
-  parking: boolean;
-  setParking: ChangeEventHandler;
-  elevator: boolean;
-  setElevator: ChangeEventHandler;
-  disability: boolean;
-  setDisability: ChangeEventHandler;
-  pool: boolean;
-  setPool: ChangeEventHandler;
-  size: number;
-  setSize: ChangeEventHandler;
   price: number;
-  setPrice: ChangeEventHandler;
+  size: number;
+  furnished: boolean;
+  homeType: HomeType | undefined;
+  terrace: boolean;
+  pets: boolean;
+  smoker: boolean;
+  disability: boolean;
+  garden: boolean;
+  parking: boolean;
+  elevator: boolean;
+  pool: boolean;
+};
+
+export interface PostFormProps {
+  post?: (Post & { attribute: Attribute | null }) | undefined;
   images?: File[] | undefined;
   setImages?: ChangeEventHandler;
   OnImgsUpload?: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -55,44 +48,127 @@ export interface PostFormProps {
   OnDocsUpload?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   OnDocDelete?: (documentId: string) => Promise<void>;
   documentsGet?: (Document & { url: string })[] | undefined;
-  onSubmit: FormEventHandler;
-  onCancel: MouseEventHandler<HTMLButtonElement>;
+  OnSubmit: (data: PostFormData) => Promise<void>;
+  OnCancel: MouseEventHandler<HTMLButtonElement>;
 }
 
 export const PostForm = (props: PostFormProps) => {
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+
+  const [location, setLocation] = useState("");
+  const [furnished, setFurnished] = useState(false);
+  const [homeType, setHomeType] = useState<HomeType | undefined>();
+  const [terrace, setTerrace] = useState(false);
+  const [pets, setPets] = useState(false);
+  const [smoker, setSmoker] = useState(false);
+  const [garden, setGarden] = useState(false);
+  const [parking, setParking] = useState(false);
+  const [elevator, setElevator] = useState(false);
+  const [disability, setDisability] = useState(false);
+  const [pool, setPool] = useState(false);
+  const [size, setSize] = useState(0);
+  const [price, setPrice] = useState(0);
+
+  useEffect(() => {
+    if (props.post) {
+      setTitle(props.post.title ?? "");
+      setDescription(props.post.desc ?? "");
+      setLocation(props.post.attribute?.location ?? "");
+      setHomeType(props.post.attribute?.homeType ?? undefined);
+      setSize(props.post.attribute?.size ?? 0);
+      setPrice(props.post.attribute?.price ?? 0);
+      setFurnished(props.post.attribute?.furnished ?? false);
+      setTerrace(props.post.attribute?.terrace ?? false);
+      setPets(props.post.attribute?.pets ?? false);
+      setSmoker(props.post.attribute?.smoker ?? false);
+      setGarden(props.post.attribute?.garden ?? false);
+      setParking(props.post.attribute?.parking ?? false);
+      setElevator(props.post.attribute?.elevator ?? false);
+      setPool(props.post.attribute?.pool ?? false);
+      setDisability(props.post.attribute?.disability ?? false);
+    }
+  }, [props.post]);
+
+  const handleChange =
+    (setter: Dispatch<SetStateAction<string>>) =>
+    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      setter(event.target.value);
+    };
+
+  const handleBooleanChange =
+    (setter: Dispatch<SetStateAction<boolean>>) =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setter(event.target.checked);
+    };
+
+  const handleNumberChange =
+    (setter: Dispatch<SetStateAction<number>>) =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setter(event.target.valueAsNumber);
+    };
+
+  const handleHomeTypeChange =
+    (setter: Dispatch<SetStateAction<HomeType | undefined>>) =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setter(event.target.value as HomeType);
+    };
+
+  const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+    e.preventDefault();
+    const data: PostFormData = {
+      title,
+      description,
+      location,
+      price,
+      size,
+      furnished,
+      homeType,
+      terrace,
+      pets,
+      smoker,
+      disability,
+      garden,
+      parking,
+      elevator,
+      pool,
+    };
+    props.OnSubmit(data);
+  };
+
   const attributesStates = {
-    location: props.location,
-    handleLocationChange: props.setLocation,
-    price: props.price,
-    handlePriceChange: props.setPrice,
-    size: props.size,
-    handleSizeChange: props.setSize,
-    furnished: props.furnished,
-    handleFurnishedChange: props.setFurnished,
-    homeType: props.homeType,
-    handleHomeTypeChange: props.setHomeType,
-    terrace: props.terrace,
-    handleTerraceChange: props.setTerrace,
-    pets: props.pets,
-    handlePetsChange: props.setPets,
-    smoker: props.smoker,
-    handleSmokerChange: props.setSmoker,
-    disability: props.disability,
-    handleDisabilityChange: props.setDisability,
-    garden: props.garden,
-    handleGardenChange: props.setGarden,
-    parking: props.parking,
-    handleParkingChange: props.setParking,
-    elevator: props.elevator,
-    handleElevatorChange: props.setElevator,
-    pool: props.pool,
-    handlePoolChange: props.setPool,
+    location,
+    handleLocationChange: handleChange(setLocation),
+    price,
+    handlePriceChange: handleNumberChange(setPrice),
+    size,
+    handleSizeChange: handleNumberChange(setSize),
+    furnished,
+    handleFurnishedChange: handleBooleanChange(setFurnished),
+    homeType,
+    handleHomeTypeChange: handleHomeTypeChange(setHomeType),
+    terrace,
+    handleTerraceChange: handleBooleanChange(setTerrace),
+    pets,
+    handlePetsChange: handleBooleanChange(setPets),
+    smoker,
+    handleSmokerChange: handleBooleanChange(setSmoker),
+    disability,
+    handleDisabilityChange: handleBooleanChange(setDisability),
+    garden,
+    handleGardenChange: handleBooleanChange(setGarden),
+    parking,
+    handleParkingChange: handleBooleanChange(setParking),
+    elevator,
+    handleElevatorChange: handleBooleanChange(setElevator),
+    pool,
+    handlePoolChange: handleBooleanChange(setPool),
   };
 
   return (
     <form
       className="m-auto my-5 flex w-fit flex-col justify-center rounded-lg bg-white p-12 shadow"
-      onSubmit={props.onSubmit}
+      onSubmit={handleSubmit}
     >
       <div className="pb-5">
         <div>
@@ -100,8 +176,8 @@ export const PostForm = (props: PostFormProps) => {
           <Input
             placeholder="Appartment in Central Park"
             name="title"
-            onChange={props.setTitle}
-            value={props.title}
+            onChange={handleChange(setTitle)}
+            value={title}
             className="w-full"
           />
         </div>
@@ -110,8 +186,8 @@ export const PostForm = (props: PostFormProps) => {
           <TextArea
             placeholder="Description"
             name="description"
-            onChange={props.setDescription}
-            value={props.description}
+            onChange={handleChange(setDescription)}
+            value={description}
             className="w-full"
           />
         </div>
@@ -144,7 +220,7 @@ export const PostForm = (props: PostFormProps) => {
         ))}
       </div>
       <div className="mt-10 flex justify-center gap-4">
-        <Button type="button" theme="danger" onClick={props.onCancel}>
+        <Button type="button" theme="danger" onClick={props.OnCancel}>
           Cancel
         </Button>
         <Button>Submit</Button>

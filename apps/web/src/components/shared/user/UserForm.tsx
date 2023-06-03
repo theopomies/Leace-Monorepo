@@ -133,7 +133,7 @@ export const UserForm = (props: UserFormProps) => {
       setter(event.target.value as HomeType);
     };
 
-  const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
+  const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
 
     const data: UserFormData = {
