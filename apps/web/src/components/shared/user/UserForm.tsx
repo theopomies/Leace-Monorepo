@@ -1,8 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
-import React, {
-  ChangeEventHandler,
+import {
+  ChangeEvent,
+  Dispatch,
   FormEventHandler,
   MouseEventHandler,
+  SetStateAction,
+  useEffect,
+  useState,
 } from "react";
 import { Button } from "../button/Button";
 import { TextArea } from "../forms/TextArea";
@@ -13,93 +17,187 @@ import { Document } from "@prisma/client";
 import { AttributesUserForm } from "../../attributes/AttributesUserForm";
 import { DateInput } from "../forms/DateInput";
 import { TextInput } from "../forms/TextInput";
-import { User, Role } from "@prisma/client";
+import { User, Attribute, Role } from "@prisma/client";
+
+export type UserFormData = {
+  birthDate: string;
+  firstName: string;
+  lastName: string;
+  description: string;
+  location: string;
+  maxPrice: number;
+  minPrice: number;
+  maxSize: number;
+  minSize: number;
+  furnished: boolean;
+  homeType: HomeType | undefined;
+  terrace: boolean;
+  pets: boolean;
+  smoker: boolean;
+  disability: boolean;
+  garden: boolean;
+  parking: boolean;
+  elevator: boolean;
+  pool: boolean;
+};
 
 export interface UserFormProps {
-  user: User | undefined;
-  firstName: string;
-  setFirstName: ChangeEventHandler;
-  lastName: string;
-  setLastName: ChangeEventHandler;
-  birthDate: string;
-  setBirthDate: ChangeEventHandler;
-  description: string;
-  setDescription: ChangeEventHandler;
-  location: string;
-  setLocation: ChangeEventHandler;
-  maxPrice: number;
-  setMaxPrice: ChangeEventHandler;
-  minPrice: number;
-  setMinPrice: ChangeEventHandler;
-  maxSize: number;
-  setMaxSize: ChangeEventHandler;
-  minSize: number;
-  setMinSize: ChangeEventHandler;
-  furnished: boolean;
-  setFurnished: ChangeEventHandler;
-  homeType: HomeType | undefined;
-  setHomeType: ChangeEventHandler;
-  terrace: boolean;
-  setTerrace: ChangeEventHandler;
-  pets: boolean;
-  setPets: ChangeEventHandler;
-  smoker: boolean;
-  setSmoker: ChangeEventHandler;
-  disability: boolean;
-  setDisability: ChangeEventHandler;
-  garden: boolean;
-  setGarden: ChangeEventHandler;
-  parking: boolean;
-  setParking: ChangeEventHandler;
-  elevator: boolean;
-  setElevator: ChangeEventHandler;
-  pool: boolean;
-  setPool: ChangeEventHandler;
-  OnDocsUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  user: (User & { attribute: Attribute | null }) | undefined;
+  OnDocsUpload: (event: ChangeEvent<HTMLInputElement>) => void;
   OnDocDelete: (documentId: string) => Promise<void>;
   documentsGet: (Document & { url: string })[] | undefined;
-  onSubmit: FormEventHandler;
-  onCancel: MouseEventHandler<HTMLButtonElement>;
+  OnSubmit: (data: UserFormData) => Promise<void>;
+  OnCancel: MouseEventHandler<HTMLButtonElement>;
 }
 
 export const UserForm = (props: UserFormProps) => {
+  const [birthDate, setBirthDate] = useState<string>("");
+  const [firstName, setFirstName] = useState<string>("");
+  const [lastName, setLastName] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+
+  const [location, setLocation] = useState("");
+  const [maxPrice, setMaxPrice] = useState(0);
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxSize, setMaxSize] = useState(0);
+  const [minSize, setMinSize] = useState(0);
+  const [furnished, setFurnished] = useState(false);
+  const [homeType, setHomeType] = useState<HomeType | undefined>();
+  const [terrace, setTerrace] = useState(false);
+  const [pets, setPets] = useState(false);
+  const [smoker, setSmoker] = useState(false);
+  const [disability, setDisability] = useState(false);
+  const [garden, setGarden] = useState(false);
+  const [parking, setParking] = useState(false);
+  const [elevator, setElevator] = useState(false);
+  const [pool, setPool] = useState(false);
+
+  useEffect(() => {
+    if (props.user) {
+      const date = props.user.birthDate
+        ? `${props.user.birthDate.getUTCFullYear()}-${
+            props.user.birthDate.getUTCMonth() + 1 > 9
+              ? props.user.birthDate.getUTCMonth() + 1
+              : "0" + (props.user.birthDate.getUTCMonth() + 1)
+          }-${
+            props.user.birthDate.getUTCDate() > 9
+              ? props.user.birthDate.getUTCDate()
+              : "0" + props.user.birthDate.getUTCDate()
+          }`
+        : "";
+      setBirthDate(date);
+      setFirstName(props.user.firstName ?? "");
+      setLastName(props.user.lastName ?? "");
+      setDescription(props.user.description ?? "");
+      if (props.user.role === Role.TENANT) {
+        setLocation(props.user.attribute?.location ?? "");
+        setHomeType(props.user.attribute?.homeType ?? undefined);
+        setMaxPrice(props.user.attribute?.maxPrice ?? 0);
+        setMinPrice(props.user.attribute?.minPrice ?? 0);
+        setMaxSize(props.user.attribute?.maxSize ?? 0);
+        setMinSize(props.user.attribute?.minSize ?? 0);
+        setFurnished(props.user.attribute?.furnished ?? false);
+        setTerrace(props.user.attribute?.terrace ?? false);
+        setPets(props.user.attribute?.pets ?? false);
+        setSmoker(props.user.attribute?.smoker ?? false);
+        setDisability(props.user.attribute?.disability ?? false);
+        setGarden(props.user.attribute?.garden ?? false);
+        setParking(props.user.attribute?.parking ?? false);
+        setElevator(props.user.attribute?.elevator ?? false);
+        setPool(props.user.attribute?.pool ?? false);
+      }
+    }
+  }, [props.user]);
+
+  const handleChange =
+    (setter: Dispatch<SetStateAction<string>>) =>
+    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      setter(event.target.value);
+    };
+
+  const handleBooleanChange =
+    (setter: Dispatch<SetStateAction<boolean>>) =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setter(event.target.checked);
+    };
+
+  const handleNumberChange =
+    (setter: Dispatch<SetStateAction<number>>) =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setter(event.target.valueAsNumber);
+    };
+
+  const handleHomeTypeChange =
+    (setter: Dispatch<SetStateAction<HomeType | undefined>>) =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setter(event.target.value as HomeType);
+    };
+
+  const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
+    e.preventDefault();
+
+    const data: UserFormData = {
+      birthDate,
+      firstName,
+      lastName,
+      description,
+      location,
+      maxPrice,
+      minPrice,
+      maxSize,
+      minSize,
+      furnished,
+      homeType,
+      terrace,
+      pets,
+      smoker,
+      disability,
+      garden,
+      parking,
+      elevator,
+      pool,
+    };
+
+    props.OnSubmit(data);
+  };
+
   const attributesStates = {
-    location: props.location,
-    handleLocationChange: props.setLocation,
-    maxPrice: props.maxPrice,
-    handleMaxPriceChange: props.setMaxPrice,
-    minPrice: props.minPrice,
-    handleMinPriceChange: props.setMinPrice,
-    maxSize: props.maxSize,
-    handleMaxSizeChange: props.setMaxSize,
-    minSize: props.minSize,
-    handleMinSizeChange: props.setMinSize,
-    furnished: props.furnished,
-    handleFurnishedChange: props.setFurnished,
-    homeType: props.homeType,
-    handleHomeTypeChange: props.setHomeType,
-    terrace: props.terrace,
-    handleTerraceChange: props.setTerrace,
-    pets: props.pets,
-    handlePetsChange: props.setPets,
-    smoker: props.smoker,
-    handleSmokerChange: props.setSmoker,
-    disability: props.disability,
-    handleDisabilityChange: props.setDisability,
-    garden: props.garden,
-    handleGardenChange: props.setGarden,
-    parking: props.parking,
-    handleParkingChange: props.setParking,
-    elevator: props.elevator,
-    handleElevatorChange: props.setElevator,
-    pool: props.pool,
-    handlePoolChange: props.setPool,
+    location,
+    handleLocationChange: handleChange(setLocation),
+    maxPrice,
+    handleMaxPriceChange: handleNumberChange(setMaxPrice),
+    minPrice,
+    handleMinPriceChange: handleNumberChange(setMinPrice),
+    maxSize,
+    handleMaxSizeChange: handleNumberChange(setMaxSize),
+    minSize,
+    handleMinSizeChange: handleNumberChange(setMinSize),
+    furnished,
+    handleFurnishedChange: handleBooleanChange(setFurnished),
+    homeType,
+    handleHomeTypeChange: handleHomeTypeChange(setHomeType),
+    terrace,
+    handleTerraceChange: handleBooleanChange(setTerrace),
+    pets,
+    handlePetsChange: handleBooleanChange(setPets),
+    smoker,
+    handleSmokerChange: handleBooleanChange(setSmoker),
+    disability,
+    handleDisabilityChange: handleBooleanChange(setDisability),
+    garden,
+    handleGardenChange: handleBooleanChange(setGarden),
+    parking,
+    handleParkingChange: handleBooleanChange(setParking),
+    elevator,
+    handleElevatorChange: handleBooleanChange(setElevator),
+    pool,
+    handlePoolChange: handleBooleanChange(setPool),
   };
 
   return (
     <form
       className="m-auto my-5 flex w-fit flex-col justify-center rounded-lg bg-white p-12 shadow"
-      onSubmit={props.onSubmit}
+      onSubmit={handleSubmit}
     >
       <div>
         <img
@@ -117,25 +215,25 @@ export const UserForm = (props: UserFormProps) => {
             <TextInput
               required
               placeholder="First Name"
-              onChange={props.setFirstName}
-              value={props.firstName}
+              onChange={handleChange(setFirstName)}
+              value={firstName}
             />
             <TextInput
               required
               placeholder="Last Name"
-              onChange={props.setLastName}
-              value={props.lastName}
+              onChange={handleChange(setLastName)}
+              value={lastName}
             />
             <DateInput
               required
-              value={props.birthDate}
-              onChange={props.setBirthDate}
+              onChange={handleChange(setBirthDate)}
+              value={birthDate}
             />
           </div>
           <TextArea
             placeholder="Description"
-            onChange={props.setDescription}
-            value={props.description}
+            onChange={handleChange(setDescription)}
+            value={description}
           />
         </div>
       </div>
@@ -153,7 +251,7 @@ export const UserForm = (props: UserFormProps) => {
         </FileInput>
       </div>
       <div className="mt-10 flex justify-center gap-8">
-        <Button theme="danger" onClick={props.onCancel}>
+        <Button theme="danger" onClick={props.OnCancel}>
           Cancel
         </Button>
         <Button theme="primary">Update</Button>

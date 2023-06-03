@@ -29,6 +29,7 @@ export const documentRouter = router({
       const bucketParams = {
         Bucket: "leaceawsbucket",
         Key: key,
+        ContentType: input.fileType,
       };
       const command = new PutObjectCommand(bucketParams);
 
