@@ -98,7 +98,7 @@ export const documentRouter = router({
         });
         if (!getUser) throw new TRPCError({ code: "NOT_FOUND" });
 
-        if (input.userId !== ctx.auth.userId) {
+        if (getUser.id !== ctx.auth.userId) {
           const getPost = await ctx.prisma.post.findFirst({
             where: {
               createdById: ctx.auth.userId,
@@ -118,9 +118,7 @@ export const documentRouter = router({
         }
 
         const documents = await ctx.prisma.document.findMany({
-          where: {
-            userId: getUser.id,
-          },
+          where: { userId: getUser.id },
         });
         if (!documents) throw new TRPCError({ code: "NOT_FOUND" });
 
@@ -156,9 +154,7 @@ export const documentRouter = router({
         }
 
         const documents = await ctx.prisma.document.findMany({
-          where: {
-            postId: getPost.id,
-          },
+          where: { postId: getPost.id },
         });
         if (!documents) throw new TRPCError({ code: "NOT_FOUND" });
 
