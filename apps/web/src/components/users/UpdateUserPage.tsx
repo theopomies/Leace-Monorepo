@@ -59,6 +59,7 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
       Array.from(event.target.files).map(async (document) => {
         await uploadDocument
           .mutateAsync({
+            userId,
             fileType: document.type,
           })
           .then(async (url) => {
