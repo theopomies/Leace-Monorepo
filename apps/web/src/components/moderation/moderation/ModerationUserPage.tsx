@@ -2,7 +2,7 @@ import { trpc } from "../../../utils/trpc";
 import { Loader } from "../../shared/Loader";
 import { Button } from "../../shared/button/Button";
 import Link from "next/link";
-import { User } from "../user";
+import { User } from "../users";
 import { ActionButtons } from "../ActionButtons";
 
 export function ModerationUserPage({

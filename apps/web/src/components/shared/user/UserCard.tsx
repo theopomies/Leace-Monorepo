@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { displayDate } from "../../../utils/displayDate";
 import { DisplayReports } from "../../moderation/report/DisplayReports";
-import { DocumentsList } from "../document/DocumentsList";
+import { DocumentList } from "../document/DocumentList";
 import { User, Attribute, Report, Document } from "@prisma/client";
 import { Button } from "../button/Button";
 import { DeleteUserDialog } from "../../users/DeleteUserDialog";
@@ -140,7 +140,7 @@ export const UserCard = ({
           </div>
         </div>
       )}
-      <DocumentsList
+      <DocumentList
         documents={documents}
         isLoggedInOrAdmin={isLoggedIn || isAdmin}
         OnDelete={OnDocDelete}

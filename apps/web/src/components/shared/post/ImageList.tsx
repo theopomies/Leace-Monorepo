@@ -3,12 +3,12 @@ import { Button } from "../button/Button";
 import { Image } from "@prisma/client";
 import { CrossSvg } from "../icons/CrossSvg";
 
-export interface ImagesListProps {
+export interface ImageListProps {
   images: (Image & { url: string })[] | undefined;
   OnDelete?: (imageId: string) => Promise<void>;
 }
 
-export const ImagesList = ({ images, OnDelete }: ImagesListProps) => {
+export const ImageList = ({ images, OnDelete }: ImageListProps) => {
   if (!images || images.length === 0) return null;
 
   return (

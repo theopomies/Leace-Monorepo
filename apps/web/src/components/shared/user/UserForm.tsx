@@ -12,7 +12,7 @@ import { Button } from "../button/Button";
 import { TextArea } from "../forms/TextArea";
 import { FileInput } from "../forms/FileInput";
 import { HomeType } from "../../../types/homeType";
-import { DocumentsList } from "../document/DocumentsList";
+import { DocumentList } from "../document/DocumentList";
 import { Document } from "@prisma/client";
 import { AttributesUserForm } from "../../attributes/AttributesUserForm";
 import { DateInput } from "../forms/DateInput";
@@ -240,7 +240,7 @@ export const UserForm = (props: UserFormProps) => {
       {props.user?.role === Role.TENANT && (
         <AttributesUserForm {...attributesStates} />
       )}
-      <DocumentsList
+      <DocumentList
         documents={props.documentsGet}
         OnDelete={props.OnDocDelete}
         isLoggedInOrAdmin

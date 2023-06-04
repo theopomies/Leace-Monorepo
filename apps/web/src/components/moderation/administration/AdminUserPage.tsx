@@ -3,7 +3,7 @@ import { Loader } from "../../shared/Loader";
 import { Search } from "./Search";
 import { Button } from "../../shared/button/Button";
 import Link from "next/link";
-import { User } from "../user";
+import { User } from "../users";
 import { ActionButtons } from "../ActionButtons";
 
 export function AdminUserPage({ userId }: { userId: string }) {

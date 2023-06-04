@@ -13,8 +13,8 @@ import { Input } from "../forms/Input";
 import { TextArea } from "../forms/TextArea";
 import { FileInput } from "../forms/FileInput";
 import { HomeType } from "../../../types/homeType";
-import { DocumentsList } from "../document/DocumentsList";
-import { ImagesList } from "./ImagesList";
+import { DocumentList } from "../document/DocumentList";
+import { ImageList } from "./ImageList";
 import { Post, Attribute, Image, Document } from "@prisma/client";
 import { AttributesPostForm } from "../../attributes/AttributesPostForm";
 
@@ -193,7 +193,7 @@ export const PostForm = (props: PostFormProps) => {
         </div>
       </div>
       <AttributesPostForm {...attributesStates} />
-      <ImagesList images={props.imagesGet} OnDelete={props.OnImgDelete} />
+      <ImageList images={props.imagesGet} OnDelete={props.OnImgDelete} />
       <div className="mt-2 mb-5 flex flex-wrap justify-center gap-4">
         <FileInput multiple onChange={props.setImages || props.OnImgsUpload}>
           Upload Image
@@ -202,7 +202,7 @@ export const PostForm = (props: PostFormProps) => {
           <p key={index}>{image.name}</p>
         ))}
       </div>
-      <DocumentsList
+      <DocumentList
         documents={props.documentsGet}
         OnDelete={props.OnDocDelete}
         isLoggedInOrAdmin

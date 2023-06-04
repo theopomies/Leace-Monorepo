@@ -3,8 +3,8 @@ import { trpc } from "../../../utils/trpc";
 import { Loader } from "../../shared/Loader";
 import { Button } from "../../shared/button/Button";
 import { Search } from "./Search";
-import { PostList } from "../post/PostList";
-import { Post } from "../post";
+import { PostList } from "../posts/PostList";
+import { Post } from "../posts";
 import { ActionButtons } from "../ActionButtons";
 
 export function AdminPostPage({ postId }: { postId: string }) {

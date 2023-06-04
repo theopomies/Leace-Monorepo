@@ -9,19 +9,19 @@ import { CheckSvg } from "../icons/CheckSvg";
 
 type DocumentWithUrl = Document & { url: string };
 
-export interface DocumentsListProps {
+export interface DocumentListProps {
   documents: DocumentWithUrl[] | undefined;
   isLoggedInOrAdmin?: boolean;
   OnDelete?: (documentId: string) => Promise<void>;
   OnValidation?: (document: DocumentWithUrl) => Promise<void>;
 }
 
-export const DocumentsList = ({
+export const DocumentList = ({
   documents,
   isLoggedInOrAdmin,
   OnDelete,
   OnValidation,
-}: DocumentsListProps) => {
+}: DocumentListProps) => {
   const [selectedDocument, setSelectedDocument] =
     useState<DocumentWithUrl | null>();
 

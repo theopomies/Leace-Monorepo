@@ -2,11 +2,11 @@
 import { SlideShow } from "../../home/stack/SlideShow";
 import { motion } from "framer-motion";
 import { displayDate } from "../../../utils/displayDate";
-import { GreenCheck } from "../../moderation/post/GreenCheck";
-import { RedUncheck } from "../../moderation/post/RedUncheck";
+import { GreenCheck } from "../../moderation/posts/GreenCheck";
+import { RedUncheck } from "../../moderation/posts/RedUncheck";
 import { DisplayReports } from "../../moderation/report/DisplayReports";
-import { ImagesList } from "./ImagesList";
-import { DocumentsList } from "../document/DocumentsList";
+import { ImageList } from "./ImageList";
+import { DocumentList } from "../document/DocumentList";
 import { Post, Attribute, Report, Image, Document } from "@prisma/client";
 import Link from "next/link";
 import { Button } from "../button/Button";
@@ -107,9 +107,9 @@ export const PostCard = ({
         </div>
       )}
       {(isLoggedIn || isAdmin) && (
-        <ImagesList images={images} OnDelete={OnImgDelete} />
+        <ImageList images={images} OnDelete={OnImgDelete} />
       )}
-      <DocumentsList
+      <DocumentList
         documents={documents}
         isLoggedInOrAdmin={isLoggedIn || isAdmin}
         OnDelete={OnDocDelete}
