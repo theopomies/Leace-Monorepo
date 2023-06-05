@@ -16,7 +16,10 @@ export default function AdminUserView() {
   }
 
   return (
-    <LoggedLayout title="User Administration | Leace" roles={[Role.ADMIN]}>
+    <LoggedLayout
+      title="User Administration | Leace"
+      roles={[Role.ADMIN, Role.MODERATOR]}
+    >
       <ModerationUserPage reportId={reportId} userId={userId} />
     </LoggedLayout>
   );

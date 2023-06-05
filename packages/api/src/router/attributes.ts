@@ -7,7 +7,7 @@ import axios from "axios";
 import { checkLocation, filterStrings } from "../utils/filter";
 
 export const attributesRouter = router({
-  updateUserAttributes: protectedProcedure([Role.TENANT])
+  updateUserAttributes: protectedProcedure([Role.TENANT, Role.ADMIN])
     .input(
       z.object({
         userId: z.string(),
@@ -138,7 +138,11 @@ export const attributesRouter = router({
 
       if (!updated) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
     }),
-  updatePostAttributes: protectedProcedure([Role.OWNER, Role.AGENCY])
+  updatePostAttributes: protectedProcedure([
+    Role.OWNER,
+    Role.AGENCY,
+    Role.ADMIN,
+  ])
     .input(
       z.object({
         postId: z.string(),

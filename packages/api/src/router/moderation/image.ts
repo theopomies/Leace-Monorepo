@@ -3,7 +3,12 @@ import { z } from "zod";
 import { Role, Image } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { DeleteObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
+import {
+  DeleteObjectCommand,
+  GetObjectCommand,
+  PutObjectCommand,
+} from "@aws-sdk/client-s3";
+import { randomUUID } from "crypto";
 
 export const imageModeration = router({
   deleteUserImage: protectedProcedure([Role.ADMIN, Role.MODERATOR])
@@ -22,6 +27,34 @@ export const imageModeration = router({
       await ctx.clerkClient.users.updateUser(input.userId, {
         profileImageID: "",
       });
+    }),
+  putSignedPostUrl: protectedProcedure([Role.ADMIN])
+    .input(z.object({ postId: z.string(), fileType: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const id = randomUUID();
+
+      const ext = input.fileType.split("/")[1];
+      if (!ext || (ext != "png" && ext != "jpeg"))
+        throw new TRPCError({ code: "BAD_REQUEST" });
+
+      const getPost = await ctx.prisma.post.findUnique({
+        where: { id: input.postId },
+      });
+      if (!getPost) throw new TRPCError({ code: "NOT_FOUND" });
+
+      const created = await ctx.prisma.image.create({
+        data: { id: id, postId: input.postId, ext: ext },
+      });
+      if (!created) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+      const key = `posts/${getPost.id}/images/${id}.${ext}`;
+      const bucketParams = {
+        Bucket: "leaceawsbucket",
+        Key: key,
+      };
+      const command = new PutObjectCommand(bucketParams);
+
+      return await getSignedUrl(ctx.s3Client, command);
     }),
   getSignedPostUrl: protectedProcedure([Role.ADMIN, Role.MODERATOR])
     .input(z.string())

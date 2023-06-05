@@ -1,7 +1,7 @@
 import { Role } from "@prisma/client";
-import { LoggedLayout } from "../../../../../components/layout/LoggedLayout";
+import { LoggedLayout } from "../../../../../../components/layout/LoggedLayout";
 import { useRouter } from "next/router";
-import { ModeratioPostPage } from "../../../../../components/moderation/moderation/ModerationPostPage";
+import { ModeratioPostPage } from "../../../../../../components/moderation/moderation/ModerationPostPage";
 
 export default function ModerationPostView() {
   const router = useRouter();
@@ -16,7 +16,10 @@ export default function ModerationPostView() {
   }
 
   return (
-    <LoggedLayout title="User Moderation | Leace" roles={[Role.ADMIN]}>
+    <LoggedLayout
+      title="User Moderation | Leace"
+      roles={[Role.ADMIN, Role.MODERATOR]}
+    >
       <ModeratioPostPage reportId={reportId} postId={postId} />
     </LoggedLayout>
   );
