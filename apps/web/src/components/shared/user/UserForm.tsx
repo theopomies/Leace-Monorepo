@@ -201,51 +201,49 @@ export const UserForm = (props: UserFormProps) => {
       className="m-auto my-5 flex w-fit flex-col justify-center rounded-lg bg-white p-12 shadow"
       onSubmit={handleSubmit}
     >
-      <div>
-        <div className="relative">
-          <img
-            src={(props.user && props.user.image) || "/defaultImage.png"}
-            referrerPolicy="no-referrer"
-            alt="image"
-            className="mx-auto h-32 rounded-full shadow-xl"
+      <div className="relative self-center">
+        <img
+          src={(props.user && props.user.image) || "/defaultImage.png"}
+          referrerPolicy="no-referrer"
+          alt="image"
+          className="mx-auto h-32 rounded-full shadow-xl"
+        />
+        {props.user && props.user.image && props.OnImgDelete && (
+          <Button
+            theme="danger"
+            onClick={props.OnImgDelete}
+            overrideStyles
+            className="absolute right-0 top-0 inline-flex h-7 w-7 items-center justify-center rounded-md bg-red-500 stroke-white p-1.5 hover:bg-red-700 "
+          >
+            <CrossSvg />
+          </Button>
+        )}
+      </div>
+      <div className="flex h-full flex-col gap-5 py-5">
+        <div className="flex justify-center gap-5">
+          <TextInput
+            required
+            placeholder="First Name"
+            onChange={handleChange(setFirstName)}
+            value={firstName}
           />
-          {props.user && props.user.image && props.OnImgDelete && (
-            <Button
-              theme="danger"
-              onClick={props.OnImgDelete}
-              overrideStyles
-              className="absolute right-0 top-0 inline-flex h-7 w-7 items-center justify-center rounded-md bg-red-500 stroke-white p-1.5 hover:bg-red-700 "
-            >
-              <CrossSvg />
-            </Button>
-          )}
-        </div>
-        <div className="flex h-full flex-col gap-5 py-5">
-          <div className="flex justify-center gap-5">
-            <TextInput
-              required
-              placeholder="First Name"
-              onChange={handleChange(setFirstName)}
-              value={firstName}
-            />
-            <TextInput
-              required
-              placeholder="Last Name"
-              onChange={handleChange(setLastName)}
-              value={lastName}
-            />
-            <DateInput
-              required
-              onChange={handleChange(setBirthDate)}
-              value={birthDate}
-            />
-          </div>
-          <TextArea
-            placeholder="Description"
-            onChange={handleChange(setDescription)}
-            value={description}
+          <TextInput
+            required
+            placeholder="Last Name"
+            onChange={handleChange(setLastName)}
+            value={lastName}
+          />
+          <DateInput
+            required
+            onChange={handleChange(setBirthDate)}
+            value={birthDate}
           />
         </div>
+        <TextArea
+          placeholder="Description"
+          onChange={handleChange(setDescription)}
+          value={description}
+        />
       </div>
       {props.user?.role === Role.TENANT && (
         <AttributesUserForm {...attributesStates} />
