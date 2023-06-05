@@ -7,9 +7,11 @@ import { useMemo } from "react";
 export function AdminChat({
   userId,
   conversationId = "",
+  url,
 }: {
   userId: string;
   conversationId?: string;
+  url: string;
 }) {
   const { data: user, isLoading: userLoading } =
     trpc.moderation.user.getUserById.useQuery(userId);
@@ -23,9 +25,7 @@ export function AdminChat({
   const { data: conversation, isLoading: conversationIsLoading } =
     trpc.moderation.conversation.getConversation.useQuery(
       { conversationId },
-      {
-        retry: false,
-      },
+      { retry: false },
     );
 
   const isLoading = useMemo(
@@ -64,7 +64,7 @@ export function AdminChat({
       role={Role.ADMIN}
       relationships={relationships}
       supportRelationships={supportRelationships}
-      conversationLink="/administration/users/[userId]/conversations/[conversationId]"
+      conversationLink={`${url}/users/[userId]/conversations/[conversationId]`}
       conversationId={conversationId}
       messages={conversation?.messages}
     />

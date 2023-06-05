@@ -5,7 +5,7 @@ import { Role } from "@prisma/client";
 
 export default function AdminUserConversationsPage() {
   const router = useRouter();
-  const { userId } = router.query;
+  const { userId, reportId } = router.query;
 
   if (!userId || typeof userId !== "string") {
     return <div>Invalid User ID</div>;
@@ -17,7 +17,7 @@ export default function AdminUserConversationsPage() {
       roles={[Role.ADMIN, Role.MODERATOR]}
     >
       <div className="flex h-screen w-full justify-center p-4">
-        <AdminChat userId={userId} />
+        <AdminChat userId={userId} url={`/moderation/reports/${reportId}`} />
       </div>
     </LoggedLayout>
   );
