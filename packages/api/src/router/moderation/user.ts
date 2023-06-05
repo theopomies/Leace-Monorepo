@@ -3,7 +3,7 @@ import { z } from "zod";
 import { Role } from "@prisma/client";
 
 export const userModeration = router({
-  getUserById: protectedProcedure([Role.ADMIN])
+  getUserById: protectedProcedure([Role.ADMIN, Role.MODERATOR])
     .input(z.string())
     .query(({ ctx, input }) => {
       return ctx.prisma.user.findFirstOrThrow({

@@ -4,7 +4,10 @@ import { ModerationReportPage } from "../../../components/moderation/moderation/
 
 export default function ModerationReportIndex() {
   return (
-    <LoggedLayout title="Moderation Report | Leace" roles={[Role.ADMIN]}>
+    <LoggedLayout
+      title="Moderation Report | Leace"
+      roles={[Role.ADMIN, Role.MODERATOR]}
+    >
       <ModerationReportPage />
     </LoggedLayout>
   );

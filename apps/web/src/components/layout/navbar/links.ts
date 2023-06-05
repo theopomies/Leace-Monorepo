@@ -39,7 +39,7 @@ export function getLinks(userId: string): {
     {
       href: "/moderation/reports",
       label: "Moderation",
-      roles: [Role.ADMIN],
+      roles: [Role.ADMIN, Role.MODERATOR],
     },
     {
       href: "/support",
