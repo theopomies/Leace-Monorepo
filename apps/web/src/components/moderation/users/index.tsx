@@ -14,18 +14,14 @@ export const User = ({ userId }: UserProps) => {
     trpc.auth.getSession.useQuery();
   const { data: isBanned, isLoading: isBannedLoading } =
     trpc.moderation.ban.getIsBan.useQuery({ userId });
-  const {
-    data: user,
-    isLoading: userLoading,
-    refetch: refetchUser,
-  } = trpc.moderation.user.getUser.useQuery({ userId });
+  const { data: user, isLoading: userLoading } =
+    trpc.moderation.user.getUser.useQuery({ userId });
   const {
     data: documents,
     isLoading: documentsLoading,
     refetch: refetchDocuments,
   } = trpc.moderation.document.getSignedUrl.useQuery({ userId });
 
-  const deleteImage = trpc.moderation.image.deleteUserImage.useMutation();
   const documentValidation =
     trpc.moderation.document.documentValidation.useMutation();
 
@@ -43,11 +39,6 @@ export const User = ({ userId }: UserProps) => {
 
   if (!user) return <p>Something went wrong</p>;
 
-  const handleDeleteImg = async () => {
-    await deleteImage.mutateAsync({ userId });
-    refetchUser();
-  };
-
   const handleDocValidation = async (document: Document & { url: string }) => {
     if (document) {
       await documentValidation.mutateAsync({
@@ -62,7 +53,6 @@ export const User = ({ userId }: UserProps) => {
     <UserCard
       user={user}
       isBanned={isBanned}
-      OnImgDelete={handleDeleteImg}
       documents={documents}
       OnDocValidation={handleDocValidation}
       updateLink={"/administration/users/[userId]/update"}

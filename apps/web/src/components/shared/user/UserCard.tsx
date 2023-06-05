@@ -6,7 +6,6 @@ import { DocumentList } from "../document/DocumentList";
 import { User, Attribute, Report, Document } from "@prisma/client";
 import { Button } from "../button/Button";
 import { DeleteUserDialog } from "../../users/DeleteUserDialog";
-import { CrossSvg } from "../icons/CrossSvg";
 
 export interface UserCardProps {
   user: User & {
@@ -15,7 +14,6 @@ export interface UserCardProps {
   };
   isBanned: boolean | undefined;
   OnUserDelete?: () => Promise<void>;
-  OnImgDelete?: () => Promise<void>;
   documents: (Document & { url: string })[] | undefined;
   OnDocValidation?: (document: Document & { url: string }) => Promise<void>;
   updateLink?: string;
@@ -27,7 +25,6 @@ export const UserCard = ({
   user,
   isBanned,
   OnUserDelete,
-  OnImgDelete,
   documents,
   OnDocValidation,
   updateLink,
@@ -37,24 +34,12 @@ export const UserCard = ({
   return (
     <div className="flex w-full flex-col overflow-auto rounded-lg bg-white p-8 shadow">
       <div className="flex justify-center">
-        <div className="relative">
-          <img
-            src={user.image || "/defaultImage.png"}
-            referrerPolicy="no-referrer"
-            alt="image"
-            className="mx-auto h-32 rounded-full shadow-xl"
-          />
-          {user.image && isAdmin && (
-            <Button
-              theme="danger"
-              onClick={OnImgDelete}
-              overrideStyles
-              className="absolute right-0 top-0 inline-flex h-7 w-7 items-center justify-center rounded-md bg-red-500 stroke-white p-1.5 hover:bg-red-700 "
-            >
-              <CrossSvg />
-            </Button>
-          )}
-        </div>
+        <img
+          src={user.image || "/defaultImage.png"}
+          referrerPolicy="no-referrer"
+          alt="image"
+          className="mx-auto h-32 rounded-full shadow-xl"
+        />
       </div>
       <div className="mt-2 px-16 pb-10 text-center">
         <h3 className="font-semibold">{user.role}</h3>

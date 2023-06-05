@@ -9,10 +9,13 @@ import { UserForm, UserFormData } from "../../shared/user/UserForm";
 
 export function UpdateAdminUserPage({ userId }: { userId: string }) {
   const router = useRouter();
-  const { data: user } = trpc.moderation.user.getUser.useQuery({ userId });
+  const { data: user, refetch: refetchUser } =
+    trpc.moderation.user.getUser.useQuery({ userId });
   const updateUser = trpc.user.updateUserById.useMutation();
 
   const updateAttributes = trpc.attribute.updateUserAttributes.useMutation();
+
+  const deleteImage = trpc.moderation.image.deleteUserImage.useMutation();
 
   const { data: documentsGet, refetch: refetchDocumentsGet } =
     trpc.moderation.document.getSignedUrl.useQuery({ userId });
@@ -72,6 +75,11 @@ export function UpdateAdminUserPage({ userId }: { userId: string }) {
     }
   };
 
+  const handleDeleteImg = async () => {
+    await deleteImage.mutateAsync({ userId });
+    refetchUser();
+  };
+
   const handleDeleteDoc = async (documentId: string) => {
     await deleteDocument.mutateAsync({ userId, documentId });
     refetchDocumentsGet();
@@ -87,6 +95,7 @@ export function UpdateAdminUserPage({ userId }: { userId: string }) {
       <Header heading="Update Profile" />
       <UserForm
         user={user}
+        OnImgDelete={handleDeleteImg}
         OnDocsUpload={handleUploadDocs}
         OnDocDelete={handleDeleteDoc}
         documentsGet={documentsGet}

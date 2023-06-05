@@ -18,6 +18,7 @@ import { AttributesUserForm } from "../../attributes/AttributesUserForm";
 import { DateInput } from "../forms/DateInput";
 import { TextInput } from "../forms/TextInput";
 import { User, Attribute, Role } from "@prisma/client";
+import { CrossSvg } from "../icons/CrossSvg";
 
 export type UserFormData = {
   birthDate: string;
@@ -43,6 +44,7 @@ export type UserFormData = {
 
 export interface UserFormProps {
   user: (User & { attribute: Attribute | null }) | undefined;
+  OnImgDelete?: () => Promise<void>;
   OnDocsUpload: (event: ChangeEvent<HTMLInputElement>) => void;
   OnDocDelete: (documentId: string) => Promise<void>;
   documentsGet: (Document & { url: string })[] | undefined;
@@ -200,16 +202,24 @@ export const UserForm = (props: UserFormProps) => {
       onSubmit={handleSubmit}
     >
       <div>
-        <img
-          src={
-            props.user && props.user.image
-              ? props.user.image
-              : "/defaultImage.png"
-          }
-          referrerPolicy="no-referrer"
-          alt="image"
-          className="mx-auto h-32 rounded-full shadow-xl"
-        />
+        <div className="relative">
+          <img
+            src={(props.user && props.user.image) || "/defaultImage.png"}
+            referrerPolicy="no-referrer"
+            alt="image"
+            className="mx-auto h-32 rounded-full shadow-xl"
+          />
+          {props.user && props.user.image && props.OnImgDelete && (
+            <Button
+              theme="danger"
+              onClick={props.OnImgDelete}
+              overrideStyles
+              className="absolute right-0 top-0 inline-flex h-7 w-7 items-center justify-center rounded-md bg-red-500 stroke-white p-1.5 hover:bg-red-700 "
+            >
+              <CrossSvg />
+            </Button>
+          )}
+        </div>
         <div className="flex h-full flex-col gap-5 py-5">
           <div className="flex justify-center gap-5">
             <TextInput
