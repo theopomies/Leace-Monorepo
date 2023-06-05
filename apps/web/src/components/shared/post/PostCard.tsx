@@ -5,7 +5,6 @@ import { displayDate } from "../../../utils/displayDate";
 import { GreenCheck } from "../../moderation/posts/GreenCheck";
 import { RedUncheck } from "../../moderation/posts/RedUncheck";
 import { DisplayReports } from "../../moderation/report/DisplayReports";
-import { ImageList } from "./ImageList";
 import { DocumentList } from "../document/DocumentList";
 import { Post, Attribute, Report, Image, Document } from "@prisma/client";
 import Link from "next/link";
@@ -18,9 +17,7 @@ export interface PostCardProps {
   };
   OnPostDelete?: () => Promise<void>;
   images: (Image & { url: string })[] | undefined;
-  OnImgDelete: (imageId: string) => Promise<void>;
   documents: (Document & { url: string })[] | undefined;
-  OnDocDelete: (documentId: string) => Promise<void>;
   OnDocValidation?: (document: Document & { url: string }) => Promise<void>;
   updateLink?: string;
   isLoggedIn?: boolean;
@@ -31,9 +28,7 @@ export const PostCard = ({
   post,
   OnPostDelete,
   images,
-  OnImgDelete,
   documents,
-  OnDocDelete,
   OnDocValidation,
   updateLink,
   isLoggedIn,
@@ -106,18 +101,14 @@ export const PostCard = ({
           </div>
         </div>
       )}
+      <DocumentList documents={documents} OnValidation={OnDocValidation} />
+      <DisplayReports reports={post.reports} />
       {(isLoggedIn || isAdmin) && (
-        <ImageList images={images} OnDelete={OnImgDelete} />
-      )}
-      <DocumentList
-        documents={documents}
-        isLoggedInOrAdmin={isLoggedIn || isAdmin}
-        OnDelete={OnDocDelete}
-        OnValidation={OnDocValidation}
-      />
-      {isAdmin && <DisplayReports reports={post.reports} />}
-      {isLoggedIn && (
-        <div className="flex justify-between">
+        <div
+          className={`mt-10 flex ${
+            OnPostDelete ? "justify-between" : "justify-center"
+          }`}
+        >
           {updateLink && (
             <Link
               className="rounded bg-indigo-500 px-4 py-3 font-bold text-white hover:bg-indigo-600 active:bg-indigo-700"

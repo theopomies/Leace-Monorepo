@@ -3,7 +3,7 @@ import { trpc } from "../../../utils/trpc";
 import { Loader } from "../../shared/Loader";
 import { useMemo } from "react";
 import { UserCard } from "../../shared/user/UserCard";
-import { Document } from "@prisma/client";
+import { Document, Role } from "@prisma/client";
 
 export interface UserProps {
   userId: string;
@@ -26,7 +26,6 @@ export const User = ({ userId }: UserProps) => {
   } = trpc.moderation.document.getSignedUrl.useQuery({ userId });
 
   const deleteImage = trpc.moderation.image.deleteUserImage.useMutation();
-  const deleteDocument = trpc.moderation.document.deleteSignedUrl.useMutation();
   const documentValidation =
     trpc.moderation.document.documentValidation.useMutation();
 
@@ -49,11 +48,6 @@ export const User = ({ userId }: UserProps) => {
     refetchUser();
   };
 
-  const handleDeleteDoc = async (documentId: string) => {
-    await deleteDocument.mutateAsync({ userId, documentId });
-    refetchDocuments();
-  };
-
   const handleDocValidation = async (document: Document & { url: string }) => {
     if (document) {
       await documentValidation.mutateAsync({
@@ -70,9 +64,9 @@ export const User = ({ userId }: UserProps) => {
       isBanned={isBanned}
       OnImgDelete={handleDeleteImg}
       documents={documents}
-      OnDocDelete={handleDeleteDoc}
       OnDocValidation={handleDocValidation}
-      isAdmin
+      updateLink={"/administration/users/[userId]/update"}
+      isAdmin={session.role === Role.ADMIN}
     />
   );
 };

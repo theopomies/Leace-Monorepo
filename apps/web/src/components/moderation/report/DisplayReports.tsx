@@ -7,10 +7,12 @@ export interface DisplayReportsProps {
 }
 
 export const DisplayReports = ({ reports }: DisplayReportsProps) => {
+  if (!reports) return null;
+
   return (
     <div className="border-t py-5">
       <p className="mb-5 text-xl">Reports :</p>
-      {reports && reports.length > 0 ? (
+      {reports.length > 0 ? (
         <div className="flex flex-wrap">
           {reports.map((report, index) => (
             <div key={index} className="flex items-center gap-2">

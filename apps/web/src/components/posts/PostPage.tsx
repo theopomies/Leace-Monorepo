@@ -1,4 +1,3 @@
-import axios from "axios";
 import { trpc } from "../../utils/trpc";
 import { Loader } from "../shared/Loader";
 import { useRouter } from "next/router";
@@ -16,20 +15,12 @@ export const PostPage = ({ postId }: PostPageProps) => {
   const { data: post, isLoading: postLoading } = trpc.post.getPostById.useQuery(
     { postId },
   );
-  const {
-    data: images,
-    isLoading: imagesLoading,
-    refetch: refetchImages,
-  } = trpc.image.getSignedPostUrl.useQuery(postId);
-  const {
-    data: documents,
-    isLoading: documentLoading,
-    refetch: refetchDocuments,
-  } = trpc.document.getSignedUrl.useQuery({ postId });
+  const { data: images, isLoading: imagesLoading } =
+    trpc.image.getSignedPostUrl.useQuery(postId);
+  const { data: documents, isLoading: documentLoading } =
+    trpc.document.getSignedUrl.useQuery({ postId });
 
   const deletePost = trpc.post.deletePostById.useMutation();
-  const deleteImage = trpc.image.deleteSignedPostUrl.useMutation();
-  const deleteDocument = trpc.document.deleteSignedUrl.useMutation();
 
   const isLoading = useMemo(() => {
     return sessionLoading || postLoading || imagesLoading || documentLoading;
@@ -50,27 +41,13 @@ export const PostPage = ({ postId }: PostPageProps) => {
     router.push(`/users/${session.userId ?? "/"}`);
   };
 
-  const handleDeleteImg = async (imageId: string) => {
-    await deleteImage.mutateAsync({ postId, imageId }).then(async (url) => {
-      await axios.delete(url);
-    });
-    refetchImages();
-  };
-
-  const handleDeleteDoc = async (documentId: string) => {
-    await deleteDocument.mutateAsync({ postId, documentId });
-    refetchDocuments();
-  };
-
   return (
     <div className="m-auto w-1/2 py-5">
       <PostCard
         post={post}
         OnPostDelete={handleDeletePost}
         images={images}
-        OnImgDelete={handleDeleteImg}
         documents={documents}
-        OnDocDelete={handleDeleteDoc}
         updateLink="/posts/[postId]/update"
         isLoggedIn={post.createdById === session.userId}
       />

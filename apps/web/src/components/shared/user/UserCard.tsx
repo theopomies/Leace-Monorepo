@@ -17,7 +17,6 @@ export interface UserCardProps {
   OnUserDelete?: () => Promise<void>;
   OnImgDelete?: () => Promise<void>;
   documents: (Document & { url: string })[] | undefined;
-  OnDocDelete: (documentId: string) => Promise<void>;
   OnDocValidation?: (document: Document & { url: string }) => Promise<void>;
   updateLink?: string;
   isLoggedIn?: boolean;
@@ -30,7 +29,6 @@ export const UserCard = ({
   OnUserDelete,
   OnImgDelete,
   documents,
-  OnDocDelete,
   OnDocValidation,
   updateLink,
   isLoggedIn,
@@ -140,15 +138,14 @@ export const UserCard = ({
           </div>
         </div>
       )}
-      <DocumentList
-        documents={documents}
-        isLoggedInOrAdmin={isLoggedIn || isAdmin}
-        OnDelete={OnDocDelete}
-        OnValidation={OnDocValidation}
-      />
-      {isAdmin && <DisplayReports reports={user.reports} />}
-      {isLoggedIn && (
-        <div className="flex justify-between">
+      <DocumentList documents={documents} OnValidation={OnDocValidation} />
+      <DisplayReports reports={user.reports} />
+      {(isLoggedIn || isAdmin) && (
+        <div
+          className={`mt-10 flex ${
+            OnUserDelete ? "justify-between" : "justify-center"
+          }`}
+        >
           {updateLink && (
             <Link href={updateLink.replace("[userId]", user.id)}>
               <Button>Modify</Button>

@@ -1,48 +1,39 @@
 /* eslint-disable @next/next/no-img-element */
 import { trpc } from "../../../utils/trpc";
 import { Loader } from "../../shared/Loader";
-import axios from "axios";
 import { useMemo } from "react";
 import { PostCard } from "../../shared/post/PostCard";
-import { Document } from "@prisma/client";
+import { Document, Role } from "@prisma/client";
 
 export interface PostProps {
   postId: string;
 }
 
 export const Post = ({ postId }: PostProps) => {
-  const utils = trpc.useContext();
+  const { data: session, isLoading: sessionLoading } =
+    trpc.auth.getSession.useQuery();
   const { data: post, isLoading: postLoading } =
     trpc.moderation.post.getPost.useQuery({ postId });
-  const {
-    data: images,
-    isLoading: imagesLoading,
-    refetch: refetchImages,
-  } = trpc.moderation.image.getSignedPostUrl.useQuery(postId);
+  const { data: images, isLoading: imagesLoading } =
+    trpc.moderation.image.getSignedPostUrl.useQuery(postId);
   const {
     data: documents,
     isLoading: documentsLoading,
     refetch: refetchDocuments,
   } = trpc.moderation.document.getSignedUrl.useQuery({ postId });
 
-  const deleteImage = trpc.moderation.image.deleteSignedPostUrl.useMutation({
-    onSuccess: () => utils.image.getSignedPostUrl.invalidate(),
-  });
-  const deleteDocument = trpc.moderation.document.deleteSignedUrl.useMutation();
   const documentValidation =
     trpc.moderation.document.documentValidation.useMutation();
 
-  const handleDeleteImg = async (imageId: string) => {
-    await deleteImage.mutateAsync({ postId, imageId }).then(async (url) => {
-      await axios.delete(url);
-      refetchImages();
-    });
-  };
+  const isLoading = useMemo(() => {
+    return sessionLoading || postLoading || imagesLoading || documentsLoading;
+  }, [sessionLoading, postLoading, imagesLoading, documentsLoading]);
 
-  const handleDeleteDoc = async (documentId: string) => {
-    await deleteDocument.mutateAsync({ postId, documentId });
-    refetchDocuments();
-  };
+  if (isLoading) return <Loader />;
+
+  if (!session) return <div>Not logged in</div>;
+
+  if (!post) return <p>Something went wrong</p>;
 
   const handleDocValidation = async (document: Document & { url: string }) => {
     if (document) {
@@ -54,23 +45,14 @@ export const Post = ({ postId }: PostProps) => {
     }
   };
 
-  const isLoading = useMemo(() => {
-    return postLoading || imagesLoading || documentsLoading;
-  }, [postLoading, imagesLoading, documentsLoading]);
-
-  if (isLoading) return <Loader />;
-
-  if (!post) return <p>Something went wrong</p>;
-
   return (
     <PostCard
       post={post}
       images={images}
-      OnImgDelete={handleDeleteImg}
       documents={documents}
-      OnDocDelete={handleDeleteDoc}
       OnDocValidation={handleDocValidation}
-      isAdmin
+      updateLink={"/administration/posts/[postId]/update"}
+      isAdmin={session.role === Role.ADMIN}
     />
   );
 };
