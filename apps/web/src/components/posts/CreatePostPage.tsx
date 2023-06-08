@@ -16,7 +16,7 @@ export const CreatePostPage = () => {
 
   const updatePost = trpc.attribute.updatePostAttributes.useMutation();
 
-  const uploadImage = trpc.image.putSignedPostUrl.useMutation();
+  const uploadImage = trpc.image.putSignedUrl.useMutation();
   const [images, setImages] = useState<File[] | undefined>();
 
   const uploadDocument = trpc.document.putSignedUrl.useMutation();
@@ -47,28 +47,22 @@ export const CreatePostPage = () => {
     if (images && images.length > 0) {
       images.map(async (image) => {
         await uploadImage
-          .mutateAsync({
-            postId,
-            fileType: image.type,
-          })
+          .mutateAsync({ postId, fileType: image.type })
           .then(async (url) => {
-            await axios.put(url, image);
+            if (url) {
+              await axios.put(url, image);
+            }
           });
       });
     }
     if (documents && documents.length > 0) {
       documents.map(async (document) => {
         await uploadDocument
-          .mutateAsync({
-            postId,
-            fileType: document.type,
-          })
+          .mutateAsync({ postId, fileType: document.type })
           .then(async (url) => {
             if (url)
               await axios.put(url, document, {
-                headers: {
-                  "Content-Type": document.type,
-                },
+                headers: { "Content-Type": document.type },
               });
           });
       });

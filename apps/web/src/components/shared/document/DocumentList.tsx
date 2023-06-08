@@ -10,7 +10,7 @@ import { CheckSvg } from "../icons/CheckSvg";
 type DocumentWithUrl = Document & { url: string };
 
 export interface DocumentListProps {
-  documents: DocumentWithUrl[] | undefined;
+  documents: DocumentWithUrl[] | null | undefined;
   isLoggedInOrAdmin?: boolean;
   OnDelete?: (documentId: string) => Promise<void>;
   OnValidation?: (document: DocumentWithUrl) => Promise<void>;

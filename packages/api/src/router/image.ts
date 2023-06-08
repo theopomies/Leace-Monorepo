@@ -9,10 +9,17 @@ import {
 } from "@aws-sdk/client-s3";
 import { randomUUID } from "crypto";
 import { TRPCError } from "@trpc/server";
+import { getId } from "../utils/getId";
 
 export const imageRouter = router({
-  putSignedPostUrl: protectedProcedure([Role.TENANT, Role.AGENCY, Role.OWNER])
-    .input(z.object({ postId: z.string(), fileType: z.string() }))
+  putSignedUrl: protectedProcedure([Role.TENANT, Role.AGENCY, Role.OWNER])
+    .input(
+      z.object({
+        userId: z.string().optional(),
+        postId: z.string().optional(),
+        fileType: z.string(),
+      }),
+    )
     .mutation(async ({ ctx, input }) => {
       const id = randomUUID();
 
@@ -20,24 +27,76 @@ export const imageRouter = router({
       if (!ext || (ext != "png" && ext != "jpeg"))
         throw new TRPCError({ code: "BAD_REQUEST" });
 
-      const getPost = await ctx.prisma.post.findUnique({
-        where: { id: input.postId },
-      });
-      if (!getPost) throw new TRPCError({ code: "NOT_FOUND" });
+      if (input.userId) {
+        const userId = getId({ ctx: ctx, userId: input.userId });
 
-      const created = await ctx.prisma.image.create({
-        data: { id: id, postId: input.postId, ext: ext },
-      });
-      if (!created) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+        const user = await ctx.prisma.user.findUnique({
+          where: { id: userId },
+          include: { images: true },
+        });
+        if (!user) throw new TRPCError({ code: "NOT_FOUND" });
 
-      const key = `posts/${getPost.id}/images/${id}.${ext}`;
+        if (user.images[0]) {
+          const updated = await ctx.prisma.image.update({
+            where: { id: user.images[0].id },
+            data: { ext: ext },
+          });
+          if (!updated) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+        } else {
+          const created = await ctx.prisma.image.create({
+            data: { id: id, userId, ext: ext },
+          });
+          if (!created) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+        }
+        const key = `users/${userId}/image/profilePicture.${ext}`;
+        const bucketParams = {
+          Bucket: "leaceawsbucket",
+          Key: key,
+        };
+        const command = new PutObjectCommand(bucketParams);
+
+        return await getSignedUrl(ctx.s3Client, command, { expiresIn: -1 });
+      } else if (input.postId) {
+        const getPost = await ctx.prisma.post.findUnique({
+          where: { id: input.postId },
+        });
+        if (!getPost) throw new TRPCError({ code: "NOT_FOUND" });
+
+        const created = await ctx.prisma.image.create({
+          data: { id: id, postId: input.postId, ext: ext },
+        });
+        if (!created) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+        const key = `posts/${getPost.id}/images/${id}.${ext}`;
+        const bucketParams = {
+          Bucket: "leaceawsbucket",
+          Key: key,
+        };
+        const command = new PutObjectCommand(bucketParams);
+
+        return await getSignedUrl(ctx.s3Client, command);
+      }
+    }),
+  getSignedUserUrl: protectedProcedure([Role.TENANT, Role.AGENCY, Role.OWNER])
+    .input(z.object({ userId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const userId = getId({ ctx: ctx, userId: input.userId });
+
+      const user = await ctx.prisma.user.findUnique({ where: { id: userId } });
+      if (!user) throw new TRPCError({ code: "NOT_FOUND" });
+
+      const image = await ctx.prisma.image.findFirst({
+        where: { userId: userId },
+      });
+      if (!image) return null;
+
       const bucketParams = {
         Bucket: "leaceawsbucket",
-        Key: key,
+        Key: `users/${userId}/image/profilePicture.${image.ext}`,
       };
-      const command = new PutObjectCommand(bucketParams);
-
-      return await getSignedUrl(ctx.s3Client, command);
+      const command = new GetObjectCommand(bucketParams);
+      const url = await getSignedUrl(ctx.s3Client, command);
+      return { ...image, url };
     }),
   getSignedPostUrl: protectedProcedure([
     Role.TENANT,
@@ -46,19 +105,17 @@ export const imageRouter = router({
     Role.ADMIN,
     Role.MODERATOR,
   ])
-    .input(z.string())
+    .input(z.object({ postId: z.string() }))
     .query(async ({ ctx, input }) => {
       const getPost = await ctx.prisma.post.findUnique({
-        where: { id: input },
+        where: { id: input.postId },
       });
       if (!getPost) throw new TRPCError({ code: "NOT_FOUND" });
 
       const images = await ctx.prisma.image.findMany({
-        where: {
-          postId: getPost.id,
-        },
+        where: { postId: getPost.id },
       });
-      if (!images) throw new TRPCError({ code: "NOT_FOUND" });
+      if (!images) return null;
 
       return await Promise.all(
         images.map(async (image: Image) => {

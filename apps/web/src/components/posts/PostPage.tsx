@@ -16,7 +16,7 @@ export const PostPage = ({ postId }: PostPageProps) => {
     { postId },
   );
   const { data: images, isLoading: imagesLoading } =
-    trpc.image.getSignedPostUrl.useQuery(postId);
+    trpc.image.getSignedPostUrl.useQuery({ postId });
   const { data: documents, isLoading: documentLoading } =
     trpc.document.getSignedUrl.useQuery({ postId });
 

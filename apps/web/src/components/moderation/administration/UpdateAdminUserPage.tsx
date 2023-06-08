@@ -6,16 +6,19 @@ import { Header } from "../../shared/Header";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { UserForm, UserFormData } from "../../shared/user/UserForm";
+import { cropImage } from "../../../utils/cropImage";
 
 export function UpdateAdminUserPage({ userId }: { userId: string }) {
   const router = useRouter();
-  const { data: user, refetch: refetchUser } =
-    trpc.moderation.user.getUser.useQuery({ userId });
+  const { data: user } = trpc.moderation.user.getUser.useQuery({ userId });
   const updateUser = trpc.user.updateUserById.useMutation();
 
   const updateAttributes = trpc.attribute.updateUserAttributes.useMutation();
 
-  const deleteImage = trpc.moderation.image.deleteUserImage.useMutation();
+  const { data: imageGet, refetch: refetchImageGet } =
+    trpc.moderation.image.getSignedUserUrl.useQuery({ userId });
+  const uploadImage = trpc.moderation.image.putSignedUrl.useMutation();
+  const deleteImage = trpc.moderation.image.deleteSignedUrl.useMutation();
 
   const { data: documentsGet, refetch: refetchDocumentsGet } =
     trpc.moderation.document.getSignedUrl.useQuery({ userId });
@@ -53,22 +56,19 @@ export function UpdateAdminUserPage({ userId }: { userId: string }) {
     router.push(`administration/users/${userId}`);
   };
 
-  const handleUploadDocs = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files.length > 0) {
-      Array.from(event.target.files).map(async (document) => {
-        await uploadDocument
-          .mutateAsync({
-            userId,
-            fileType: document.type,
-          })
+  const handleUploadImg = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file = event.target.files && event.target.files[0];
+
+    if (file) {
+      cropImage(file, async (croppedBlob) => {
+        await uploadImage
+          .mutateAsync({ userId, fileType: croppedBlob.type })
           .then(async (url) => {
-            if (url) {
-              await axios.put(url, document, {
-                headers: {
-                  "Content-Type": document.type,
-                },
-              });
-              refetchDocumentsGet();
+            if (url && event.target.files) {
+              await axios.put(url, croppedBlob);
+              refetchImageGet();
             }
           });
       });
@@ -76,8 +76,30 @@ export function UpdateAdminUserPage({ userId }: { userId: string }) {
   };
 
   const handleDeleteImg = async () => {
-    await deleteImage.mutateAsync({ userId });
-    refetchUser();
+    if (imageGet) {
+      await deleteImage
+        .mutateAsync({ userId, imageId: imageGet.id })
+        .then(() => {
+          refetchImageGet();
+        });
+    }
+  };
+
+  const handleUploadDocs = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      Array.from(event.target.files).map(async (document) => {
+        await uploadDocument
+          .mutateAsync({ userId, fileType: document.type })
+          .then(async (url) => {
+            if (url) {
+              await axios.put(url, document, {
+                headers: { "Content-Type": document.type },
+              });
+              refetchDocumentsGet();
+            }
+          });
+      });
+    }
   };
 
   const handleDeleteDoc = async (documentId: string) => {
@@ -95,7 +117,9 @@ export function UpdateAdminUserPage({ userId }: { userId: string }) {
       <Header heading="Update Profile" />
       <UserForm
         user={user}
+        OnImgUpload={handleUploadImg}
         OnImgDelete={handleDeleteImg}
+        imageGet={imageGet}
         OnDocsUpload={handleUploadDocs}
         OnDocDelete={handleDeleteDoc}
         documentsGet={documentsGet}

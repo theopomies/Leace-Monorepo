@@ -28,7 +28,9 @@ export const PostBar = ({
   OnDeleteMatch,
   OnLikeMatch,
 }: PostBarProps) => {
-  const { data: img } = trpc.image.getSignedPostUrl.useQuery(post.id);
+  const { data: img } = trpc.image.getSignedPostUrl.useQuery({
+    postId: post.id,
+  });
 
   return (
     <div className="mx-auto flex flex-grow cursor-pointer flex-col overflow-hidden rounded-xl bg-white shadow-md md:max-w-2xl">

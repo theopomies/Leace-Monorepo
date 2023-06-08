@@ -6,6 +6,7 @@ import { Header } from "../shared/Header";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { UserForm, UserFormData } from "../shared/user/UserForm";
+import { cropImage } from "../../utils/cropImage";
 
 export interface UpdateUserPageProps {
   userId: string;
@@ -17,6 +18,10 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
   const updateUser = trpc.user.updateUserById.useMutation();
 
   const updateAttributes = trpc.attribute.updateUserAttributes.useMutation();
+
+  const { data: imageGet, refetch: refetchImageGet } =
+    trpc.image.getSignedUserUrl.useQuery({ userId });
+  const uploadImage = trpc.image.putSignedUrl.useMutation();
 
   const { data: documentsGet, refetch: refetchDocumentsGet } =
     trpc.document.getSignedUrl.useQuery({ userId });
@@ -52,6 +57,28 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
       });
     }
     router.push(`/users/${userId}`);
+  };
+
+  const handleUploadImg = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file = event.target.files && event.target.files[0];
+
+    if (file) {
+      cropImage(file, async (croppedBlob) => {
+        await uploadImage
+          .mutateAsync({
+            userId,
+            fileType: croppedBlob.type,
+          })
+          .then(async (url) => {
+            if (url) {
+              await axios.put(url, croppedBlob);
+              refetchImageGet();
+            }
+          });
+      });
+    }
   };
 
   const handleUploadDocs = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -91,6 +118,8 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
       <Header heading="Update Profile" />
       <UserForm
         user={user}
+        OnImgUpload={handleUploadImg}
+        imageGet={imageGet}
         OnDocsUpload={handleUploadDocs}
         OnDocDelete={handleDeleteDoc}
         documentsGet={documentsGet}

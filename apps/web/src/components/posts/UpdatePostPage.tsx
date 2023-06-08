@@ -18,14 +18,12 @@ export const UpdatePostPage = ({ postId }: UpdatePostProps) => {
     trpc.attribute.updatePostAttributes.useMutation();
 
   const { data: imagesGet, refetch: refetchImagesGet } =
-    trpc.image.getSignedPostUrl.useQuery(postId);
-  const uploadImage = trpc.image.putSignedPostUrl.useMutation();
+    trpc.image.getSignedPostUrl.useQuery({ postId });
+  const uploadImage = trpc.image.putSignedUrl.useMutation();
   const deleteImage = trpc.image.deleteSignedPostUrl.useMutation();
 
   const { data: documentsGet, refetch: refetchDocumentsGet } =
-    trpc.document.getSignedUrl.useQuery({
-      postId,
-    });
+    trpc.document.getSignedUrl.useQuery({ postId });
   const uploadDocument = trpc.document.putSignedUrl.useMutation();
   const deleteDocument = trpc.document.deleteSignedUrl.useMutation();
 
@@ -64,13 +62,12 @@ export const UpdatePostPage = ({ postId }: UpdatePostProps) => {
     if (event.target.files && event.target.files.length > 0) {
       Array.from(event.target.files).map(async (image) => {
         await uploadImage
-          .mutateAsync({
-            postId,
-            fileType: image.type,
-          })
+          .mutateAsync({ postId, fileType: image.type })
           .then(async (url) => {
-            await axios.put(url, image);
-            refetchImagesGet();
+            if (url) {
+              await axios.put(url, image);
+              refetchImagesGet();
+            }
           });
       });
     }
@@ -85,16 +82,11 @@ export const UpdatePostPage = ({ postId }: UpdatePostProps) => {
     if (event.target.files && event.target.files.length > 0) {
       Array.from(event.target.files).map(async (document) => {
         await uploadDocument
-          .mutateAsync({
-            postId,
-            fileType: document.type,
-          })
+          .mutateAsync({ postId, fileType: document.type })
           .then(async (url) => {
             if (url) {
               await axios.put(url, document, {
-                headers: {
-                  "Content-Type": document.type,
-                },
+                headers: { "Content-Type": document.type },
               });
               refetchDocumentsGet();
             }

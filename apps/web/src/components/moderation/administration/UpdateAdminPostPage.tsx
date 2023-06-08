@@ -14,14 +14,12 @@ export const UpdateAdminPostPage = ({ postId }: { postId: string }) => {
     trpc.attribute.updatePostAttributes.useMutation();
 
   const { data: imagesGet, refetch: refetchImagesGet } =
-    trpc.moderation.image.getSignedPostUrl.useQuery(postId);
-  const uploadImage = trpc.moderation.image.putSignedPostUrl.useMutation();
-  const deleteImage = trpc.moderation.image.deleteSignedPostUrl.useMutation();
+    trpc.moderation.image.getSignedPostUrl.useQuery({ postId });
+  const uploadImage = trpc.moderation.image.putSignedUrl.useMutation();
+  const deleteImage = trpc.moderation.image.deleteSignedUrl.useMutation();
 
   const { data: documentsGet, refetch: refetchDocumentsGet } =
-    trpc.moderation.document.getSignedUrl.useQuery({
-      postId,
-    });
+    trpc.moderation.document.getSignedUrl.useQuery({ postId });
   const uploadDocument = trpc.moderation.document.putSignedUrl.useMutation();
   const deleteDocument = trpc.moderation.document.deleteSignedUrl.useMutation();
 
@@ -60,13 +58,12 @@ export const UpdateAdminPostPage = ({ postId }: { postId: string }) => {
     if (event.target.files && event.target.files.length > 0) {
       Array.from(event.target.files).map(async (image) => {
         await uploadImage
-          .mutateAsync({
-            postId,
-            fileType: image.type,
-          })
+          .mutateAsync({ postId, fileType: image.type })
           .then(async (url) => {
-            await axios.put(url, image);
-            refetchImagesGet();
+            if (url) {
+              await axios.put(url, image);
+              refetchImagesGet();
+            }
           });
       });
     }
@@ -81,16 +78,11 @@ export const UpdateAdminPostPage = ({ postId }: { postId: string }) => {
     if (event.target.files && event.target.files.length > 0) {
       Array.from(event.target.files).map(async (document) => {
         await uploadDocument
-          .mutateAsync({
-            postId,
-            fileType: document.type,
-          })
+          .mutateAsync({ postId, fileType: document.type })
           .then(async (url) => {
             if (url) {
               await axios.put(url, document, {
-                headers: {
-                  "Content-Type": document.type,
-                },
+                headers: { "Content-Type": document.type },
               });
               refetchDocumentsGet();
             }

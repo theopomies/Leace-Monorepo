@@ -15,7 +15,7 @@ export const Post = ({ postId }: PostProps) => {
   const { data: post, isLoading: postLoading } =
     trpc.moderation.post.getPost.useQuery({ postId });
   const { data: images, isLoading: imagesLoading } =
-    trpc.moderation.image.getSignedPostUrl.useQuery(postId);
+    trpc.moderation.image.getSignedPostUrl.useQuery({ postId });
   const {
     data: documents,
     isLoading: documentsLoading,

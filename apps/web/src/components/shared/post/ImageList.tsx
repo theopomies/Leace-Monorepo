@@ -4,7 +4,7 @@ import { Image } from "@prisma/client";
 import { CrossSvg } from "../icons/CrossSvg";
 
 export interface ImageListProps {
-  images: (Image & { url: string })[] | undefined;
+  images: (Image & { url: string })[] | null | undefined;
   OnDelete?: (imageId: string) => Promise<void>;
 }
 

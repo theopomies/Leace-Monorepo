@@ -120,7 +120,7 @@ export const documentRouter = router({
         const documents = await ctx.prisma.document.findMany({
           where: { userId: getUser.id },
         });
-        if (!documents) throw new TRPCError({ code: "NOT_FOUND" });
+        if (!documents) return null;
 
         return await Promise.all(
           documents.map(async (document: Document) => {
@@ -156,7 +156,7 @@ export const documentRouter = router({
         const documents = await ctx.prisma.document.findMany({
           where: { postId: getPost.id },
         });
-        if (!documents) throw new TRPCError({ code: "NOT_FOUND" });
+        if (!documents) return null;
 
         return await Promise.all(
           documents.map(async (document: Document) => {
@@ -179,7 +179,7 @@ export const documentRouter = router({
             leaseId: getLease.id,
           },
         });
-        if (!documents) throw new TRPCError({ code: "NOT_FOUND" });
+        if (!documents) return null;
         return await Promise.all(
           documents.map(async (document: Document) => {
             const bucketParams = {

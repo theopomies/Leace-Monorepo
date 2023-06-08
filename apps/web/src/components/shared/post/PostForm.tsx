@@ -42,12 +42,12 @@ export interface PostFormProps {
   setImages?: ChangeEventHandler;
   OnImgsUpload?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   OnImgDelete?: (imageId: string) => Promise<void>;
-  imagesGet?: (Image & { url: string })[] | undefined;
+  imagesGet?: (Image & { url: string })[] | null | undefined;
   documents?: File[] | undefined;
   setDocuments?: ChangeEventHandler;
   OnDocsUpload?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   OnDocDelete?: (documentId: string) => Promise<void>;
-  documentsGet?: (Document & { url: string })[] | undefined;
+  documentsGet?: (Document & { url: string })[] | null | undefined;
   OnSubmit: (data: PostFormData) => Promise<void>;
   OnCancel: MouseEventHandler<HTMLButtonElement>;
 }

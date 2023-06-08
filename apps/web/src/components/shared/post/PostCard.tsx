@@ -16,8 +16,8 @@ export interface PostCardProps {
     reports?: Report[];
   };
   OnPostDelete?: () => Promise<void>;
-  images: (Image & { url: string })[] | undefined;
-  documents: (Document & { url: string })[] | undefined;
+  images: (Image & { url: string })[] | null | undefined;
+  documents: (Document & { url: string })[] | null | undefined;
   OnDocValidation?: (document: Document & { url: string }) => Promise<void>;
   updateLink?: string;
   isLoggedIn?: boolean;

@@ -9,27 +9,17 @@ import {
   PutObjectCommand,
 } from "@aws-sdk/client-s3";
 import { randomUUID } from "crypto";
+import { getId } from "../../utils/getId";
 
 export const imageModeration = router({
-  deleteUserImage: protectedProcedure([Role.ADMIN, Role.MODERATOR])
-    .input(z.object({ userId: z.string() }))
-    .mutation(async ({ ctx, input }) => {
-      const user = await ctx.prisma.user.findUnique({
-        where: { id: input.userId },
-      });
-      if (!user) throw new TRPCError({ code: "NOT_FOUND" });
-
-      await ctx.prisma.user.update({
-        where: { id: input.userId },
-        data: { image: null },
-      });
-
-      await ctx.clerkClient.users.updateUser(input.userId, {
-        profileImageID: "",
-      });
-    }),
-  putSignedPostUrl: protectedProcedure([Role.ADMIN])
-    .input(z.object({ postId: z.string(), fileType: z.string() }))
+  putSignedUrl: protectedProcedure([Role.ADMIN])
+    .input(
+      z.object({
+        userId: z.string().optional(),
+        postId: z.string().optional(),
+        fileType: z.string(),
+      }),
+    )
     .mutation(async ({ ctx, input }) => {
       const id = randomUUID();
 
@@ -37,30 +27,86 @@ export const imageModeration = router({
       if (!ext || (ext != "png" && ext != "jpeg"))
         throw new TRPCError({ code: "BAD_REQUEST" });
 
-      const getPost = await ctx.prisma.post.findUnique({
-        where: { id: input.postId },
-      });
-      if (!getPost) throw new TRPCError({ code: "NOT_FOUND" });
+      if (input.userId) {
+        const userId = getId({ ctx: ctx, userId: input.userId });
 
-      const created = await ctx.prisma.image.create({
-        data: { id: id, postId: input.postId, ext: ext },
-      });
-      if (!created) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+        const user = await ctx.prisma.user.findUnique({
+          where: { id: userId },
+          include: { images: true },
+        });
+        if (!user) throw new TRPCError({ code: "NOT_FOUND" });
 
-      const key = `posts/${getPost.id}/images/${id}.${ext}`;
+        if (user.images[0]) {
+          const updated = await ctx.prisma.image.update({
+            where: { id: user.images[0].id },
+            data: { ext: ext },
+          });
+          if (!updated) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+        } else {
+          const created = await ctx.prisma.image.create({
+            data: { id: id, userId, ext: ext },
+          });
+          if (!created) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+        }
+        const key = `users/${userId}/image/profilePicture.${ext}`;
+        const bucketParams = {
+          Bucket: "leaceawsbucket",
+          Key: key,
+        };
+        const command = new PutObjectCommand(bucketParams);
+
+        return await getSignedUrl(ctx.s3Client, command);
+      } else if (input.postId) {
+        const getPost = await ctx.prisma.post.findUnique({
+          where: { id: input.postId },
+        });
+        if (!getPost) throw new TRPCError({ code: "NOT_FOUND" });
+
+        const created = await ctx.prisma.image.create({
+          data: { id: id, postId: input.postId, ext: ext },
+        });
+        if (!created) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+        const key = `posts/${getPost.id}/images/${id}.${ext}`;
+        const bucketParams = {
+          Bucket: "leaceawsbucket",
+          Key: key,
+        };
+        const command = new PutObjectCommand(bucketParams);
+
+        return await getSignedUrl(ctx.s3Client, command);
+      }
+    }),
+  getSignedUserUrl: protectedProcedure([Role.ADMIN, Role.MODERATOR])
+    .input(z.object({ userId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const userId = getId({ ctx: ctx, userId: input.userId });
+
+      const user = await ctx.prisma.user.findUnique({
+        where: { id: userId },
+      });
+      if (!user) throw new TRPCError({ code: "NOT_FOUND" });
+
+      const image = await ctx.prisma.image.findFirst({
+        where: {
+          userId: userId,
+        },
+      });
+      if (!image) return null;
+
       const bucketParams = {
         Bucket: "leaceawsbucket",
-        Key: key,
+        Key: `users/${userId}/image/profilePicture.${image.ext}`,
       };
-      const command = new PutObjectCommand(bucketParams);
-
-      return await getSignedUrl(ctx.s3Client, command);
+      const command = new GetObjectCommand(bucketParams);
+      const url = await getSignedUrl(ctx.s3Client, command);
+      return { ...image, url };
     }),
   getSignedPostUrl: protectedProcedure([Role.ADMIN, Role.MODERATOR])
-    .input(z.string())
+    .input(z.object({ postId: z.string() }))
     .query(async ({ ctx, input }) => {
       const getPost = await ctx.prisma.post.findUnique({
-        where: { id: input },
+        where: { id: input.postId },
       });
       if (!getPost) throw new TRPCError({ code: "NOT_FOUND" });
 
@@ -69,7 +115,7 @@ export const imageModeration = router({
           postId: getPost.id,
         },
       });
-      if (!images) throw new TRPCError({ code: "NOT_FOUND" });
+      if (!images) return null;
 
       return await Promise.all(
         images.map(async (image: Image) => {
@@ -83,30 +129,63 @@ export const imageModeration = router({
         }),
       );
     }),
-  deleteSignedPostUrl: protectedProcedure([Role.ADMIN, Role.MODERATOR])
-    .input(z.object({ postId: z.string(), imageId: z.string() }))
+  deleteSignedUrl: protectedProcedure([Role.ADMIN])
+    .input(
+      z.object({
+        userId: z.string().optional(),
+        postId: z.string().optional(),
+        imageId: z.string(),
+      }),
+    )
     .mutation(async ({ ctx, input }) => {
-      const getPost = await ctx.prisma.post.findUnique({
-        where: { id: input.postId },
-      });
-      if (!getPost) throw new TRPCError({ code: "NOT_FOUND" });
+      if (input.userId) {
+        const userId = getId({ ctx: ctx, userId: input.userId });
 
-      const image = await ctx.prisma.image.findFirst({
-        where: { id: input.imageId, postId: input.postId },
-      });
-      if (!image) throw new TRPCError({ code: "NOT_FOUND" });
+        const user = await ctx.prisma.user.findUnique({
+          where: { id: userId },
+        });
+        if (!user) throw new TRPCError({ code: "NOT_FOUND" });
 
-      const deleted = await ctx.prisma.image.delete({
-        where: { id: image.id },
-      });
-      if (!deleted) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+        const image = await ctx.prisma.image.findFirst({
+          where: { id: input.imageId, userId: userId },
+        });
+        if (!image) throw new TRPCError({ code: "NOT_FOUND" });
 
-      const bucketParams = {
-        Bucket: "leaceawsbucket",
-        Key: `posts/${getPost.id}/images/${image.id}.${image.ext}`,
-      };
-      const command = new DeleteObjectCommand(bucketParams);
+        const deleted = await ctx.prisma.image.delete({
+          where: { id: image.id },
+        });
+        if (!deleted) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
 
-      return await getSignedUrl(ctx.s3Client, command);
+        const bucketParams = {
+          Bucket: "leaceawsbucket",
+          Key: `users/${userId}/image/profilePicture.${image.ext}`,
+        };
+        const command = new DeleteObjectCommand(bucketParams);
+
+        return await getSignedUrl(ctx.s3Client, command);
+      } else if (input.postId) {
+        const getPost = await ctx.prisma.post.findUnique({
+          where: { id: input.postId },
+        });
+        if (!getPost) throw new TRPCError({ code: "NOT_FOUND" });
+
+        const image = await ctx.prisma.image.findFirst({
+          where: { id: input.imageId, postId: input.postId },
+        });
+        if (!image) throw new TRPCError({ code: "NOT_FOUND" });
+
+        const deleted = await ctx.prisma.image.delete({
+          where: { id: image.id },
+        });
+        if (!deleted) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+        const bucketParams = {
+          Bucket: "leaceawsbucket",
+          Key: `posts/${getPost.id}/images/${image.id}.${image.ext}`,
+        };
+        const command = new DeleteObjectCommand(bucketParams);
+
+        return await getSignedUrl(ctx.s3Client, command);
+      }
     }),
 });
