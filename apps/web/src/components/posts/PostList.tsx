@@ -39,22 +39,18 @@ export const PostList = ({ userId }: PostListProps) => {
   };
 
   if (status == "success" && relationships.length) {
-    return (
-      <div className="flex flex-row gap-4">
-        {relationships.map(({ post, id, relationType, conversation }) => (
-          <PostBar
-            key={post.id}
-            post={post}
-            postLink="/posts/[postId]"
-            relationType={relationType}
-            relationshipId={id}
-            conversationId={conversation?.id}
-            user={user}
-            OnDeleteMatch={OnDeleteMatch}
-          />
-        ))}
-      </div>
-    );
+    return relationships.map(({ post, id, relationType, conversation }) => (
+      <PostBar
+        key={post.id}
+        post={post}
+        postLink="/posts/[postId]"
+        relationType={relationType}
+        relationshipId={id}
+        conversationId={conversation?.id}
+        user={user}
+        OnDeleteMatch={OnDeleteMatch}
+      />
+    ));
   }
   return (
     <div className="mt-8 flex flex-col items-center justify-center">

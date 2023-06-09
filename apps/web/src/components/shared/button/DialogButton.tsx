@@ -1,26 +1,34 @@
 import * as Dialog from "@radix-ui/react-dialog";
-import { Button } from "../shared/button/Button";
+import { Button } from "./Button";
 
-export interface DeleteUserDialogProps {
+export interface DialogButtonProps {
+  buttonText: string;
+  title: string;
+  description: string;
+  confirmButtonText: string;
   onDelete: () => Promise<void>;
 }
 
-export function DeleteUserDialog({ onDelete }: DeleteUserDialogProps) {
+export function DialogButton({
+  buttonText,
+  title,
+  description,
+  confirmButtonText,
+  onDelete,
+}: DialogButtonProps) {
   return (
     <Dialog.Root>
       <Dialog.Trigger asChild>
-        <Button theme="danger">Delete my account</Button>
+        <Button theme="danger">{buttonText}</Button>
       </Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className=" fixed inset-0 bg-gray-500 opacity-70" />
         <Dialog.Content className="fixed top-[50%] left-[50%] w-[70vh] -translate-x-[50%] -translate-y-[50%] rounded-xl bg-white p-8">
           <Dialog.Title asChild>
-            <h1 className="p-4 text-xl">Delete my account</h1>
+            <h1 className="p-4 text-xl">{title}</h1>
           </Dialog.Title>
           <Dialog.Description asChild>
-            <p className="p-4 text-lg">
-              Are you sure you want to delete your account?
-            </p>
+            <p className="p-4 text-lg">{description}</p>
           </Dialog.Description>
           <div className="flex justify-end gap-4 pt-4">
             <Dialog.Close asChild>
@@ -28,7 +36,7 @@ export function DeleteUserDialog({ onDelete }: DeleteUserDialogProps) {
             </Dialog.Close>
             <Dialog.Close>
               <Button theme="danger" onClick={() => onDelete()}>
-                Yes, delete my account
+                {confirmButtonText}
               </Button>
             </Dialog.Close>
           </div>

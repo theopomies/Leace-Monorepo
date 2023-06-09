@@ -10,7 +10,7 @@ import { trpc } from "../../utils/trpc";
 import { PostForm, PostFormData } from "../shared/post/PostForm";
 import axios from "axios";
 
-export const CreatePostPage = () => {
+export const CreatePostPage = ({ userId }: { userId: string }) => {
   const router = useRouter();
   const post = trpc.post.createPost.useMutation();
 
@@ -67,7 +67,7 @@ export const CreatePostPage = () => {
           });
       });
     }
-    router.push(`/posts/${postId}`);
+    router.push(`/users/${userId}/posts/${postId}`);
   };
 
   const handleImage =

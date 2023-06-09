@@ -27,7 +27,7 @@ export const UserBar = ({
   OnLikeMatch,
 }: UserBarProps) => {
   return (
-    <div className="mx-auto flex flex-grow cursor-pointer flex-col overflow-hidden rounded-xl bg-white shadow-md md:max-w-2xl">
+    <div className="mx-auto mb-5 flex flex-grow cursor-pointer flex-col overflow-hidden rounded-xl bg-white shadow-md md:max-w-2xl">
       <Link href={matchedUserLink.replace("[userId]", matchedUser.id)}>
         <div className="md:flex">
           {matchedUser.image && (

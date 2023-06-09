@@ -80,19 +80,19 @@ export const imageRouter = router({
   getSignedUserUrl: protectedProcedure([Role.TENANT, Role.AGENCY, Role.OWNER])
     .input(z.object({ userId: z.string() }))
     .query(async ({ ctx, input }) => {
-      const userId = getId({ ctx: ctx, userId: input.userId });
-
-      const user = await ctx.prisma.user.findUnique({ where: { id: userId } });
+      const user = await ctx.prisma.user.findUnique({
+        where: { id: input.userId },
+      });
       if (!user) throw new TRPCError({ code: "NOT_FOUND" });
 
       const image = await ctx.prisma.image.findFirst({
-        where: { userId: userId },
+        where: { userId: user.id },
       });
       if (!image) return null;
 
       const bucketParams = {
         Bucket: "leaceawsbucket",
-        Key: `users/${userId}/image/profilePicture.${image.ext}`,
+        Key: `users/${user.id}/image/profilePicture.${image.ext}`,
       };
       const command = new GetObjectCommand(bucketParams);
       const url = await getSignedUrl(ctx.s3Client, command);

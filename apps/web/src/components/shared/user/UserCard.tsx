@@ -5,7 +5,7 @@ import { DisplayReports } from "../../moderation/report/DisplayReports";
 import { DocumentList } from "../document/DocumentList";
 import { User, Attribute, Report, Image, Document } from "@prisma/client";
 import { Button } from "../button/Button";
-import { DeleteUserDialog } from "../../users/DeleteUserDialog";
+import { DialogButton } from "../button/DialogButton";
 
 export interface UserCardProps {
   user: User & {
@@ -135,10 +135,18 @@ export const UserCard = ({
         >
           {updateLink && (
             <Link href={updateLink.replace("[userId]", user.id)}>
-              <Button>Modify</Button>
+              <Button>Update</Button>
             </Link>
           )}
-          {OnUserDelete && <DeleteUserDialog onDelete={OnUserDelete} />}
+          {OnUserDelete && (
+            <DialogButton
+              buttonText="Delete my account"
+              title="Delete my account"
+              description="Are you sure you want to delete your account?"
+              confirmButtonText="Yes, delete my account"
+              onDelete={OnUserDelete}
+            />
+          )}
         </div>
       )}
     </div>

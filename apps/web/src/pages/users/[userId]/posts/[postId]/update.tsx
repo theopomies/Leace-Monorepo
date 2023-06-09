@@ -1,9 +1,9 @@
-import { LoggedLayout } from "../../../components/layout/LoggedLayout";
 import { useRouter } from "next/router";
-import { UpdatePostPage } from "../../../components/posts/UpdatePostPage";
 import { Role } from "@prisma/client";
+import { LoggedLayout } from "../../../../../components/layout/LoggedLayout";
+import { UpdatePostPage } from "../../../../../components/posts/UpdatePostPage";
 
-const Update = () => {
+const UpdatePostView = () => {
   const router = useRouter();
   const { postId } = router.query;
 
@@ -21,4 +21,4 @@ const Update = () => {
   );
 };
 
-export default Update;
+export default UpdatePostView;

@@ -1,7 +1,7 @@
 import React from "react";
 import { useRouter } from "next/router";
 import { LoggedLayout } from "../../../components/layout/LoggedLayout";
-import { PostPage } from "../../../components/posts/PostPage";
+import { Post } from "../../../components/posts/Post";
 
 const Index = () => {
   const router = useRouter();
@@ -13,7 +13,9 @@ const Index = () => {
 
   return (
     <LoggedLayout title="Post | Leace">
-      <PostPage postId={postId} />
+      <div className="m-auto py-5">
+        <Post postId={postId} />
+      </div>
     </LoggedLayout>
   );
 };

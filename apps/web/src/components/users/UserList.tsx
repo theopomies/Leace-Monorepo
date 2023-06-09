@@ -41,23 +41,21 @@ export const UserList = ({ userId }: UserListProps) => {
   };
 
   if (status == "success" && relationships.length && currentUser) {
-    return (
-      <div className="flex flex-row gap-4">
-        {relationships.map(({ user, relationType, id, post, conversation }) => (
-          <UserBar
-            key={user.id}
-            matchedUser={user}
-            matchedUserLink="/users/[userId]"
-            post={post}
-            relationType={relationType}
-            relationshipId={id}
-            user={currentUser}
-            conversationId={conversation?.id}
-            OnDeleteMatch={OnDeleteMatch}
-            OnLikeMatch={OnLikeMatch}
-          />
-        ))}
-      </div>
+    return relationships.map(
+      ({ user, relationType, id, post, conversation }) => (
+        <UserBar
+          key={user.id}
+          matchedUser={user}
+          matchedUserLink="/users/[userId]"
+          post={post}
+          relationType={relationType}
+          relationshipId={id}
+          user={currentUser}
+          conversationId={conversation?.id}
+          OnDeleteMatch={OnDeleteMatch}
+          OnLikeMatch={OnLikeMatch}
+        />
+      ),
     );
   }
   return (

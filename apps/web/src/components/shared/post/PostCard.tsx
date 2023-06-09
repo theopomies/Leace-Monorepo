@@ -2,13 +2,11 @@
 import { SlideShow } from "../../home/stack/SlideShow";
 import { motion } from "framer-motion";
 import { displayDate } from "../../../utils/displayDate";
-import { GreenCheck } from "../../moderation/posts/GreenCheck";
-import { RedUncheck } from "../../moderation/posts/RedUncheck";
 import { DisplayReports } from "../../moderation/report/DisplayReports";
 import { DocumentList } from "../document/DocumentList";
 import { Post, Attribute, Report, Image, Document } from "@prisma/client";
 import Link from "next/link";
-import { Button } from "../button/Button";
+import { DialogButton } from "../button/DialogButton";
 
 export interface PostCardProps {
   post: Post & {
@@ -59,20 +57,12 @@ export const PostCard = ({
                 {post.attribute.homeType
                   ? post.attribute.homeType.charAt(0) +
                     post.attribute.homeType.slice(1).toLowerCase()
-                  : "Whatever"}
+                  : "Whatever"}{" "}
+                - {post.attribute.size}m²
               </p>
               <p className="text-xl">{post.attribute.price}$/month</p>
             </div>
-            <p>{post.attribute.size}m²</p>
             <p>{post.attribute.location}</p>
-            <p>
-              Available on{" "}
-              {post.attribute.rentStartDate &&
-                displayDate(post.attribute.rentStartDate)}{" "}
-              to{" "}
-              {post.attribute.rentEndDate &&
-                displayDate(post.attribute.rentEndDate)}
-            </p>
             <p>Posted on {displayDate(post.createdAt)}</p>
           </div>
           <div className="border-t py-10">
@@ -83,14 +73,8 @@ export const PostCard = ({
           <div className="px-auto justify-center border-t py-10">
             <p className="mb-5 text-xl font-semibold">What this place offer</p>
             <div className="grid grid-cols-3 gap-4">
-              <div className="flex items-center">
-                {post.attribute.terrace ? <GreenCheck /> : <RedUncheck />}
-                Terrace
-              </div>
-              <div className="flex items-center">
-                {post.attribute.smoker ? <GreenCheck /> : <RedUncheck />}
-                Smoker
-              </div>
+              <p>Terrace: {post.attribute.terrace ? "✅" : "❌"}</p>
+              <p>Smoker: {post.attribute.smoker ? "✅" : "❌"}</p>
               <p>Elevator: {post.attribute.elevator ? "✅" : "❌"}</p>
               <p>Pets: {post.attribute.pets ? "✅" : "❌"}</p>
               <p>Piscine: {post.attribute.pool ? "✅" : "❌"}</p>
@@ -118,9 +102,13 @@ export const PostCard = ({
             </Link>
           )}
           {OnPostDelete && (
-            <Button theme="danger" onClick={OnPostDelete}>
-              Delete
-            </Button>
+            <DialogButton
+              buttonText="Delete my post"
+              title="Delete my post"
+              description="Are you sure you want to delete your post?"
+              confirmButtonText="Yes, delete my post"
+              onDelete={OnPostDelete}
+            />
           )}
         </div>
       )}
