@@ -46,18 +46,22 @@ export const PotentialMatchesTenant = ({ userId }: PostListProps) => {
     relationships.relationship.length > 0 &&
     user
   ) {
-    return relationships.relationship.map(({ post, id, relationType }) => (
-      <PostBar
-        key={post.id}
-        post={post}
-        postLink="/posts/[postId]"
-        relationType={relationType}
-        relationshipId={id}
-        user={user}
-        OnDeleteMatch={OnDeleteMatch}
-        OnLikeMatch={OnLikeMatch}
-      />
-    ));
+    return (
+      <div>
+        {relationships.relationship.map(({ post, id, relationType }) => (
+          <PostBar
+            key={post.id}
+            post={post}
+            postLink="/posts/[postId]"
+            relationType={relationType}
+            relationshipId={id}
+            user={user}
+            OnDeleteMatch={OnDeleteMatch}
+            OnLikeMatch={OnLikeMatch}
+          />
+        ))}
+      </div>
+    );
   }
   return (
     <div className="mt-8 flex flex-col items-center justify-center">

@@ -45,20 +45,22 @@ export const PotentialMatchesAgencyOwner = ({ userId }: TenantListProps) => {
     relationships.relationship.length > 0 &&
     currentUser
   ) {
-    return relationships.relationship.map(
-      ({ user, relationType, id, post }) => (
-        <UserBar
-          key={user.id}
-          matchedUser={user}
-          matchedUserLink="/users/[userId]"
-          post={post}
-          relationType={relationType}
-          relationshipId={id}
-          user={currentUser}
-          OnDeleteMatch={OnDeleteMatch}
-          OnLikeMatch={OnLikeMatch}
-        />
-      ),
+    return (
+      <div>
+        {relationships.relationship.map(({ user, relationType, id, post }) => (
+          <UserBar
+            key={user.id}
+            matchedUser={user}
+            matchedUserLink="/users/[userId]"
+            post={post}
+            relationType={relationType}
+            relationshipId={id}
+            user={currentUser}
+            OnDeleteMatch={OnDeleteMatch}
+            OnLikeMatch={OnLikeMatch}
+          />
+        ))}
+      </div>
     );
   }
   return (
