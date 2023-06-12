@@ -1,7 +1,9 @@
+import { useEffect } from "react";
 import { trpc } from "../../utils/trpc";
 import { Loader } from "../shared/Loader";
 import { PostBar } from "../shared/post/PostBar";
 import { Post } from "./Post";
+import { setCacheId } from "../../utils/useCache";
 
 export interface MyPostsPageProps {
   userId: string;
@@ -11,6 +13,10 @@ export interface MyPostsPageProps {
 export const MyPostsPage = ({ userId, postId }: MyPostsPageProps) => {
   const { data: posts, isLoading: postsLoading } =
     trpc.post.getPostsByUserId.useQuery({ userId });
+
+  useEffect(() => {
+    if (postId) setCacheId("lastSelectedPostId", postId);
+  }, [postId]);
 
   if (postsLoading) {
     return <Loader />;
