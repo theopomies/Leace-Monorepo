@@ -6,13 +6,13 @@ import { Document } from "@prisma/client";
 export interface DocumentModalProps {
   document: Document & { url: string };
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
-  OnValidation?: (document: Document & { url: string }) => Promise<void>;
+  onValidation?: (document: Document & { url: string }) => Promise<void>;
 }
 
 export const DocumentModal = ({
   document,
   setShowModal,
-  OnValidation,
+  onValidation,
 }: DocumentModalProps) => {
   return (
     <>
@@ -47,10 +47,10 @@ export const DocumentModal = ({
 
           <div className="mr-9 flex items-center justify-center gap-4">
             <Button onClick={() => setShowModal(false)}>Close</Button>
-            {OnValidation && (
+            {onValidation && (
               <Button
                 onClick={() => {
-                  OnValidation(document);
+                  onValidation(document);
                   setShowModal(false);
                 }}
                 theme={document.valid ? "danger" : "success"}

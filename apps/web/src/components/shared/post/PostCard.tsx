@@ -13,10 +13,10 @@ export interface PostCardProps {
     attribute: Attribute | null;
     reports?: Report[];
   };
-  OnPostDelete?: () => Promise<void>;
+  onPostDelete?: () => Promise<void>;
   images: (Image & { url: string })[] | null | undefined;
   documents: (Document & { url: string })[] | null | undefined;
-  OnDocValidation?: (document: Document & { url: string }) => Promise<void>;
+  onDocValidation?: (document: Document & { url: string }) => Promise<void>;
   updateLink?: string;
   isLoggedIn?: boolean;
   isAdmin?: boolean;
@@ -24,10 +24,10 @@ export interface PostCardProps {
 
 export const PostCard = ({
   post,
-  OnPostDelete,
+  onPostDelete,
   images,
   documents,
-  OnDocValidation,
+  onDocValidation,
   updateLink,
   isLoggedIn,
   isAdmin,
@@ -85,12 +85,12 @@ export const PostCard = ({
           </div>
         </div>
       )}
-      <DocumentList documents={documents} OnValidation={OnDocValidation} />
+      <DocumentList documents={documents} onValidation={onDocValidation} />
       <DisplayReports reports={post.reports} />
       {(isLoggedIn || isAdmin) && (
         <div
           className={`mt-10 flex ${
-            OnPostDelete ? "justify-between" : "justify-center"
+            onPostDelete ? "justify-between" : "justify-center"
           }`}
         >
           {updateLink && (
@@ -101,13 +101,13 @@ export const PostCard = ({
               Update
             </Link>
           )}
-          {OnPostDelete && (
+          {onPostDelete && (
             <DialogButton
               buttonText="Delete my post"
               title="Delete my post"
               description="Are you sure you want to delete your post?"
               confirmButtonText="Yes, delete my post"
-              onDelete={OnPostDelete}
+              onDelete={onPostDelete}
             />
           )}
         </div>

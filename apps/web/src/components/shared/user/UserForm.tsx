@@ -13,7 +13,7 @@ import { TextArea } from "../forms/TextArea";
 import { FileInput } from "../forms/FileInput";
 import { HomeType } from "../../../types/homeType";
 import { DocumentList } from "../document/DocumentList";
-import { AttributesUserForm } from "../../attributes/AttributesUserForm";
+import { UserAttributesForm } from "../../attributes/UserAttributesForm";
 import { DateInput } from "../forms/DateInput";
 import { TextInput } from "../forms/TextInput";
 import { User, Attribute, Image, Document, Role } from "@prisma/client";
@@ -43,14 +43,14 @@ export type UserFormData = {
 
 export interface UserFormProps {
   user: (User & { attribute: Attribute | null }) | undefined;
-  OnImgUpload?: (event: ChangeEvent<HTMLInputElement>) => Promise<void>;
-  OnImgDelete?: () => Promise<void>;
+  onImgUpload?: (event: ChangeEvent<HTMLInputElement>) => Promise<void>;
+  onImgDelete?: () => Promise<void>;
   imageGet: (Image & { url: string }) | null | undefined;
-  OnDocsUpload: (event: ChangeEvent<HTMLInputElement>) => void;
-  OnDocDelete: (documentId: string) => Promise<void>;
+  onDocsUpload: (event: ChangeEvent<HTMLInputElement>) => void;
+  onDocDelete: (documentId: string) => Promise<void>;
   documentsGet: (Document & { url: string })[] | null | undefined;
-  OnSubmit: (data: UserFormData) => Promise<void>;
-  OnCancel: MouseEventHandler<HTMLButtonElement>;
+  onSubmit: (data: UserFormData) => Promise<void>;
+  onCancel: MouseEventHandler<HTMLButtonElement>;
 }
 
 export const UserForm = (props: UserFormProps) => {
@@ -161,7 +161,7 @@ export const UserForm = (props: UserFormProps) => {
       pool,
     };
 
-    props.OnSubmit(data);
+    props.onSubmit(data);
   };
 
   const attributesStates = {
@@ -214,12 +214,12 @@ export const UserForm = (props: UserFormProps) => {
             alt="image"
             className="mx-auto h-32 rounded-full shadow-xl"
           />
-          {props.imageGet && props.imageGet.url && props.OnImgDelete && (
+          {props.imageGet && props.imageGet.url && props.onImgDelete && (
             <Button
               theme="danger"
               onClick={(e) => {
                 e.preventDefault();
-                props.OnImgDelete && props.OnImgDelete();
+                props.onImgDelete && props.onImgDelete();
               }}
               overrideStyles
               className="absolute right-0 top-0 inline-flex h-7 w-7 items-center justify-center rounded-md bg-red-500 stroke-white p-1.5 hover:bg-red-700"
@@ -228,9 +228,9 @@ export const UserForm = (props: UserFormProps) => {
             </Button>
           )}
         </div>
-        {props.OnImgUpload && (
+        {props.onImgUpload && (
           <div className="ml-2 flex items-center">
-            <FileInput onChange={props.OnImgUpload}>Choose file</FileInput>
+            <FileInput onChange={props.onImgUpload}>Choose file</FileInput>
           </div>
         )}
       </div>
@@ -261,20 +261,20 @@ export const UserForm = (props: UserFormProps) => {
         />
       </div>
       {props.user?.role === Role.TENANT && (
-        <AttributesUserForm {...attributesStates} />
+        <UserAttributesForm {...attributesStates} />
       )}
       <DocumentList
         documents={props.documentsGet}
-        OnDelete={props.OnDocDelete}
+        onDelete={props.onDocDelete}
         isLoggedInOrAdmin
       />
       <div className="mx-auto">
-        <FileInput multiple onChange={props.OnDocsUpload} accept=".pdf">
+        <FileInput multiple onChange={props.onDocsUpload} accept=".pdf">
           Upload Document
         </FileInput>
       </div>
       <div className="mt-10 flex justify-center gap-8">
-        <Button theme="danger" onClick={props.OnCancel}>
+        <Button theme="danger" onClick={props.onCancel}>
           Cancel
         </Button>
         <Button theme="primary">Update</Button>

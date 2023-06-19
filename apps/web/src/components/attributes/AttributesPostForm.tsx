@@ -113,7 +113,7 @@ export function AttributesPostForm({ ...attributes }: AttributesPostFormProps) {
               checked={attributes.homeType === "APARTMENT"}
               value={"APARTMENT"}
             >
-              Appartment
+              Apartment
             </Checkbox>
           </div>
           <h2 className="pb-2 pt-4 text-xl font-bold text-gray-700">

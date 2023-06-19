@@ -117,14 +117,14 @@ export function UpdateAdminUserPage({ userId }: { userId: string }) {
       <Header heading="Update Profile" />
       <UserForm
         user={user}
-        OnImgUpload={handleUploadImg}
-        OnImgDelete={handleDeleteImg}
+        onImgUpload={handleUploadImg}
+        onImgDelete={handleDeleteImg}
         imageGet={imageGet}
-        OnDocsUpload={handleUploadDocs}
-        OnDocDelete={handleDeleteDoc}
+        onDocsUpload={handleUploadDocs}
+        onDocDelete={handleDeleteDoc}
         documentsGet={documentsGet}
-        OnSubmit={handleSubmit}
-        OnCancel={handleCancel}
+        onSubmit={handleSubmit}
+        onCancel={handleCancel}
       />
     </div>
   );

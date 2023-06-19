@@ -42,7 +42,7 @@ export const Post = ({ postId, authorId, updateLink }: PostProps) => {
   return (
     <PostCard
       post={post}
-      OnPostDelete={handleDeletePost}
+      onPostDelete={handleDeletePost}
       images={images}
       documents={documents}
       updateLink={updateLink}

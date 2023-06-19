@@ -63,7 +63,7 @@ export const UserPage = ({ userId }: UserPageProps) => {
       <UserCard
         user={user}
         isBanned={isBanned}
-        OnUserDelete={handleDeleteUser}
+        onUserDelete={handleDeleteUser}
         image={image}
         documents={documents}
         updateLink="/users/[userId]/update"

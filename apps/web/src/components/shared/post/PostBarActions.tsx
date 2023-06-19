@@ -9,8 +9,8 @@ export interface PostBarActionsProps {
   relationshipId: string;
   conversationId?: string;
   user?: User;
-  OnDeleteMatch: (relationshipId: string) => void;
-  OnLikeMatch?: (postId: string) => void;
+  onDeleteMatch: (relationshipId: string) => void;
+  onLikeMatch?: (postId: string) => void;
 }
 
 export const PostBarActions = ({
@@ -19,12 +19,12 @@ export const PostBarActions = ({
   relationshipId,
   conversationId,
   user,
-  OnDeleteMatch,
-  OnLikeMatch,
+  onDeleteMatch,
+  onLikeMatch,
 }: PostBarActionsProps) => {
   return (
     <div className="flex items-center justify-between bg-gray-100 px-8 py-4">
-      <Button theme="danger" onClick={() => OnDeleteMatch(relationshipId)}>
+      <Button theme="danger" onClick={() => onDeleteMatch(relationshipId)}>
         Delete Match
       </Button>
       {user && conversationId && relationType == RelationType.MATCH && (
@@ -35,11 +35,11 @@ export const PostBarActions = ({
           Chat with Match
         </Link>
       )}
-      {OnLikeMatch &&
+      {onLikeMatch &&
         user &&
         user.isPremium &&
         relationType != RelationType.MATCH && (
-          <Button theme="success" onClick={() => OnLikeMatch(postId)}>
+          <Button theme="success" onClick={() => onLikeMatch(postId)}>
             Like Match
           </Button>
         )}

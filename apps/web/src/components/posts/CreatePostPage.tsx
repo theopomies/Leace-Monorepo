@@ -95,8 +95,8 @@ export const CreatePostPage = ({ userId }: { userId: string }) => {
     <div className="w-full">
       <Header heading={"Create Post"} />
       <PostForm
-        OnSubmit={handleSubmit}
-        OnCancel={handleCancel}
+        onSubmit={handleSubmit}
+        onCancel={handleCancel}
         setImages={handleImage(setImages)}
         setDocuments={handleDocuments(setDocuments)}
         documents={documents}

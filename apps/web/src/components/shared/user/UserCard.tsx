@@ -13,10 +13,10 @@ export interface UserCardProps {
     reports?: Report[];
   };
   isBanned: boolean | undefined;
-  OnUserDelete?: () => Promise<void>;
+  onUserDelete?: () => Promise<void>;
   image: (Image & { url: string }) | null | undefined;
   documents: (Document & { url: string })[] | null | undefined;
-  OnDocValidation?: (document: Document & { url: string }) => Promise<void>;
+  onDocValidation?: (document: Document & { url: string }) => Promise<void>;
   updateLink?: string;
   isLoggedIn?: boolean;
   isAdmin?: boolean;
@@ -25,10 +25,10 @@ export interface UserCardProps {
 export const UserCard = ({
   user,
   isBanned,
-  OnUserDelete,
+  onUserDelete,
   image,
   documents,
-  OnDocValidation,
+  onDocValidation,
   updateLink,
   isLoggedIn,
   isAdmin,
@@ -125,12 +125,12 @@ export const UserCard = ({
           </div>
         </div>
       )}
-      <DocumentList documents={documents} OnValidation={OnDocValidation} />
+      <DocumentList documents={documents} onValidation={onDocValidation} />
       <DisplayReports reports={user.reports} />
       {(isLoggedIn || isAdmin) && (
         <div
           className={`mt-10 flex ${
-            OnUserDelete ? "justify-between" : "justify-center"
+            onUserDelete ? "justify-between" : "justify-center"
           }`}
         >
           {updateLink && (
@@ -138,13 +138,13 @@ export const UserCard = ({
               <Button>Update</Button>
             </Link>
           )}
-          {OnUserDelete && (
+          {onUserDelete && (
             <DialogButton
               buttonText="Delete my account"
               title="Delete my account"
               description="Are you sure you want to delete your account?"
               confirmButtonText="Yes, delete my account"
-              onDelete={OnUserDelete}
+              onDelete={onUserDelete}
             />
           )}
         </div>

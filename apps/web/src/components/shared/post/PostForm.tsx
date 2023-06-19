@@ -40,16 +40,16 @@ export interface PostFormProps {
   post?: (Post & { attribute: Attribute | null }) | undefined;
   images?: File[] | undefined;
   setImages?: ChangeEventHandler;
-  OnImgsUpload?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  OnImgDelete?: (imageId: string) => Promise<void>;
+  onImgsUpload?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onImgDelete?: (imageId: string) => Promise<void>;
   imagesGet?: (Image & { url: string })[] | null | undefined;
   documents?: File[] | undefined;
   setDocuments?: ChangeEventHandler;
-  OnDocsUpload?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  OnDocDelete?: (documentId: string) => Promise<void>;
+  onDocsUpload?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onDocDelete?: (documentId: string) => Promise<void>;
   documentsGet?: (Document & { url: string })[] | null | undefined;
-  OnSubmit: (data: PostFormData) => Promise<void>;
-  OnCancel: MouseEventHandler<HTMLButtonElement>;
+  onSubmit: (data: PostFormData) => Promise<void>;
+  onCancel: MouseEventHandler<HTMLButtonElement>;
 }
 
 export const PostForm = (props: PostFormProps) => {
@@ -133,7 +133,7 @@ export const PostForm = (props: PostFormProps) => {
       elevator,
       pool,
     };
-    props.OnSubmit(data);
+    props.onSubmit(data);
   };
 
   const attributesStates = {
@@ -174,7 +174,7 @@ export const PostForm = (props: PostFormProps) => {
         <div>
           <label className="text-lg font-medium">Title</label>
           <Input
-            placeholder="Appartment in Central Park"
+            placeholder="Apartment in Central Park"
             name="title"
             onChange={handleChange(setTitle)}
             value={title}
@@ -193,9 +193,9 @@ export const PostForm = (props: PostFormProps) => {
         </div>
       </div>
       <AttributesPostForm {...attributesStates} />
-      <ImageList images={props.imagesGet} OnDelete={props.OnImgDelete} />
+      <ImageList images={props.imagesGet} onDelete={props.onImgDelete} />
       <div className="mt-2 mb-5 flex flex-wrap justify-center gap-4">
-        <FileInput multiple onChange={props.setImages || props.OnImgsUpload}>
+        <FileInput multiple onChange={props.setImages || props.onImgsUpload}>
           Upload Image
         </FileInput>
         {props.images?.map((image, index) => (
@@ -204,13 +204,13 @@ export const PostForm = (props: PostFormProps) => {
       </div>
       <DocumentList
         documents={props.documentsGet}
-        OnDelete={props.OnDocDelete}
+        onDelete={props.onDocDelete}
         isLoggedInOrAdmin
       />
       <div className="mt-2 flex flex-wrap justify-center gap-4">
         <FileInput
           multiple
-          onChange={props.setDocuments || props.OnDocsUpload}
+          onChange={props.setDocuments || props.onDocsUpload}
           accept=".pdf"
         >
           Upload Document
@@ -220,7 +220,7 @@ export const PostForm = (props: PostFormProps) => {
         ))}
       </div>
       <div className="mt-10 flex justify-center gap-4">
-        <Button type="button" theme="danger" onClick={props.OnCancel}>
+        <Button type="button" theme="danger" onClick={props.onCancel}>
           Cancel
         </Button>
         <Button>Submit</Button>

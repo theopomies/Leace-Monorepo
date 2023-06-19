@@ -50,7 +50,7 @@ export const Post = ({ postId }: PostProps) => {
       post={post}
       images={images}
       documents={documents}
-      OnDocValidation={handleDocValidation}
+      onDocValidation={handleDocValidation}
       updateLink={"/administration/posts/[postId]/update"}
       isAdmin={session.role === Role.ADMIN}
     />

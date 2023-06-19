@@ -69,7 +69,7 @@ export const User = ({ userId }: UserProps) => {
       isBanned={isBanned}
       image={image}
       documents={documents}
-      OnDocValidation={handleDocValidation}
+      onDocValidation={handleDocValidation}
       updateLink={"/administration/users/[userId]/update"}
       isAdmin={session.role === Role.ADMIN}
     />

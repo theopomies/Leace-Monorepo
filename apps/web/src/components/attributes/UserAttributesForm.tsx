@@ -5,7 +5,7 @@ import React from "react";
 import { AddressAutocomplete } from "../shared/forms/AddressAutocomplete";
 import { NumberInput } from "../shared/forms/NumberInput";
 
-interface AttributesUserFormProps {
+interface UserAttributesFormProps {
   location: string;
   handleLocationChange: ChangeEventHandler<HTMLInputElement>;
   maxPrice: number;
@@ -38,7 +38,7 @@ interface AttributesUserFormProps {
   handlePoolChange: ChangeEventHandler<HTMLInputElement>;
 }
 
-export function AttributesUserForm({ ...attributes }: AttributesUserFormProps) {
+export function UserAttributesForm({ ...attributes }: UserAttributesFormProps) {
   const attributesList: {
     label: string;
     name: string;
@@ -117,7 +117,7 @@ export function AttributesUserForm({ ...attributes }: AttributesUserFormProps) {
               checked={attributes.homeType === "APARTMENT"}
               value={"APARTMENT"}
             >
-              Appartment
+              Apartment
             </Checkbox>
             <Checkbox
               name="homeType"

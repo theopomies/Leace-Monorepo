@@ -11,8 +11,8 @@ export interface UserBarProps {
   relationshipId?: string;
   user?: User;
   conversationId?: string;
-  OnDeleteMatch?: (relationshipId: string) => Promise<void>;
-  OnLikeMatch?: (matchedUserId: string, postId: string) => Promise<void>;
+  onDeleteMatch?: (relationshipId: string) => Promise<void>;
+  onLikeMatch?: (matchedUserId: string, postId: string) => Promise<void>;
 }
 
 export const UserBar = ({
@@ -23,8 +23,8 @@ export const UserBar = ({
   relationshipId,
   user,
   conversationId,
-  OnDeleteMatch,
-  OnLikeMatch,
+  onDeleteMatch,
+  onLikeMatch,
 }: UserBarProps) => {
   return (
     <div className="mx-auto mb-5 flex flex-grow cursor-pointer flex-col overflow-hidden rounded-xl bg-white shadow-md md:max-w-2xl">
@@ -53,7 +53,7 @@ export const UserBar = ({
           <p className="font-black text-black">{post.title}</p>
         </div>
       </Link>
-      {OnDeleteMatch && relationshipId && (
+      {onDeleteMatch && relationshipId && (
         <UserBarActions
           matchedUserId={matchedUser.id}
           relationshipId={relationshipId}
@@ -61,8 +61,8 @@ export const UserBar = ({
           postId={post.id}
           user={user}
           conversationId={conversationId}
-          OnDeleteMatch={OnDeleteMatch}
-          OnLikeMatch={OnLikeMatch}
+          onDeleteMatch={onDeleteMatch}
+          onLikeMatch={onLikeMatch}
         />
       )}
     </div>

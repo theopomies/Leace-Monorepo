@@ -32,10 +32,10 @@ export const PotentialMatchesAgencyOwner = ({ userId }: TenantListProps) => {
     return <Loader />;
   }
 
-  const OnDeleteMatch = async (relationshipId: string) => {
+  const onDeleteMatch = async (relationshipId: string) => {
     await deleteMatchMutation.mutateAsync({ userId, relationshipId });
   };
-  const OnLikeMatch = async (matchedUserId: string, postId: string) => {
+  const onLikeMatch = async (matchedUserId: string, postId: string) => {
     await likeTenantForPost.mutateAsync({ userId: matchedUserId, postId });
   };
 
@@ -56,8 +56,8 @@ export const PotentialMatchesAgencyOwner = ({ userId }: TenantListProps) => {
             relationType={relationType}
             relationshipId={id}
             user={currentUser}
-            OnDeleteMatch={OnDeleteMatch}
-            OnLikeMatch={OnLikeMatch}
+            onDeleteMatch={onDeleteMatch}
+            onLikeMatch={onLikeMatch}
           />
         ))}
       </div>

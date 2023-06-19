@@ -12,15 +12,15 @@ type DocumentWithUrl = Document & { url: string };
 export interface DocumentListProps {
   documents: DocumentWithUrl[] | null | undefined;
   isLoggedInOrAdmin?: boolean;
-  OnDelete?: (documentId: string) => Promise<void>;
-  OnValidation?: (document: DocumentWithUrl) => Promise<void>;
+  onDelete?: (documentId: string) => Promise<void>;
+  onValidation?: (document: DocumentWithUrl) => Promise<void>;
 }
 
 export const DocumentList = ({
   documents,
   isLoggedInOrAdmin,
-  OnDelete,
-  OnValidation,
+  onDelete,
+  onValidation,
 }: DocumentListProps) => {
   const [selectedDocument, setSelectedDocument] =
     useState<DocumentWithUrl | null>();
@@ -65,12 +65,12 @@ export const DocumentList = ({
                 <CheckSvg />
               </div>
             )}
-            {isLoggedInOrAdmin && OnDelete && (
+            {isLoggedInOrAdmin && onDelete && (
               <Button
                 theme="danger"
                 onClick={(e) => {
                   e.preventDefault();
-                  OnDelete(doc.id);
+                  onDelete(doc.id);
                 }}
                 overrideStyles
                 className="absolute -right-1 -top-1 inline-flex h-7 w-7 items-center justify-center rounded-md bg-red-500 stroke-white p-1.5 hover:bg-red-700 "
@@ -84,7 +84,7 @@ export const DocumentList = ({
           <DocumentModal
             document={selectedDocument}
             setShowModal={handleModalClose}
-            OnValidation={OnValidation}
+            onValidation={onValidation}
           />
         )}
       </div>

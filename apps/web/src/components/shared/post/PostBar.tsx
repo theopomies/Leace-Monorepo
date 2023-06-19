@@ -14,8 +14,8 @@ export interface PostBarProps {
   conversationId?: string;
   user?: User;
   userLink?: string;
-  OnDeleteMatch?: (relationshipId: string) => void;
-  OnLikeMatch?: (postId: string) => void;
+  onDeleteMatch?: (relationshipId: string) => void;
+  onLikeMatch?: (postId: string) => void;
 }
 
 export const PostBar = ({
@@ -27,8 +27,8 @@ export const PostBar = ({
   conversationId,
   user,
   userLink,
-  OnDeleteMatch,
-  OnLikeMatch,
+  onDeleteMatch,
+  onLikeMatch,
 }: PostBarProps) => {
   const { data: img } = trpc.image.getSignedPostUrl.useQuery({
     postId: post.id,
@@ -65,15 +65,15 @@ export const PostBar = ({
         </Link>
         {user && userLink && <PostBarUser user={user} userLink={userLink} />}
       </div>
-      {relationshipId && OnDeleteMatch && (
+      {relationshipId && onDeleteMatch && (
         <PostBarActions
           postId={post.id}
           relationType={relationType}
           relationshipId={relationshipId}
           conversationId={conversationId}
           user={user}
-          OnDeleteMatch={OnDeleteMatch}
-          OnLikeMatch={OnLikeMatch}
+          onDeleteMatch={onDeleteMatch}
+          onLikeMatch={onLikeMatch}
         />
       )}
     </div>

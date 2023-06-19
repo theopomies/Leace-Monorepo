@@ -105,13 +105,13 @@ export const UpdatePostPage = ({ postId }: UpdatePostProps) => {
       <Header heading={"Update Post"} />
       <PostForm
         post={post}
-        OnSubmit={handleSubmit}
-        OnCancel={handleCancel}
-        OnImgsUpload={handleUploadImages}
-        OnImgDelete={handleDeleteImage}
+        onSubmit={handleSubmit}
+        onCancel={handleCancel}
+        onImgsUpload={handleUploadImages}
+        onImgDelete={handleDeleteImage}
         imagesGet={imagesGet}
-        OnDocsUpload={handleUploadDocs}
-        OnDocDelete={handleDeleteDoc}
+        onDocsUpload={handleUploadDocs}
+        onDocDelete={handleDeleteDoc}
         documentsGet={documentsGet}
       />
     </div>

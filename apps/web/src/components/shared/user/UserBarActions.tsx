@@ -10,8 +10,8 @@ export interface UserBarActionsProps {
   postId?: string;
   user?: User;
   conversationId?: string;
-  OnDeleteMatch: (relationshipId: string) => void;
-  OnLikeMatch?: (matchedUserId: string, postId: string) => void;
+  onDeleteMatch: (relationshipId: string) => void;
+  onLikeMatch?: (matchedUserId: string, postId: string) => void;
 }
 
 export const UserBarActions = ({
@@ -21,12 +21,12 @@ export const UserBarActions = ({
   postId,
   user,
   conversationId,
-  OnDeleteMatch,
-  OnLikeMatch,
+  onDeleteMatch,
+  onLikeMatch,
 }: UserBarActionsProps) => {
   return (
     <div className="flex items-center justify-between bg-gray-100 px-8 py-4">
-      <Button theme="danger" onClick={() => OnDeleteMatch(relationshipId)}>
+      <Button theme="danger" onClick={() => onDeleteMatch(relationshipId)}>
         Delete Match
       </Button>
       {user && conversationId && relationType == RelationType.MATCH && (
@@ -37,14 +37,14 @@ export const UserBarActions = ({
           Chat with Match
         </Link>
       )}
-      {OnLikeMatch &&
+      {onLikeMatch &&
         user &&
         user.isPremium &&
         relationType != RelationType.MATCH &&
         postId && (
           <Button
             theme="success"
-            onClick={() => OnLikeMatch(matchedUserId, postId)}
+            onClick={() => onLikeMatch(matchedUserId, postId)}
           >
             Like Match
           </Button>

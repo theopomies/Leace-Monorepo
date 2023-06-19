@@ -53,7 +53,9 @@ export const BanModal = ({ userId, reports, onBan }: BanModalProps) => {
 
   return (
     <div className="flex w-full flex-col items-center justify-center">
-      <Button onClick={() => setShowModal(true)}>Ban user</Button>
+      <Button theme="danger" onClick={() => setShowModal(true)}>
+        Ban user
+      </Button>
       {showModal && (
         <>
           <div className="fixed inset-0 z-50 flex h-full justify-center overflow-auto p-5">

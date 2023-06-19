@@ -22,12 +22,12 @@ export const BanUser = ({ userId }: BanUserProps) => {
     userId,
   });
 
-  const OnBan = (banData: RouterInputs["moderation"]["ban"]["createBan"]) => {
+  const onBan = (banData: RouterInputs["moderation"]["ban"]["createBan"]) => {
     banUser.mutateAsync(banData);
   };
 
   if (!reports) {
     return null;
   }
-  return <BanModal userId={userId} reports={reports} onBan={OnBan} />;
+  return <BanModal userId={userId} reports={reports} onBan={onBan} />;
 };

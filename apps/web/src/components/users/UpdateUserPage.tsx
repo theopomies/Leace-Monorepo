@@ -118,13 +118,13 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
       <Header heading="Update Profile" />
       <UserForm
         user={user}
-        OnImgUpload={handleUploadImg}
+        onImgUpload={handleUploadImg}
         imageGet={imageGet}
-        OnDocsUpload={handleUploadDocs}
-        OnDocDelete={handleDeleteDoc}
+        onDocsUpload={handleUploadDocs}
+        onDocDelete={handleDeleteDoc}
         documentsGet={documentsGet}
-        OnSubmit={handleSubmit}
-        OnCancel={handleCancel}
+        onSubmit={handleSubmit}
+        onCancel={handleCancel}
       />
     </div>
   );

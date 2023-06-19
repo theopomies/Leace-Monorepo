@@ -34,7 +34,7 @@ export const PostList = ({ userId }: PostListProps) => {
     return <Loader />;
   }
 
-  const OnDeleteMatch = async (relationshipId: string) => {
+  const onDeleteMatch = async (relationshipId: string) => {
     await deleteMatchMutation.mutateAsync({ userId, relationshipId });
   };
 
@@ -50,7 +50,7 @@ export const PostList = ({ userId }: PostListProps) => {
             relationshipId={id}
             conversationId={conversation?.id}
             user={user}
-            OnDeleteMatch={OnDeleteMatch}
+            onDeleteMatch={onDeleteMatch}
           />
         ))}
       </div>

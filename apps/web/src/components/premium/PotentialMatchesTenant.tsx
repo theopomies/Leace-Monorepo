@@ -33,10 +33,10 @@ export const PotentialMatchesTenant = ({ userId }: PostListProps) => {
     return <Loader />;
   }
 
-  const OnDeleteMatch = async (relationshipId: string) => {
+  const onDeleteMatch = async (relationshipId: string) => {
     await deleteMatchMutation.mutateAsync({ userId, relationshipId });
   };
-  const OnLikeMatch = async (postId: string) => {
+  const onLikeMatch = async (postId: string) => {
     await likePostForTenant.mutateAsync({ userId, postId });
   };
 
@@ -56,8 +56,8 @@ export const PotentialMatchesTenant = ({ userId }: PostListProps) => {
             relationType={relationType}
             relationshipId={id}
             user={user}
-            OnDeleteMatch={OnDeleteMatch}
-            OnLikeMatch={OnLikeMatch}
+            onDeleteMatch={onDeleteMatch}
+            onLikeMatch={onLikeMatch}
           />
         ))}
       </div>
