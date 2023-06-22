@@ -5,7 +5,7 @@ import React from "react";
 import { AddressAutocomplete } from "../shared/forms/AddressAutocomplete";
 import { NumberInput } from "../shared/forms/NumberInput";
 
-interface AttributesPostFormProps {
+interface PostAttributesFormProps {
   location: string;
   handleLocationChange: ChangeEventHandler<HTMLInputElement>;
   price: number;
@@ -34,7 +34,7 @@ interface AttributesPostFormProps {
   handlePoolChange: ChangeEventHandler<HTMLInputElement>;
 }
 
-export function AttributesPostForm({ ...attributes }: AttributesPostFormProps) {
+export function PostAttributesForm({ ...attributes }: PostAttributesFormProps) {
   const attributesList: {
     label: string;
     name: string;

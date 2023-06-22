@@ -16,7 +16,7 @@ import { HomeType } from "../../../types/homeType";
 import { DocumentList } from "../document/DocumentList";
 import { ImageList } from "./ImageList";
 import { Post, Attribute, Image, Document } from "@prisma/client";
-import { AttributesPostForm } from "../../attributes/AttributesPostForm";
+import { PostAttributesForm } from "../../attributes/PostAttributesForm";
 
 export type PostFormData = {
   title: string;
@@ -192,7 +192,7 @@ export const PostForm = (props: PostFormProps) => {
           />
         </div>
       </div>
-      <AttributesPostForm {...attributesStates} />
+      <PostAttributesForm {...attributesStates} />
       <ImageList images={props.imagesGet} onDelete={props.onImgDelete} />
       <div className="mt-2 mb-5 flex flex-wrap justify-center gap-4">
         <FileInput multiple onChange={props.setImages || props.onImgsUpload}>
