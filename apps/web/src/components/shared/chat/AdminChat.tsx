@@ -2,15 +2,18 @@ import { Role } from "@prisma/client";
 import { trpc } from "../../../utils/trpc";
 import { Loader } from "../Loader";
 import { Chat } from "./Chat";
+import { useMemo } from "react";
 
 export function AdminChat({
   userId,
   conversationId = "",
+  url,
 }: {
   userId: string;
   conversationId?: string;
+  url: string;
 }) {
-  const { data: user, isLoading } =
+  const { data: user, isLoading: userLoading } =
     trpc.moderation.user.getUserById.useQuery(userId);
 
   const { data: relationships, isLoading: relationshipsLoading } =
@@ -20,14 +23,26 @@ export function AdminChat({
     trpc.moderation.support.getRelationships.useQuery({ userId });
 
   const { data: conversation, isLoading: conversationIsLoading } =
-    trpc.moderation.conversation.getConversation.useQuery({ conversationId });
+    trpc.moderation.conversation.getConversation.useQuery(
+      { conversationId },
+      { retry: false },
+    );
 
-  if (
-    isLoading ||
-    relationshipsLoading ||
-    supportRelationshipsLoading ||
-    conversationIsLoading
-  ) {
+  const isLoading = useMemo(
+    () =>
+      userLoading ||
+      relationshipsLoading ||
+      supportRelationshipsLoading ||
+      conversationIsLoading,
+    [
+      userLoading,
+      relationshipsLoading,
+      supportRelationshipsLoading,
+      conversationIsLoading,
+    ],
+  );
+
+  if (isLoading) {
     return <Loader />;
   }
 
@@ -35,8 +50,12 @@ export function AdminChat({
     return <div>User not found</div>;
   }
 
-  if (user.role !== Role.TENANT && user.role !== Role.OWNER) {
-    return <div>User is not a tenant or owner</div>;
+  if (
+    user.role !== Role.TENANT &&
+    user.role !== Role.OWNER &&
+    user.role !== Role.AGENCY
+  ) {
+    return <div>User is not a tenant or owner/agency</div>;
   }
 
   return (
@@ -45,7 +64,7 @@ export function AdminChat({
       role={Role.ADMIN}
       relationships={relationships}
       supportRelationships={supportRelationships}
-      conversationLink="/administration/users/[userId]/conversations/[conversationId]"
+      conversationLink={`${url}/users/[userId]/conversations/[conversationId]`}
       conversationId={conversationId}
       messages={conversation?.messages}
     />

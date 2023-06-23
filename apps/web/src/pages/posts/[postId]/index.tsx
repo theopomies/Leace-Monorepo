@@ -1,20 +1,23 @@
 import React from "react";
 import { useRouter } from "next/router";
 import { LoggedLayout } from "../../../components/layout/LoggedLayout";
-import { PostPage } from "../../../components/posts/PostPage";
+import { Post } from "../../../components/posts/Post";
 
 const Index = () => {
   const router = useRouter();
   const { postId } = router.query;
 
-  const children =
-    postId && typeof postId == "string" ? (
-      <PostPage postId={postId} />
-    ) : (
-      <div>Please enter a valid postId</div>
-    );
+  if (typeof postId != "string" || !postId) {
+    return <div>Invalid postId</div>;
+  }
 
-  return <LoggedLayout title="Post | Leace">{children}</LoggedLayout>;
+  return (
+    <LoggedLayout title="Post | Leace">
+      <div className="m-auto py-5">
+        <Post postId={postId} />
+      </div>
+    </LoggedLayout>
+  );
 };
 
 export default Index;

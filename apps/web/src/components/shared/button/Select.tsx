@@ -3,7 +3,7 @@
 // @ts-nocheck
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { Check } from "../../moderation/Icons";
+import { CheckSvg } from "../icons/CheckSvg";
 
 export interface SelectProps {
   label?: string;
@@ -22,7 +22,6 @@ export const Select = ({
 }: SelectProps) => {
   const [open, setOpen] = useState(false);
   const selectRef = useRef<HTMLDivElement>(null);
-  console.log(options);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -111,8 +110,8 @@ export const Select = ({
                     </span>
                   </div>
                   {option === value && (
-                    <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-indigo-600 group-hover:text-white">
-                      <Check />
+                    <span className="absolute inset-y-0 right-0 flex w-5 items-center stroke-indigo-600 group-hover:stroke-white">
+                      <CheckSvg />
                     </span>
                   )}
                 </li>

@@ -1,72 +1,76 @@
-import Link from "next/link";
 import { trpc } from "../../utils/trpc";
-import { TenantBar } from "../users/UserBar";
-import { Header } from "../users/Header";
+import { UserBar } from "../shared/user/UserBar";
+import { Loader } from "../shared/Loader";
+import { useMemo } from "react";
 
 export interface TenantListProps {
   userId: string;
 }
 
 export const PotentialMatchesAgencyOwner = ({ userId }: TenantListProps) => {
-  const { data: relationships } = trpc.relationship.getLikesForOwner.useQuery({
-    userId,
+  const {
+    data: relationships,
+    isLoading: likesForOwnerLoading,
+    refetch: refetchLikesForOwner,
+  } = trpc.relationship.getLikesForOwner.useQuery({ userId });
+  const { data: currentUser, isLoading: userLoading } =
+    trpc.user.getUserById.useQuery({ userId });
+
+  const likeTenantForPost = trpc.relationship.likeTenantForPost.useMutation({
+    onSuccess: () => refetchLikesForOwner(),
   });
-  const { data: user } = trpc.user.getUserById.useQuery({
-    userId: userId ?? "",
-  });
-  if (relationships && relationships.relationship) {
+  const deleteMatchMutation =
+    trpc.relationship.deleteRelationForOwner.useMutation({
+      onSuccess: () => refetchLikesForOwner(),
+    });
+
+  const isLoading = useMemo(() => {
+    return likesForOwnerLoading || userLoading;
+  }, [likesForOwnerLoading, userLoading]);
+
+  if (isLoading) {
+    return <Loader />;
+  }
+
+  const onDeleteMatch = async (relationshipId: string) => {
+    await deleteMatchMutation.mutateAsync({ userId, relationshipId });
+  };
+  const onLikeMatch = async (matchedUserId: string, postId: string) => {
+    await likeTenantForPost.mutateAsync({ userId: matchedUserId, postId });
+  };
+
+  if (
+    relationships &&
+    relationships.relationship &&
+    relationships.relationship.length > 0 &&
+    currentUser
+  ) {
     return (
-      <div className="container mx-auto p-4">
-        <Header heading={"Potential Matches"} />
-        <>
-          {relationships.relationship.map(
-            ({
-              user: {
-                id: otherUserId,
-                image,
-                description,
-                firstName,
-                lastName,
-              },
-              post: { id: postId, title },
-              id,
-              relationType,
-            }) => (
-              <div key={id}>
-                <TenantBar
-                  otherUserId={otherUserId}
-                  img={image ?? ""}
-                  desc={description ?? ""}
-                  firstname={firstName ?? ""}
-                  lastName={lastName ?? ""}
-                  relationType={relationType}
-                  userId={userId}
-                  relationshipId={id}
-                  postId={postId}
-                  title={title ?? ""}
-                  user={user}
-                />
-              </div>
-            ),
-          )}
-        </>
-      </div>
-    );
-  } else {
-    return (
-      <div className="container mx-auto p-4">
-        <div className="bottom-80 left-0 right-0 top-80 items-center justify-center">
-          <div className="items-center justify-center text-center text-3xl font-bold">
-            No client has liked your post yet!
-          </div>
-        </div>
-        <Link
-          className="bottom-0 left-0 right-0 flex items-center justify-center rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
-          href={`/`}
-        >
-          Return
-        </Link>
+      <div>
+        {relationships.relationship.map(({ user, relationType, id, post }) => (
+          <UserBar
+            key={user.id}
+            matchedUser={user}
+            matchedUserLink="/users/[userId]"
+            post={post}
+            relationType={relationType}
+            relationshipId={id}
+            user={currentUser}
+            onDeleteMatch={onDeleteMatch}
+            onLikeMatch={onLikeMatch}
+          />
+        ))}
       </div>
     );
   }
+  return (
+    <div className="mt-8 flex flex-col items-center justify-center">
+      <h1 className="text-2xl font-bold text-gray-700">
+        No client has liked your post yet :(
+      </h1>
+      <div className="mt-4 flex flex-col items-center justify-center">
+        <p className="text-gray-500">Wait, clients are coming to you !</p>
+      </div>
+    </div>
+  );
 };

@@ -6,25 +6,32 @@ import { Role } from "@prisma/client";
 
 export function SupportChat({
   userId,
-  conversationId,
+  conversationId = "",
   role,
 }: {
   userId: string;
   conversationId?: string;
   role: Role;
 }) {
-  const utils = trpc.useContext();
-  const { data: conversation, isLoading: conversationIsLoading } =
-    trpc.moderation.support.getConversation.useQuery({
-      conversationId: conversationId ?? "",
-    });
-  const sendMutation = trpc.moderation.support.sendMessage.useMutation({
-    onSuccess() {
-      utils.moderation.support.getConversation.invalidate();
-    },
-  });
   const { data: supportRelationships, isLoading: supportRelationshipsLoading } =
     trpc.moderation.support.getRelationships.useQuery({ userId });
+
+  const {
+    data: conversation,
+    isLoading: conversationIsLoading,
+    refetch: refetchConversation,
+  } = trpc.moderation.support.getConversation.useQuery(
+    { conversationId },
+    {
+      retry: false,
+    },
+  );
+
+  const sendMutation = trpc.moderation.support.sendMessage.useMutation({
+    onSuccess() {
+      refetchConversation();
+    },
+  });
 
   const sendMessage = (content: string) => {
     if (!conversationId) {

@@ -2,7 +2,7 @@ import { MouseEventHandler } from "react";
 import { trpc } from "../../utils/trpc";
 import { Role } from "@prisma/client";
 import { Button } from "../shared/button/Button";
-import { Header } from "./Header";
+import { Header } from "../shared/Header";
 
 export interface RoleSelectorProps {
   userId: string;

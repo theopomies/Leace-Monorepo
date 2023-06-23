@@ -14,12 +14,7 @@ export default function SupportPage() {
     return <Loader />;
   }
 
-  if (
-    !conversationId ||
-    typeof conversationId !== "string" ||
-    !session ||
-    !session
-  ) {
+  if (!conversationId || typeof conversationId !== "string" || !session) {
     return <div>BAD REQ</div>;
   }
 

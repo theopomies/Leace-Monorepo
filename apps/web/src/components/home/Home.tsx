@@ -3,9 +3,9 @@ import { trpc } from "../../utils/trpc";
 import { RoleSelector } from "../users/RoleSelector";
 import { PostStack } from "./stack/PostStack";
 import { TenantStack } from "./stack/TenantStack";
-import { Moderation } from "../moderation/Moderation";
 import { Loader } from "../shared/Loader";
 import { useRouter } from "next/router";
+import { ModerationReportPage } from "../moderation/moderation/ModerationReportPage";
 
 export const Home = () => {
   const { data: session, isLoading } = trpc.auth.getSession.useQuery();
@@ -22,7 +22,7 @@ export const Home = () => {
     return <Loader />;
   }
 
-  if (role == Role.MODERATOR) return <Moderation />;
+  if (role == Role.MODERATOR) return <ModerationReportPage />;
 
   if (role == Role.TENANT) return <PostStack />;
 

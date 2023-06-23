@@ -16,7 +16,7 @@ export function TextArea({
       className={
         overrideStyles
           ? className
-          : "mt-5 rounded-lg border-2 border-gray-300 bg-gray-50 p-2.5 text-start text-sm text-gray-900 focus:border-blue-600 focus:outline-none " +
+          : "rounded-lg border-2 border-gray-300 bg-gray-50 p-2.5 text-start text-sm text-gray-900 focus:border-blue-600 focus:outline-none " +
             className
       }
       rows={rows}

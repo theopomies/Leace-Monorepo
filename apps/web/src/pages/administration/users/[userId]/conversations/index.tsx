@@ -14,7 +14,7 @@ export default function AdminUserConversationsPage() {
   return (
     <LoggedLayout title="User Conversations | Leace" roles={[Role.ADMIN]}>
       <div className="flex h-screen w-full justify-center p-4">
-        <AdminChat userId={userId} />
+        <AdminChat userId={userId} url="/administration" />
       </div>
     </LoggedLayout>
   );

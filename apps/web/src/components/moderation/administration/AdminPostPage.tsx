@@ -1,28 +1,37 @@
+import Link from "next/link";
 import { trpc } from "../../../utils/trpc";
 import { Loader } from "../../shared/Loader";
-import { Search } from "../Search";
-import { BanPostAuthor } from "../ban/BanPostAuthor";
-import { Post } from "../post";
+import { Button } from "../../shared/button/Button";
+import { Search } from "./Search";
+import { PostList } from "../posts/PostList";
+import { Post } from "../posts";
+import { ActionButtons } from "../ActionButtons";
 
 export function AdminPostPage({ postId }: { postId: string }) {
-  const user = trpc.moderation.post.getPostById.useQuery(postId, {
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    refetchOnReconnect: false,
-    retry: false,
-  });
+  const post = trpc.moderation.post.getPostById.useQuery(postId);
 
-  if (user.isLoading) return <Loader />;
-  if (user && user.data && !user.error) {
+  if (post.isLoading) return <Loader />;
+  if (post && post.data && !post.error) {
     return (
       <div className="flex w-full">
-        <div className="flex w-1/5 items-center justify-center"></div>
-        <div className="w-3/5 py-5">
+        <div className="flex w-5/6 flex-col">
           <Search />
-          {user.data && <Post postId={postId} />}
+          <Link href={`/administration/users/${post.data.createdById}`}>
+            <Button className="w-full">View profile</Button>
+          </Link>
+          <div className="flex">
+            <PostList
+              userId={post.data.createdById}
+              postLink="/administration/posts/[postId]"
+            />
+            <Post postId={postId} />
+          </div>
         </div>
-        <div className="flex h-screen w-1/5 flex-col items-center justify-center gap-5 px-10">
-          {user.data && <BanPostAuthor postId={postId} />}
+        <div className="h-screen w-1/6">
+          <ActionButtons
+            userId={post.data.createdById}
+            conversationLink={`/administration/users/${post.data.createdById}/conversations`}
+          />
         </div>
       </div>
     );
@@ -32,7 +41,7 @@ export function AdminPostPage({ postId }: { postId: string }) {
       <div className="w-3/5">
         <Search />
         <p className="flex w-full items-center justify-center">
-          User not found
+          Post not found
         </p>
       </div>
     </div>

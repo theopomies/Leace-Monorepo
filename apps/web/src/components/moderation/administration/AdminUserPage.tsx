@@ -1,28 +1,32 @@
 import { trpc } from "../../../utils/trpc";
 import { Loader } from "../../shared/Loader";
-import { Search } from "../Search";
-import { Ban } from "../ban";
-import { User } from "../user";
+import { Search } from "./Search";
+import { Button } from "../../shared/button/Button";
+import Link from "next/link";
+import { User } from "../users";
+import { ActionButtons } from "../ActionButtons";
 
 export function AdminUserPage({ userId }: { userId: string }) {
-  const user = trpc.moderation.user.getUserById.useQuery(userId, {
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    refetchOnReconnect: false,
-    retry: false,
-  });
+  const user = trpc.moderation.user.getUserById.useQuery(userId);
 
   if (user.isLoading) return <Loader />;
   if (user && user.data && !user.error) {
     return (
       <div className="flex w-full">
-        <div className="flex w-1/5 items-center justify-center"></div>
-        <div className="w-3/5 py-5">
+        <div className="flex w-5/6 flex-col">
           <Search />
-          {user.data && <User userId={userId} />}
+          {user.data.posts[0] && (
+            <Link href={`/administration/posts/${user.data.posts[0].id}`}>
+              <Button className="w-full">View posts</Button>
+            </Link>
+          )}
+          <User userId={userId} />
         </div>
-        <div className="flex h-screen w-1/5 flex-col items-center justify-center gap-5 px-10">
-          {user.data && <Ban userId={userId} />}
+        <div className="h-screen w-1/6">
+          <ActionButtons
+            userId={userId}
+            conversationLink={`/administration/users/${userId}/conversations`}
+          />
         </div>
       </div>
     );
