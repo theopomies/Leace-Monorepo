@@ -5,16 +5,33 @@ import { ReportModal } from "../Modal";
 import BottomBar from "./BottomBar";
 import Message from "./Message";
 import { ContractCard } from "../Card";
-import { RouteProp, useNavigation } from "@react-navigation/native";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { TabStackParamList } from "../../navigation/TabNavigator";
+import { trpc } from "../../utils/trpc";
 
-export const Portal = ({
-  route,
-}: {
-  route?: RouteProp<TabStackParamList, "Portal">;
-}) => {
-  const params = route?.params;
+export const Portal = () => {
+  const route = useRoute<RouteProp<TabStackParamList, "Portal">>();
+  const userId = route.params?.userId;
+  const relationshipId = route.params?.relationshipId;
+
+  const lease = trpc.lease.getLeasesByUserId.useQuery({ userId });
+
+  const deleteLease = trpc.lease.deleteLeaseById.useMutation();
+
+  const deleteLeaseButton = () => {
+    deleteLease.mutate({
+      leaseId: lease.data[0]?.id as string,
+    });
+  };
+
+  const updateLeaseButton = async () => {
+    navigation.navigate("UpdateLease", {
+      userId,
+      relationshipId,
+      leaseId: lease.data[0]?.id as string,
+    });
+  };
 
   const navigation =
     useNavigation<NativeStackNavigationProp<TabStackParamList>>();
@@ -25,8 +42,8 @@ export const Portal = ({
   const onSelect = (item: { item: string }) => {
     setSelected(item);
 
-    if (item.item === "Contract") {
-      navigation.navigate("Contract", { id: params as unknown as string });
+    if (item.item === "Lease") {
+      navigation.navigate("Lease", { userId, relationshipId });
     }
   };
 
@@ -35,44 +52,55 @@ export const Portal = ({
   };
 
   const data = [
-    { item: "Contract" },
+    { item: "Lease" },
     { item: "Photo & Video" },
     { item: "Document" },
     { item: "Report" },
   ];
 
   return (
-    <View className="mt-10">
-      <View className="flex-row items-center border-b border-gray-400 bg-white p-3">
-        <TouchableOpacity
-          className="mr-5"
-          onPress={() => navigation.navigate("Dashboard")}
-        >
-          <Icon
-            size={20}
-            name="arrow-back-ios"
-            type="material-icons"
-            color={"#002642"}
+    <View className="flex flex-1">
+      <View className="mb-20 mt-10 flex flex-1">
+        <View className="flex-row items-center border-b border-gray-400 bg-white p-3">
+          <TouchableOpacity
+            className="mr-5"
+            onPress={() => navigation.navigate("Dashboard", { userId })}
+          >
+            <Icon
+              size={20}
+              name="arrow-back-ios"
+              type="material-icons"
+              color={"#002642"}
+            />
+          </TouchableOpacity>
+          <Image
+            source={require("../../../assets/blank.png")}
+            className="mr-10 h-10 w-10 rounded-full"
           />
-        </TouchableOpacity>
-        <Image
-          source={require("../../../assets/blank.png")}
-          className="mr-10 h-10 w-10 rounded-full"
-        />
-        <Text className="ml-5 flex text-center text-2xl font-bold">
-          John Doe
-        </Text>
+          <Text className="ml-5 flex text-center text-2xl font-bold">
+            John Doe
+          </Text>
+        </View>
+
+        {selected.item === "Report" ? (
+          <ReportModal cond={false} visible={true} />
+        ) : null}
+
+        <Message />
+
+        {lease.data && lease.data.length > 0 && (
+          <ContractCard
+            rentCost={lease.data[0].rentCost as number}
+            utilitiesCost={lease.data[0].utilitiesCost as number}
+            startDate={lease.data[0].startDate as Date}
+            endDate={lease.data[0].endDate as Date}
+            deleteLease={deleteLeaseButton}
+            updateLease={updateLeaseButton}
+          />
+        )}
       </View>
 
-      {selected.item === "Report" ? (
-        <ReportModal cond={false} visible={true} />
-      ) : null}
-
-      <Message />
-
-      <ContractCard />
-
-      <View className="max-h-100 absolute bottom-0 left-0 flex w-full items-center justify-between p-5">
+      <View className="flex w-full items-center justify-between p-5">
         <BottomBar
           onSelect={onSelect}
           data={data}

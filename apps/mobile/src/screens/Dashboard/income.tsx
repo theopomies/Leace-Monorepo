@@ -20,13 +20,13 @@ const Income = () => {
       <View>
         <View className="ml-10 flex-row items-center justify-center">
           <Text className="font-p text-custom mx-auto mb-10	text-center text-3xl font-bold">
-            EXPENSES
+            INCOME
           </Text>
           <ShowProfile path={require("../../../assets/blank.png")} />
         </View>
         {posts.data && income ? (
           posts.data.map((post) => (
-            <View key={post.id} className="mb-10 items-center">
+            <View key={post.id} className="mb-5 items-center">
               <PostCard
                 title={post.title}
                 desc={post.desc}

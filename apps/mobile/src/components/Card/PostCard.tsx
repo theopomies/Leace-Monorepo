@@ -36,14 +36,20 @@ const PostCard = ({
           className="mr-10 h-20 w-20 rounded-full"
         />
         <View className="flex-1">
-          <Text className="text-18 mb-5 font-bold">{title}</Text>
-          <Text className="text-14 mb-5 text-gray-600">{desc}</Text>
+          <Text className="text-18 mb-2 font-bold">{title}</Text>
+          <Text className="text-14 mb-2 text-gray-600">{desc}</Text>
           <Text className="text-16">{content}</Text>
           {income !== undefined ? (
-            <Text className="text-14 text-gray-600">Income: {income}</Text>
+            <View className="flex-row">
+              <Text className="text-14 mr-2 font-bold">Income:</Text>
+              <Text className="text-14">{income}</Text>
+            </View>
           ) : null}
           {expenses !== undefined ? (
-            <Text className="text-14 text-gray-600">Expenses: {expenses}</Text>
+            <View className="flex-row">
+              <Text className="text-14 mr-2 font-bold">Expenses:</Text>
+              <Text className="text-14">{expenses}</Text>
+            </View>
           ) : null}
         </View>
       </View>

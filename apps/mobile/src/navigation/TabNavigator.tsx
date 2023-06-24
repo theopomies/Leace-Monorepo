@@ -45,10 +45,11 @@ export type TabStackParamList = {
   Clients: { userId: string };
   Occupied: { userId: string };
   Available: { userId: string };
-  Chat: { id: string };
-  Portal: { id: string };
+  Chat: { userId: string };
+  Portal: { userId: string; relationshipId: string; leaseId: string };
 
-  Contract: { id: string };
+  Lease: { userId: string; relationshipId: string };
+  UpdateLease: { userId: string; relationshipId: string; leaseId: string };
 };
 
 const TabNavigator = () => {
@@ -74,7 +75,7 @@ const TabNavigator = () => {
     getSession();
   }, [session]);
 
-  if (!session || !role) {
+  if (!session && !role) {
     return (
       <View className="flex-1 items-center justify-center">
         <ActivityIndicator size="large" color={"#002642"} />

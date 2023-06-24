@@ -23,7 +23,7 @@ const SignOut = () => {
 };
 
 const Dashboard = () => {
-  const route = useRoute<RouteProp<TabStackParamList, "ViewPost">>();
+  const route = useRoute<RouteProp<TabStackParamList, "Dashboard">>();
   const userId = route.params?.userId;
 
   const navigation =
@@ -68,7 +68,7 @@ const Dashboard = () => {
         <View>
           <MotionButton
             path={require("../../../assets/chat.png")}
-            onPress={() => navigation.navigate("Chat")}
+            onPress={() => navigation.navigate("Chat", { userId })}
           />
         </View>
       </View>

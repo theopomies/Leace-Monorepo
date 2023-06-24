@@ -12,7 +12,7 @@ const Clients = () => {
   const route = useRoute<RouteProp<TabStackParamList, "Clients">>();
   const userId = route.params?.userId;
 
-  const rs = trpc.relationship.getMatchesForOwner.useQuery({ userId });
+  const rs = trpc.support.getRelationshipsForOwner.useQuery({ userId });
 
   return (
     <ScrollView className="mx-5 mt-20" showsVerticalScrollIndicator={false}>
@@ -27,11 +27,12 @@ const Clients = () => {
           rs.data.map((item) => (
             <View key={item.id} className="mb-2 items-center">
               <ClientCard
-                firstName={item.post.createdBy.firstName}
-                lastName={item.post.createdBy.lastName}
-                email={item.post.createdBy.email}
+                firstName={item.user.firstName}
+                lastName={item.user.lastName}
+                email={item.user.email}
                 image={require("../../../assets/blank.png")}
-                id={item.id}
+                userId={userId}
+                relationshipId={item.id}
               />
             </View>
           ))

@@ -14,13 +14,15 @@ const ClientCard = ({
   lastName,
   email,
   image,
-  id,
+  userId,
+  relationshipId,
 }: {
   firstName: string | null;
   lastName: string | null;
   email: string | null;
   image: ImageSourcePropType;
-  id: string;
+  userId: string;
+  relationshipId: string;
 }) => {
   const navigation =
     useNavigation<NativeStackNavigationProp<TabStackParamList>>();
@@ -29,7 +31,7 @@ const ClientCard = ({
     <TouchableOpacity
       className="max-w-400 w-full overflow-hidden rounded-2xl border border-gray-300"
       onPress={() => {
-        navigation.navigate("Portal", { id: id });
+        navigation.navigate("Portal", { userId, relationshipId });
       }}
     >
       <View className="flex-row items-center p-2">

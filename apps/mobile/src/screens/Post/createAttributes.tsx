@@ -135,8 +135,8 @@ const CreateAttributes = () => {
         />
       </View>
       <DatePicker
-        startLabel={"Start Date"}
-        endLabel={"End date"}
+        startLabel={"rentStartDate"}
+        endLabel={"rentEndDate"}
         onChangeAttributesHandler={onChangeAttributesHandler}
       />
       <AddSelectedAttributes

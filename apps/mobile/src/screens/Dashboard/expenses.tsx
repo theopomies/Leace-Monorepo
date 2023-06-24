@@ -10,7 +10,7 @@ import { TabStackParamList } from "../../navigation/TabNavigator";
 const Expenses = () => {
   const route = useRoute<RouteProp<TabStackParamList, "Expenses">>();
   const userId = route.params?.userId;
-  const expenses = trpc.post.getRentExpenseByUserId.useQuery({ userId });
+  const expenses = trpc.post.getRentIncomeByUserId.useQuery({ userId });
 
   const posts = trpc.post.getPostsByUserId.useQuery({ userId });
 

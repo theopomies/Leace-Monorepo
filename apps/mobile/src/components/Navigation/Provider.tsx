@@ -18,12 +18,13 @@ import {
   ViewDetails,
 } from "../../screens/Post";
 import { Stack } from "../../screens/Stack/stack";
-import { Contract } from "../../screens/Contract/contract";
+import { Lease } from "../../screens/Lease/lease";
 import Role from "../../screens/Role/role";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { TabStackParamList } from "../../navigation/TabNavigator";
 import { UserRoles } from "../../utils/enum";
 import { Portal } from "../Chat/Portal";
+import { UpdateLease } from "../../screens/Lease/updateLease";
 
 const Tab = createBottomTabNavigator<TabStackParamList>();
 
@@ -225,8 +226,13 @@ const Provider = ({
       />
 
       <Tab.Screen
-        name="Contract"
-        component={Contract}
+        name="Lease"
+        component={Lease}
+        options={{ tabBarButton: () => null, headerShown: false }}
+      />
+      <Tab.Screen
+        name="UpdateLease"
+        component={UpdateLease}
         options={{ tabBarButton: () => null, headerShown: false }}
       />
     </Tab.Navigator>
