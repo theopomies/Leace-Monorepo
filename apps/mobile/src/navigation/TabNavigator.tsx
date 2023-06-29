@@ -26,7 +26,7 @@ const SignOut = () => {
 
 export type TabStackParamList = {
   Role: undefined;
-  Profile: undefined;
+  Profile: { userId: string };
   Stack: { userId: string };
   Match: undefined;
   Dashboard: { userId: string };
@@ -86,7 +86,9 @@ const TabNavigator = () => {
   }
 
   if (role === UserRoles.TENANT) {
-    return <Tenant role={role} />;
+    console.log("----------- ROLE", role);
+    console.log("----------- USER ID", session.userId);
+    return <Tenant role={role} userId={session?.userId as string} />;
   }
   return <Provider role={role} userId={session?.userId as string} />;
 };
