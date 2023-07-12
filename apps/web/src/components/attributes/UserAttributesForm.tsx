@@ -4,37 +4,38 @@ import { HomeType } from "../../types/homeType";
 import React from "react";
 import { AddressAutocomplete } from "../shared/forms/AddressAutocomplete";
 import { NumberInput } from "../shared/forms/NumberInput";
+import { Button } from "../shared/button/Button";
 
 interface UserAttributesFormProps {
-  location: string;
+  location?: string;
   handleLocationChange: ChangeEventHandler<HTMLInputElement>;
-  maxPrice: number;
+  maxPrice?: number;
   handleMaxPriceChange: ChangeEventHandler<HTMLInputElement>;
-  minPrice: number;
+  minPrice?: number;
   handleMinPriceChange: ChangeEventHandler<HTMLInputElement>;
-  maxSize: number;
+  maxSize?: number;
   handleMaxSizeChange: ChangeEventHandler<HTMLInputElement>;
-  minSize: number;
+  minSize?: number;
   handleMinSizeChange: ChangeEventHandler<HTMLInputElement>;
-  furnished: boolean;
+  furnished?: boolean;
   handleFurnishedChange: ChangeEventHandler<HTMLInputElement>;
-  homeType: HomeType | undefined;
+  homeType?: HomeType;
   handleHomeTypeChange: ChangeEventHandler<HTMLInputElement>;
-  terrace: boolean;
+  terrace?: boolean;
   handleTerraceChange: ChangeEventHandler<HTMLInputElement>;
-  pets: boolean;
+  pets?: boolean;
   handlePetsChange: ChangeEventHandler<HTMLInputElement>;
-  smoker: boolean;
+  smoker?: boolean;
   handleSmokerChange: ChangeEventHandler<HTMLInputElement>;
-  disability: boolean;
+  disability?: boolean;
   handleDisabilityChange: ChangeEventHandler<HTMLInputElement>;
-  garden: boolean;
+  garden?: boolean;
   handleGardenChange: ChangeEventHandler<HTMLInputElement>;
-  parking: boolean;
+  parking?: boolean;
   handleParkingChange: ChangeEventHandler<HTMLInputElement>;
-  elevator: boolean;
+  elevator?: boolean;
   handleElevatorChange: ChangeEventHandler<HTMLInputElement>;
-  pool: boolean;
+  pool?: boolean;
   handlePoolChange: ChangeEventHandler<HTMLInputElement>;
 }
 
@@ -95,7 +96,7 @@ export function UserAttributesForm({ ...attributes }: UserAttributesFormProps) {
     <div className="flex justify-center">
       <div className="h-auto w-full border-t py-5 text-center">
         <AddressAutocomplete
-          location={attributes.location}
+          location={attributes.location ?? ""}
           handleLocationChange={attributes.handleLocationChange}
         />
         <div className="mt-5 px-16">
@@ -137,7 +138,9 @@ export function UserAttributesForm({ ...attributes }: UserAttributesFormProps) {
                 key={att.name}
                 name={att.name}
                 onChange={att.handleChange}
-                checked={!!attributes[att.name as keyof typeof attributes]}
+                checked={
+                  attributes[att.name as keyof typeof attributes] as boolean
+                }
               >
                 {att.label}
               </Checkbox>

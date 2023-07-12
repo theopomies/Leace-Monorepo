@@ -2,8 +2,8 @@
 import { trpc } from "../../utils/trpc";
 import { Loader } from "../shared/Loader";
 import { useClerk } from "@clerk/nextjs";
-import { UserCard } from "../shared/user/UserCard";
 import { useMemo } from "react";
+import { UserCard } from "./UserCard";
 
 export interface UserPageProps {
   userId: string;
@@ -59,15 +59,14 @@ export const UserPage = ({ userId }: UserPageProps) => {
   };
 
   return (
-    <div className="m-auto w-1/2 py-5">
+    <div className="flex h-screen w-full flex-col overflow-hidden">
       <UserCard
         user={user}
         isBanned={isBanned}
-        onUserDelete={handleDeleteUser}
+        onDelete={handleDeleteUser}
         image={image}
         documents={documents}
-        updateLink="/users/[userId]/update"
-        isLoggedIn={userId === session.userId}
+        isLoggedUser={userId === session.userId}
       />
     </div>
   );

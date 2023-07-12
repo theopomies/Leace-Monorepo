@@ -19,7 +19,7 @@ import { TextInput } from "../forms/TextInput";
 import { User, Attribute, Image, Document, Role } from "@prisma/client";
 import { CrossSvg } from "../icons/CrossSvg";
 
-export type UserFormData = {
+export type ModerationUserFormData = {
   birthDate: string;
   firstName: string;
   lastName: string;
@@ -49,11 +49,11 @@ export interface UserFormProps {
   onDocsUpload: (event: ChangeEvent<HTMLInputElement>) => void;
   onDocDelete: (documentId: string) => Promise<void>;
   documentsGet: (Document & { url: string })[] | null | undefined;
-  onSubmit: (data: UserFormData) => Promise<void>;
+  onSubmit: (data: ModerationUserFormData) => Promise<void>;
   onCancel: MouseEventHandler<HTMLButtonElement>;
 }
 
-export const UserForm = (props: UserFormProps) => {
+export const ModerationUserForm = (props: UserFormProps) => {
   const [birthDate, setBirthDate] = useState<string>("");
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
@@ -139,7 +139,7 @@ export const UserForm = (props: UserFormProps) => {
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
 
-    const data: UserFormData = {
+    const data: ModerationUserFormData = {
       birthDate,
       firstName,
       lastName,

@@ -1,12 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
-import { MouseEventHandler } from "react";
+import { MouseEventHandler, useRef } from "react";
 import { trpc } from "../../utils/trpc";
 import { Role } from "@prisma/client";
-import { Header } from "../shared/Header";
 import { useRouter } from "next/router";
 import axios from "axios";
-import { UserForm, UserFormData } from "../shared/user/UserForm";
 import { cropImage } from "../../utils/cropImage";
+import { NewUserForm, NewUserFormData } from "./NewUserForm";
+import { UserLayout } from "./UserLayout";
+import { Button } from "../shared/button/Button";
 
 export interface UpdateUserPageProps {
   userId: string;
@@ -19,22 +20,23 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
 
   const updateAttributes = trpc.attribute.updateUserAttributes.useMutation();
 
-  const { data: imageGet, refetch: refetchImageGet } =
+  const { data: image, refetch: refetchImage } =
     trpc.image.getSignedUserUrl.useQuery({ userId });
   const uploadImage = trpc.image.putSignedUrl.useMutation();
 
-  const { data: documentsGet, refetch: refetchDocumentsGet } =
+  const { data: documents, refetch: refetchDocuments } =
     trpc.document.getSignedUrl.useQuery({ userId });
   const uploadDocument = trpc.document.putSignedUrl.useMutation();
   const deleteDocument = trpc.document.deleteSignedUrl.useMutation();
 
-  const handleSubmit = async (data: UserFormData) => {
+  const handleSubmit = async (data: NewUserFormData) => {
     await updateUser.mutateAsync({
       userId,
       birthDate: new Date(data.birthDate + "T00:00:00.000Z"),
       firstName: data.firstName,
       lastName: data.lastName,
       description: data.description,
+      country: data.country,
     });
     if (user?.role === Role.TENANT) {
       await updateAttributes.mutateAsync({
@@ -74,7 +76,7 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
           .then(async (url) => {
             if (url) {
               await axios.put(url, croppedBlob);
-              refetchImageGet();
+              refetchImage();
             }
           });
       });
@@ -96,7 +98,7 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
                   "Content-Type": document.type,
                 },
               });
-              refetchDocumentsGet();
+              refetchDocuments();
             }
           });
       });
@@ -105,7 +107,7 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
 
   const handleDeleteDoc = async (documentId: string) => {
     await deleteDocument.mutateAsync({ userId, documentId });
-    refetchDocumentsGet();
+    refetchDocuments();
   };
 
   const handleCancel: MouseEventHandler<HTMLButtonElement> = (e) => {
@@ -113,19 +115,52 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
     router.back();
   };
 
+  const formRef = useRef<HTMLFormElement>(null);
+
+  if (!user) {
+    return <div>User not found</div>;
+  }
+
   return (
-    <div className="w-full">
-      <Header heading="Update Profile" />
-      <UserForm
-        user={user}
-        onImgUpload={handleUploadImg}
-        imageGet={imageGet}
-        onDocsUpload={handleUploadDocs}
-        onDocDelete={handleDeleteDoc}
-        documentsGet={documentsGet}
-        onSubmit={handleSubmit}
-        onCancel={handleCancel}
-      />
-    </div>
+    <UserLayout
+      sidePanel={
+        <>
+          <div className="relative h-40 w-40">
+            <div className="relative h-full w-full overflow-hidden rounded-full shadow-xl">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={user.image || (image && image.url) || "/defaultImage.png"}
+                referrerPolicy="no-referrer"
+                alt="image"
+                className="mx-auto h-full w-full overflow-hidden rounded-full"
+              />
+            </div>
+            <button className="absolute top-0 left-0 flex h-full w-full items-end justify-center rounded-full opacity-0 transition-all hover:opacity-100">
+              <span className=" translate-y-[50%] rounded-full bg-white px-4 shadow-md">
+                Edit
+              </span>
+            </button>
+          </div>
+          <div className="flex gap-4">
+            <Button theme="danger" onClick={handleCancel}>
+              Cancel
+            </Button>
+            <Button onClick={() => formRef.current?.requestSubmit()}>
+              Submit
+            </Button>
+          </div>
+        </>
+      }
+      mainPanel={
+        <NewUserForm
+          ref={formRef}
+          user={user}
+          onDocsUpload={handleUploadDocs}
+          onDocDelete={handleDeleteDoc}
+          documents={documents}
+          onSubmit={handleSubmit}
+        />
+      }
+    />
   );
 }

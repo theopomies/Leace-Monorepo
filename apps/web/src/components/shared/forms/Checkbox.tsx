@@ -2,6 +2,7 @@ import {
   ChangeEventHandler,
   DetailedHTMLProps,
   InputHTMLAttributes,
+  useEffect,
 } from "react";
 
 export type CheckboxProps = DetailedHTMLProps<
@@ -23,14 +24,20 @@ export function Checkbox({
     onChange?.(e);
   };
 
+  useEffect(() => console.log(checked), [checked]);
+
   return (
     <label
       className={
-        (checked ? "bg-indigo-500" : "bg-indigo-200") +
+        (checked === undefined
+          ? "bg-indigo-400"
+          : checked
+          ? "bg-indigo-500"
+          : "bg-indigo-200") +
         " inline-block cursor-pointer rounded-md px-2.5 py-1.5 text-sm font-medium text-white"
       }
     >
-      {children}
+      {checked === undefined ? "Whatever" : children}
       <input
         type={type}
         className="pointer-events-none absolute opacity-0"

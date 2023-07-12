@@ -79,6 +79,7 @@ export const userRouter = router({
         userId: z.string(),
         firstName: z.string().optional(),
         lastName: z.string().optional(),
+        country: z.string().optional(),
         phoneNumber: z.string().optional(),
         description: z.string().optional(),
         birthDate: z.date().optional(),
@@ -111,6 +112,7 @@ export const userRouter = router({
             description: input.description,
             birthDate,
             status: UserStatus.ACTIVE,
+            country: input.country,
           },
         });
         if (!updated) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
