@@ -14,6 +14,9 @@ export const Lease = () => {
   const userId = route.params?.userId;
   const relationshipId = route.params?.relationshipId;
 
+  console.log(userId);
+  console.log(relationshipId);
+
   const navigation =
     useNavigation<NativeStackNavigationProp<TabStackParamList>>();
 
@@ -160,7 +163,7 @@ export const Lease = () => {
                 onPress={() =>
                   navigation.navigate("Portal", {
                     userId,
-                    leaseId: "cli0wvufp0003ug55005rvu4x",
+                    leaseId: "cljfmk97j000cvqyafa7ifx8m",
                     relationshipId,
                   })
                 }

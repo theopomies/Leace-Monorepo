@@ -1,57 +1,90 @@
-import { View, Image, TouchableOpacity } from 'react-native'
-import React, { useState } from 'react'
-import { Button } from 'react-native-elements'
-import { Picker } from '@react-native-picker/picker';
-import { Reason } from '../../utils/enum';
-import Modal from './Modal'
-import { trpc } from '../../utils/trpc';
+import { View, Image, TouchableOpacity, TextInput, Text } from "react-native";
+import React, { useState } from "react";
+import { Button } from "../Button";
+import { Picker } from "@react-native-picker/picker";
+import { Reason } from "../../utils/enum";
+import Modal from "./Modal";
+import { trpc } from "../../utils/trpc";
 
+const ReportModal = ({
+  userId,
+  isOpened,
+  setIsOpened,
+}: {
+  userId: string;
+  isOpened: boolean;
+  setIsOpened: (bool: boolean) => void;
+}) => {
+  const reportUser = trpc.report.reportUserById.useMutation();
 
-const ReportModal = ({ cond, visible }: { cond: boolean, visible: boolean }) => {
+  const [selectedValue, setSelectedValue] = useState<Reason>(Reason.SPAM);
+  const [inputText, setInputText] = useState("");
 
-    const reportUser = trpc.report.reportPost.useMutation()
+  const reportButton = (reason: Reason) => {
+    reportUser.mutate({
+      userId: userId,
+      reason: reason,
+      desc: inputText,
+    });
+    setInputText("");
+  };
 
-    const [selectedValue, setSelectedValue] = useState<Reason>(Reason.SPAM);
-    const [isOpened, setIsOpened] = useState(false);
+  return (
+    <View>
+      <Modal aspect={false} visible={isOpened}>
+        <View className="h-full rounded-lg ">
+          <View className="flex items-end justify-end">
+            <TouchableOpacity
+              onPress={() => {
+                setIsOpened(false);
+                setInputText("");
+              }}
+            >
+              <Image
+                source={require("../../../assets/x.png")}
+                className="mb-5 h-8 w-8"
+              />
+            </TouchableOpacity>
+          </View>
 
-    const reportButton = (reason: Reason) => {
-        reportUser.mutate({ postId: reportUser.data?.id as string, reason: reason });
-    };
+          <Text className="font-p text-custom mb-2 text-xl font-bold">
+            What's happening?
+          </Text>
+          <Text className="mb-5 text-sm text-gray-800">
+            Tell us the reason of your report.
+          </Text>
+          <Picker
+            selectedValue={selectedValue}
+            onValueChange={(itemValue) => setSelectedValue(itemValue as Reason)}
+          >
+            <Picker.Item label="SPAM" value={Reason.SPAM} />
+            <Picker.Item label="SCAM" value={Reason.SCAM} />
+            <Picker.Item label="INAPPROPRIATE" value={Reason.INAPPROPRIATE} />
+            <Picker.Item label="OTHER" value={Reason.OTHER} />
+          </Picker>
 
-    return (
-        <View>
-            {cond ? <Button title="Report" buttonStyle={{ backgroundColor: "#002642" }} className="mx-9 mt-5 rounded bg-blue-500  text-white hover:bg-blue-700" onPress={() => {
-                setIsOpened(true);
-            }} /> : <></>}
-            {isOpened && visible ?
-                <Modal aspect={false} visible={isOpened}>
-                    <View className="items-center">
-                        <TouchableOpacity onPress={() => {
-                            setIsOpened(false);
-                        }}>
-                            <Image
-                                source={require('../../../assets/x.png')}
-                                className="h-8 w-8 mb-5"
-                            />
-                        </TouchableOpacity>
-                        <Picker
-                            selectedValue={selectedValue}
-                            style={{ height: 50, width: 300, marginBottom: 200 }}
-                            onValueChange={(itemValue) => setSelectedValue(itemValue as Reason)}
-                        >
-                            <Picker.Item label="SPAM" value={Reason.SPAM} />
-                            <Picker.Item label="SCAM" value={Reason.SCAM} />
-                            <Picker.Item label="INAPPROPRIATE" value={Reason.INAPPROPRIATE} />
-                            <Picker.Item label="OTHER" value={Reason.OTHER} />
-                        </Picker>
+          <TextInput
+            className="my-10 h-32 w-full rounded-lg border border-solid border-gray-400 px-2"
+            placeholder="Let us know what's going on"
+            value={inputText}
+            onChangeText={(text) => setInputText(text)}
+            multiline
+          />
 
-                        <Button title="Submit" className="mt-20 mx-9 mb-4 rounded bg-blue-500 py-1 px-4 font-bold text-white hover:bg-blue-700" onPress={() => { reportButton(selectedValue); setIsOpened(false); }} />
-
-                    </View>
-                </Modal>
-                : <></>}
+          <View className="items-center">
+            <Button
+              title="Submit"
+              color="custom"
+              onPress={() => {
+                reportButton(selectedValue);
+                setIsOpened(false);
+              }}
+            />
+          </View>
         </View>
-    )
-}
+      </Modal>
+    </View>
+  );
+};
 
-export default ReportModal
+export default ReportModal;

@@ -50,6 +50,8 @@ export type TabStackParamList = {
 
   Lease: { userId: string; relationshipId: string };
   UpdateLease: { userId: string; relationshipId: string; leaseId: string };
+
+  Offer: undefined;
 };
 
 const TabNavigator = () => {
@@ -79,7 +81,6 @@ const TabNavigator = () => {
     return (
       <View className="flex-1 items-center justify-center">
         <ActivityIndicator size="large" color={"#002642"} />
-
         <SignOut />
       </View>
     );

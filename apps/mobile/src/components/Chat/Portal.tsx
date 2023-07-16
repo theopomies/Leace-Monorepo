@@ -38,11 +38,17 @@ export const Portal = () => {
 
   const [value, setValue] = useState("");
   const [selected, setSelected] = useState({ item: "" });
+  const [openReport, setOpenReport] = useState(false);
 
   const onSelect = (item: { item: string }) => {
     setSelected(item);
 
-    if (item.item === "Lease") {
+    console.log(item.item);
+    console.log(selected.item);
+    if (item.item === "Report") {
+      setSelected({ item: "Report" });
+      setOpenReport(true);
+    } else if (item.item === "Lease") {
       navigation.navigate("Lease", { userId, relationshipId });
     }
   };
@@ -83,7 +89,13 @@ export const Portal = () => {
         </View>
 
         {selected.item === "Report" ? (
-          <ReportModal cond={false} visible={true} />
+          <ReportModal
+            isOpened={openReport}
+            setIsOpened={() => {
+              setOpenReport(!openReport);
+            }}
+            userId={userId}
+          />
         ) : null}
 
         <Message />

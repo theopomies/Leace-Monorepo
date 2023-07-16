@@ -13,6 +13,15 @@ const Clients = () => {
   const userId = route.params?.userId;
 
   const rs = trpc.support.getRelationshipsForOwner.useQuery({ userId });
+  const del = trpc.relationship.deleteRelationForOwner.useMutation();
+
+  const deleteClient = async (relationshipId: string) => {
+    console.log(del);
+    await del.mutateAsync({
+      userId: "user_2NQu30Ubhyv6QsGTOCJmFvAADyZ",
+      relationshipId: "user_2NQu30Ubhyv6QsGTOCJmFvAADyZ",
+    });
+  };
 
   return (
     <ScrollView className="mx-5 mt-20" showsVerticalScrollIndicator={false}>
@@ -23,7 +32,7 @@ const Clients = () => {
           </Text>
           <ShowProfile path={require("../../../assets/blank.png")} />
         </View>
-        {rs.data ? (
+        {rs.data && rs.data.length > 0 ? (
           rs.data.map((item) => (
             <View key={item.id} className="mb-2 items-center">
               <ClientCard
@@ -33,6 +42,7 @@ const Clients = () => {
                 image={require("../../../assets/blank.png")}
                 userId={userId}
                 relationshipId={item.id}
+                onDelete={() => deleteClient(item.id)}
               />
             </View>
           ))

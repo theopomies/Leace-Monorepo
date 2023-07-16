@@ -28,19 +28,17 @@ export const Dropdown = ({
     <View className="relative">
       {showOptions ? (
         <View className="fixed inset-0 z-50 flex items-center justify-center">
-          <View className="ml-5 w-80 items-center justify-center rounded-lg bg-white shadow-lg">
+          <View className="ml-5 w-80 items-center justify-start  rounded-lg bg-white shadow-lg">
             {data.map((value: { item: string }, i: number) => {
               return (
                 <TouchableOpacity
-                  className="flex w-full flex-row items-center justify-center border-b border-gray-300 px-4 py-2"
+                  className="flex w-full flex-row border-b border-gray-300 px-4 py-2"
                   onPress={() => {
                     onSelectedItem(value);
                   }}
                   key={String(i)}
                 >
-                  <View
-                    className={`flex h-8 w-8 flex-row items-start justify-start rounded-lg`}
-                  >
+                  <View className="flex w-5 items-start justify-start rounded-lg">
                     {value.item === "Lease" ? (
                       <Icon
                         size={18}
@@ -51,30 +49,35 @@ export const Dropdown = ({
                     ) : value.item === "Photo & Video" ? (
                       <Icon
                         size={18}
-                        name="file-document-edit-outline"
-                        type="material-community"
+                        name="file-photo-o"
+                        type="font-awesome"
                         color="#002642"
                       />
                     ) : value.item === "Document" ? (
                       <Icon
                         size={18}
-                        name="attachment"
-                        type="entypo"
+                        name="document-attach-outline"
+                        type="ionicon"
                         color="#002642"
                       />
                     ) : value.item === "Report" ? (
                       <Icon
                         size={18}
-                        name="attachment"
-                        type="entypo"
+                        name="report"
+                        type="octicon"
                         color="#002642"
                       />
                     ) : null}
                   </View>
-                  <Text className="ml-4 text-base">{value.item}</Text>
+                  <View className="flex-1 items-center justify-center rounded-lg ">
+                    <Text className="ml-4 justify-center text-base">
+                      {value.item}
+                    </Text>
+                  </View>
                 </TouchableOpacity>
               );
             })}
+
             <View className="w-full bg-gray-200">
               <Text className="ml-4 text-base"></Text>
             </View>
@@ -82,7 +85,12 @@ export const Dropdown = ({
               className="flex w-full flex-row items-center justify-center border-b border-gray-300 px-4 py-2"
               onPress={toggleDropdown}
             >
-              <Text className="ml-4 text-base">Cancel</Text>
+              <View className="flex w-5 items-start justify-start rounded-lg">
+                <Icon size={18} name="cross" type="entypo" color="#002642" />
+              </View>
+              <View className="flex-1 items-center justify-center rounded-lg ">
+                <Text className="ml-4 justify-center text-base">Cancel</Text>
+              </View>
             </TouchableOpacity>
           </View>
         </View>

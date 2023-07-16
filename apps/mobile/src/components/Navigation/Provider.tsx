@@ -25,6 +25,7 @@ import { TabStackParamList } from "../../navigation/TabNavigator";
 import { UserRoles } from "../../utils/enum";
 import { Portal } from "../Chat/Portal";
 import { UpdateLease } from "../../screens/Lease/updateLease";
+import { Offer } from "../../screens/Offer";
 
 const Tab = createBottomTabNavigator<TabStackParamList>();
 
@@ -74,16 +75,14 @@ const Provider = ({
         component={Match}
         options={{
           tabBarIcon: ({ focused }) => {
-            const icon = focused
-              ? "star-four-points"
-              : "star-four-points-outline";
+            const icon = focused ? "people" : "people-outline";
 
             return (
               <View>
                 {focused ? (
-                  <Icon name={icon} type="material-community" />
+                  <Icon name={icon} type="ionicons" />
                 ) : (
-                  <Icon name={icon} type="material-community" />
+                  <Icon name={icon} type="ionicons" />
                 )}
               </View>
             );
@@ -142,23 +141,7 @@ const Provider = ({
       <Tab.Screen
         name="MatchChat"
         component={MatchChat}
-        options={{
-          tabBarIcon: ({ focused }) => {
-            const icon = focused ? "chat" : "chat-bubble-outline";
-
-            return (
-              <View>
-                {focused ? (
-                  <Icon name={icon} type="material" />
-                ) : (
-                  <Icon name={icon} type="material" />
-                )}
-              </View>
-            );
-          },
-          tabBarLabel: "",
-          headerShown: false,
-        }}
+        options={{ tabBarButton: () => null, headerShown: false }}
       />
 
       <Tab.Screen
@@ -234,6 +217,30 @@ const Provider = ({
         name="UpdateLease"
         component={UpdateLease}
         options={{ tabBarButton: () => null, headerShown: false }}
+      />
+
+      <Tab.Screen
+        name="Offer"
+        component={Offer}
+        options={{
+          tabBarIcon: ({ focused }) => {
+            const icon = focused
+              ? "star-four-points"
+              : "star-four-points-outline";
+
+            return (
+              <View>
+                {focused ? (
+                  <Icon name={icon} type="material-community" />
+                ) : (
+                  <Icon name={icon} type="material-community" />
+                )}
+              </View>
+            );
+          },
+          tabBarLabel: "",
+          headerShown: false,
+        }}
       />
     </Tab.Navigator>
   );
