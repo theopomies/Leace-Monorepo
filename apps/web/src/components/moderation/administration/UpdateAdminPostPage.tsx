@@ -46,7 +46,7 @@ export const UpdateAdminPostPage = ({ postId }: { postId: string }) => {
       price: data.price,
       size: data.size,
     });
-    router.push(`administration/posts/${postId}`);
+    router.push(`/administration/posts/${postId}`);
   };
 
   const handleCancel: MouseEventHandler<HTMLButtonElement> = (e) => {
