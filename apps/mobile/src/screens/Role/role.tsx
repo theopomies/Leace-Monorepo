@@ -1,8 +1,7 @@
 import React from "react";
 import { View, Text, TouchableOpacity, Image } from "react-native";
 import Swiper from "react-native-swiper";
-import { trpc } from "../../utils/trpc";
-import { RouterInputs } from "../../../../web/src/utils/trpc";
+import { RouterInputs, trpc } from "../../../../web/src/utils/trpc";
 import { UserRoles } from "../../utils/enum";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -31,8 +30,7 @@ const Role = () => {
     e.preventDefault();
     await createUser.mutateAsync();
     await userRole.mutateAsync({ role, userId });
-    console.log(userRole);
-    navigation.navigate("Stack", { userId: userId });
+    navigation.navigate("Stack");
   };
 
   return (

@@ -1,19 +1,16 @@
 import { View, Text, ScrollView } from "react-native";
 import React from "react";
 
-import { trpc } from "../../utils/trpc";
 import { Type } from "../../utils/enum";
 import { PostCard } from "../../components/Card";
 import ShowProfile from "../../components/ShowProfile";
-import { useRoute, RouteProp } from "@react-navigation/native";
-import { TabStackParamList } from "../../navigation/TabNavigator";
+import { trpc } from "../../../../web/src/utils/trpc";
 
 const Available = () => {
-  const route = useRoute<RouteProp<TabStackParamList, "Available">>();
-  const userId = route.params?.userId;
+  const { data: session } = trpc.auth.getSession.useQuery();
 
   const available = trpc.post.getPostsByUserId.useQuery({
-    userId,
+    userId: session?.userId as string,
     postType: Type.TO_BE_RENTED,
   });
 
@@ -36,10 +33,9 @@ const Available = () => {
                 title={item.title}
                 desc={item.desc}
                 content={item.content}
-                postId={item.id}
                 income={undefined}
                 expenses={undefined}
-                userId={userId}
+                postId={item.id}
               />
             </View>
           );

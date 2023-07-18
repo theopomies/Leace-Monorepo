@@ -2,17 +2,14 @@ import React from "react";
 import { View, ScrollView, Text } from "react-native";
 import { PostCard } from "../../components/Card";
 
-import { trpc } from "../../utils/trpc";
 import ShowProfile from "../../components/ShowProfile";
-import { useRoute, RouteProp } from "@react-navigation/native";
-import { TabStackParamList } from "../../navigation/TabNavigator";
+import { trpc } from "../../../../web/src/utils/trpc";
 
 const ViewPost = () => {
-  const route = useRoute<RouteProp<TabStackParamList, "ViewPost">>();
-  const userId = route.params?.userId;
+  const { data: session } = trpc.auth.getSession.useQuery();
 
   const posts = trpc.post.getPostsByUserId.useQuery({
-    userId,
+    userId: session?.userId as string,
   });
 
   return (
@@ -28,13 +25,12 @@ const ViewPost = () => {
           posts.data.map((post) => (
             <View key={post.id} className="mb-10 items-center">
               <PostCard
+                postId={post.id}
                 title={post.title}
                 desc={post.desc}
                 content={post.content}
-                postId={post.id}
                 income={undefined}
                 expenses={undefined}
-                userId={userId}
               />
             </View>
           ))

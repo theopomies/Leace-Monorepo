@@ -1,14 +1,15 @@
-import { RouteProp, useRoute } from "@react-navigation/native";
 import { View, Text, ScrollView } from "react-native";
 import { PostAttributeCard } from "../../components/Card";
 
-import { trpc } from "../../utils/trpc";
-import { TabStackParamList } from "../../navigation/TabNavigator";
 import ShowProfile from "../../components/ShowProfile";
+import { trpc } from "../../../../web/src/utils/trpc";
+import { useRoute, RouteProp } from "@react-navigation/native";
+import { TabStackParamList } from "../../navigation/TabNavigator";
 
 const ViewDetails = () => {
   const route = useRoute<RouteProp<TabStackParamList, "PostDetails">>();
-  const postId = route.params?.postId;
+
+  const postId = route.params.postId;
 
   const posts = trpc.post.getPostById.useQuery({ postId });
 

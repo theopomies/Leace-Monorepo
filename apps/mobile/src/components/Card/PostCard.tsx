@@ -7,18 +7,16 @@ const PostCard = ({
   title,
   desc,
   content,
-  postId,
-  userId,
   income,
   expenses,
+  postId,
 }: {
   title: string | null;
   desc: string | null;
   content: string | null;
-  postId: string;
-  userId: string;
   income: number | undefined;
   expenses: number | undefined;
+  postId: string;
 }) => {
   const navigation =
     useNavigation<NativeStackNavigationProp<TabStackParamList>>();
@@ -26,9 +24,7 @@ const PostCard = ({
   return (
     <TouchableOpacity
       className="max-w-400 w-full overflow-hidden rounded-2xl border border-gray-300"
-      onPress={() =>
-        navigation.navigate("PostDetails", { postId: postId, userId: userId })
-      }
+      onPress={() => navigation.navigate("PostDetails", { postId })}
     >
       <View className="flex-row items-center p-2">
         <Image

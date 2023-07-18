@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, ScrollView } from "react-native";
-import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { TabStackParamList } from "../../navigation/TabNavigator";
 import { MotionButton } from "../../components/Button";
@@ -23,9 +23,6 @@ const SignOut = () => {
 };
 
 const Dashboard = () => {
-  const route = useRoute<RouteProp<TabStackParamList, "Dashboard">>();
-  const userId = route.params?.userId;
-
   const navigation =
     useNavigation<NativeStackNavigationProp<TabStackParamList>>();
 
@@ -38,37 +35,37 @@ const Dashboard = () => {
         <View className="mb-10 mr-20">
           <MotionButton
             path={require("../../../assets/income.png")}
-            onPress={() => navigation.navigate("Income", { userId })}
+            onPress={() => navigation.navigate("Income")}
           />
         </View>
         <View className="mb-10">
           <MotionButton
             path={require("../../../assets/expenses.png")}
-            onPress={() => navigation.navigate("Expenses", { userId })}
+            onPress={() => navigation.navigate("Expenses")}
           />
         </View>
         <View className="mb-10 mr-20">
           <MotionButton
             path={require("../../../assets/available.png")}
-            onPress={() => navigation.navigate("Available", { userId })}
+            onPress={() => navigation.navigate("Available")}
           />
         </View>
         <View className="mb-10">
           <MotionButton
             path={require("../../../assets/occupied.png")}
-            onPress={() => navigation.navigate("Occupied", { userId })}
+            onPress={() => navigation.navigate("Occupied")}
           />
         </View>
         <View className="mr-20">
           <MotionButton
             path={require("../../../assets/client.png")}
-            onPress={() => navigation.navigate("Clients", { userId })}
+            onPress={() => navigation.navigate("Clients")}
           />
         </View>
         <View>
           <MotionButton
             path={require("../../../assets/chat.png")}
-            onPress={() => navigation.navigate("Chat", { userId })}
+            onPress={() => navigation.navigate("Chat")}
           />
         </View>
       </View>

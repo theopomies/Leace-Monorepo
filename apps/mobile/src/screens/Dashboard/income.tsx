@@ -1,19 +1,20 @@
 import { View, ScrollView, Text } from "react-native";
 import React from "react";
 
-import { trpc } from "../../utils/trpc";
 import { PostCard } from "../../components/Card";
 import ShowProfile from "../../components/ShowProfile";
-import { useRoute, RouteProp } from "@react-navigation/native";
-import { TabStackParamList } from "../../navigation/TabNavigator";
+import { trpc } from "../../../../web/src/utils/trpc";
 
 const Income = () => {
-  const route = useRoute<RouteProp<TabStackParamList, "Income">>();
-  const userId = route.params?.userId;
+  const { data: session } = trpc.auth.getSession.useQuery();
 
-  const income = trpc.post.getRentIncomeByUserId.useQuery({ userId });
+  const income = trpc.post.getRentIncomeByUserId.useQuery({
+    userId: session?.userId as string,
+  });
 
-  const posts = trpc.post.getPostsByUserId.useQuery({ userId });
+  const posts = trpc.post.getPostsByUserId.useQuery({
+    userId: session?.userId as string,
+  });
 
   return (
     <ScrollView className="mx-5 mt-20" showsVerticalScrollIndicator={false}>
@@ -31,10 +32,9 @@ const Income = () => {
                 title={post.title}
                 desc={post.desc}
                 content={post.content}
-                postId={post.id}
                 income={income.data}
                 expenses={undefined}
-                userId={userId}
+                postId={post.id}
               />
             </View>
           ))

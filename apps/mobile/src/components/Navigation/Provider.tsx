@@ -29,13 +29,7 @@ import { Offer } from "../../screens/Offer";
 
 const Tab = createBottomTabNavigator<TabStackParamList>();
 
-const Provider = ({
-  role,
-  userId,
-}: {
-  role: keyof typeof UserRoles;
-  userId: string;
-}) => {
+const Provider = ({ role }: { role: keyof typeof UserRoles }) => {
   return (
     <Tab.Navigator>
       {role === null || role === undefined ? (
@@ -55,7 +49,6 @@ const Provider = ({
       <Tab.Screen
         name="Stack"
         component={Stack}
-        initialParams={{ userId }}
         options={{
           tabBarIcon: ({ focused }) => {
             const icon = focused ? "favorite" : "favorite-border";
@@ -95,7 +88,6 @@ const Provider = ({
       <Tab.Screen
         name="CreatePost"
         component={CreatePost}
-        initialParams={{ userId }}
         options={{
           tabBarIcon: ({ focused }) => {
             const icon = focused ? "plus-square" : "plus-square-o";
@@ -116,19 +108,16 @@ const Provider = ({
       />
       <Tab.Screen
         name="CreatePostAttributes"
-        initialParams={{ userId }}
         component={CreateAttributes}
         options={{ tabBarButton: () => null, headerShown: false }}
       />
       <Tab.Screen
         name="ViewPost"
-        initialParams={{ userId }}
         component={ViewPost}
         options={{ tabBarButton: () => null, headerShown: false }}
       />
       <Tab.Screen
         name="PostDetails"
-        initialParams={{ userId }}
         component={ViewDetails}
         options={{ tabBarButton: () => null, headerShown: false }}
       />
@@ -147,7 +136,6 @@ const Provider = ({
       <Tab.Screen
         name="Dashboard"
         component={Dashboard}
-        initialParams={{ userId }}
         options={{
           tabBarIcon: ({ focused }) => {
             const icon = focused ? "view-dashboard" : "view-dashboard-outline";
@@ -168,31 +156,26 @@ const Provider = ({
       />
       <Tab.Screen
         name="Expenses"
-        initialParams={{ userId }}
         component={Expenses}
         options={{ tabBarButton: () => null, headerShown: false }}
       />
       <Tab.Screen
         name="Income"
-        initialParams={{ userId }}
         component={Income}
         options={{ tabBarButton: () => null, headerShown: false }}
       />
       <Tab.Screen
         name="Clients"
-        initialParams={{ userId }}
         component={Clients}
         options={{ tabBarButton: () => null, headerShown: false }}
       />
       <Tab.Screen
         name="Occupied"
-        initialParams={{ userId }}
         component={Occupied}
         options={{ tabBarButton: () => null, headerShown: false }}
       />
       <Tab.Screen
         name="Available"
-        initialParams={{ userId }}
         component={Available}
         options={{ tabBarButton: () => null, headerShown: false }}
       />

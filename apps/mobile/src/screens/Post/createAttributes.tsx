@@ -2,9 +2,7 @@ import { useState } from "react";
 import { ScrollView, View, Text } from "react-native";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 
-import { trpc } from "../../utils/trpc";
-
-import { RouterInputs } from "../../../../web/src/utils/trpc";
+import { RouterInputs, trpc } from "../../../../web/src/utils/trpc";
 import { TabStackParamList } from "../../navigation/TabNavigator";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import ShowProfile from "../../components/ShowProfile";
@@ -15,8 +13,8 @@ import CustomInput from "../../components/CustomInput/CustomInput";
 const CreateAttributes = () => {
   const route =
     useRoute<RouteProp<TabStackParamList, "CreatePostAttributes">>();
-  const userId = route.params?.userId;
-  const postId = route.params?.postId;
+
+  const postId = route.params.postId;
 
   const navigation =
     useNavigation<NativeStackNavigationProp<TabStackParamList>>();
@@ -82,7 +80,7 @@ const CreateAttributes = () => {
 
   const updateAttributesButton = async () => {
     const newErrors = {
-      location: data.location?.trim() === "",
+      location: data.location === "",
       price: isNaN(Number(data.price)),
       size: isNaN(Number(data.size)),
     };
@@ -94,7 +92,7 @@ const CreateAttributes = () => {
     }
     if (!data) return;
     await attributes.mutateAsync(data);
-    navigation.navigate("ViewPost", { userId: userId });
+    navigation.navigate("ViewPost");
   };
 
   return (
@@ -160,7 +158,7 @@ const CreateAttributes = () => {
           <Button
             title={"Cancel"}
             color={"custom"}
-            onPress={() => navigation.navigate("Stack", { userId })}
+            onPress={() => navigation.navigate("Stack")}
           />
         </View>
         <View>

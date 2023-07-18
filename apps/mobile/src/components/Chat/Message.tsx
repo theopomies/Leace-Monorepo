@@ -1,51 +1,79 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Text, View } from "react-native";
-import { Icon } from "react-native-elements";
+import { Image } from "react-native-elements";
+import { Loading } from "../Loading";
 import { trpc } from "../../../../web/src/utils/trpc";
 
-const Message = () => {
-  //     const message = trpc.conversation.sendMessage.useMutation({ conve });
-  //     const [data, setData] = useState<
-  //     RouterInputs["attribute"]["updatePostAttributes"]
-  //   >({
-  //     postId: "",
-  //     location: "",
-  //   });
+const Message = ({
+  userId,
+  conversationId,
+  image,
+}: {
+  userId: string | undefined;
+  conversationId: string;
+  image: string;
+}) => {
+  const convQuery = trpc.conversation.getConversation.useQuery({
+    conversationId,
+  });
+
+  const conv = convQuery.data;
+
+  useEffect(() => {
+    // convQuery.refetch();
+  }, [convQuery.data]);
+
+  if (convQuery.isLoading) {
+    return <Loading />;
+  }
+
+  if (convQuery.isError) {
+    return <Text>Error loading messages</Text>;
+  }
+
   return (
-    <>
-      <View className="bg-custom mb-2 ml-2 mr-3 mt-10 h-16 w-64 self-end rounded-xl">
-        <View className="h-full flex-row items-center justify-between p-2">
-          <View className="w-4/5">
-            <Text className="p-2 text-base text-white">Hi there!</Text>
-          </View>
-          <View className="flex w-1/5 flex-row items-end">
-            <Icon
-              name="check-all"
-              type="material-community"
-              size={16}
-              color="#4caf50"
-            />
-            <Text className="text-right text-sm text-white">10:30 AM</Text>
+    <View className="flex h-full w-full flex-auto flex-col p-6">
+      <View className="flex h-full w-full flex-auto flex-shrink-0 flex-col rounded-2xl bg-gray-100 p-4">
+        <View className="flex h-full w-full flex-col overflow-auto">
+          <View className="flex h-full flex-col">
+            {conv &&
+              conv.messages.map((message) => (
+                <View key={message.id} className="grid grid-cols-12 gap-y-2">
+                  {message.senderId === userId ? (
+                    <View className="col-start-6 col-end-13 rounded-lg p-3">
+                      <View className="flex flex-row-reverse items-center justify-start">
+                        <View className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full uppercase">
+                          <Image
+                            source={{ uri: image }}
+                            className="mx-auto  h-10 w-10 rounded-full"
+                          />
+                        </View>
+                        <Text className="mr-3 flex w-fit break-words rounded-xl bg-indigo-100 px-4 py-2 text-sm shadow">
+                          {message.content}
+                        </Text>
+                      </View>
+                    </View>
+                  ) : (
+                    <View className="col-start-1 col-end-8 rounded-lg p-3">
+                      <View className="flex flex-row items-center">
+                        <View className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full uppercase">
+                          <Image
+                            source={{ uri: image }}
+                            className="mx-auto h-10 w-10 rounded-full"
+                          />
+                        </View>
+                        <Text className="ml-3 flex w-fit break-words rounded-xl bg-white px-4 py-2 text-sm shadow">
+                          {message.content}
+                        </Text>
+                      </View>
+                    </View>
+                  )}
+                </View>
+              ))}
           </View>
         </View>
       </View>
-      <View className="mb-2 ml-3 mr-2 h-16 w-64 rounded-xl bg-gray-300">
-        <View className="h-full flex-row items-center justify-between p-2">
-          <View className="w-4/5">
-            <Text className="p-2 text-base text-black">Good morning</Text>
-          </View>
-          <View className="flex w-1/5 flex-row items-end">
-            <Icon
-              name="check"
-              type="material-community"
-              size={16}
-              color="#000000"
-            />
-            <Text className="text-right text-sm text-black">10:32 AM</Text>
-          </View>
-        </View>
-      </View>
-    </>
+    </View>
   );
 };
 

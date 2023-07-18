@@ -4,14 +4,14 @@ import { Button } from "../Button";
 import { Picker } from "@react-native-picker/picker";
 import { Reason } from "../../utils/enum";
 import Modal from "./Modal";
-import { trpc } from "../../utils/trpc";
+import { trpc } from "../../../../web/src/utils/trpc";
 
 const ReportModal = ({
   userId,
   isOpened,
   setIsOpened,
 }: {
-  userId: string;
+  userId: string | undefined;
   isOpened: boolean;
   setIsOpened: (bool: boolean) => void;
 }) => {
@@ -21,8 +21,10 @@ const ReportModal = ({
   const [inputText, setInputText] = useState("");
 
   const reportButton = (reason: Reason) => {
+    const id = userId as string;
+
     reportUser.mutate({
-      userId: userId,
+      userId: id,
       reason: reason,
       desc: inputText,
     });

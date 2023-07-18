@@ -1,25 +1,34 @@
 import { View, Text, ScrollView } from "react-native";
 import React from "react";
 
-import { trpc } from "../../utils/trpc";
-
 import ShowProfile from "../../components/ShowProfile";
 import { ClientCard } from "../../components/Card";
-import { useRoute, RouteProp } from "@react-navigation/native";
-import { TabStackParamList } from "../../navigation/TabNavigator";
+import { trpc } from "../../../../web/src/utils/trpc";
 
 const Clients = () => {
-  const route = useRoute<RouteProp<TabStackParamList, "Clients">>();
-  const userId = route.params?.userId;
+  const { data: session } = trpc.auth.getSession.useQuery();
 
-  const rs = trpc.support.getRelationshipsForOwner.useQuery({ userId });
+  const rs = trpc.relationship.getMatchesForOwner.useQuery({
+    userId: session?.userId as string,
+  });
+
+  let firstName: string | null | undefined = null;
+  let lastName: string | null | undefined = null;
+
+  if (rs.data && rs.data.length > 0) {
+    firstName = rs.data[0]?.post.createdBy.firstName;
+    lastName = rs.data[0]?.post.createdBy.lastName;
+  }
+
+  const fst = firstName as string;
+  const lst = lastName as string;
+
   const del = trpc.relationship.deleteRelationForOwner.useMutation();
 
   const deleteClient = async (relationshipId: string) => {
-    console.log(del);
     await del.mutateAsync({
-      userId: "user_2NQu30Ubhyv6QsGTOCJmFvAADyZ",
-      relationshipId: "user_2NQu30Ubhyv6QsGTOCJmFvAADyZ",
+      userId: session?.userId as string,
+      relationshipId,
     });
   };
 
@@ -36,13 +45,12 @@ const Clients = () => {
           rs.data.map((item) => (
             <View key={item.id} className="mb-2 items-center">
               <ClientCard
-                firstName={item.user.firstName}
-                lastName={item.user.lastName}
+                firstName={fst}
+                lastName={lst}
                 email={item.user.email}
                 image={require("../../../assets/blank.png")}
-                userId={userId}
-                relationshipId={item.id}
                 onDelete={() => deleteClient(item.id)}
+                relationshipId={item.id}
               />
             </View>
           ))

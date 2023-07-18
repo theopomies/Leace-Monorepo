@@ -5,17 +5,13 @@ import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { TabStackParamList } from "../../navigation/TabNavigator";
 import CustomInput from "../../components/CustomInput/CustomInput";
-import { RouterInputs } from "../../../../web/src/utils/trpc";
-import { trpc } from "../../utils/trpc";
+import { RouterInputs, trpc } from "../../../../web/src/utils/trpc";
 import { DatePicker } from "../../components/Attributes";
 
 export const Lease = () => {
   const route = useRoute<RouteProp<TabStackParamList, "Lease">>();
-  const userId = route.params?.userId;
-  const relationshipId = route.params?.relationshipId;
 
-  console.log(userId);
-  console.log(relationshipId);
+  const relationshipId = route.params.relationshipId;
 
   const navigation =
     useNavigation<NativeStackNavigationProp<TabStackParamList>>();
@@ -116,11 +112,7 @@ export const Lease = () => {
     if (!data) return;
 
     await lease.mutateAsync(data);
-    navigation.navigate("Portal", {
-      userId,
-      relationshipId,
-      leaseId: "cli0wvufp0003ug55005rvu4x",
-    });
+    navigation.navigate("Portal", {});
   };
 
   return (
@@ -128,7 +120,7 @@ export const Lease = () => {
       <View className="flex h-full flex-col space-y-16">
         <View className="ml-10 flex-row items-center justify-center">
           <Text className="font-poppins text-custom mx-auto	text-center text-3xl">
-            CONTRACT
+            LEASE
           </Text>
         </View>
         <View>
@@ -160,13 +152,7 @@ export const Lease = () => {
               <Button
                 title={"Cancel"}
                 color={"custom"}
-                onPress={() =>
-                  navigation.navigate("Portal", {
-                    userId,
-                    leaseId: "cljfmk97j000cvqyafa7ifx8m",
-                    relationshipId,
-                  })
-                }
+                onPress={() => navigation.navigate("Portal", {})}
               />
             </View>
             <View>

@@ -3,53 +3,41 @@ import { useNavigation } from "@react-navigation/native";
 
 import { UserRoles } from "../utils/enum";
 
-import { trpc } from "../utils/trpc";
 import { Tenant, Provider } from "../components/Navigation";
-import { View, ActivityIndicator } from "react-native";
-import { Button } from "../components/Button";
-import { useAuth } from "@clerk/clerk-expo";
-
-const SignOut = () => {
-  const { signOut } = useAuth();
-  return (
-    <View>
-      <Button
-        title="Sign Out"
-        onPress={() => {
-          signOut();
-        }}
-        color={"custom"}
-      />
-    </View>
-  );
-};
+import { Loading } from "../components/Loading";
+import { trpc } from "../../../web/src/utils/trpc";
 
 export type TabStackParamList = {
   Role: undefined;
   Profile: undefined;
-  Stack: { userId: string };
+  Stack: undefined;
   Match: undefined;
-  Dashboard: { userId: string };
+  Dashboard: undefined;
 
   Notifications: undefined;
 
-  MatchChat: { id: string };
+  MatchChat: undefined;
 
-  CreatePost: { userId: string };
-  CreatePostAttributes: { postId: string; userId: string };
-  ViewPost: { userId: string };
-  PostDetails: { postId: string; userId: string };
+  CreatePost: undefined;
+  CreatePostAttributes: { postId: string };
+  ViewPost: undefined;
+  PostDetails: { postId: string };
 
-  Expenses: { userId: string };
-  Income: { userId: string };
-  Clients: { userId: string };
-  Occupied: { userId: string };
-  Available: { userId: string };
-  Chat: { userId: string };
-  Portal: { userId: string; relationshipId: string; leaseId: string };
+  Expenses: undefined;
+  Income: undefined;
+  Clients: undefined;
+  Occupied: undefined;
+  Available: undefined;
+  Chat: undefined;
+  Portal: {
+    leaseId?: string;
+    relationshipId?: string;
+    firstName?: string | null;
+    lastName?: string | null;
+  };
 
-  Lease: { userId: string; relationshipId: string };
-  UpdateLease: { userId: string; relationshipId: string; leaseId: string };
+  Lease: { relationshipId: string };
+  UpdateLease: { relationshipId: string; leaseId: string };
 
   Offer: undefined;
 };
@@ -78,12 +66,7 @@ const TabNavigator = () => {
   }, [session]);
 
   if (!session && !role) {
-    return (
-      <View className="flex-1 items-center justify-center">
-        <ActivityIndicator size="large" color={"#002642"} />
-        <SignOut />
-      </View>
-    );
+    return <Loading />;
   }
 
   if (role === UserRoles.TENANT) {

@@ -3,12 +3,14 @@ import { View } from "react-native";
 import { Icon } from "react-native-elements";
 import { Match, MatchChat } from "../../screens/Match";
 import { Profile } from "../../screens/Profile/profile";
-import { Stack } from "../../screens/Stack/stack";
+// import { Stack } from "../../screens/Stack/stack";
 import { Offer } from "../../screens/Offer";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { TabStackParamList } from "../../navigation/TabNavigator";
 import Role from "../../screens/Role/role";
 import { UserRoles } from "../../utils/enum";
+import { Chat } from "../../screens/Dashboard";
+import { Portal } from "../Chat/Portal";
 
 const Tab = createBottomTabNavigator<TabStackParamList>();
 
@@ -31,7 +33,7 @@ const Tenant = ({ role }: { role: keyof typeof UserRoles }) => {
       ) : null}
       <Tab.Screen
         name="Stack"
-        component={Stack}
+        component={Match}
         options={{
           tabBarIcon: ({ focused }) => {
             const icon = focused ? "favorite" : "favorite-border";
@@ -52,6 +54,11 @@ const Tenant = ({ role }: { role: keyof typeof UserRoles }) => {
         options={{ tabBarButton: () => null, headerShown: false }}
       />
 
+      <Tab.Screen
+        name="Portal"
+        component={Portal}
+        options={{ tabBarButton: () => null, headerShown: false }}
+      />
       <Tab.Screen
         name="MatchChat"
         component={MatchChat}
@@ -93,6 +100,17 @@ const Tenant = ({ role }: { role: keyof typeof UserRoles }) => {
           },
           tabBarLabel: "",
           headerShown: false,
+        }}
+      />
+      <Tab.Screen
+        name="Chat"
+        component={Chat}
+        options={{
+          tabBarButton: () => null,
+          headerShown: false,
+          tabBarStyle: {
+            display: "none",
+          },
         }}
       />
 

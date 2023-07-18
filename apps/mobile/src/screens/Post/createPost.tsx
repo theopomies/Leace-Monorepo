@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import { View, Text } from "react-native";
-import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 
-import { trpc } from "../../utils/trpc";
-
-import { RouterInputs } from "../../../../web/src/utils/trpc";
+import { RouterInputs, trpc } from "../../../../web/src/utils/trpc";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { TabStackParamList } from "../../navigation/TabNavigator";
 
@@ -13,9 +11,6 @@ import ShowProfile from "../../components/ShowProfile";
 import CustomInput from "../../components/CustomInput/CustomInput";
 
 const CreatePost = () => {
-  const route = useRoute<RouteProp<TabStackParamList, "CreatePost">>();
-  const userId = route.params?.userId;
-
   const navigation =
     useNavigation<NativeStackNavigationProp<TabStackParamList>>();
 
@@ -44,9 +39,11 @@ const CreatePost = () => {
   };
 
   const createPostButton = async () => {
+    console.log(post);
+
     const newErrors = {
-      title: post.title.trim() === "",
-      desc: post.desc.trim() === "",
+      title: post.title === "",
+      desc: post.desc === "",
     };
 
     setErrors(newErrors);
@@ -56,12 +53,10 @@ const CreatePost = () => {
     }
 
     if (!post) return;
+
     const postId = await posts.mutateAsync(post);
     if (postId)
-      navigation.navigate("CreatePostAttributes", {
-        postId: postId.id,
-        userId: userId,
-      });
+      navigation.navigate("CreatePostAttributes", { postId: postId.id });
   };
 
   return (
@@ -107,7 +102,7 @@ const CreatePost = () => {
             <Button
               title={"Cancel"}
               color={"custom"}
-              onPress={() => navigation.navigate("Stack", { userId: userId })}
+              onPress={() => navigation.navigate("Stack")}
             />
           </View>
           <View>

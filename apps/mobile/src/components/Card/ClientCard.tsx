@@ -15,15 +15,13 @@ const ClientCard = ({
   lastName,
   email,
   image,
-  userId,
   relationshipId,
   onDelete,
 }: {
-  firstName: string | null;
-  lastName: string | null;
+  firstName: string;
+  lastName: string;
   email: string | null;
   image: ImageSourcePropType;
-  userId: string;
   relationshipId: string;
   onDelete: () => void;
 }) => {
@@ -53,7 +51,7 @@ const ClientCard = ({
     <TouchableOpacity
       className="max-w-400 w-full overflow-hidden rounded-2xl border border-gray-300"
       onPress={() => {
-        navigation.navigate("Portal", { userId, relationshipId, leaseId: "a" });
+        navigation.navigate("Portal", { relationshipId });
       }}
     >
       <View className="flex-row items-center p-2">

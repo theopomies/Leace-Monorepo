@@ -8,13 +8,21 @@ const BottomBar = ({
   data,
   value,
   handleChange,
+  onSendMessage,
 }: {
   onSelect: (item: { item: string }) => void;
   data: { item: string }[];
   value: string;
   handleChange: (value: string) => void;
+  onSendMessage: (value: string) => void;
 }) => {
   const [showOptions, setShowOptions] = useState(false);
+
+  const sendMessage = () => {
+    if (value) {
+      onSendMessage(value);
+    }
+  };
 
   return (
     <View
@@ -37,7 +45,7 @@ const BottomBar = ({
             placeholder="Type a message"
           />
           {value && (
-            <TouchableOpacity>
+            <TouchableOpacity onPress={sendMessage}>
               <Icon size={15} name="send" reverse color="#002642" />
             </TouchableOpacity>
           )}
