@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, Alert } from "react-native";
 
 import { Icon } from "react-native-elements";
 
-import { StripeProvider, useStripe } from "@stripe/stripe-react-native";
+import { useStripe } from "@stripe/stripe-react-native";
 
 import { Button } from "react-native-elements";
 import React from "react";
@@ -172,16 +172,13 @@ const PaymentScreen = () => {
         </View>
       </View>
       <View className="mt-10 flex items-center justify-center">
-        <StripeProvider publishableKey="sk_test_51NNNqUKqsAbQAwatNxsiylHZyLYF2cVafUgVyUToUlyu7hraabYWj53eHy6N3Ucbg2WiNYxNfYGLxHRjZeuWFiZy00z1D8WUQl">
-          <CheckoutScreen />
-          <Button
-            title={"Get Started"}
-            color={"blue-500"}
-            onPress={() => {
-              console.log(selectedOffer);
-            }}
-          />
-        </StripeProvider>
+        <CheckoutScreen />
+        <Button
+          title={"Get Started"}
+          onPress={() => {
+            console.log(selectedOffer);
+          }}
+        />
         <Text className="ml-2 mt-8 text-xs font-bold text-gray-500">
           Subscriptions will automatically renew and your
         </Text>

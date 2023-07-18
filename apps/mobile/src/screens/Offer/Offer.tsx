@@ -1,11 +1,5 @@
-import { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, Alert } from "react-native";
+import { StripeProvider } from "@stripe/stripe-react-native";
 
-import { Icon } from "react-native-elements";
-
-import { StripeProvider, useStripe } from "@stripe/stripe-react-native";
-
-import { Button } from "../../components/Button";
 import React from "react";
 import PaymentScreen from "./Screen";
 
