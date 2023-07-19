@@ -1,11 +1,15 @@
 import React from "react";
 import { View, Image, TouchableOpacity, Text } from "react-native";
+import { trpc } from "../../../../web/src/utils/trpc";
+import { UserRoles } from "../../utils/enum";
 
 const ContractCard = ({
   rentCost,
   utilitiesCost,
   startDate,
   endDate,
+  accepted,
+  acceptLease,
   deleteLease,
   updateLease,
 }: {
@@ -13,6 +17,8 @@ const ContractCard = ({
   utilitiesCost: number;
   startDate: Date;
   endDate: Date;
+  accepted: boolean;
+  acceptLease: () => void;
   deleteLease: () => void;
   updateLease: () => void;
 }) => {
@@ -22,6 +28,8 @@ const ContractCard = ({
   const formattedEndDate = endDate
     ? new Date(endDate).toLocaleDateString()
     : "";
+
+  const { data: session } = trpc.auth.getSession.useQuery();
 
   return (
     <View className="mt-5 flex items-center justify-center">
@@ -58,18 +66,34 @@ const ContractCard = ({
           </View>
         </View>
 
-        <TouchableOpacity
-          onPress={updateLease}
-          className="flex w-full flex-row items-center justify-center border-b border-gray-300 px-4 py-2"
-        >
-          <Text className="ml-4 text-base">Counter</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={deleteLease}
-          className="flex w-full flex-row items-center justify-center border-b border-gray-300 px-4 py-2"
-        >
-          <Text className="ml-4 text-base">Delete</Text>
-        </TouchableOpacity>
+        {session?.role === UserRoles.AGENCY ||
+        (session?.role === UserRoles.OWNER && accepted === false) ? (
+          <>
+            <TouchableOpacity
+              onPress={updateLease}
+              className="flex w-full flex-row items-center justify-center border-b border-t border-gray-300 px-4 py-2"
+            >
+              <Text className="ml-4 text-base">Update</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={deleteLease}
+              className="flex w-full flex-row items-center justify-center border-b border-gray-300 px-4 py-2"
+            >
+              <Text className="ml-4 text-base">Delete</Text>
+            </TouchableOpacity>
+          </>
+        ) : session?.role === UserRoles.TENANT && accepted === false ? (
+          <>
+            <TouchableOpacity
+              onPress={acceptLease}
+              className="flex w-full flex-row items-center justify-center border-b border-t border-gray-300 px-4 py-2"
+            >
+              <Text className="ml-4 text-base">Accept</Text>
+            </TouchableOpacity>
+          </>
+        ) : (
+          <></>
+        )}
       </View>
     </View>
   );

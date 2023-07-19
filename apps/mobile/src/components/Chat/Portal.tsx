@@ -78,20 +78,35 @@ export const Portal = () => {
     }
   }
 
+  const leaseData = trpc.lease.getLeaseById.useQuery({
+    leaseId: "clk9w9fxk0000i6vtfrpk70al",
+  });
+
+  if (leaseData.data) {
+    lease = leaseData.data;
+  }
+
   const conversationId = conversation as string;
 
-  // clk8u4yzd0003i6l1pa7lywjv
   const deleteLease = trpc.lease.deleteLeaseById.useMutation();
 
   const conv = trpc.conversation.sendMessage.useMutation();
 
-  const deleteLeaseButton = () => {
-    deleteLease.mutate({
-      leaseId,
+  const signLease = trpc.lease.signLeaseById.useMutation();
+
+  const acceptLeaseButton = async () => {
+    await signLease.mutateAsync({
+      leaseId: "clk9w9fxk0000i6vtfrpk70al",
     });
   };
 
-  const updateLeaseButton = async () => {
+  const deleteLeaseButton = async () => {
+    await deleteLease.mutateAsync({
+      leaseId: "clk9w9fxk0000i6vtfrpk70al",
+    });
+  };
+
+  const updateLeaseButton = () => {
     navigation.navigate("UpdateLease", {
       relationshipId,
       leaseId,
@@ -220,14 +235,27 @@ export const Portal = () => {
               />
 
               {lease && (
-                <ContractCard
-                  rentCost={lease.rentCost as number}
-                  utilitiesCost={lease.utilitiesCost as number}
-                  startDate={lease.startDate as Date}
-                  endDate={lease.endDate as Date}
-                  deleteLease={deleteLeaseButton}
-                  updateLease={updateLeaseButton}
-                />
+                <View>
+                  <View
+                    className={`absolute right-0 top-0 mr-12 mt-10 ${
+                      lease.isSigned ? "bg-green-500" : "bg-red-500"
+                    } rounded-md p-2`}
+                  >
+                    <Text className={`font-bold text-white`}>
+                      {lease.isSigned ? "RENTED" : "TO BE RENTED"}
+                    </Text>
+                  </View>
+                  <ContractCard
+                    rentCost={lease.rentCost as number}
+                    utilitiesCost={lease.utilitiesCost as number}
+                    startDate={lease.startDate as Date}
+                    endDate={lease.endDate as Date}
+                    deleteLease={deleteLeaseButton}
+                    updateLease={updateLeaseButton}
+                    acceptLease={acceptLeaseButton}
+                    accepted={lease.isSigned}
+                  />
+                </View>
               )}
             </View>
           </ScrollView>
