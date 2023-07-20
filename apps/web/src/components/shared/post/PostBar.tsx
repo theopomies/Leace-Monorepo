@@ -43,22 +43,18 @@ export const PostBar = ({
       <div className="flex items-center">
         <Link
           href={postLink.replace("[postId]", post.id)}
-          className="flex w-full"
+          className="flex w-full flex-col"
         >
           {img && img[0] && (
-            <div className="h-full w-2/5">
+            <div className="w-full">
               <img src={img[0].url} alt="Post image" className="object-cover" />
             </div>
           )}
-          <div
-            className={`my-auto mx-5 w-3/5 min-w-max ${
-              (!img || !img[0]) && "py-6"
-            }`}
-          >
+          <div className="flex flex-col gap-2 p-3">
             <div className=" font-semibold uppercase tracking-wide text-indigo-500">
               {post.title}
             </div>
-            <p className="mt-2 text-slate-500">
+            <p className="text-slate-500">
               {post.type == PostType.RENTED ? "Rented ✅" : "Available"}
             </p>
           </div>

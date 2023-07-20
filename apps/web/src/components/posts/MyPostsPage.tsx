@@ -4,6 +4,7 @@ import { Loader } from "../shared/Loader";
 import { PostBar } from "../shared/post/PostBar";
 import { Post } from "./Post";
 import { setCacheId } from "../../utils/useCache";
+import { useRouter } from "next/router";
 
 export interface MyPostsPageProps {
   userId: string;
@@ -13,19 +14,26 @@ export interface MyPostsPageProps {
 export const MyPostsPage = ({ userId, postId }: MyPostsPageProps) => {
   const { data: posts, isLoading: postsLoading } =
     trpc.post.getPostsByUserId.useQuery({ userId });
+  const router = useRouter();
 
   useEffect(() => {
     if (postId) setCacheId("lastSelectedPostId", postId);
   }, [postId]);
+
+  useEffect(() => {
+    if (!postsLoading && posts && posts.length > 0 && !postId) {
+      router.push(`/users/${userId}/posts/${posts[0]?.id}`);
+    }
+  }, [posts, postId, router, postsLoading, userId]);
 
   if (postsLoading) {
     return <Loader />;
   }
 
   return (
-    <div className="flex w-full gap-5 p-10">
+    <div className="flex h-screen w-full gap-5 overflow-hidden p-10">
       {posts && posts.length > 0 && (
-        <div>
+        <div className="w-1/6">
           {posts.map((post) => (
             <PostBar
               key={post.id}

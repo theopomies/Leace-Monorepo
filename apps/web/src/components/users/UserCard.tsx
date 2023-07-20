@@ -44,10 +44,6 @@ export function UserCard({
   image,
   documents,
 }: UserCardProps) {
-  // isLoggedUser = false;
-  // user.isPremium = true;
-  // isBanned = true;
-  console.log(user.country);
   return (
     <UserLayout
       sidePanel={

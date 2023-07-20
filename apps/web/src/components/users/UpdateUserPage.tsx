@@ -5,7 +5,7 @@ import { Role } from "@prisma/client";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { cropImage } from "../../utils/cropImage";
-import { NewUserForm, NewUserFormData } from "./NewUserForm";
+import { UserForm, UserFormData } from "./UserForm";
 import { UserLayout } from "./UserLayout";
 import { Button } from "../shared/button/Button";
 
@@ -29,7 +29,7 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
   const uploadDocument = trpc.document.putSignedUrl.useMutation();
   const deleteDocument = trpc.document.deleteSignedUrl.useMutation();
 
-  const handleSubmit = async (data: NewUserFormData) => {
+  const handleSubmit = async (data: UserFormData) => {
     await updateUser.mutateAsync({
       userId,
       birthDate: new Date(data.birthDate + "T00:00:00.000Z"),
@@ -152,7 +152,7 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
         </>
       }
       mainPanel={
-        <NewUserForm
+        <UserForm
           ref={formRef}
           user={user}
           onDocsUpload={handleUploadDocs}

@@ -50,7 +50,7 @@ export const UpdatePostPage = ({ postId }: UpdatePostProps) => {
       price: data.price,
       size: data.size,
     });
-    router.push(`/posts/${postId}`);
+    router.push(`/users/${post?.createdById}/posts/${postId}`);
   };
 
   const handleCancel: MouseEventHandler<HTMLButtonElement> = (e) => {

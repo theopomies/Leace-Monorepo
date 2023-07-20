@@ -4,7 +4,6 @@ import {
   Dispatch,
   FormEventHandler,
   ForwardedRef,
-  MouseEventHandler,
   SetStateAction,
   forwardRef,
   useEffect,
@@ -19,7 +18,7 @@ import { FileInput } from "../shared/forms/FileInput";
 import { TextArea } from "../shared/forms/TextArea";
 import { TextInput } from "../shared/forms/TextInput";
 
-export type NewUserFormData = {
+export type UserFormData = {
   birthDate: string;
   firstName: string;
   lastName: string;
@@ -42,16 +41,16 @@ export type NewUserFormData = {
   pool?: boolean;
 };
 
-export interface NewUserFormProps {
+export interface UserFormProps {
   user: User & { attribute: Attribute | null };
   onDocsUpload: (event: ChangeEvent<HTMLInputElement>) => void;
   onDocDelete: (documentId: string) => Promise<void>;
   documents?: (Document & { url: string })[] | null;
-  onSubmit: (data: NewUserFormData) => Promise<void>;
+  onSubmit: (data: UserFormData) => Promise<void>;
 }
 
-const NewUserFormBeforeRef = (
-  { user, onDocsUpload, onDocDelete, documents, onSubmit }: NewUserFormProps,
+const UserFormBeforeRef = (
+  { user, onDocsUpload, onDocDelete, documents, onSubmit }: UserFormProps,
   ref: ForwardedRef<HTMLFormElement>,
 ) => {
   const [birthDate, setBirthDate] = useState<string>("");
@@ -122,12 +121,6 @@ const NewUserFormBeforeRef = (
       setter(event.target.value);
     };
 
-  const handleBooleanChange =
-    (setter: Dispatch<SetStateAction<boolean | undefined>>) =>
-    (_event: React.ChangeEvent<HTMLInputElement>) => {
-      setter((previous) => (previous === false ? undefined : !previous));
-    };
-
   const handleNumberChange =
     (setter: Dispatch<SetStateAction<number | undefined>>) =>
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -143,7 +136,7 @@ const NewUserFormBeforeRef = (
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
 
-    const data: NewUserFormData = {
+    const data: UserFormData = {
       birthDate,
       firstName,
       lastName,
@@ -181,25 +174,25 @@ const NewUserFormBeforeRef = (
     minSize,
     handleMinSizeChange: handleNumberChange(setMinSize),
     furnished,
-    handleFurnishedChange: handleBooleanChange(setFurnished),
+    handleFurnishedChange: setFurnished,
     homeType,
     handleHomeTypeChange: handleHomeTypeChange(setHomeType),
     terrace,
-    handleTerraceChange: handleBooleanChange(setTerrace),
+    handleTerraceChange: setTerrace,
     pets,
-    handlePetsChange: handleBooleanChange(setPets),
+    handlePetsChange: setPets,
     smoker,
-    handleSmokerChange: handleBooleanChange(setSmoker),
+    handleSmokerChange: setSmoker,
     disability,
-    handleDisabilityChange: handleBooleanChange(setDisability),
+    handleDisabilityChange: setDisability,
     garden,
-    handleGardenChange: handleBooleanChange(setGarden),
+    handleGardenChange: setGarden,
     parking,
-    handleParkingChange: handleBooleanChange(setParking),
+    handleParkingChange: setParking,
     elevator,
-    handleElevatorChange: handleBooleanChange(setElevator),
+    handleElevatorChange: setElevator,
     pool,
-    handlePoolChange: handleBooleanChange(setPool),
+    handlePoolChange: setPool,
   };
 
   return (
@@ -288,6 +281,6 @@ const NewUserFormBeforeRef = (
   );
 };
 
-export const NewUserForm = forwardRef<HTMLFormElement, NewUserFormProps>(
-  NewUserFormBeforeRef,
+export const UserForm = forwardRef<HTMLFormElement, UserFormProps>(
+  UserFormBeforeRef,
 );
