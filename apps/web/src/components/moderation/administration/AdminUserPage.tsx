@@ -12,11 +12,14 @@ export function AdminUserPage({ userId }: { userId: string }) {
   if (user.isLoading) return <Loader />;
   if (user && user.data && !user.error) {
     return (
-      <div className="flex w-full">
+      <div className="flex w-full py-10 pl-10">
         <div className="flex w-5/6 flex-col">
           <Search />
           {user.data.posts[0] && (
-            <Link href={`/administration/posts/${user.data.posts[0].id}`}>
+            <Link
+              href={`/administration/posts/${user.data.posts[0].id}`}
+              className="pt-10 pb-5"
+            >
               <Button className="w-full">View posts</Button>
             </Link>
           )}

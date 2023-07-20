@@ -18,16 +18,18 @@ export function ModeratioPostPage({
   if (post.isLoading) return <Loader />;
   if (post && post.data && !post.error) {
     return (
-      <div className="flex w-full">
+      <div className="flex w-full py-10 pl-10">
         <div className="flex w-5/6 flex-col">
           <Link
             href={`/moderation/reports/${reportId}/users/${post.data.createdById}`}
+            className="pb-5"
           >
             <Button className="w-full">View profile</Button>
           </Link>
-          <div className="flex">
+          <div className="flex gap-5">
             <PostList
               userId={post.data.createdById}
+              postId={postId}
               postLink={`/moderation/reports/${reportId}/posts/[postId]`}
             />
             <Post postId={postId} />
