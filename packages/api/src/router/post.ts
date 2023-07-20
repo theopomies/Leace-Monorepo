@@ -141,6 +141,7 @@ export const postRouter = router({
         include: {
           images: true,
           attribute: true,
+          createdBy: true,
         },
       });
       if (!post) throw new TRPCError({ code: "NOT_FOUND" });

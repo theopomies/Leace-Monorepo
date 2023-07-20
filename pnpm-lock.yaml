@@ -137,6 +137,9 @@ importers:
       react-native-snap-carousel:
         specifier: ^3.9.1
         version: 3.9.1(react-native@0.71.0-rc.0)(react@18.2.0)
+      react-native-swipe-gestures:
+        specifier: ^1.0.5
+        version: 1.0.5
       react-native-swiper:
         specifier: ^1.6.0
         version: 1.6.0
@@ -11190,6 +11193,10 @@ packages:
       react: 18.2.0
       react-native: 0.71.0-rc.0(@babel/core@7.21.8)(@babel/preset-env@7.21.5)(react@18.2.0)
     dev: true
+
+  /react-native-swipe-gestures@1.0.5:
+    resolution: {integrity: sha512-Ns7Bn9H/Tyw278+5SQx9oAblDZ7JixyzeOczcBK8dipQk2pD7Djkcfnf1nB/8RErAmMLL9iXgW0QHqiII8AhKw==}
+    dev: false
 
   /react-native-swiper@1.6.0:
     resolution: {integrity: sha512-OnkTTZi+9uZUgy0uz1I9oYDhCU3z36lZn+LFsk9FXPRelxb/KeABzvPs3r3SrHWy1aA67KGtSFj0xNK2QD0NJQ==}
