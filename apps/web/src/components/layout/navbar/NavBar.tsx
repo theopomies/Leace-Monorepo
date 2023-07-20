@@ -12,7 +12,7 @@ export function NavBar({ userId }: NavBarProps) {
   const links = getLinks(userId);
   const { auth } = trpc.useContext();
   const { data: me } = trpc.user.getUserById.useQuery({ userId });
-  const { signOut } = useClerk();
+  //const { signOut } = useClerk();
   const handleLink = ({
     href,
     label,
@@ -61,7 +61,7 @@ export function NavBar({ userId }: NavBarProps) {
           <Link
             href="#"
             onClick={async () => {
-              await signOut();
+              //  await signOut();
               await auth.getSession.invalidate();
             }}
             className="flex h-12 transform flex-row items-center text-gray-500 transition-transform duration-200 ease-in hover:translate-x-2 hover:text-gray-800"

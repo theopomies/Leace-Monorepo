@@ -85,8 +85,8 @@ export default function UserProfile({
   }, [edit]);
 
   return (
-    <View className="flex flex-1 px-2.5">
-      <View className="flex h-24 flex-row">
+    <View className="flex flex-1">
+      <View className="flex h-24 flex-row bg-[#002642] text-white">
         <View className="w-24 items-center justify-center">
           <Image
             className="rounded-full"
@@ -96,10 +96,11 @@ export default function UserProfile({
         </View>
         <View className="flex flex-1 items-center justify-center px-1.5">
           {edit ? (
-            <View className="flex w-full flex-col">
+            <View className="flex w-full flex-col text-white">
               <TextInput
-                className="h-10"
+                className="h-10 text-white"
                 placeholder="First Name"
+                placeholderTextColor="#FFFFFF"
                 defaultValue={user.firstName ?? ""}
                 onFocus={() => setFocus({ ...defFocus, firstName: true })}
                 onChangeText={(text) => {
@@ -111,8 +112,9 @@ export default function UserProfile({
                 }}
               />
               <TextInput
-                className="h-10"
+                className="h-10 text-white"
                 placeholder="Last Name"
+                placeholderTextColor="#FFFFFF"
                 defaultValue={user.lastName ?? ""}
                 onFocus={() => setFocus({ ...defFocus, lastName: true })}
                 onChangeText={(text) => {
@@ -125,13 +127,13 @@ export default function UserProfile({
               />
             </View>
           ) : (
-            <Text className="text-lg font-bold text-[#002642]">{`${
+            <Text className="text-lg font-bold text-white">{`${
               user.firstName ?? ""
             } ${user.lastName ?? ""}`}</Text>
           )}
         </View>
       </View>
-      <View className="flex space-y-3">
+      <View className="mt-2 flex space-y-2 px-2.5">
         <View className="flex flex-col">
           <Text className="text-md min-w-[60px] font-bold text-[#002642]">
             Email

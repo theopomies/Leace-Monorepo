@@ -86,8 +86,6 @@ const TabNavigator = () => {
   }
 
   if (role === UserRoles.TENANT) {
-    console.log("----------- ROLE", role);
-    console.log("----------- USER ID", session.userId);
     return <Tenant role={role} userId={session?.userId as string} />;
   }
   return <Provider role={role} userId={session?.userId as string} />;

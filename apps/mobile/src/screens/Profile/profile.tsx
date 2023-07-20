@@ -25,7 +25,7 @@ const SignOut = () => {
         title="Sign Out"
         buttonStyle={{ backgroundColor: "#002642" }}
         onPress={() => {
-          // signOut();
+          signOut();
         }}
       />
     </View>
@@ -125,10 +125,8 @@ export const Profile = () => {
             </Text>
             <View className="mt-1 flex space-y-4">
               <Text>
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                Consectetur accusantium perspiciatis, ad aspernatur et harum
-                aliquam totam voluptatum nemo optio magni ipsum placeat
-                voluptatibus vero reprehenderit sapiente? Earum, voluptate sed.
+                Are you sure you want to delete your account? This action is
+                irreversible.
               </Text>
               <View className="flex flex-row items-center justify-center space-x-4">
                 <View className="bg-green-100">

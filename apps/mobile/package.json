@@ -4,7 +4,7 @@
   "main": "index.ts",
   "scripts": {
     "start": "expo start",
-    "dev": "expo start --ios",
+    "dev": "expo start",
     "clean": "rm -rf .expo .turbo node_modules",
     "android": "expo start --android",
     "ios": "expo start --ios",
@@ -47,8 +47,7 @@
     "react-native-snap-carousel": "^3.9.1",
     "react-native-swiper": "^1.6.0",
     "react-native-vector-icons": "^9.2.0",
-    "react-native-web": "~0.18.12",
-    "uuid": "^9.0.0"
+    "react-native-web": "~0.18.12"
   },
   "devDependencies": {
     "@babel/core": "^7.21.8",
