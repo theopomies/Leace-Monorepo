@@ -41,6 +41,14 @@ export const Portal = () => {
       image = tenantQuery.data[0]?.post.createdBy.image as string;
       otherId = tenantQuery.data[0]?.post.createdBy.id as string;
     }
+
+    const leaseData = trpc.lease.getLeaseById.useQuery({
+      leaseId,
+    });
+
+    if (leaseData.data) {
+      lease = leaseData.data;
+    }
   } else if (
     session?.role === UserRoles.OWNER ||
     session?.role === UserRoles.AGENCY
@@ -76,14 +84,18 @@ export const Portal = () => {
     if (leaseData.data) {
       lease = leaseData.data;
     }
-  }
+  } else if (session?.role === UserRoles.TENANT) {
+    relationshipId = route.params.relationshipId as string;
+    firstName = route.params.firstName as string;
+    lastName = route.params.lastName as string;
 
-  const leaseData = trpc.lease.getLeaseById.useQuery({
-    leaseId: "clk9w9fxk0000i6vtfrpk70al",
-  });
+    const leaseData = trpc.lease.getLeaseById.useQuery({
+      leaseId: "clkb72jv10008ibmpjktzrt9q",
+    });
 
-  if (leaseData.data) {
-    lease = leaseData.data;
+    if (leaseData.data) {
+      lease = leaseData.data;
+    }
   }
 
   const conversationId = conversation as string;
@@ -96,13 +108,13 @@ export const Portal = () => {
 
   const acceptLeaseButton = async () => {
     await signLease.mutateAsync({
-      leaseId: "clk9w9fxk0000i6vtfrpk70al",
+      leaseId: "clkb72jv10008ibmpjktzrt9q",
     });
   };
 
   const deleteLeaseButton = async () => {
     await deleteLease.mutateAsync({
-      leaseId: "clk9w9fxk0000i6vtfrpk70al",
+      leaseId,
     });
   };
 

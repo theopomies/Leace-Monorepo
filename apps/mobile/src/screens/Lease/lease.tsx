@@ -112,7 +112,7 @@ export const Lease = () => {
     if (!data) return;
 
     await lease.mutateAsync(data);
-    navigation.navigate("Portal", {});
+    navigation.navigate("Portal", { relationshipId });
   };
 
   return (
@@ -152,7 +152,9 @@ export const Lease = () => {
               <Button
                 title={"Cancel"}
                 color={"custom"}
-                onPress={() => navigation.navigate("Portal", {})}
+                onPress={() =>
+                  navigation.navigate("Portal", { relationshipId })
+                }
               />
             </View>
             <View>

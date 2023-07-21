@@ -58,13 +58,13 @@ function CheckoutScreen() {
     }
   };
 
-  useEffect(() => {
-    initializePaymentSheet();
-  }, []);
+  // useEffect(() => {
+  //   initializePaymentSheet();
+  // }, []);
 
   return (
     <View>
-      <Button disabled={!loading} title="Set up" onPress={openPaymentSheet} />
+      <Button title="Get Started" onPress={openPaymentSheet} />
     </View>
   );
 }
@@ -173,12 +173,6 @@ const PaymentScreen = () => {
       </View>
       <View className="mt-10 flex items-center justify-center">
         <CheckoutScreen />
-        <Button
-          title={"Get Started"}
-          onPress={() => {
-            console.log(selectedOffer);
-          }}
-        />
         <Text className="ml-2 mt-8 text-xs font-bold text-gray-500">
           Subscriptions will automatically renew and your
         </Text>
