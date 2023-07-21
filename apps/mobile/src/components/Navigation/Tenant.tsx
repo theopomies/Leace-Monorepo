@@ -3,18 +3,21 @@ import { View } from "react-native";
 import { Icon } from "react-native-elements";
 import { Match, MatchChat } from "../../screens/Match";
 import { Profile } from "../../screens/Profile/profile";
-// import { Stack } from "../../screens/Stack/stack";
-import { Offer } from "../../screens/Offer";
+import { Stack } from "../../screens/Stack/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { TabStackParamList } from "../../navigation/TabNavigator";
 import Role from "../../screens/Role/role";
 import { UserRoles } from "../../utils/enum";
-import { Chat } from "../../screens/Dashboard";
-import { Portal } from "../Chat/Portal";
 
 const Tab = createBottomTabNavigator<TabStackParamList>();
 
-const Tenant = ({ role }: { role: keyof typeof UserRoles }) => {
+const Tenant = ({
+  role,
+  userId,
+}: {
+  role: keyof typeof UserRoles;
+  userId: string;
+}) => {
   return (
     <Tab.Navigator>
       {role === null || role === undefined ? (
@@ -33,7 +36,11 @@ const Tenant = ({ role }: { role: keyof typeof UserRoles }) => {
       ) : null}
       <Tab.Screen
         name="Stack"
+<<<<<<< HEAD
         component={Match}
+=======
+        component={Stack}
+>>>>>>> mobile/stack
         options={{
           tabBarIcon: ({ focused }) => {
             const icon = focused ? "favorite" : "favorite-border";
@@ -51,6 +58,7 @@ const Tenant = ({ role }: { role: keyof typeof UserRoles }) => {
       <Tab.Screen
         name="Match"
         component={Match}
+<<<<<<< HEAD
         options={{ tabBarButton: () => null, headerShown: false }}
       />
 
@@ -141,4 +149,75 @@ const Tenant = ({ role }: { role: keyof typeof UserRoles }) => {
   );
 };
 
+=======
+        options={{
+          tabBarIcon: ({ focused }) => {
+            const icon = focused
+              ? "star-four-points"
+              : "star-four-points-outline";
+
+            return (
+              <View>
+                {focused ? (
+                  <Icon name={icon} type="material-community" />
+                ) : (
+                  <Icon name={icon} type="material-community" />
+                )}
+              </View>
+            );
+          },
+          tabBarLabel: "",
+          headerShown: false,
+        }}
+      />
+
+      <Tab.Screen
+        name="MatchChat"
+        component={MatchChat}
+        options={{
+          tabBarIcon: ({ focused }) => {
+            const icon = focused ? "chat" : "chat-bubble-outline";
+
+            return (
+              <View>
+                {focused ? (
+                  <Icon name={icon} type="material" />
+                ) : (
+                  <Icon name={icon} type="material" />
+                )}
+              </View>
+            );
+          },
+          tabBarLabel: "",
+          headerShown: false,
+        }}
+      />
+
+      <Tab.Screen
+        name="Profile"
+        component={Profile}
+        initialParams={{ userId }}
+        options={{
+          tabBarIcon: ({ focused }) => {
+            const icon = focused ? "person" : "person-outline";
+
+            return (
+              <View>
+                {focused ? (
+                  <Icon name={icon} color="#002642" type="material-icons" />
+                ) : (
+                  <Icon name={icon} color="#002642" type="material-icons" />
+                )}
+              </View>
+            );
+          },
+          tabBarLabel: "",
+          headerShown: false,
+        }}
+      />
+    </Tab.Navigator>
+  );
+};
+
+>>>>>>> mobile/stack
 export default Tenant;

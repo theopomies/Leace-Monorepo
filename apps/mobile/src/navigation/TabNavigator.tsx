@@ -9,8 +9,8 @@ import { trpc } from "../../../web/src/utils/trpc";
 
 export type TabStackParamList = {
   Role: undefined;
-  Profile: undefined;
-  Stack: undefined;
+  Profile: { userId: string };
+  Stack: { userId: string };
   Match: undefined;
   Dashboard: undefined;
 
@@ -70,7 +70,7 @@ const TabNavigator = () => {
   }
 
   if (role === UserRoles.TENANT) {
-    return <Tenant role={role} />;
+    return <Tenant role={role} userId={session?.userId as string} />;
   }
   return <Provider role={role} userId={session?.userId as string} />;
 };
