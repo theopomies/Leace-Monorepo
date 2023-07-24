@@ -47,7 +47,11 @@ export const PostBar = ({
         >
           {img && img[0] && (
             <div className="w-full">
-              <img src={img[0].url} alt="Post image" className="object-cover" />
+              <img
+                src={img[0].url}
+                alt="Post image"
+                className="w-full object-cover"
+              />
             </div>
           )}
           <div className="flex flex-col gap-2 p-3">

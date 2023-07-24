@@ -33,7 +33,7 @@ export const MyPostsPage = ({ userId, postId }: MyPostsPageProps) => {
   return (
     <div className="flex h-screen w-full gap-5 overflow-hidden p-10">
       {posts && posts.length > 0 && (
-        <div className="w-1/6">
+        <div className="w-1/5">
           {posts.map((post) => (
             <PostBar
               key={post.id}
