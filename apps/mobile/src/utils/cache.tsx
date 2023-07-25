@@ -18,3 +18,20 @@ export const tokenCache =
         saveToken,
       }
     : undefined;
+
+const storage = new Map<string, boolean>();
+
+export class LocalStorage {
+  static setItem(key: string, value: boolean): void {
+    storage.set(key, value);
+  }
+  static getItem(key: string): boolean {
+    return storage.get(key) ?? false;
+  }
+  static removeItem(key: string): void {
+    storage.delete(key);
+  }
+  static clear(): void {
+    storage.clear();
+  }
+}

@@ -121,7 +121,7 @@ export const postRouter = router({
     .query(async ({ ctx, input }) => {
       const post = await ctx.prisma.post.findUnique({
         where: { id: input.postId },
-        include: { attribute: true },
+        include: { attribute: true, createdBy: true, images: true },
       });
 
       if (!post) throw new TRPCError({ code: "NOT_FOUND" });
@@ -141,7 +141,6 @@ export const postRouter = router({
         include: {
           images: true,
           attribute: true,
-          createdBy: true,
         },
       });
       if (!post) throw new TRPCError({ code: "NOT_FOUND" });
