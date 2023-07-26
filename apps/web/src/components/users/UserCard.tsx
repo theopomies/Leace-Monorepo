@@ -67,12 +67,12 @@ export function UserCard({
                 className="mx-auto h-full w-full overflow-hidden rounded-full"
               />
               {user.isPremium && !isBanned && (
-                <div className="absolute top-[20%] right-0 w-full translate-x-[25%] rotate-45 bg-yellow-300 px-2 text-center font-bold text-white">
+                <div className="absolute right-0 top-[20%] w-full translate-x-[25%] rotate-45 bg-yellow-300 px-2 text-center font-bold text-white">
                   Premium
                 </div>
               )}
               {isBanned && (
-                <div className="absolute top-[20%] right-0 w-full translate-x-[25%] rotate-45 bg-red-600 px-2 text-center font-bold text-white">
+                <div className="absolute right-0 top-[20%] w-full translate-x-[25%] rotate-45 bg-red-600 px-2 text-center font-bold text-white">
                   Banned
                 </div>
               )}
@@ -231,6 +231,66 @@ export function UserCard({
                     </li>
                   );
                 })}
+              </ul>
+              <ul className="gap-4 sm:flex sm:flex-wrap md:grid md:grid-cols-3">
+                <li className="mr-8 flex-grow border-b border-indigo-300 pb-2">
+                  <h3 className="text-xl font-medium">Job</h3>
+                  <p className={"Developer" ? "" : " text-indigo-600"}>
+                    {"Developer" ??
+                      (isLoggedUser
+                        ? "Please add your job by updating your profile"
+                        : "Not specified")}
+                  </p>
+                </li>
+                <li className="mr-8 flex-grow border-b border-indigo-300 pb-2">
+                  <h3 className="text-xl font-medium">Type of contract</h3>
+                  <p className={"CDI" ? "" : " text-indigo-600"}>
+                    {"CDI"
+                      ? "CDI"
+                      : isLoggedUser
+                      ? "Please add your type of contract by updating your profile"
+                      : "Not specified"}
+                  </p>
+                </li>
+                <li className="mr-8 flex-grow border-b border-indigo-300 pb-2">
+                  <h3 className="text-xl font-medium">Annual salary</h3>
+                  <p className={"100K" ? "" : " text-indigo-600"}>
+                    {"100K"
+                      ? "100K"
+                      : isLoggedUser
+                      ? "Please add your annual salary by updating your profile"
+                      : "Not specified"}
+                  </p>
+                </li>
+              </ul>
+              <ul className="gap-4 sm:flex sm:flex-wrap md:grid md:grid-cols-3">
+                <li className="mr-8 flex-grow border-b border-indigo-300 pb-2">
+                  <h3 className="text-xl font-medium">Credit score</h3>
+                  <p className={"850" ? "" : " text-indigo-600"}>
+                    {"850" ??
+                      (isLoggedUser
+                        ? "Please add your credit score by updating your profile"
+                        : "Not specified")}
+                  </p>
+                </li>
+                <li className="mr-8 flex-grow border-b border-indigo-300 pb-2">
+                  <h3 className="text-xl font-medium">Desired rental period</h3>
+                  <p className={"2 years" ? "" : " text-indigo-600"}>
+                    {"2 years" ??
+                      (isLoggedUser
+                        ? "Please add your desired rental period by updating your profile"
+                        : "Not specified")}
+                  </p>
+                </li>
+                <li className="mr-8 flex-grow border-b border-indigo-300 pb-2">
+                  <h3 className="text-xl font-medium">Family situation</h3>
+                  <p className={"Married" ? "" : " text-indigo-600"}>
+                    {"Married" ??
+                      (isLoggedUser
+                        ? "Please add your family situation by updating your profile"
+                        : "Not specified")}
+                  </p>
+                </li>
               </ul>
             </section>
           )}

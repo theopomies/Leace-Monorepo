@@ -265,6 +265,69 @@ const UserFormBeforeRef = (
         <section>
           <h2 className="py-4 text-3xl font-medium">Preferences</h2>
           <UserAttributesForm {...attributesStates} />
+          <ul className="flex flex-wrap gap-4 pt-4">
+            <li className="flex-grow pr-8">
+              <h3 className="text-xl font-medium">Job</h3>
+              <TextInput
+                required
+                placeholder="France"
+                onChange={handleChange(setCountry)}
+                value={country}
+                className="w-full"
+              />
+            </li>
+            <li className="flex-grow">
+              <h3 className="text-xl font-medium">Type of contract</h3>
+              <DateInput
+                required
+                onChange={handleChange(setBirthDate)}
+                value={birthDate}
+                className="w-full"
+              />
+            </li>
+          </ul>
+          <ul className="flex flex-wrap gap-4 pt-4">
+            <li className="flex-grow pr-8">
+              <h3 className="text-xl font-medium">Annual salary</h3>
+              <TextInput
+                required
+                placeholder="France"
+                onChange={handleChange(setCountry)}
+                value={country}
+                className="w-full"
+              />
+            </li>
+            <li className="flex-grow">
+              <h3 className="text-xl font-medium">Credit score</h3>
+              <DateInput
+                required
+                onChange={handleChange(setBirthDate)}
+                value={birthDate}
+                className="w-full"
+              />
+            </li>
+          </ul>
+          <ul className="flex flex-wrap gap-4 pt-4">
+            <li className="flex-grow pr-8">
+              <h3 className="text-xl font-medium">Desired rental period</h3>
+              <TextInput
+                required
+                placeholder="France"
+                onChange={handleChange(setCountry)}
+                value={country}
+                className="w-full"
+              />
+            </li>
+            <li className="flex-grow">
+              <h3 className="text-xl font-medium">Family situation</h3>
+              <DateInput
+                required
+                onChange={handleChange(setBirthDate)}
+                value={birthDate}
+                className="w-full"
+              />
+            </li>
+          </ul>
         </section>
       )}
       <DocumentList
