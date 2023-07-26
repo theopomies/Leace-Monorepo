@@ -7,6 +7,7 @@ import { DocumentList } from "../document/DocumentList";
 import { Post, Attribute, Report, Image, Document } from "@prisma/client";
 import Link from "next/link";
 import { DialogButton } from "../button/DialogButton";
+import { Button } from "../button/Button";
 
 export interface PostCardProps {
   post: Post & {
@@ -20,6 +21,9 @@ export interface PostCardProps {
   updateLink?: string;
   isLoggedIn?: boolean;
   isAdmin?: boolean;
+
+  onPauseButton?: () => Promise<void>;
+  onUnpauseButton?: () => Promise<void>;
 }
 
 export const PostCard = ({
@@ -31,6 +35,8 @@ export const PostCard = ({
   updateLink,
   isLoggedIn,
   isAdmin,
+  onPauseButton,
+  onUnpauseButton,
 }: PostCardProps) => {
   return (
     <div className="flex w-full flex-col overflow-auto rounded-lg bg-white p-8 shadow">
@@ -101,6 +107,19 @@ export const PostCard = ({
               Update
             </Link>
           )}
+          {onPauseButton ? (
+            <Button
+              title="Pause"
+              onClick={onPauseButton}
+              className="bg-yellow-500 hover:bg-yellow-600 active:bg-yellow-700"
+            >
+              Pause
+            </Button>
+          ) : onUnpauseButton ? (
+            <Button title="unpause" onClick={onUnpauseButton} theme="success">
+              Unpause
+            </Button>
+          ) : null}
           {onPostDelete && (
             <DialogButton
               buttonText="Delete my post"
