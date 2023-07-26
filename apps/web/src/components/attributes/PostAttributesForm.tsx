@@ -4,6 +4,7 @@ import { HomeType } from "../../types/homeType";
 import React from "react";
 import { AddressAutocomplete } from "../shared/forms/AddressAutocomplete";
 import { NumberInput } from "../shared/forms/NumberInput";
+import { TextInput } from "../shared/forms/TextInput";
 
 interface PostAttributesFormProps {
   location: string;
@@ -131,6 +132,87 @@ export function PostAttributesForm({ ...attributes }: PostAttributesFormProps) {
               </Checkbox>
             ))}
           </div>
+          <h2 className="pb-2 pt-4 text-xl font-bold text-gray-700">
+            Additional information
+          </h2>
+          <ul className="flex flex-wrap gap-4 pt-4">
+            <li className="flex-grow pr-8">
+              <h3 className="text-x2 font-medium">Energy class</h3>
+              <TextInput
+                required
+                placeholder="France"
+                onChange={attributes.handleHomeTypeChange}
+                value="France"
+                className="w-full"
+              />
+            </li>
+            <li className="flex-grow">
+              <h3 className="text-x2 font-medium">GES</h3>
+              <TextInput
+                required
+                placeholder="France"
+                onChange={attributes.handleHomeTypeChange}
+                value="France"
+                className="w-full"
+              />
+            </li>
+          </ul>
+          <ul className="flex flex-wrap gap-4 pt-4">
+            <li className="flex-grow pr-8">
+              <h3 className="text-x2 font-medium">Construction date</h3>
+              <TextInput
+                required
+                placeholder="France"
+                onChange={attributes.handleHomeTypeChange}
+                value="France"
+                className="w-full"
+              />
+            </li>
+            <li className="flex-grow">
+              <h3 className="text-x2 font-medium">Fees</h3>
+              <TextInput
+                required
+                placeholder="France"
+                onChange={attributes.handleHomeTypeChange}
+                value="France"
+                className="w-full"
+              />
+            </li>
+          </ul>
+          <ul className="flex flex-wrap gap-4 pt-4">
+            <li className="flex-grow pr-8">
+              <h3 className="text-x2 font-medium">Store distance</h3>
+              <TextInput
+                required
+                placeholder="France"
+                onChange={attributes.handleHomeTypeChange}
+                value="France"
+                className="w-full"
+              />
+            </li>
+            <li className="flex-grow">
+              <h3 className="text-x2 font-medium">Alarm / security</h3>
+              <TextInput
+                required
+                placeholder="France"
+                onChange={attributes.handleHomeTypeChange}
+                value="France"
+                className="w-full"
+              />
+            </li>
+          </ul>
+          <ul className="flex justify-center gap-4 pt-4">
+            <li className="pr-8">
+              <h3 className="text-x2 font-medium">Internet</h3>
+              <TextInput
+                required
+                placeholder="France"
+                onChange={attributes.handleHomeTypeChange}
+                value="France"
+                className="w-full"
+              />
+            </li>
+          </ul>
         </div>
         <div className="mt-6 flex flex-wrap justify-around gap-4">
           <label>
