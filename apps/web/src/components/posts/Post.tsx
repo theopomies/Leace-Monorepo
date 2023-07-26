@@ -47,6 +47,8 @@ export const Post = ({ postId, authorId, updateLink }: PostProps) => {
       documents={documents}
       updateLink={updateLink}
       isLoggedIn={post.createdById === authorId}
+      onPauseButton={handleDeletePost}
+      onUnpauseButton={handleDeletePost}
     />
   );
 };
