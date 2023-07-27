@@ -15,13 +15,9 @@ import { Icon } from "react-native-elements";
 import GestureRecognizer from "react-native-swipe-gestures";
 import { trpc } from "../../utils/trpc";
 import Loading from "../../components/Loading";
-import { Btn } from "../../components/Btn";
 import Separator from "../../components/Separator";
 import { Report } from "../../components/Report";
-import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { TabStackParamList } from "../../navigation/TabNavigator";
-import { Post, Attribute, Image, User } from "@leace/db";
+import { User } from "@leace/db";
 import { Type } from "../../utils/enum";
 
 interface IActionButton {
@@ -49,8 +45,6 @@ function ActionButton({
 }
 
 export default function ProviderStack() {
-  const navigation =
-    useNavigation<NativeStackNavigationProp<TabStackParamList>>();
   const [idx, setIdx] = useState(0);
   const { data: session } = trpc.auth.getSession.useQuery();
 
@@ -78,14 +72,13 @@ export default function ProviderStack() {
     otherId = users[currentUserIndex]?.id as string;
   }
 
-  console.log(otherId);
   const { data: attributes } = trpc.user.getUserById.useQuery({
     userId: users[currentUserIndex]?.id as string,
   });
 
   const [post, setPost] = useState<User[] | undefined>();
 
-  const likePost = trpc.relationship.likePostForTenant.useMutation({
+  const likePost = trpc.relationship.likeTenantForPost.useMutation({
     onSuccess() {
       console.log("post liked !");
     },
@@ -94,7 +87,7 @@ export default function ProviderStack() {
     },
   });
 
-  const dislikePost = trpc.relationship.dislikePostForTenant.useMutation({
+  const dislikePost = trpc.relationship.dislikeTenantForPost.useMutation({
     onSuccess() {
       console.log("post disliked !");
     },
@@ -140,8 +133,16 @@ export default function ProviderStack() {
       setPost(users);
       return;
     }
-    //  if (move === "LEFT") dislikePost.mutate({ userId, postId: post.id });
-    //  else likePost.mutate({ userId, postId: post.id });
+    if (move === "LEFT")
+      dislikePost.mutate({
+        userId: users[currentUserIndex]?.id as string,
+        postId,
+      });
+    else
+      likePost.mutate({
+        userId: users[currentUserIndex]?.id as string,
+        postId,
+      });
     if (idx < users.length - 1) {
       setCurrentUserIndex((prevIndex) => prevIndex + 1);
 
@@ -167,7 +168,7 @@ export default function ProviderStack() {
                     className="rounded-md"
                     source={{
                       uri:
-                        post[0].image ??
+                        post[0]?.image ??
                         "https://montverde.org/wp-content/themes/eikra/assets/img/noimage-420x273.jpg",
                     }}
                     style={{ flex: 1, resizeMode: "contain" }}
@@ -284,7 +285,7 @@ export default function ProviderStack() {
                   <View className="mb-3 flex flex-row">
                     <Text className="font-bold text-white">Created: </Text>
                     <Text className="text-white">
-                      {post[0].createdAt.toDateString()}
+                      {post[0]?.createdAt.toDateString()}
                     </Text>
                   </View>
                 </View>
