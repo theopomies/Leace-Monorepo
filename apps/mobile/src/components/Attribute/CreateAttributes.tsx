@@ -54,9 +54,10 @@ export default function CreateAttributes({
       <DateTimePickerModal
         isVisible={open}
         mode="date"
+        date={attrs.rentStartDate ?? new Date()}
         onConfirm={(date) => {
-          setAttrs({ ...attrs, rentStartDate: date });
           setOpen(false);
+          setAttrs({ ...attrs, rentStartDate: date });
         }}
         onCancel={() => setOpen(false)}
       />
@@ -64,9 +65,10 @@ export default function CreateAttributes({
       <DateTimePickerModal
         isVisible={open1}
         mode="date"
+        date={attrs.rentEndDate ?? new Date()}
         onConfirm={(date) => {
-          setAttrs({ ...attrs, rentEndDate: date });
           setOpen1(false);
+          setAttrs({ ...attrs, rentEndDate: date });
         }}
         onCancel={() => setOpen1(false)}
       />

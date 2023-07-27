@@ -93,8 +93,8 @@ export default function UserProfile({
       </View>
       <View style={{ flex: 1 }}>
         <View className="flex flex-row items-center justify-between px-2">
-          <Text className="text-base font-bold text-[#394867]">Country:</Text>
-          <Text className="font-light">{data.country ?? "-"}</Text>
+          <Text className="text-base font-bold text-[#394867]">Location:</Text>
+          <Text className="font-light">{data.attribute?.location ?? "-"}</Text>
         </View>
         <View className="flex flex-row items-center justify-between px-2">
           <Text className="text-base font-bold text-[#394867]">Phone:</Text>

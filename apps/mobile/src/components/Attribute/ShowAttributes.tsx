@@ -60,6 +60,23 @@ export default function ShowAttributes({
         <View>
           <View>
             <Text className="text-base font-bold" style={{ color: titleColor }}>
+              Rent:
+            </Text>
+            <View className="flex flex-row justify-evenly">
+              <View className="flex min-w-[100px] items-center justify-center rounded-full bg-[#10316B] px-2 py-1">
+                <Text className="font-light text-white">
+                  Start: {attribute.rentStartDate?.toLocaleDateString() ?? "-"}
+                </Text>
+              </View>
+              <View className="flex min-w-[100px] items-center justify-center rounded-full bg-[#10316B] px-2 py-1">
+                <Text className="font-light text-white">
+                  End: {attribute.rentEndDate?.toLocaleDateString() ?? "-"}
+                </Text>
+              </View>
+            </View>
+          </View>
+          <View>
+            <Text className="text-base font-bold" style={{ color: titleColor }}>
               Budget:
             </Text>
             <View className="flex flex-row justify-evenly">

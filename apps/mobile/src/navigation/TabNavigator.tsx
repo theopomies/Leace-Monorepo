@@ -1,9 +1,9 @@
-import React, { useEffect, useLayoutEffect, useState, useRef } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { UserRoles } from "../utils/enum";
 import { trpc } from "../utils/trpc";
 import { Tenant, Provider } from "../components/Navigation";
-import { View, Platform, StatusBar, Animated, Image } from "react-native";
+import { View, Platform, StatusBar } from "react-native";
 import { useAuth } from "@clerk/clerk-expo";
 import { Btn } from "../components/Btn";
 import Loading from "../components/Loading";
@@ -63,7 +63,6 @@ const TabNavigator = () => {
   const { signOut } = useAuth();
   const [role, setRole] = useState<keyof typeof UserRoles | null>(null);
   const { data: session, isLoading } = trpc.auth.getSession.useQuery();
-  const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
