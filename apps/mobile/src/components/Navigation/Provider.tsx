@@ -9,7 +9,7 @@ import { EditPost, PostStack, ShowPost, CreatePost } from "../../screens/Post";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { EditProfile, ShowProfile } from "../../screens/Profile";
-import { ProviderStack } from "../../screens/Provider/ProviderStack";
+import ProviderStack from "../../screens/Provider/ProviderStack";
 
 const Tab = createBottomTabNavigator<TabStackParamList>();
 
