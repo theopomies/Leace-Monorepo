@@ -4,7 +4,6 @@ export function getLinks(userId: string): {
   href: string;
   label: string;
   roles: Role[];
-  hidePremium?: boolean;
 }[] {
   return [
     {
@@ -13,14 +12,9 @@ export function getLinks(userId: string): {
       roles: [Role.OWNER, Role.AGENCY, Role.TENANT, Role.ADMIN],
     },
     {
-      href: "/chat/all",
-      label: "Chat",
-      roles: [Role.OWNER, Role.AGENCY, Role.TENANT],
-    },
-    {
-      href: `/dashboard/main`,
+      href: `/dashboard`,
       label: "Dashboard",
-      roles: [Role.AGENCY],
+      roles: [Role.AGENCY, Role.OWNER],
     },
     {
       href: `/users/${userId}/matches`,
@@ -38,19 +32,14 @@ export function getLinks(userId: string): {
       roles: [Role.OWNER, Role.AGENCY],
     },
     {
-      href: "/posts/create",
+      href: `/users/${userId}/posts/create`,
       label: "Create a post",
       roles: [Role.OWNER, Role.AGENCY],
     },
     {
-      href: "#",
-      label: "Notifications",
-      roles: [Role.OWNER, Role.AGENCY, Role.TENANT],
-    },
-    {
-      href: "/moderation",
+      href: "/moderation/reports",
       label: "Moderation",
-      roles: [Role.ADMIN],
+      roles: [Role.ADMIN, Role.MODERATOR],
     },
     {
       href: "/support",
@@ -61,7 +50,6 @@ export function getLinks(userId: string): {
       href: "/premium",
       label: "Premium",
       roles: [Role.OWNER, Role.AGENCY, Role.TENANT],
-      hidePremium: true,
     },
   ];
 }

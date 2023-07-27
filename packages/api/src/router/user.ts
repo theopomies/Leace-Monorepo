@@ -68,7 +68,12 @@ export const userRouter = router({
         - a valid birthdate
       An account turn active after the first update.
   */
-  updateUserById: protectedProcedure([Role.TENANT, Role.OWNER, Role.AGENCY])
+  updateUserById: protectedProcedure([
+    Role.TENANT,
+    Role.OWNER,
+    Role.AGENCY,
+    Role.ADMIN,
+  ])
     .input(
       z.object({
         userId: z.string(),
@@ -173,5 +178,7 @@ export const userRouter = router({
       });
 
       if (!deleted) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+      ctx.clerkClient.users.deleteUser(userId);
     }),
 });

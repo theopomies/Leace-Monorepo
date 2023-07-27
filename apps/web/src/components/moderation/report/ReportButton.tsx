@@ -3,26 +3,24 @@ import { useState } from "react";
 import { trpc } from "../../../utils/trpc";
 import { Button } from "../../shared/button/Button";
 import { Select } from "../../shared/button/Select";
+import { useRouter } from "next/router";
 
 export interface ReportButtonProps {
   reportId: string;
 }
 
 export const ReportButton = ({ reportId }: ReportButtonProps) => {
+  const router = useRouter();
   const [selected, setSelected] = useState<ReportReason>(ReportReason["SPAM"]);
 
-  const utils = trpc.useContext();
-  const mutation = trpc.moderation.report.updateReport.useMutation({
+  const updateReport = trpc.moderation.report.updateReport.useMutation({
     onSuccess() {
-      utils.moderation.report.getReport.invalidate();
+      router.push("/moderation/reports");
     },
   });
 
   const handleClick = () => {
-    mutation.mutate({
-      id: reportId,
-      reason: selected,
-    });
+    updateReport.mutate({ reportId, reason: selected });
   };
 
   return (

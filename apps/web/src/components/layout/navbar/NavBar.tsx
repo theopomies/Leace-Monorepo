@@ -17,19 +17,13 @@ export function NavBar({ userId }: NavBarProps) {
     href,
     label,
     roles,
-    hidePremium = false,
   }: {
     href: string;
     label: string;
     roles: Role[];
-    hidePremium?: boolean;
   }) => {
     if (me) {
-      if (
-        ((hidePremium && !me.isPremium) || !hidePremium) &&
-        me.role &&
-        roles.includes(me.role)
-      ) {
+      if (me.role && roles.includes(me.role)) {
         return (
           <li key={label}>
             <Link
@@ -38,11 +32,6 @@ export function NavBar({ userId }: NavBarProps) {
             >
               <span className="inline-flex h-12 w-12 items-center justify-center text-lg text-gray-400"></span>
               <span className="text-sm font-medium">{label}</span>
-              {label === "Notifications" && (
-                <span className="ml-auto mr-6 rounded-full bg-red-100 px-3 py-px text-sm text-red-500">
-                  5
-                </span>
-              )}
             </Link>
           </li>
         );

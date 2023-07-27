@@ -49,13 +49,18 @@ enum PostType {
   TO_BE_RENTED
 }
 
+enum HomeType {
+  APARTMENT
+  HOUSE
+}
+
 model User {
   id   String @id @default(cuid())
   role Role?
 
   email         String?     @unique
   emailVerified DateTime?
-  image         String?
+  image         String?     @db.Text
   firstName     String?
   lastName      String?
   phoneNumber   String?     @unique
@@ -67,7 +72,15 @@ model User {
 
   attribute Attribute?
 
-  posts         Post[]
+  posts Post[] @relation("posts_created")
+
+  postsSeen     Post[] @relation("posts_seen")
+  postsToBeSeen Post[] @relation("posts_to_be_seen")
+
+  seenBy     Post[] @relation("users_seen")
+  toBeSeenBy Post[] @relation("users_to_be_seen")
+
+  images        Image[]
   documents     Document[]
   relationships Relationship[]
   messages      Message[]
@@ -92,7 +105,7 @@ model User {
 model Post {
   id String @id @default(cuid())
 
-  createdBy   User   @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  createdBy   User   @relation(fields: [createdById], references: [id], "posts_created", onDelete: Cascade)
   createdById String
 
   title   String?
@@ -101,6 +114,12 @@ model Post {
   type    PostType? @default(TO_BE_RENTED)
 
   attribute Attribute?
+
+  seenBy     User[] @relation("posts_seen")
+  toBeSeenBy User[] @relation("posts_to_be_seen")
+
+  usersSeen     User[] @relation("users_seen")
+  usersToBeSeen User[] @relation("users_to_be_seen")
 
   images    Image[]
   documents Document[]
@@ -125,6 +144,8 @@ model Attribute {
   postId String? @unique
 
   location String?
+  lat      Float?
+  lng      Float?
 
   // Only Tenant
   maxPrice Int?
@@ -132,6 +153,8 @@ model Attribute {
 
   maxSize Int?
   minSize Int?
+
+  range Int @default(100)
 
   // Only Owner and Agency
   price Int?
@@ -141,8 +164,7 @@ model Attribute {
   rentEndDate   DateTime?
 
   furnished  Boolean?
-  house      Boolean?
-  appartment Boolean?
+  homeType   HomeType?
   terrace    Boolean?
   pets       Boolean?
   smoker     Boolean?
@@ -219,7 +241,7 @@ model Document {
   user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String?
 
-  lease Lease? @relation(fields: [leaseId], references: [id], onDelete: Cascade)
+  lease   Lease?  @relation(fields: [leaseId], references: [id], onDelete: Cascade)
   leaseId String?
 
   post   Post?   @relation(fields: [postId], references: [id], onDelete: Cascade)
@@ -242,12 +264,16 @@ model Image {
 
   ext String
 
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String?
+
   post   Post?   @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@index([userId])
   @@index([postId])
   @@map("pictures")
 }
@@ -297,8 +323,8 @@ model SupportRelationship {
 model Conversation {
   id String @id @default(cuid())
 
-  relationship         Relationship? @relation(fields: [relationId], references: [id], onDelete: Cascade)
-  relationId String?       @unique
+  relationship Relationship? @relation(fields: [relationId], references: [id], onDelete: Cascade)
+  relationId   String?       @unique
 
   supportRs         SupportRelationship? @relation(fields: [supportRelationId], references: [id], onDelete: Cascade)
   supportRelationId String?              @unique
@@ -336,13 +362,13 @@ model Lease {
   id String @id @default(cuid())
 
   relationship   Relationship @relation(fields: [relationshipId], references: [id], onDelete: Cascade)
-  relationshipId String @unique
+  relationshipId String       @unique
 
-  isSigned Boolean @default(false)
-  rentCost Int
+  isSigned      Boolean  @default(false)
+  rentCost      Int
   utilitiesCost Int
-  startDate DateTime
-  endDate DateTime
+  startDate     DateTime
+  endDate       DateTime
 
   documents Document[]
 
@@ -351,5 +377,4 @@ model Lease {
 
   @@index([relationshipId])
   @@index([createdById])
-
 }

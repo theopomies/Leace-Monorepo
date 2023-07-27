@@ -4,6 +4,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";
 import { getId } from "../utils/getId";
+import { movePostToSeen, moveUserToSeen } from "../utils/algorithm";
 
 export const relationshipRouter = router({
   likeTenantForPost: protectedProcedure([Role.OWNER, Role.AGENCY])
@@ -45,6 +46,8 @@ export const relationshipRouter = router({
       )
         throw new TRPCError({ code: "FORBIDDEN" });
 
+      await moveUserToSeen(user.id, post.id);
+
       const relationship = await ctx.prisma.relationship.findFirst({
         where: { postId: post.id, userId: user.id },
       });
@@ -60,6 +63,13 @@ export const relationshipRouter = router({
         if (!created) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
 
         return created;
+      }
+
+      if (relationship.relationType == RelationType.POST) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "This post already liked this user",
+        });
       }
 
       const updated = await ctx.prisma.relationship.update({
@@ -109,11 +119,20 @@ export const relationshipRouter = router({
       )
         throw new TRPCError({ code: "FORBIDDEN" });
 
+      await moveUserToSeen(user.id, post.id);
+
       const relationship = await ctx.prisma.relationship.findFirst({
         where: { postId: post.id, userId: user.id },
       });
 
       if (!relationship) return { missed: false, message: "Nothing to do" };
+
+      if (relationship.relationType == RelationType.POST) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "This post already liked this user",
+        });
+      }
 
       const deleted = await ctx.prisma.relationship.delete({
         where: { id: relationship.id },
@@ -149,6 +168,7 @@ export const relationshipRouter = router({
 
       if (post.type == PostType.RENTED)
         throw new TRPCError({ code: "FORBIDDEN" });
+      await movePostToSeen(ctx.auth.userId, post.id);
 
       const relationship = await ctx.prisma.relationship.findFirst({
         where: { postId: post.id, userId: user.id },
@@ -209,6 +229,7 @@ export const relationshipRouter = router({
 
       if (post.type == PostType.RENTED)
         throw new TRPCError({ code: "FORBIDDEN" });
+      await movePostToSeen(ctx.auth.userId, post.id);
 
       const relationship = await ctx.prisma.relationship.findFirst({
         where: { postId: post.id, userId: user.id },
@@ -241,6 +262,7 @@ export const relationshipRouter = router({
           post: { include: { createdBy: true } },
           conversation: true,
           user: true,
+          lease: true,
         },
         orderBy: { updatedAt: "desc" },
       });
@@ -285,6 +307,7 @@ export const relationshipRouter = router({
           post: { include: { createdBy: true } },
           conversation: true,
           user: true,
+          lease: true,
         },
         orderBy: { updatedAt: "desc" },
       });
@@ -430,5 +453,57 @@ export const relationshipRouter = router({
         return { count: relationships.length, relationship: null };
 
       return { count: relationships.length, relationship: relationships };
+    }),
+  getClientsByUserId: protectedProcedure([Role.AGENCY, Role.OWNER])
+    .input(
+      z.object({
+        userId: z.string(),
+        postType: z.enum([PostType.RENTED, PostType.TO_BE_RENTED]).optional(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const userId = getId({ ctx, userId: input.userId });
+
+      const user = await ctx.prisma.user.findUnique({ where: { id: userId } });
+
+      if (!user) throw new TRPCError({ code: "NOT_FOUND" });
+
+      if (!input.postType) {
+        const posts = await ctx.prisma.post.findMany({
+          where: { createdById: userId },
+        });
+        if (!posts) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+        const data = await Promise.all(
+          posts.map(async (post) => {
+            const relationship = await ctx.prisma.relationship.findFirst({
+              where: { postId: post.id, lease: { isSigned: true } },
+              include: { post: { include: { attribute: true } }, user: true },
+            });
+
+            return { post: post, user: relationship?.user };
+          }),
+        );
+
+        return data;
+      }
+
+      const posts = await ctx.prisma.post.findMany({
+        where: { createdById: userId, type: input.postType },
+      });
+      if (!posts) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+      const data = await Promise.all(
+        posts.map(async (post) => {
+          const relationship = await ctx.prisma.relationship.findFirst({
+            where: { postId: post.id, lease: { isSigned: true } },
+            include: { post: { include: { attribute: true } }, user: true },
+          });
+
+          return { post: post, user: relationship?.user };
+        }),
+      );
+
+      return data;
     }),
 });

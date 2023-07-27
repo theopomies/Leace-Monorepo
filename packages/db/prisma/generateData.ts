@@ -5,6 +5,7 @@ import {
   PrismaClient,
   Prisma,
   PostType,
+  HomeType,
 } from "@prisma/client";
 
 const nbUsers = 0;
@@ -36,35 +37,67 @@ export const makeUsers = () => {
 };
 
 export const makePosts = async (prisma: PrismaClient) => {
-  const posts = new Array<Prisma.PostCreateManyInput>();
+  const newUser = await prisma.user.upsert({
+    where: { email: "bob.dylan@prisma.com" },
+    update: {},
+    create: {
+      email: "bob.dylan@prisma.com",
+      firstName: "Bob",
+      lastName: "Dylan",
+      role: Role.TENANT,
+    },
+  });
 
-  for (let i = 0; i < nbPosts; i++) {
-    const userCount = await prisma.user.count({
-      where: { role: Role.OWNER },
-    });
-    const skip = Math.floor(Math.random() * userCount);
-    const createdBy = await prisma.user.findMany({
-      where: { role: Role.OWNER },
-      take: 1,
-      skip: skip,
-      orderBy: {
-        createdAt: "desc",
+  const getRandomInt = (min: number, max: number) => {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  };
+
+  for (let i = 0; i < 50; i++) {
+    const post = await prisma.post.upsert({
+      where: { id: i.toString() },
+      update: {},
+      create: {
+        title: `Post ${getRandomInt(1, 100)}`,
+        content: `This is post number ${getRandomInt(1, 100)}.`,
+        desc: `This is a description of post number ${getRandomInt(1, 100)}.`,
+        type: PostType.TO_BE_RENTED,
+        createdBy: {
+          connect: {
+            id: newUser.id,
+          },
+        },
+        attribute: {
+          create: {
+            location: [
+              "New York City",
+              "Los Angeles",
+              "Chicago",
+              "Houston",
+              "Phoenix",
+            ][getRandomInt(0, 4)],
+            lat: [40.7128, 34.0522, 41.8781, 29.7604, 33.4484][
+              getRandomInt(0, 4)
+            ],
+            lng: [-74.006, -118.2437, -87.6298, -95.3698, -112.074][
+              getRandomInt(0, 4)
+            ],
+            price: getRandomInt(1000, 5000),
+            size: getRandomInt(100, 500),
+            furnished: [true, false][getRandomInt(0, 1)],
+            homeType: [HomeType.HOUSE, HomeType.APARTMENT][getRandomInt(0, 1)],
+            terrace: [true, false][getRandomInt(0, 1)],
+            pets: [true, false][getRandomInt(0, 1)],
+            smoker: [true, false][getRandomInt(0, 1)],
+            disability: [true, false][getRandomInt(0, 1)],
+            garden: [true, false][getRandomInt(0, 1)],
+            parking: [true, false][getRandomInt(0, 1)],
+            elevator: [true, false][getRandomInt(0, 1)],
+            pool: [true, false][getRandomInt(0, 1)],
+          },
+        },
       },
     });
-    if (!createdBy || !createdBy[0] || !createdBy[0].id) {
-      continue;
-    }
-    posts.push({
-      createdById: createdBy[0].id,
-      title: "title-" + Math.random().toString(36).substring(2, 7),
-      content: "content-" + Math.random().toString(36).substring(2, 7),
-      desc: "desc-" + Math.random().toString(36).substring(2, 7),
-      type: Boolean(Math.round(Math.random()))
-        ? PostType.RENTED
-        : PostType.TO_BE_RENTED,
-    });
   }
-  return posts;
 };
 
 export const makeReports = async (prisma: PrismaClient) => {

@@ -3,6 +3,11 @@ import { z } from "zod";
 import { RelationType, PostType, Role } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { getId } from "../utils/getId";
+import {
+  getPostsWithAttribute,
+  getUsersWithAttribute,
+  shuffle,
+} from "../utils/algorithm";
 import { filterStrings } from "../utils/filter";
 
 export const postRouter = router({
@@ -187,7 +192,7 @@ export const postRouter = router({
 
       return posts;
     }),
-  getRentIncomeByUserId: protectedProcedure([Role.AGENCY, Role.OWNER])
+  RentDataAgencyByUserId: protectedProcedure([Role.AGENCY, Role.OWNER])
     .input(z.object({ userId: z.string() }))
     .query(async ({ ctx, input }) => {
       const userId = getId({ ctx, userId: input.userId });
@@ -196,26 +201,90 @@ export const postRouter = router({
 
       if (!user) throw new TRPCError({ code: "NOT_FOUND" });
 
-      if (user.role != Role.AGENCY && user.role != Role.OWNER)
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "User provided does not fit in this scope",
+      const currentDate = new Date();
+
+      const leases = await ctx.prisma.lease.findMany({
+        where: {
+          createdById: ctx.auth.userId,
+          isSigned: true,
+          endDate: { lte: currentDate },
+        },
+      });
+
+      if (!leases) throw new TRPCError({ code: "NOT_FOUND" });
+
+      let income = 0;
+      let expense = 0;
+      leases.map((lease) => {
+        income += lease.rentCost;
+        expense += lease.utilitiesCost;
+      });
+
+      return { income, expense };
+    }),
+  getPostsToBeSeen: protectedProcedure([Role.TENANT])
+    .input(z.object({ userId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      if (input.userId !== ctx.auth.userId) {
+        throw new TRPCError({ code: "FORBIDDEN" });
+      }
+
+      const user = await ctx.prisma.user.findUniqueOrThrow({
+        where: { id: input.userId },
+        include: {
+          postsToBeSeen: { include: { images: true, attribute: true } },
+        },
+      });
+
+      // If less or equal than 3 posts, add more
+      if (user.postsToBeSeen.length <= 3) {
+        const newPosts = await getPostsWithAttribute(user.id);
+        if (newPosts.length === 0) return user.postsToBeSeen;
+        const updatedUser = await ctx.prisma.user.update({
+          where: { id: user.id },
+          data: {
+            postsToBeSeen: {
+              connect: newPosts.map((post) => ({ id: post.id })),
+            },
+          },
+          include: {
+            postsToBeSeen: { include: { images: true, attribute: true } },
+          },
         });
-
-      const posts = await ctx.prisma.post.findMany({
-        where: { createdById: userId, type: PostType.RENTED },
-        include: { attribute: true },
+        shuffle(updatedUser.postsToBeSeen);
+        return updatedUser.postsToBeSeen;
+      }
+      // If more than 3 posts, return the list
+      shuffle(user.postsToBeSeen);
+      return user.postsToBeSeen;
+    }),
+  getUsersToBeSeen: protectedProcedure([Role.AGENCY, Role.OWNER])
+    .input(z.object({ postId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const post = await ctx.prisma.post.findUniqueOrThrow({
+        where: { id: input.postId },
+        include: { usersToBeSeen: true },
       });
 
-      if (!posts) throw new TRPCError({ code: "NOT_FOUND" });
-
-      let total = 0;
-      posts.map((post) => {
-        if (post.attribute && post.attribute.price)
-          total += post.attribute.price;
-      });
-
-      return total;
+      // If less or equal than 3 posts, add more
+      if (post.usersToBeSeen.length <= 3) {
+        const newUsers = await getUsersWithAttribute(post.id);
+        if (newUsers.length === 0) return post.usersToBeSeen;
+        const updatedPost = await ctx.prisma.post.update({
+          where: { id: post.id },
+          data: {
+            usersToBeSeen: {
+              connect: newUsers.map((user) => ({ id: user.id })),
+            },
+          },
+          include: { usersToBeSeen: true },
+        });
+        shuffle(updatedPost.usersToBeSeen);
+        return updatedPost.usersToBeSeen;
+      }
+      // If more than 3 posts, return the list
+      shuffle(post.usersToBeSeen);
+      return post.usersToBeSeen;
     }),
   getRentExpenseByUserId: protectedProcedure([Role.TENANT])
     .input(z.object({ userId: z.string() }))
@@ -226,33 +295,24 @@ export const postRouter = router({
 
       if (!user) throw new TRPCError({ code: "NOT_FOUND" });
 
-      if (user.role != Role.TENANT)
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "User provided does not fit in this scope",
-        });
+      const currentDate = new Date();
 
-      const relationship = await ctx.prisma.relationship.findMany({
+      const relationship = await ctx.prisma.relationship.findFirst({
         where: {
           userId: userId,
           relationType: RelationType.MATCH,
           post: { type: PostType.RENTED },
-          lease: { isSigned: true },
+          lease: { isSigned: true, endDate: { lte: currentDate } },
         },
-        include: { post: { include: { attribute: true } } },
+        include: { lease: true },
       });
 
-      let total = 0;
+      if (!relationship || !relationship.lease)
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
 
-      relationship.map((relationship) => {
-        if (
-          relationship.post &&
-          relationship.post.attribute &&
-          relationship.post.attribute.price
-        )
-          total += relationship.post.attribute.price;
-      });
-
-      return total;
+      return {
+        rentCost: relationship.lease.rentCost,
+        utilitiesCost: relationship.lease.utilitiesCost,
+      };
     }),
 });
