@@ -27,7 +27,7 @@ export default function Role() {
   const navigation =
     useNavigation<NativeStackNavigationProp<TabStackParamList>>();
   const [role, setRole] = useState<"TENANT" | "OWNER" | "AGENCY">("TENANT");
-  const [page, setPage] = useState<"CHOOSE" | "CREATE">("CREATE");
+  const [page, setPage] = useState<"CHOOSE" | "CREATE">("CHOOSE");
   const createUser = trpc.user.createUser.useMutation();
 
   const utils = trpc.useContext();
@@ -44,7 +44,6 @@ export default function Role() {
       }
     | undefined
   >({ userId });
-  const [open, setOpen] = useState(false);
   const [attrs, setAttrs] = useState<IUserAttrs | undefined>({ userId });
 
   const userRole = trpc.user.updateUserRoleById.useMutation({
@@ -73,8 +72,8 @@ export default function Role() {
     if (!user) return;
     await createUser.mutateAsync();
     await userRole.mutateAsync({ role, userId });
-    userProfile.mutateAsync(user);
-    if (attrs && role === "TENANT") userAttrs.mutateAsync(attrs);
+    await userProfile.mutateAsync(user);
+    if (attrs && role === "TENANT") await userAttrs.mutateAsync(attrs);
   }
 
   if (!user) return null;

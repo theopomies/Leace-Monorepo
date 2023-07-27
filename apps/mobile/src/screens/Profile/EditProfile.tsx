@@ -69,8 +69,8 @@ export default function EditProfile() {
   useFocusEffect(
     useCallback(() => {
       const parsed = JSON.parse(data);
-      const {
-        userId,
+      let {
+        id,
         firstName,
         lastName,
         phoneNumber,
@@ -83,8 +83,15 @@ export default function EditProfile() {
         emailVerified,
         email,
       } = parsed;
+      if (!attribute) {
+        attribute = {
+          ...attribute,
+          rentStartDate: new Date(),
+          rentEndDate: new Date(),
+        };
+      }
       setUser({
-        userId,
+        userId: id,
         firstName,
         lastName,
         phoneNumber,
@@ -94,11 +101,10 @@ export default function EditProfile() {
       setUser1({ image, isPremium, emailVerified, role, email });
       setAttrs({
         ...attribute,
-        userId,
+        userId: id,
         rentStartDate: new Date(attribute.rentStartDate),
         rentEndDate: new Date(attribute.rentEndDate),
       });
-
       return () => {
         setUser(undefined);
         setAttrs(undefined);
@@ -108,7 +114,7 @@ export default function EditProfile() {
 
   function updateUser() {
     if (!user) return;
-    userMutation.mutate(user);
+    userMutation.mutate({ ...user });
     if (showAttrs && attrs) {
       attributesMutation.mutate(attrs);
     }
