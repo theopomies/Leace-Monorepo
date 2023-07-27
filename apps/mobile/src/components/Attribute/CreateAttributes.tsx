@@ -38,15 +38,13 @@ export default function CreateAttributes({
 }: ICreateAttributes) {
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(false);
-  const [reason, setReason] = useState<"HOUSE" | "APPARTMENT">("HOUSE");
+  const [reason, setReason] = useState<"HOUSE" | "APARTMENT">("HOUSE");
   if (!attrs) return null;
 
-  function handlePicker(itemValue: "HOUSE" | "APPARTMENT") {
+  function handlePicker(itemValue: "HOUSE" | "APARTMENT") {
     if (!attrs) return;
     setReason(itemValue);
-    if (itemValue === "HOUSE")
-      setAttrs({ ...attrs, house: true, appartment: false });
-    else setAttrs({ ...attrs, house: false, appartment: true });
+    setAttrs({ ...attrs, homeType: itemValue });
   }
 
   return (
@@ -124,6 +122,7 @@ export default function CreateAttributes({
             // @ts-ignore
             inputMode="numeric"
             placeholder="0 €"
+            defaultValue={attrs.price?.toString() ?? ""}
             onChangeText={(text) =>
               setAttrs({ ...attrs, price: parseInt(text) })
             }
@@ -138,6 +137,7 @@ export default function CreateAttributes({
             // @ts-ignore
             inputMode="numeric"
             placeholder="0 m²"
+            defaultValue={attrs.size?.toString() ?? ""}
             onChangeText={(text) =>
               setAttrs({ ...attrs, size: parseInt(text) })
             }

@@ -64,7 +64,7 @@ const MagicLink = () => {
         onChangeText={(emailAddress) => setEmail(emailAddress)}
       />
       <Pressable
-        className="bg-custom h-12 w-full items-center justify-center rounded-md px-4 py-2"
+        className="h-12 w-full items-center justify-center rounded-md bg-[#10316B] px-4 py-2"
         onPress={handleSignUp}
       >
         <Text className="text-white">Send me a link</Text>

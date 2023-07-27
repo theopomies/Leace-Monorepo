@@ -49,6 +49,7 @@ export default function ProviderStack() {
   const { data: session } = trpc.auth.getSession.useQuery();
 
   const userId = session?.userId as string;
+  console.log({ userId });
 
   const { data: posts, isLoading } = trpc.post.getPostsByUserId.useQuery({
     userId,
@@ -68,6 +69,7 @@ export default function ProviderStack() {
   const [currentUserIndex, setCurrentUserIndex] = useState(0);
 
   const otherId = users?.[currentUserIndex]?.id as string;
+  console.log({ otherId });
 
   const { data: attributes } = trpc.user.getUserById.useQuery({
     userId: otherId,

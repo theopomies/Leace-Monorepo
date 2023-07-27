@@ -41,6 +41,7 @@ export default function ShowPost() {
 
   const deletePost = trpc.post.deletePostById.useMutation({
     onSuccess() {
+      LocalStorage.setItem("refreshPosts", true);
       navigation.navigate("MyPosts", { userId });
     },
   });
@@ -75,7 +76,6 @@ export default function ShowPost() {
 
   function handleDelete() {
     if (!post) return;
-    LocalStorage.setItem("refreshPosts", true);
     deletePost.mutate({ postId: post.id });
   }
 
@@ -160,7 +160,7 @@ export default function ShowPost() {
               <View className="flex flex-row">
                 <Text className="min-w-[68px] font-bold text-white">Type:</Text>
                 <Text className="font-light text-white">
-                  {post.attribute?.appartment ? "Appartment" : "House"}
+                  {post.attribute?.homeType}
                 </Text>
               </View>
               <View className="flex flex-row">

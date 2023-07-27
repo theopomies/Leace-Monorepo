@@ -8,6 +8,8 @@ import { Icon } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { TabStackParamList } from "../../navigation/TabNavigator";
+import { Btn } from "../Btn";
+import { useAuth } from "@clerk/clerk-expo";
 
 interface IUserProfile {
   userId: string;
@@ -24,6 +26,8 @@ export default function UserProfile({
 }: IUserProfile) {
   const navigation =
     useNavigation<NativeStackNavigationProp<TabStackParamList>>();
+
+  const { signOut } = useAuth();
 
   return (
     <View className="flex-1">
@@ -127,6 +131,9 @@ export default function UserProfile({
           )}
         </>
       )}
+      <View className="px-3 pb-2">
+        <Btn title="Log out" bgColor="#EF4444" onPress={() => signOut()} />
+      </View>
     </View>
   );
 }

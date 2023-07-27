@@ -39,12 +39,12 @@ export default function PostStack() {
       const check = LocalStorage.getItem("refreshPosts");
       if (!check) return;
       LocalStorage.setItem("refreshPosts", false);
+      setPosts(undefined);
       refetch();
     }, [userId]),
   );
   useEffect(() => {
     if (posts) return;
-    console.log("in useEffect");
     setPosts(data);
   }, [data]);
 
@@ -100,17 +100,18 @@ export default function PostStack() {
             ]}
           />
         </View>
-        {posts && (
-          <ScrollView
-            contentContainerStyle={{ flexGrow: 1 }}
-            style={{ backgroundColor: "#F2F7FF" }}
-            className="px-2"
-          >
-            {posts.map((post, idx) => (
-              <PostCard data={post} key={idx} userId={userId} />
-            ))}
-          </ScrollView>
-        )}
+        <View className="flex-1 bg-[#F2F7FF]">
+          {posts && (
+            <ScrollView
+              contentContainerStyle={{ flexGrow: 1 }}
+              className="px-2"
+            >
+              {posts.map((post, idx) => (
+                <PostCard data={post} key={idx} userId={userId} />
+              ))}
+            </ScrollView>
+          )}
+        </View>
       </View>
     </SafeAreaView>
   );
