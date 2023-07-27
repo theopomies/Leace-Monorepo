@@ -2,13 +2,11 @@ import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { IDefaulAttributes } from "../../types";
 import { Icon } from "react-native-elements";
-import DateTimePicker, {
-  DateTimePickerEvent,
-} from "@react-native-community/datetimepicker";
-import { Picker } from "@react-native-picker/picker";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import RNPickerSelect from "react-native-picker-select";
 
 interface ICreateAttributes {
-  attrs: IDefaulAttributes;
+  attrs: IDefaulAttributes | undefined;
   setAttrs: React.Dispatch<React.SetStateAction<IDefaulAttributes | undefined>>;
 }
 interface IAttributeBtn {
@@ -41,50 +39,47 @@ export default function CreateAttributes({
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(false);
   const [reason, setReason] = useState<"HOUSE" | "APPARTMENT">("HOUSE");
+  if (!attrs) return null;
 
-  const onChange = (event: DateTimePickerEvent, date?: Date) => {
-    setOpen(false);
-    setAttrs({ ...attrs, rentStartDate: date });
-  };
-
-  const onChange1 = (event: DateTimePickerEvent, date?: Date) => {
-    setOpen1(false);
-    setAttrs({ ...attrs, rentEndDate: date });
-  };
+  function handlePicker(itemValue: "HOUSE" | "APPARTMENT") {
+    if (!attrs) return;
+    setReason(itemValue);
+    if (itemValue === "HOUSE")
+      setAttrs({ ...attrs, house: true, appartment: false });
+    else setAttrs({ ...attrs, house: false, appartment: true });
+  }
 
   return (
     <View className="flex space-y-2">
-      {open && (
-        <DateTimePicker
-          testID="dateTimePicker"
-          value={attrs.rentStartDate || new Date()}
-          mode={"date"}
-          onChange={onChange}
-        />
-      )}
+      <DateTimePickerModal
+        isVisible={open}
+        mode="date"
+        onConfirm={(date) => {
+          setAttrs({ ...attrs, rentStartDate: date });
+          setOpen(false);
+        }}
+        onCancel={() => setOpen(false)}
+      />
 
-      {open1 && (
-        <DateTimePicker
-          testID="dateTimePicker"
-          value={attrs.rentEndDate || new Date()}
-          mode={"date"}
-          onChange={onChange1}
-        />
-      )}
+      <DateTimePickerModal
+        isVisible={open1}
+        mode="date"
+        onConfirm={(date) => {
+          setAttrs({ ...attrs, rentEndDate: date });
+          setOpen1(false);
+        }}
+        onCancel={() => setOpen1(false)}
+      />
       <View>
         <Text className="text-base font-bold text-[#10316B]">Type</Text>
-        <Picker
-          selectedValue={reason}
-          onValueChange={(itemValue) => {
-            setReason(itemValue);
-            if (itemValue === "HOUSE")
-              setAttrs({ ...attrs, house: true, appartment: false });
-            else setAttrs({ ...attrs, house: false, appartment: true });
-          }}
-        >
-          <Picker.Item label="HOUSE" value={"HOUSE"} />
-          <Picker.Item label="APPARTMENT" value={"APPARTMENT"} />
-        </Picker>
+        <RNPickerSelect
+          placeholder={{}}
+          onValueChange={handlePicker}
+          items={[
+            { label: "HOUSE", value: "HOUSE" },
+            { label: "APARTMENT", value: "APARTMENT" },
+          ]}
+        />
       </View>
       <View>
         <Text className="text-base font-bold text-[#10316B]">Location</Text>

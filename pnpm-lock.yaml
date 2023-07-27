@@ -59,9 +59,6 @@ importers:
       '@react-native-community/datetimepicker':
         specifier: ^6.7.5
         version: 6.7.5
-      '@react-native-picker/picker':
-        specifier: ^2.4.10
-        version: 2.4.10(react-native@0.71.0-rc.0)(react@18.2.0)
       '@react-native/normalize-color':
         specifier: ^2.1.0
         version: 2.1.0
@@ -137,6 +134,9 @@ importers:
       react-native-modal-datetime-picker:
         specifier: ^14.0.1
         version: 14.0.1(@react-native-community/datetimepicker@6.7.5)(react-native@0.71.0-rc.0)
+      react-native-picker-select:
+        specifier: ^8.0.4
+        version: 8.0.4(react-native@0.71.0-rc.0)(react@18.2.0)
       react-native-safe-area-context:
         specifier: 4.4.1
         version: 4.4.1(react-native@0.71.0-rc.0)(react@18.2.0)
@@ -4483,10 +4483,10 @@ packages:
       invariant: 2.2.4
     dev: false
 
-  /@react-native-picker/picker@2.4.10(react-native@0.71.0-rc.0)(react@18.2.0):
-    resolution: {integrity: sha512-EvAlHmPEPOwvbP6Pjg/gtDV3XJzIjIxr10fXFNlX5r9HeHw582G1Zt2o8FLyB718nOttgj8HYUTGxvhu4N65sQ==}
+  /@react-native-picker/picker@1.16.8(react-native@0.71.0-rc.0)(react@18.2.0):
+    resolution: {integrity: sha512-pacdQDX6V6EmjF+HoiIh6u++qx4mTK0WnhgUHRc01B+Qt5eoeUwseBqmqfTSXTx/aHDEd6PiIw7UGvKgFoqgFQ==}
     peerDependencies:
-      react: '>=16'
+      react: 16 || 17
       react-native: '>=0.57'
     dependencies:
       react: 18.2.0
@@ -11131,6 +11131,16 @@ packages:
       '@react-native-community/datetimepicker': 6.7.5
       prop-types: 15.8.1
       react-native: 0.71.0-rc.0(@babel/core@7.21.8)(@babel/preset-env@7.21.5)(react@18.2.0)
+    dev: false
+
+  /react-native-picker-select@8.0.4(react-native@0.71.0-rc.0)(react@18.2.0):
+    resolution: {integrity: sha512-orBjPIwBkV5oipyVw263YNMI56f6Kj3p/ejabZoCYYNSG3AiLVVhC2RqsxMgDA7IayyURAW+AlV+mDJyVqLBkg==}
+    dependencies:
+      '@react-native-picker/picker': 1.16.8(react-native@0.71.0-rc.0)(react@18.2.0)
+      lodash.isequal: 4.5.0
+    transitivePeerDependencies:
+      - react
+      - react-native
     dev: false
 
   /react-native-ratings@8.0.4(react-native@0.71.0-rc.0)(react@18.2.0):

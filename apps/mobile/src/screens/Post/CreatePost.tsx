@@ -22,7 +22,7 @@ export default function CreatePost() {
     desc: "",
     content: "",
   });
-  const [postAttrs, setPostAttrs] = useState<IDefaulAttributes>({
+  const [postAttrs, setPostAttrs] = useState<IDefaulAttributes | undefined>({
     postId: "",
     location: "",
     price: 0,
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
   },
   view: {
     flex: 1,
-    marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 20,
+    marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
     backgroundColor: "#F2F7FF",
   },
 });

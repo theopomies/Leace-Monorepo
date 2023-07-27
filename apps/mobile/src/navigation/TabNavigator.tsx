@@ -81,7 +81,7 @@ const TabNavigator = () => {
       <View
         className="flex-1 items-center justify-center bg-white"
         style={{
-          paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 20,
+          paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
         }}
       >
         <Loading />
@@ -94,7 +94,7 @@ const TabNavigator = () => {
       <View
         className="flex-1 items-center justify-center bg-white"
         style={{
-          paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 20,
+          paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
         }}
       >
         <Btn

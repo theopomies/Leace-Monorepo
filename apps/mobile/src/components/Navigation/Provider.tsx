@@ -4,8 +4,7 @@ import { Icon } from "react-native-elements";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { TabStackParamList } from "../../navigation/TabNavigator";
-import { CreatePost } from "../../screens/CreatePost";
-import { EditPost, PostStack, ShowPost } from "../../screens/Post";
+import { EditPost, PostStack, ShowPost, CreatePost } from "../../screens/Post";
 
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";

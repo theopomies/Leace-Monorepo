@@ -15,8 +15,9 @@ import { TabStackParamList } from "../../navigation/TabNavigator";
 import Loading from "../../components/Loading";
 import { PostCard } from "../../components/Post";
 import { LocalStorage } from "../../utils/cache";
-import { Picker } from "@react-native-picker/picker";
 import { Post, Attribute, Image } from "@leace/db";
+
+import RNPickerSelect from "react-native-picker-select";
 
 export default function PostStack() {
   const route = useRoute<RouteProp<TabStackParamList, "MyPosts">>();
@@ -89,11 +90,15 @@ export default function PostStack() {
             borderBottomWidth: 1,
           }}
         >
-          <Picker selectedValue={reason} onValueChange={handlePicker}>
-            <Picker.Item label="ALL" value={"ALL"} />
-            <Picker.Item label="RENTED" value={"RENTED"} />
-            <Picker.Item label="TO_BE_RENTED" value={"TO_BE_RENTED"} />
-          </Picker>
+          <RNPickerSelect
+            placeholder={{}}
+            onValueChange={handlePicker}
+            items={[
+              { label: "ALL", value: "ALL" },
+              { label: "RENTED", value: "RENTED" },
+              { label: "TO_BE_RENTED", value: "TO_BE_RENTED" },
+            ]}
+          />
         </View>
         {posts && (
           <ScrollView
@@ -118,6 +123,6 @@ const styles = StyleSheet.create({
   },
   view: {
     flex: 1,
-    marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 20,
+    marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
 });

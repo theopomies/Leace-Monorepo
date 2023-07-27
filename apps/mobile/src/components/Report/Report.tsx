@@ -2,10 +2,10 @@ import { View, Text, Modal, TouchableOpacity, TextInput } from "react-native";
 import React, { useState } from "react";
 import { Icon } from "react-native-elements";
 import { Btn } from "../Btn";
-import { Picker } from "@react-native-picker/picker";
 import { Reason } from "../../utils/enum";
 import { trpc } from "../../utils/trpc";
 import { ReportReason } from "@leace/db";
+import RNPickerSelect from "react-native-picker-select";
 
 interface IReport {
   type: "USER" | "POST";
@@ -68,15 +68,16 @@ export default function Report({ type, userId, postId, className }: IReport) {
           >
             <Text className="text-center text-lg font-bold">Report form</Text>
             <Text className="text-sm font-light">Reason:</Text>
-            <Picker
-              selectedValue={reason}
+            <RNPickerSelect
+              placeholder={{}}
               onValueChange={(itemValue) => setReason(itemValue)}
-            >
-              <Picker.Item label="SPAM" value={Reason.SPAM} />
-              <Picker.Item label="SCAM" value={Reason.SCAM} />
-              <Picker.Item label="INAPPROPRIATE" value={Reason.INAPPROPRIATE} />
-              <Picker.Item label="OTHER" value={Reason.OTHER} />
-            </Picker>
+              items={[
+                { label: "SPAM", value: "SPAM" },
+                { label: "SCAM", value: "SCAM" },
+                { label: "INAPPROPRIATE", value: "INAPPROPRIATE" },
+                { label: "OTHER", value: "OTHER" },
+              ]}
+            />
             <Text className="pb-3 text-sm font-light">
               What's happening? Tell us the reason of your report.
             </Text>
