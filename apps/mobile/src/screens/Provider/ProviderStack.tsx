@@ -65,15 +65,12 @@ export default function ProviderStack() {
     postId,
   });
 
-  let otherId = "";
   const [currentUserIndex, setCurrentUserIndex] = useState(0);
 
-  if (users) {
-    otherId = users[currentUserIndex]?.id as string;
-  }
+  const otherId = users?.[currentUserIndex]?.id as string;
 
   const { data: attributes } = trpc.user.getUserById.useQuery({
-    userId: users[currentUserIndex]?.id as string,
+    userId: otherId,
   });
 
   const [post, setPost] = useState<User[] | undefined>();
@@ -143,7 +140,7 @@ export default function ProviderStack() {
         userId: users[currentUserIndex]?.id as string,
         postId,
       });
-    if (idx < users.length - 1) {
+    if (idx < (users?.length ?? 0) - 1) {
       setCurrentUserIndex((prevIndex) => prevIndex + 1);
 
       setPost([users[idx + 1]]);
@@ -156,7 +153,7 @@ export default function ProviderStack() {
       <View style={styles.view}>
         <Header />
         <View style={styles.box}>
-          {post && (
+          {post && attributes ? (
             <>
               <GestureRecognizer
                 className="flex flex-1 rounded-md bg-[#10316B]"
@@ -311,6 +308,10 @@ export default function ProviderStack() {
                 />
               </View>
             </>
+          ) : (
+            <View style={styles.centerContainer}>
+              <Text style={styles.noPostText}>No posts available.</Text>
+            </View>
           )}
         </View>
       </View>
@@ -319,6 +320,15 @@ export default function ProviderStack() {
 }
 
 const styles = StyleSheet.create({
+  centerContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  noPostText: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
   container: {
     flex: 1,
     backgroundColor: "white",
