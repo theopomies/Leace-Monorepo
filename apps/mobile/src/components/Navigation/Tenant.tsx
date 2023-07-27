@@ -10,6 +10,7 @@ import { EditProfile, ShowProfile } from "../../screens/Profile";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ShowPost } from "../../screens/Post";
+import { Likes } from "../../screens/Premium";
 
 const Tab = createBottomTabNavigator<TabStackParamList>();
 const Tenant = ({ userId }: { userId: string }) => {
@@ -55,6 +56,20 @@ const Tenant = ({ userId }: { userId: string }) => {
             <Icon
               name={focused ? "chat" : "chat-bubble-outline"}
               type="material"
+            />
+          ),
+          tabBarLabel: "",
+          headerShown: false,
+        }}
+      />
+      <Tab.Screen
+        name="Premium"
+        component={Likes}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <Icon
+              name={focused ? "star-four-points" : "star-four-points-outline"}
+              type="material-community"
             />
           ),
           tabBarLabel: "",

@@ -36,6 +36,8 @@ export type TabStackParamList = {
   Lease: { userId: string; relationshipId: string };
   UpdateLease: { userId: string; relationshipId: string; leaseId: string };
 
+  Premium: undefined;
+
   EditProfile: {
     userId: string;
     data: string;

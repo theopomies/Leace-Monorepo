@@ -10,6 +10,7 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { EditProfile, ShowProfile } from "../../screens/Profile";
 import ProviderStack from "../../screens/Provider/ProviderStack";
+import { Likes } from "../../screens/Premium";
 
 const Tab = createBottomTabNavigator<TabStackParamList>();
 
@@ -92,6 +93,20 @@ const Provider = ({ userId }: { userId: string }) => {
         options={{
           tabBarStyle: { display: "none" },
           tabBarButton: () => null,
+          headerShown: false,
+        }}
+      />
+      <Tab.Screen
+        name="Premium"
+        component={Likes}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <Icon
+              name={focused ? "star-four-points" : "star-four-points-outline"}
+              type="material-community"
+            />
+          ),
+          tabBarLabel: "",
           headerShown: false,
         }}
       />
