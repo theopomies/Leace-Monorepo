@@ -1,3 +1,4 @@
 import UserProfile from "./UserProfile";
+import EditInfo from "./EditInfo";
 
-export { UserProfile };
+export { UserProfile, EditInfo };

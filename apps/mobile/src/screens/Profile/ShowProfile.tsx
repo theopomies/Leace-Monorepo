@@ -4,6 +4,7 @@ import {
   Platform,
   StatusBar,
   StyleSheet,
+  Text,
 } from "react-native";
 import React, { useCallback } from "react";
 import { RouteProp, useFocusEffect, useRoute } from "@react-navigation/native";
@@ -30,24 +31,34 @@ export default function ShowProfile() {
     }, [userId]),
   );
 
+  if (isLoading)
+    return (
+      <View style={styles.container}>
+        <View style={styles.view}>
+          <Loading />
+        </View>
+      </View>
+    );
+
+  if (!data)
+    return (
+      <View style={styles.container}>
+        <View style={styles.view}>
+          <Text>Data not found</Text>
+        </View>
+      </View>
+    );
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.view}>
         <Header />
-        {isLoading ? (
-          <Loading />
-        ) : (
-          <>
-            {data && (
-              <UserProfile
-                userId={userId}
-                data={data}
-                editable={true}
-                showAttrs={data.role === "TENANT" ? true : false}
-              />
-            )}
-          </>
-        )}
+        <UserProfile
+          userId={userId}
+          data={data}
+          editable={true}
+          showAttrs={data.role === "TENANT" ? true : false}
+        />
       </View>
     </SafeAreaView>
   );
