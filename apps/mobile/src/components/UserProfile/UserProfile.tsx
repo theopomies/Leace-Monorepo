@@ -1,514 +1,132 @@
-import React, { useEffect, useState, useRef } from "react";
-import { View, Text, Image, TextInput, TouchableOpacity } from "react-native";
-import { Button, Icon } from "react-native-elements";
-import { trpc } from "../../utils/trpc";
+import { View, Text, Image, TouchableOpacity } from "react-native";
+import React from "react";
+import { User } from "@leace/db";
+import { Attribute } from "@prisma/client";
+import { ShowAttributes } from "../Attribute";
+import Separator from "../Separator";
+import { Icon } from "react-native-elements";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { TabStackParamList } from "../../navigation/TabNavigator";
 
 interface IUserProfile {
-  id: string;
-  role: string;
-  email: string;
-  emailVerified: null;
-  image: string;
-  firstName: string;
-  lastName: string;
-  phoneNumber: null;
-  country: null;
-  description: string;
-  birthDate: string;
-  status: string;
-  isPremium: boolean;
-  createdAt: string;
-  updatedAt: string;
-  attribute: {
-    id: string;
-    userId: string;
-    postId: null;
-    location: string;
-    lat: null;
-    lng: null;
-    maxPrice: number;
-    minPrice: number;
-    maxSize: number;
-    minSize: number;
-    range: number;
-    price: null;
-    size: null;
-    rentStartDate: null;
-    rentEndDate: null;
-    furnished: boolean;
-    homeType: null;
-    terrace: boolean;
-    pets: boolean;
-    smoker: boolean;
-    disability: boolean;
-    garden: boolean;
-    parking: boolean;
-    elevator: boolean;
-    pool: boolean;
-    createdAt: string;
-    updatedAt: string;
-  };
+  userId: string;
+  data: User & { attribute: Attribute | null };
+  editable?: boolean;
+  showAttrs?: boolean;
 }
 
 export default function UserProfile({
-  user,
-  setUser,
-  edit,
   userId,
-}: {
-  user: IUserProfile;
-  setUser: React.Dispatch<any>;
-  edit: boolean;
-  userId: string;
-}) {
-  const BLUE = "#428AF8";
-  const LIGHT_GRAY = "#D3D3D3";
-
-  const defFocus = {
-    firstName: false,
-    lastName: false,
-    email: false,
-    phone: false,
-    birthday: false,
-    country: false,
-    description: false,
-    minPrice: false,
-    maxPrice: false,
-    minSize: false,
-    maxSize: false,
-  };
-
-  const [focus, setFocus] = useState(defFocus);
-
-  useEffect(() => {
-    setFocus(defFocus);
-  }, [edit]);
+  data,
+  editable = false,
+  showAttrs = true,
+}: IUserProfile) {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<TabStackParamList>>();
 
   return (
-    <View className="flex flex-1">
-      <View className="flex h-24 flex-row bg-[#002642] text-white">
-        <View className="w-24 items-center justify-center">
-          <Image
-            className="rounded-full"
-            source={{ uri: user.image }}
-            style={{ width: "75%", height: "75%" }}
-          ></Image>
+    <View className="flex-1">
+      <View className="flex flex-row bg-[#10316B] px-3 py-2">
+        <Image
+          source={{
+            uri: data.image ?? "https://www.gravatar.com/avatar/?d=mp",
+          }}
+          className="h-24 w-24 rounded-full"
+          style={{ borderWidth: 2, borderColor: "white" }}
+        />
+        <View className="flex flex-1 items-start justify-center px-4">
+          <Text className="text-xl font-bold text-white">{data.firstName}</Text>
+          <Text className="text-white ">{data.lastName}</Text>
         </View>
-        <View className="flex flex-1 items-center justify-center px-1.5">
-          {edit ? (
-            <View className="flex w-full flex-col text-white">
-              <TextInput
-                className="h-10 text-white"
-                placeholder="First Name"
-                placeholderTextColor="#FFFFFF"
-                defaultValue={user.firstName ?? ""}
-                onFocus={() => setFocus({ ...defFocus, firstName: true })}
-                onChangeText={(text) => {
-                  setUser({ ...user, firstName: text });
-                }}
-                style={{
-                  borderBottomColor: focus.firstName ? BLUE : LIGHT_GRAY,
-                  borderBottomWidth: 1,
-                }}
-              />
-              <TextInput
-                className="h-10 text-white"
-                placeholder="Last Name"
-                placeholderTextColor="#FFFFFF"
-                defaultValue={user.lastName ?? ""}
-                onFocus={() => setFocus({ ...defFocus, lastName: true })}
-                onChangeText={(text) => {
-                  setUser({ ...user, lastName: text });
-                }}
-                style={{
-                  borderBottomColor: focus.lastName ? BLUE : LIGHT_GRAY,
-                  borderBottomWidth: 1,
-                }}
-              />
-            </View>
-          ) : (
-            <Text className="text-lg font-bold text-white">{`${
-              user.firstName ?? ""
-            } ${user.lastName ?? ""}`}</Text>
-          )}
+        {editable && (
+          <TouchableOpacity
+            className="absolute bottom-1.5 right-2 flex flex-row items-center justify-center space-x-1 rounded-full px-2 py-0.5"
+            style={{ borderWidth: 1, borderColor: "white" }}
+            onPress={() => {
+              navigation.navigate("EditProfile", {
+                userId: userId,
+                data: JSON.stringify({
+                  ...data,
+                  birthDate: data.birthDate?.toISOString(),
+                }),
+                showAttrs: showAttrs,
+              });
+            }}
+          >
+            <Icon
+              name="settings"
+              color="white"
+              size={20}
+              type="material-icons"
+            ></Icon>
+            <Text className="font-bold text-white">Settings</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+      <View className="pt-2">
+        <View className="flex flex-row items-center justify-between px-2">
+          <Text className="text-base font-bold text-[#10316B]">Kind:</Text>
+          <Text className="font-light">{data.role}</Text>
+        </View>
+        <View className="flex flex-row items-center justify-between px-2">
+          <Text className="text-base font-bold text-[#10316B]">Premium:</Text>
+          <Icon
+            name={data.isPremium ? "star" : "close"}
+            color={data.isPremium ? "#FFE867" : "red"}
+            size={25}
+            type="material-icons"
+          ></Icon>
+        </View>
+        <View className="flex flex-row items-center justify-between px-2">
+          <Text className="text-base font-bold text-[#10316B]">Verified:</Text>
+          <Icon
+            name={data.emailVerified ? "done" : "close"}
+            color={data.emailVerified ? "green" : "red"}
+            size={25}
+            type="material-icons"
+          ></Icon>
         </View>
       </View>
-      <View className="mt-2 flex space-y-2 px-2.5">
-        <View className="flex flex-col">
-          <Text className="text-md min-w-[60px] font-bold text-[#002642]">
-            Email
-          </Text>
-          {edit ? (
-            <View className="flex">
-              <TextInput
-                defaultValue={`${user.email}`}
-                className="flex h-10 flex-1"
-                onFocus={() => setFocus({ ...defFocus, email: true })}
-                onChangeText={(text) => {
-                  setUser({ ...user, email: text });
-                }}
-                style={{
-                  borderBottomColor: focus.email ? BLUE : LIGHT_GRAY,
-                  borderBottomWidth: 1,
-                }}
-              />
-            </View>
-          ) : (
-            <Text className=" ">{user.email}</Text>
-          )}
+      <View className="px-3">
+        <Separator color="#10316B" />
+      </View>
+      <View style={{ flex: 1 }}>
+        <View className="flex flex-row items-center justify-between px-2">
+          <Text className="text-base font-bold text-[#394867]">Country:</Text>
+          <Text className="font-light">{data.country ?? "-"}</Text>
         </View>
-        <View className="flex flex-col">
-          <Text className="text-md min-w-[60px] font-bold text-[#002642]">
-            Phone
-          </Text>
-          {edit ? (
-            <View className="flex">
-              <TextInput
-                inputMode="tel"
-                // placeholder="0765164821"
-                defaultValue={user.phoneNumber ?? ""}
-                className="flex h-10 flex-1"
-                onFocus={() => setFocus({ ...defFocus, phone: true })}
-                onChangeText={(text) => {
-                  setUser({ ...user, phoneNumber: text });
-                }}
-                style={{
-                  borderBottomColor: focus.phone ? BLUE : LIGHT_GRAY,
-                  borderBottomWidth: 1,
-                }}
-              />
-            </View>
-          ) : (
-            <Text className="">{user.phoneNumber ?? "-"}</Text>
-          )}
+        <View className="flex flex-row items-center justify-between px-2">
+          <Text className="text-base font-bold text-[#394867]">Phone:</Text>
+          <Text className="font-light">{data.phoneNumber ?? "-"}</Text>
         </View>
-        <View className="flex flex-col">
-          <Text className="text-md min-w-[60px] font-bold text-[#002642]">
-            Birthday
+        <View className="flex flex-row items-center justify-between px-2">
+          <Text className="text-base font-bold text-[#394867]">Birthdate:</Text>
+          <Text className="font-light">
+            {data.birthDate?.toLocaleDateString() ?? "-"}
           </Text>
-          {edit ? (
-            <View className="flex">
-              <TextInput
-                placeholder="YYYY-MM-DD"
-                defaultValue={user.birthDate ?? ""}
-                className="flex h-10 flex-1"
-                onFocus={() => setFocus({ ...defFocus, birthday: true })}
-                onChangeText={(text) => {
-                  const pattern = /^\d{4}-\d{2}-\d{2}$/;
-                  if (pattern.test(text)) setUser({ ...user, birthDate: text });
-                }}
-                style={{
-                  borderBottomColor: focus.birthday ? BLUE : LIGHT_GRAY,
-                  borderBottomWidth: 1,
-                }}
-              />
-            </View>
-          ) : (
-            <Text className="">{user.birthDate ?? "-"}</Text>
-          )}
         </View>
-        <View>
-          <Text className="text-md min-w-[60px] font-bold text-[#002642]">
-            Description
-          </Text>
-          {edit ? (
-            <View className="flex">
-              <TextInput
-                multiline
-                numberOfLines={16}
-                defaultValue={user.description ?? ""}
-                onChangeText={(text) => {
-                  setUser({ ...user, description: text });
-                }}
-                className="flex h-10 flex-1"
-                onFocus={() => setFocus({ ...defFocus, description: true })}
-                style={{
-                  borderBottomColor: focus.description ? BLUE : LIGHT_GRAY,
-                  borderBottomWidth: 1,
-                }}
-              />
-            </View>
-          ) : (
-            <Text className="">{user.description ?? "-"}</Text>
-          )}
+        <View className="flex flex-row items-center justify-between px-2">
+          <Text className="text-base font-bold text-[#394867]">Email:</Text>
+          <Text className="font-light">{data.email}</Text>
         </View>
-        <View className="">
-          <Text className="text-md min-w-[60px] font-bold text-[#002642]">
-            Criterials
+        <View className="flex px-2">
+          <Text className="text-base font-bold text-[#10316B]">
+            Description:
           </Text>
-          <View className="flex flex-row flex-wrap items-center justify-center gap-1 pt-2">
-            {edit ? (
-              <>
-                <TouchableOpacity
-                  className="rounded-md border px-2 py-0.5"
-                  style={{
-                    borderColor: user.attribute?.terrace ? BLUE : LIGHT_GRAY,
-                  }}
-                  onPress={() => {
-                    let tmp = user?.attribute;
-                    if (!tmp?.terrace) tmp = { ...tmp, terrace: true };
-                    else tmp.terrace = !tmp.terrace;
-                    setUser({ ...user, attribute: tmp });
-                  }}
-                >
-                  <Text className="">Terrace</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  className="rounded-md border px-2 py-0.5"
-                  style={{
-                    borderColor: user.attribute?.smoker ? BLUE : LIGHT_GRAY,
-                  }}
-                  onPress={() => {
-                    let tmp = user?.attribute;
-                    if (!tmp?.smoker) tmp = { ...tmp, smoker: true };
-                    else tmp.smoker = !tmp.smoker;
-                    setUser({ ...user, attribute: tmp });
-                  }}
-                >
-                  <Text className="">Smoker</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  className="rounded-md border px-2 py-0.5"
-                  style={{
-                    borderColor: user.attribute?.elevator ? BLUE : LIGHT_GRAY,
-                  }}
-                  onPress={() => {
-                    let tmp = user?.attribute;
-                    if (!tmp?.elevator) tmp = { ...tmp, elevator: true };
-                    else tmp.elevator = !tmp.elevator;
-                    setUser({ ...user, attribute: tmp });
-                  }}
-                >
-                  <Text className="">Elevator</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  className="rounded-md border px-2 py-0.5"
-                  style={{
-                    borderColor: user.attribute?.pets ? BLUE : LIGHT_GRAY,
-                  }}
-                  onPress={() => {
-                    let tmp = user?.attribute;
-                    if (!tmp?.pets) tmp = { ...tmp, pets: true };
-                    else tmp.pets = !tmp.pets;
-                    setUser({ ...user, attribute: tmp });
-                  }}
-                >
-                  <Text className="">Pets</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  className="rounded-md border px-2 py-0.5"
-                  style={{
-                    borderColor: user.attribute?.pool ? BLUE : LIGHT_GRAY,
-                  }}
-                  onPress={() => {
-                    let tmp = user?.attribute;
-                    if (!tmp?.pool) tmp = { ...tmp, pool: true };
-                    else tmp.pool = !tmp.pool;
-                    setUser({ ...user, attribute: tmp });
-                  }}
-                >
-                  <Text className="">Pool</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  className="rounded-md border px-2 py-0.5"
-                  style={{
-                    borderColor: user.attribute?.disability ? BLUE : LIGHT_GRAY,
-                  }}
-                  onPress={() => {
-                    let tmp = user?.attribute;
-                    if (!tmp?.disability) tmp = { ...tmp, disability: true };
-                    else tmp.disability = !tmp.disability;
-                    setUser({ ...user, attribute: tmp });
-                  }}
-                >
-                  <Text className="">Accessible</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  className="rounded-md border px-2 py-0.5"
-                  style={{
-                    borderColor: user.attribute?.parking ? BLUE : LIGHT_GRAY,
-                  }}
-                  onPress={() => {
-                    let tmp = user?.attribute;
-                    if (!tmp?.parking) tmp = { ...tmp, parking: true };
-                    else tmp.parking = !tmp.parking;
-                    setUser({ ...user, attribute: tmp });
-                  }}
-                >
-                  <Text className="">Garage</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  className="rounded-md border px-2 py-0.5"
-                  style={{
-                    borderColor: user.attribute?.garden ? BLUE : LIGHT_GRAY,
-                  }}
-                  onPress={() => {
-                    let tmp = user?.attribute;
-                    if (!tmp?.garden) tmp = { ...tmp, garden: true };
-                    else tmp.garden = !tmp.garden;
-                    setUser({ ...user, attribute: tmp });
-                  }}
-                >
-                  <Text className="">Garden</Text>
-                </TouchableOpacity>
-              </>
-            ) : (
-              <>
-                {user.attribute?.terrace ? (
-                  <Text className="rounded-md border px-2 py-0.5">Terrace</Text>
-                ) : null}
-                {user.attribute?.smoker ? (
-                  <Text className="rounded-md border px-2 py-0.5">Smoker</Text>
-                ) : null}
-                {user.attribute?.elevator ? (
-                  <Text className="rounded-md border px-2 py-0.5">
-                    Elevator
-                  </Text>
-                ) : null}
-                {user.attribute?.pets ? (
-                  <Text className="rounded-md border px-2 py-0.5">Pets</Text>
-                ) : null}
-                {user.attribute?.pool ? (
-                  <Text className="rounded-md border px-2 py-0.5">Pool</Text>
-                ) : null}
-                {user.attribute?.disability ? (
-                  <Text className="rounded-md border px-2 py-0.5">
-                    Accessible
-                  </Text>
-                ) : null}
-                {user.attribute?.parking ? (
-                  <Text className="rounded-md border px-2 py-0.5">Garage</Text>
-                ) : null}
-                {user.attribute?.garden ? (
-                  <Text className="rounded-md border px-2 py-0.5">Garden</Text>
-                ) : null}
-              </>
-            )}
-          </View>
-        </View>
-        <View>
-          <Text className="text-md min-w-[60px] font-bold text-[#002642]">
-            Budget
-          </Text>
-          <View className="flex flex-row">
-            <View className="flex-1 items-center justify-center">
-              {edit ? (
-                <View className="flex flex-row items-center justify-center">
-                  <Text>Min: </Text>
-                  <TextInput
-                    inputMode="numeric"
-                    placeholder="0"
-                    defaultValue={`${user.attribute?.minPrice ?? ""}`}
-                    className="h-10 text-center"
-                    onFocus={() => setFocus({ ...defFocus, minPrice: true })}
-                    style={{
-                      borderBottomColor: focus.minPrice ? BLUE : LIGHT_GRAY,
-                      borderBottomWidth: 1,
-                    }}
-                    onChangeText={(text) => {
-                      if (!text) return;
-                      let tmp = user?.attribute;
-                      tmp = { ...tmp, minPrice: parseInt(text) };
-                      setUser({ ...user, attribute: tmp });
-                    }}
-                  />
-                </View>
-              ) : (
-                <Text className=" ">
-                  Min: {user.attribute?.minPrice ?? "-"}
-                </Text>
-              )}
-            </View>
-            <View className="flex-1 items-center justify-center">
-              {edit ? (
-                <View className="flex flex-row items-center justify-center">
-                  <Text>Max: </Text>
-                  <TextInput
-                    inputMode="numeric"
-                    placeholder="1000"
-                    defaultValue={`${user.attribute?.maxPrice ?? ""}`}
-                    className="h-10 text-center"
-                    onFocus={() => setFocus({ ...defFocus, maxPrice: true })}
-                    style={{
-                      borderBottomColor: focus.maxPrice ? BLUE : LIGHT_GRAY,
-                      borderBottomWidth: 1,
-                    }}
-                    onChangeText={(text) => {
-                      if (!text) return;
-                      let tmp = user?.attribute;
-                      tmp = { ...tmp, maxPrice: parseInt(text) };
-                      setUser({ ...user, attribute: tmp });
-                    }}
-                  />
-                </View>
-              ) : (
-                <Text className=" ">
-                  Max: {user.attribute?.maxPrice ?? "-"}
-                </Text>
-              )}
-            </View>
-          </View>
-        </View>
-        <View>
-          <Text className="text-md min-w-[60px] font-bold text-[#002642]">
-            Size
-          </Text>
-          <View className="flex flex-row">
-            <View className="flex-1 items-center justify-center">
-              {edit ? (
-                <View className="flex flex-row items-center justify-center">
-                  <Text>Min: </Text>
-                  <TextInput
-                    inputMode="numeric"
-                    onChangeText={(text) => {
-                      if (!text) return;
-                      let tmp = user?.attribute;
-                      tmp = { ...tmp, minSize: parseInt(text) };
-                      setUser({ ...user, attribute: tmp });
-                    }}
-                    placeholder="0"
-                    defaultValue={`${user.attribute?.minSize ?? ""}`}
-                    className="h-10 text-center"
-                    onFocus={() => setFocus({ ...defFocus, minSize: true })}
-                    style={{
-                      borderBottomColor: focus.minSize ? BLUE : LIGHT_GRAY,
-                      borderBottomWidth: 1,
-                    }}
-                  />
-                </View>
-              ) : (
-                <Text className=" ">Min: {user.attribute?.minSize ?? "-"}</Text>
-              )}
-            </View>
-            <View className="flex-1 items-center justify-center">
-              {edit ? (
-                <View className="flex flex-row items-center justify-center">
-                  <Text>Max: </Text>
-                  <TextInput
-                    inputMode="numeric"
-                    onChangeText={(text) => {
-                      if (!text) return;
-                      let tmp = user?.attribute;
-                      tmp = { ...tmp, maxSize: parseInt(text) };
-                      setUser({ ...user, attribute: tmp });
-                    }}
-                    placeholder="100"
-                    defaultValue={`${user.attribute?.maxSize ?? ""}`}
-                    className="h-10 text-center"
-                    onFocus={() => setFocus({ ...defFocus, maxSize: true })}
-                    style={{
-                      borderBottomColor: focus.maxSize ? BLUE : LIGHT_GRAY,
-                      borderBottomWidth: 1,
-                    }}
-                  />
-                </View>
-              ) : (
-                <Text className=" ">Max: {user.attribute?.maxSize ?? "-"}</Text>
-              )}
-            </View>
-          </View>
+          <Text className="font-light">{data.description}</Text>
         </View>
       </View>
+      {showAttrs && (
+        <>
+          {data.attribute && (
+            <View className="mb-3 px-3">
+              <Separator color="#10316B" />
+              <ShowAttributes attribute={data.attribute} />
+            </View>
+          )}
+        </>
+      )}
     </View>
   );
 }

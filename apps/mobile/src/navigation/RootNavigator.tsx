@@ -4,7 +4,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import TabNavigator from "./TabNavigator";
 import { NavigationContainer } from "@react-navigation/native";
 import AuthScreen from "../screens/auth";
-import { ClerkLoaded, useUser } from "@clerk/clerk-expo"
+import { ClerkLoaded, useUser } from "@clerk/clerk-expo";
 
 export type RootStackParamList = {
   Main: undefined;
@@ -14,11 +14,11 @@ export type RootStackParamList = {
 const RootStack = createNativeStackNavigator();
 
 const StackNav = () => {
-  const { isSignedIn: signedIn } = useUser();
+  const { isSignedIn } = useUser();
 
   return (
     <RootStack.Navigator>
-      {signedIn ? (
+      {isSignedIn ? (
         <RootStack.Screen name="App" component={TabNavigator} />
       ) : (
         <>
