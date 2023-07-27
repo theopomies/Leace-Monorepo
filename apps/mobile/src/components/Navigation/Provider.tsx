@@ -1,41 +1,128 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import { Icon } from "react-native-elements";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { TabStackParamList } from "../../navigation/TabNavigator";
-import { UserRoles } from "../../utils/enum";
+import { CreatePost } from "../../screens/CreatePost";
+import { EditPost, PostStack, ShowPost } from "../../screens/Post";
+
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { EditProfile, ShowProfile } from "../../screens/Profile";
 
 const Tab = createBottomTabNavigator<TabStackParamList>();
 
-const Provider = ({
-  role,
-  userId,
-}: {
-  role: keyof typeof UserRoles | null;
-  userId: string;
-}) => {
+const Provider = ({ userId }: { userId: string }) => {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<TabStackParamList>>();
+
   return (
     <Tab.Navigator>
-      {/**
-    {role === null || role === undefined ? (
       <Tab.Screen
-        name="Role"
-        component={() => (
-          <View>
-            <Text>Role</Text>
-          </View>
-        )}
+        name="MyPosts"
+        component={PostStack}
+        initialParams={{ userId }}
         options={{
-          tabBarStyle: {
-            display: "none",
-          },
+          tabBarIcon: ({ focused }) => (
+            <Icon name={"list-alt"} type="font-awesome" />
+          ),
           tabBarLabel: "",
           headerShown: false,
-          tabBarButton: () => null,
         }}
       />
-    ) : null}
+      <Tab.Screen
+        name="CreatePost"
+        component={CreatePost}
+        initialParams={{ userId }}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <Icon
+              name={focused ? "plus-square" : "plus-square-o"}
+              type="font-awesome"
+            />
+          ),
+          tabBarLabel: "",
+          headerShown: false,
+        }}
+      />
+      <Tab.Screen
+        name="PostInfo"
+        initialParams={{ userId, editable: true }}
+        component={ShowPost}
+        options={{
+          tabBarStyle: { display: "none" },
+          tabBarButton: () => null,
+          headerShown: true,
+          headerTitleStyle: { color: "#10316B" },
+          title: "Post",
+          headerLeft: () => (
+            <TouchableOpacity
+              className="ml-4"
+              onPress={() => navigation.navigate("MyPosts", { userId })}
+            >
+              <Icon
+                name="arrow-back"
+                color="#10316B"
+                size={30}
+                type="material-icons"
+              ></Icon>
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="EditPost"
+        initialParams={{ userId }}
+        component={EditPost}
+        options={{
+          tabBarStyle: { display: "none" },
+          tabBarButton: () => null,
+          headerShown: false,
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={ShowProfile}
+        initialParams={{ userId }}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <Icon
+              name={focused ? "person" : "person-outline"}
+              color="#002642"
+              type="material-icons"
+            />
+          ),
+          tabBarLabel: "",
+          headerShown: false,
+        }}
+      />
+      <Tab.Screen
+        name="EditProfile"
+        initialParams={{ userId, showAttrs: false }}
+        component={EditProfile}
+        options={{
+          tabBarStyle: { display: "none" },
+          tabBarButton: () => null,
+          headerShown: true,
+          headerTitleStyle: { color: "#10316B" },
+          title: "Edit Profile",
+          headerLeft: () => (
+            <TouchableOpacity
+              className="ml-4"
+              onPress={() => navigation.navigate("Profile", { userId })}
+            >
+              <Icon
+                name="arrow-back"
+                color="#10316B"
+                size={30}
+                type="material-icons"
+              ></Icon>
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      {/**
     <Tab.Screen
       name="Match"
       component={() => (
@@ -55,33 +142,6 @@ const Provider = ({
                 <Icon name={icon} type="material-community" />
               ) : (
                 <Icon name={icon} type="material-community" />
-              )}
-            </View>
-          );
-        },
-        tabBarLabel: "",
-        headerShown: false,
-      }}
-    />
-
-    <Tab.Screen
-      name="CreatePost"
-      component={() => (
-        <View>
-          <Text>CreatePost</Text>
-        </View>
-      )}
-      initialParams={{ userId }}
-      options={{
-        tabBarIcon: ({ focused }) => {
-          const icon = focused ? "plus-square" : "plus-square-o";
-
-          return (
-            <View>
-              {focused ? (
-                <Icon name={icon} color="#002642" type="font-awesome" />
-              ) : (
-                <Icon name={icon} color="#002642" type="font-awesome" />
               )}
             </View>
           );

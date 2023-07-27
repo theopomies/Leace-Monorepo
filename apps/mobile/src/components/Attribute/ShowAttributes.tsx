@@ -8,6 +8,7 @@ interface IShowAttributes {
   iconTextColor?: string;
   iconBGColor?: string;
   titleColor?: string;
+  show?: boolean;
 }
 interface IAttributeBtn {
   name: string;
@@ -51,45 +52,48 @@ export default function ShowAttributes({
   iconTextColor = "#FFFFFF",
   iconBGColor = "#10316B",
   titleColor = "#10316B",
+  show = true,
 }: IShowAttributes) {
   return (
     <View className="flex">
-      <View>
+      {show && (
         <View>
-          <Text className="text-base font-bold" style={{ color: titleColor }}>
-            Budget:
-          </Text>
-          <View className="flex flex-row justify-evenly">
-            <View className="flex min-w-[100px] items-center justify-center rounded-full bg-[#10316B] px-2 py-1">
-              <Text className="font-light text-white">
-                Min: {attribute.minPrice ?? "-"} €
-              </Text>
+          <View>
+            <Text className="text-base font-bold" style={{ color: titleColor }}>
+              Budget:
+            </Text>
+            <View className="flex flex-row justify-evenly">
+              <View className="flex min-w-[100px] items-center justify-center rounded-full bg-[#10316B] px-2 py-1">
+                <Text className="font-light text-white">
+                  Min: {attribute.minPrice ?? "-"} €
+                </Text>
+              </View>
+              <View className="flex min-w-[100px] items-center justify-center rounded-full bg-[#10316B] px-2 py-1">
+                <Text className="font-light text-white">
+                  Max: {attribute.maxPrice ?? "-"} €
+                </Text>
+              </View>
             </View>
-            <View className="flex min-w-[100px] items-center justify-center rounded-full bg-[#10316B] px-2 py-1">
-              <Text className="font-light text-white">
-                Max: {attribute.maxPrice ?? "-"} €
-              </Text>
+          </View>
+          <View>
+            <Text className="text-base font-bold" style={{ color: titleColor }}>
+              Size:
+            </Text>
+            <View className="flex flex-row justify-evenly">
+              <View className="flex min-w-[100px] items-center justify-center rounded-full bg-[#10316B] px-2 py-1">
+                <Text className="font-light text-white">
+                  Min: {attribute.minSize ?? "-"} m²
+                </Text>
+              </View>
+              <View className="flex min-w-[100px] items-center justify-center rounded-full bg-[#10316B] px-2 py-1">
+                <Text className="font-light text-white">
+                  Max: {attribute.maxSize ?? "-"} m²
+                </Text>
+              </View>
             </View>
           </View>
         </View>
-        <View>
-          <Text className="text-base font-bold" style={{ color: titleColor }}>
-            Size:
-          </Text>
-          <View className="flex flex-row justify-evenly">
-            <View className="flex min-w-[100px] items-center justify-center rounded-full bg-[#10316B] px-2 py-1">
-              <Text className="font-light text-white">
-                Min: {attribute.minSize ?? "-"} m²
-              </Text>
-            </View>
-            <View className="flex min-w-[100px] items-center justify-center rounded-full bg-[#10316B] px-2 py-1">
-              <Text className="font-light text-white">
-                Max: {attribute.maxSize ?? "-"} m²
-              </Text>
-            </View>
-          </View>
-        </View>
-      </View>
+      )}
       <Text className="text-base font-bold" style={{ color: titleColor }}>
         Attributes:
       </Text>

@@ -39,7 +39,12 @@ export default function ShowProfile() {
         ) : (
           <>
             {data && (
-              <UserProfile userId={userId} data={data} editable={true} />
+              <UserProfile
+                userId={userId}
+                data={data}
+                editable={true}
+                showAttrs={data.role === "TENANT" ? true : false}
+              />
             )}
           </>
         )}

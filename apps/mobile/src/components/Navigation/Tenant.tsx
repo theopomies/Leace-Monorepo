@@ -12,96 +12,67 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ShowPost } from "../../screens/Post";
 
 const Tab = createBottomTabNavigator<TabStackParamList>();
-
-interface ITenant {
-  role: keyof typeof UserRoles | null;
-  userId: string;
-}
-
-const Tenant = ({ role, userId }: ITenant) => {
+const Tenant = ({ userId }: { userId: string }) => {
   const navigation =
     useNavigation<NativeStackNavigationProp<TabStackParamList>>();
 
   return (
     <Tab.Navigator>
-      {role === null || role === undefined ? (
-        <Tab.Screen
-          name="Role"
-          component={Role}
-          options={{
-            tabBarStyle: { display: "none" },
-            tabBarLabel: "",
-            headerShown: false,
-            tabBarButton: () => null,
-          }}
-        />
-      ) : null}
       <Tab.Screen
         name="Stack"
         component={TenantStack}
         initialParams={{ userId }}
         options={{
-          tabBarIcon: ({ focused }) => {
-            return (
-              <Icon
-                name={focused ? "favorite" : "favorite-border"}
-                color="#002642"
-              />
-            );
-          },
+          tabBarIcon: ({ focused }) => (
+            <Icon
+              name={focused ? "favorite" : "favorite-border"}
+              color="#002642"
+            />
+          ),
           tabBarLabel: "",
           headerShown: false,
         }}
       />
-
       <Tab.Screen
         name="Match"
         component={TenantMatches}
         options={{
-          tabBarIcon: ({ focused }) => {
-            return (
-              <Icon
-                name={focused ? "star-four-points" : "star-four-points-outline"}
-                type="material-community"
-              />
-            );
-          },
+          tabBarIcon: ({ focused }) => (
+            <Icon
+              name={focused ? "star-four-points" : "star-four-points-outline"}
+              type="material-community"
+            />
+          ),
           tabBarLabel: "",
           headerShown: false,
         }}
       />
-
       <Tab.Screen
         name="MatchChat"
         component={TenantChat}
         options={{
-          tabBarIcon: ({ focused }) => {
-            return (
-              <Icon
-                name={focused ? "chat" : "chat-bubble-outline"}
-                type="material"
-              />
-            );
-          },
+          tabBarIcon: ({ focused }) => (
+            <Icon
+              name={focused ? "chat" : "chat-bubble-outline"}
+              type="material"
+            />
+          ),
           tabBarLabel: "",
           headerShown: false,
         }}
       />
-
       <Tab.Screen
         name="Profile"
         component={ShowProfile}
         initialParams={{ userId }}
         options={{
-          tabBarIcon: ({ focused }) => {
-            return (
-              <Icon
-                name={focused ? "person" : "person-outline"}
-                color="#002642"
-                type="material-icons"
-              />
-            );
-          },
+          tabBarIcon: ({ focused }) => (
+            <Icon
+              name={focused ? "person" : "person-outline"}
+              color="#002642"
+              type="material-icons"
+            />
+          ),
           tabBarLabel: "",
           headerShown: false,
         }}
@@ -131,10 +102,9 @@ const Tenant = ({ role, userId }: ITenant) => {
           ),
         }}
       />
-
       <Tab.Screen
         name="PostInfo"
-        initialParams={{ userId }}
+        initialParams={{ userId, editable: false }}
         component={ShowPost}
         options={{
           tabBarStyle: { display: "none" },

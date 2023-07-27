@@ -197,6 +197,7 @@ export default function TenantStack() {
                       navigation.navigate("PostInfo", {
                         userId,
                         postId: post.id,
+                        editable: false,
                       })
                     }
                   ></Btn>

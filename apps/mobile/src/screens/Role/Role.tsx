@@ -16,9 +16,7 @@ export default function Role() {
 
   const utils = trpc.useContext();
   const data = utils.auth.getSession.getData();
-  console.log(JSON.stringify(data, null, 1));
   const userId = data?.userId || "";
-  console.log({ userId });
 
   const userRole = trpc.user.updateUserRoleById.useMutation({
     onSuccess() {

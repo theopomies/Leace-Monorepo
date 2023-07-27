@@ -31,29 +31,22 @@ export default function EditProfile() {
   const navigation =
     useNavigation<NativeStackNavigationProp<TabStackParamList>>();
   const route = useRoute<RouteProp<TabStackParamList, "EditProfile">>();
-  const { data, userId } = route.params;
+  const { data, userId, showAttrs } = route.params;
   const [user, setUser] = useState<User & { attribute: Attribute | null }>();
   const [open, setOpen] = useState(false);
 
   const userMutation = trpc.user.updateUserById.useMutation({
     onSuccess() {
-      console.log("user profile updated");
-    },
-    onError(error, variables, context) {
-      console.log("userMutation", error);
-      console.log("userMutation", variables);
-      console.log("userMutation", context);
+      if (!showAttrs) {
+        LocalStorage.setItem("refreshProfile", true);
+        navigation.navigate("Profile", { userId });
+      }
     },
   });
   const attributesMutation = trpc.attribute.updateUserAttributes.useMutation({
     onSuccess() {
       LocalStorage.setItem("refreshProfile", true);
       navigation.navigate("Profile", { userId });
-    },
-    onError(error, variables, context) {
-      console.log("attributesMutation", error);
-      console.log("attributesMutation", variables);
-      console.log("attributesMutation", context);
     },
   });
 
@@ -86,22 +79,24 @@ export default function EditProfile() {
       description: user.description ?? undefined,
       birthDate: user.birthDate ?? undefined,
     });
-    attributesMutation.mutate({
-      userId,
-      minSize: user.attribute?.minSize ?? 0,
-      maxSize: user.attribute?.maxSize ?? 0,
-      minPrice: user.attribute?.minPrice ?? 0,
-      maxPrice: user.attribute?.maxPrice ?? 0,
-      furnished: user.attribute?.furnished ?? false,
-      terrace: user.attribute?.terrace ?? false,
-      pets: user.attribute?.pets ?? false,
-      smoker: user.attribute?.smoker ?? false,
-      disability: user.attribute?.disability ?? false,
-      garden: user.attribute?.garden ?? false,
-      parking: user.attribute?.parking ?? false,
-      elevator: user.attribute?.elevator ?? false,
-      pool: user.attribute?.pool ?? false,
-    });
+    if (showAttrs) {
+      attributesMutation.mutate({
+        userId,
+        minSize: user.attribute?.minSize ?? 0,
+        maxSize: user.attribute?.maxSize ?? 0,
+        minPrice: user.attribute?.minPrice ?? 0,
+        maxPrice: user.attribute?.maxPrice ?? 0,
+        furnished: user.attribute?.furnished ?? false,
+        terrace: user.attribute?.terrace ?? false,
+        pets: user.attribute?.pets ?? false,
+        smoker: user.attribute?.smoker ?? false,
+        disability: user.attribute?.disability ?? false,
+        garden: user.attribute?.garden ?? false,
+        parking: user.attribute?.parking ?? false,
+        elevator: user.attribute?.elevator ?? false,
+        pool: user.attribute?.pool ?? false,
+      });
+    }
   }
 
   return (
@@ -248,13 +243,15 @@ export default function EditProfile() {
                   }
                 />
               </View>
-              <View
-                className="px-3"
-                style={{ justifyContent: "flex-end", flex: 1 }}
-              >
-                <Separator color="#10316B" />
-                <EditAttributes user={user} setUser={setUser} />
-              </View>
+              {showAttrs && (
+                <View
+                  className="px-3"
+                  style={{ justifyContent: "flex-end", flex: 1 }}
+                >
+                  <Separator color="#10316B" />
+                  <EditAttributes user={user} setUser={setUser} />
+                </View>
+              )}
             </View>
           </ScrollView>
         </View>

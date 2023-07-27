@@ -39,11 +39,22 @@ export type TabStackParamList = {
   EditProfile: {
     userId: string;
     data: string;
+    showAttrs: boolean;
   };
 
   PostInfo: {
     userId: string;
     postId: string;
+    editable: boolean;
+  };
+
+  MyPosts: {
+    userId: string;
+  };
+
+  EditPost: {
+    userId: string;
+    data: string;
   };
 };
 
@@ -97,9 +108,8 @@ const TabNavigator = () => {
   }
 
   if (!role) return <Role />;
-  // if (role === UserRoles.TENANT)
-  return <Tenant role={role} userId={session?.userId as string} />;
-  // return <Provider role={role} userId={session?.userId as string} />;
+  if (role === UserRoles.TENANT) return <Tenant userId={session.userId} />;
+  return <Provider userId={session.userId} />;
 };
 
 export default TabNavigator;

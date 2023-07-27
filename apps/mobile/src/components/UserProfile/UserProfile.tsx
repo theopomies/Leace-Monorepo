@@ -13,12 +13,14 @@ interface IUserProfile {
   userId: string;
   data: User & { attribute: Attribute | null };
   editable?: boolean;
+  showAttrs?: boolean;
 }
 
 export default function UserProfile({
   userId,
   data,
   editable = false,
+  showAttrs = true,
 }: IUserProfile) {
   const navigation =
     useNavigation<NativeStackNavigationProp<TabStackParamList>>();
@@ -48,6 +50,7 @@ export default function UserProfile({
                   ...data,
                   birthDate: data.birthDate?.toISOString(),
                 }),
+                showAttrs: showAttrs,
               });
             }}
           >
@@ -114,11 +117,15 @@ export default function UserProfile({
           <Text className="font-light">{data.description}</Text>
         </View>
       </View>
-      {data.attribute && (
-        <View className="mb-3 px-3">
-          <Separator color="#10316B" />
-          <ShowAttributes attribute={data.attribute} />
-        </View>
+      {showAttrs && (
+        <>
+          {data.attribute && (
+            <View className="mb-3 px-3">
+              <Separator color="#10316B" />
+              <ShowAttributes attribute={data.attribute} />
+            </View>
+          )}
+        </>
       )}
     </View>
   );
