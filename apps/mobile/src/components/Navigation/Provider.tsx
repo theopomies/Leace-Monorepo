@@ -9,6 +9,7 @@ import { EditPost, PostStack, ShowPost, CreatePost } from "../../screens/Post";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { EditProfile, ShowProfile } from "../../screens/Profile";
+import { ProviderStack } from "../../screens/Provider/ProviderStack";
 
 const Tab = createBottomTabNavigator<TabStackParamList>();
 
@@ -18,6 +19,20 @@ const Provider = ({ userId }: { userId: string }) => {
 
   return (
     <Tab.Navigator>
+      <Tab.Screen
+        name="Stack"
+        component={ProviderStack}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <Icon
+              name={focused ? "favorite" : "favorite-border"}
+              color="#002642"
+            />
+          ),
+          tabBarLabel: "",
+          headerShown: false,
+        }}
+      />
       <Tab.Screen
         name="MyPosts"
         component={PostStack}
