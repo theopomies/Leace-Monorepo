@@ -11,7 +11,7 @@ const Matches = () => {
   const { data: session } = trpc.auth.getSession.useQuery();
 
   useEffect(() => {
-    mixpanel.track("pageview", {
+    mixpanel.track("Page View", {
       path: router.asPath,
       title: "Matches Page",
       userId: session?.userId,

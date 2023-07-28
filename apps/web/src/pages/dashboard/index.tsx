@@ -12,7 +12,7 @@ export default function DashboardPage() {
   const router = useRouter();
 
   useEffect(() => {
-    mixpanel.track("pageview", {
+    mixpanel.track("Page View", {
       path: router.asPath,
       title: "Dashboard Page",
       userId: session?.userId,

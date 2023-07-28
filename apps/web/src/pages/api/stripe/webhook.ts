@@ -4,6 +4,7 @@ import rawBody from "raw-body";
 
 import { stripe } from "../../../utils/stripe";
 import { prisma } from "@leace/db";
+import mixpanel from "../../../utils/mixpanel";
 
 export const config = {
   api: {

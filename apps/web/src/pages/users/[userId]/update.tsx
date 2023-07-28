@@ -11,7 +11,7 @@ const Update = () => {
   const router = useRouter();
 
   useEffect(() => {
-    mixpanel.track("pageview", {
+    mixpanel.track("Page View", {
       path: router.asPath,
       title: "Update User Page",
       userId: session?.userId,

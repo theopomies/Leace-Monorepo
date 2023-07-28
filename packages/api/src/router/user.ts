@@ -67,9 +67,10 @@ export const userRouter = router({
 
     if (!updated) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
 
-    ctx.mixPanel.track("Update User", {
+    ctx.mixPanel.track("Update Role", {
       distinct_id: ctx.auth.userId,
       Items: "Referral",
+      role: input.role,
     });
   }),
   /** Update one user's data with the given id

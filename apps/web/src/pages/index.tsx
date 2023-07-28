@@ -10,7 +10,7 @@ const Index = () => {
   const router = useRouter();
 
   useEffect(() => {
-    mixpanel.track("pageview", {
+    mixpanel.track("Page View", {
       path: router.asPath,
       title: "Home Page",
       userId: session?.userId,

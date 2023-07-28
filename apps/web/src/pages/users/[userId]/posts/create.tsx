@@ -11,7 +11,7 @@ const CreatePostView = () => {
   const router = useRouter();
 
   useEffect(() => {
-    mixpanel.track("pageview", {
+    mixpanel.track("Page View", {
       path: router.asPath,
       title: "Create Post Page",
       userId: session?.userId,
