@@ -145,7 +145,7 @@ importers:
         version: 1.0.5(@types/react@18.0.25)(react-dom@18.2.0)(react@18.2.0)
       '@tanstack/react-query':
         specifier: ^4.16.1
-        version: 4.16.1(react-dom@18.2.0)(react-native@0.71.0-rc.0)(react@18.2.0)
+        version: 4.16.1(react-dom@18.2.0)(react@18.2.0)
       '@trpc/client':
         specifier: ^10.1.0
         version: 10.1.0(@trpc/server@10.1.0)
@@ -158,6 +158,9 @@ importers:
       '@trpc/server':
         specifier: ^10.1.0
         version: 10.1.0
+      '@types/mixpanel-browser':
+        specifier: ^2.47.1
+        version: 2.47.1
       axios:
         specifier: ^1.2.4
         version: 1.2.4
@@ -173,6 +176,15 @@ importers:
       micro-cors:
         specifier: ^0.1.1
         version: 0.1.1
+      mixpanel:
+        specifier: ^0.17.0
+        version: 0.17.0
+      mixpanel-browser:
+        specifier: ^2.47.0
+        version: 2.47.0
+      net:
+        specifier: ^1.0.2
+        version: 1.0.2
       next:
         specifier: ^13.2.4
         version: 13.2.4(react-dom@18.2.0)(react@18.2.0)
@@ -191,6 +203,9 @@ importers:
       stripe:
         specifier: ^11.8.0
         version: 11.8.0
+      tls:
+        specifier: ^0.0.1
+        version: 0.0.1
       zod:
         specifier: ^3.18.0
         version: 3.19.1
@@ -236,7 +251,7 @@ importers:
         version: 3.257.0
       '@clerk/nextjs':
         specifier: ^4.11.1
-        version: 4.11.1(next@13.2.4)(react-dom@18.2.0)(react@18.2.0)
+        version: 4.11.1
       '@leace/db':
         specifier: '*'
         version: link:../db
@@ -252,6 +267,9 @@ importers:
       libphonenumber-js:
         specifier: ^1.10.15
         version: 1.10.15
+      mixpanel:
+        specifier: ^0.17.0
+        version: 0.17.0
       superjson:
         specifier: ^1.9.1
         version: 1.10.0
@@ -2651,6 +2669,19 @@ packages:
       - '@types/react'
     dev: false
 
+  /@clerk/clerk-react@4.11.6:
+    resolution: {integrity: sha512-2k1OQBw8nHPTpRmlNGx/ce+lHwiu3D2Zh8i+XNIS9tviAG5dmT3LZmY8kM4K9Dew0FkZqvINUGyvlEFjOMFnDw==}
+    engines: {node: '>=14'}
+    peerDependencies:
+      react: '>=16'
+      react-dom: '>=16'
+    dependencies:
+      '@clerk/shared': 0.12.1
+      '@clerk/types': 3.28.3
+      swr: 1.3.0
+      tslib: 2.4.1
+    dev: false
+
   /@clerk/clerk-react@4.11.6(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-2k1OQBw8nHPTpRmlNGx/ce+lHwiu3D2Zh8i+XNIS9tviAG5dmT3LZmY8kM4K9Dew0FkZqvINUGyvlEFjOMFnDw==}
     engines: {node: '>=14'}
@@ -2691,6 +2722,21 @@ packages:
       react: 18.2.0
     dev: false
 
+  /@clerk/nextjs@4.11.1:
+    resolution: {integrity: sha512-PFw/NB+2B76flQceeX9sl4iVf7Ks1HmnIAb6Dzlw5VEjQxAYGcf4FAUGnRPAAOFrAY8LXpkKhXHCFNN6hUGd/g==}
+    engines: {node: '>=14'}
+    peerDependencies:
+      next: '>=10'
+      react: ^17.0.2 || ^18.0.0-0
+      react-dom: ^17.0.2 || ^18.0.0-0
+    dependencies:
+      '@clerk/backend': 0.9.1
+      '@clerk/clerk-react': 4.11.6
+      '@clerk/clerk-sdk-node': 4.7.6
+      '@clerk/types': 3.28.3
+      tslib: 2.4.1
+    dev: false
+
   /@clerk/nextjs@4.11.1(next@13.2.4)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-PFw/NB+2B76flQceeX9sl4iVf7Ks1HmnIAb6Dzlw5VEjQxAYGcf4FAUGnRPAAOFrAY8LXpkKhXHCFNN6hUGd/g==}
     engines: {node: '>=14'}
@@ -2717,6 +2763,13 @@ packages:
     dependencies:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
+  /@clerk/shared@0.12.1:
+    resolution: {integrity: sha512-vcnzgGYRO4/z5/4FvHryI14SqqqU4aSmki2aDRxFyFG1QjBFDykfrzAgM9ztCU1IBnzFasiNp0alCBIes3bvwQ==}
+    peerDependencies:
+      react: '>=16'
+      react-dom: '>=16'
     dev: false
 
   /@clerk/shared@0.12.1(react-dom@18.2.0)(react@18.2.0):
@@ -4586,6 +4639,24 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
+  /@tanstack/react-query@4.16.1(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-PDE9u49wSDykPazlCoLFevUpceLjQ0Mm8i6038HgtTEKb/aoVnUZdlUP7C392ds3Cd75+EGlHU7qpEX06R7d9Q==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-native: '*'
+    peerDependenciesMeta:
+      react-dom:
+        optional: true
+      react-native:
+        optional: true
+    dependencies:
+      '@tanstack/query-core': 4.15.1
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      use-sync-external-store: 1.2.0(react@18.2.0)
+    dev: false
+
   /@trpc/client@10.1.0(@trpc/server@10.1.0):
     resolution: {integrity: sha512-E7L9l2OTa5lIdM0NYvQLJf/GLapskfiVLv0Jv7t6GVxEOFd+O4THWsWQgJVUUAz9iq805iMNkY3uqSvf4GJaWg==}
     peerDependencies:
@@ -4605,7 +4676,7 @@ packages:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
     dependencies:
-      '@tanstack/react-query': 4.16.1(react-dom@18.2.0)(react-native@0.71.0-rc.0)(react@18.2.0)
+      '@tanstack/react-query': 4.16.1(react-dom@18.2.0)(react@18.2.0)
       '@trpc/client': 10.1.0(@trpc/server@10.1.0)
       '@trpc/react-query': 10.1.0(@tanstack/react-query@4.16.1)(@trpc/client@10.1.0)(@trpc/server@10.1.0)(react-dom@18.2.0)(react@18.2.0)
       '@trpc/server': 10.1.0
@@ -4624,7 +4695,7 @@ packages:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
     dependencies:
-      '@tanstack/react-query': 4.16.1(react-dom@18.2.0)(react-native@0.71.0-rc.0)(react@18.2.0)
+      '@tanstack/react-query': 4.16.1(react-dom@18.2.0)(react@18.2.0)
       '@trpc/client': 10.1.0(@trpc/server@10.1.0)
       '@trpc/server': 10.1.0
       react: 18.2.0
@@ -4732,6 +4803,10 @@ packages:
 
   /@types/mime@3.0.1:
     resolution: {integrity: sha512-Y4XFY5VJAuw0FgAqPNd6NNoV44jbq9Bz2L7Rh/J6jLTiHBSBJa9fxqQIvkIld4GsoDOcCbvzOUAbLPsSKKg+uA==}
+    dev: false
+
+  /@types/mixpanel-browser@2.47.1:
+    resolution: {integrity: sha512-4Oif1hbjmStA6KI1OLer19rbKjlPd67ujp5Wipfa7rIskA/lOFZbp6kYsPjXD0f5AiiCQTbf0R/SnnzgOaKrbA==}
     dev: false
 
   /@types/node-fetch@2.6.2:
@@ -8168,6 +8243,16 @@ packages:
       toidentifier: 1.0.1
     dev: false
 
+  /https-proxy-agent@5.0.0:
+    resolution: {integrity: sha512-EkYm5BcKUGiduxzSt3Eppko+PiNWNEpa4ySk9vTC6wDsQJW9rHSa+UhGNJoRYp7bz6Ht1eaRIa6QaJqO5rCFbA==}
+    engines: {node: '>= 6'}
+    dependencies:
+      agent-base: 6.0.2
+      debug: 4.3.4
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
   /https-proxy-agent@5.0.1:
     resolution: {integrity: sha512-dFcAjpTQFgoLMzC2VwU+C/CbS7uRL0lWmxDITmqm7C+7F0Odmj6s9l6alZc6AELXhrnggM2CeWSXHGOdX2YtwA==}
     engines: {node: '>= 6'}
@@ -9605,6 +9690,19 @@ packages:
       is-extendable: 1.0.1
     dev: false
 
+  /mixpanel-browser@2.47.0:
+    resolution: {integrity: sha512-Ldrva0fRBEIFWmEibBQO1PulfpJVF3pf28Guk09lDirDaSQqqU/xs9zQLwN2rL5VwVtsP1aD3JaCgaa98EjojQ==}
+    dev: false
+
+  /mixpanel@0.17.0:
+    resolution: {integrity: sha512-DY5WeOy/hmkPrNiiZugJpWR0iMuOwuj1a3u0bgwB2eUFRV6oIew/pIahhpawdbNjb+Bye4a8ID3gefeNPvL81g==}
+    engines: {node: '>=10.0'}
+    dependencies:
+      https-proxy-agent: 5.0.0
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
   /mkdirp@0.5.6:
     resolution: {integrity: sha512-FP+p8RB8OWpF3YZBCrP5gtADmtXApB5AMLn+vdyA+PyxCjrCs00mjyUozssO33cwDeT3wNGdLxJ5M//YqtHAJw==}
     hasBin: true
@@ -9718,6 +9816,10 @@ packages:
 
   /nested-error-stacks@2.0.1:
     resolution: {integrity: sha512-SrQrok4CATudVzBS7coSz26QRSmlK9TzzoFbeKfcPBUFPjcQM9Rqvr/DlJkOrwI/0KcgvMub1n1g5Jt9EgRn4A==}
+    dev: false
+
+  /net@1.0.2:
+    resolution: {integrity: sha512-kbhcj2SVVR4caaVnGLJKmlk2+f+oLkjqdKeQlmUtz6nGzOpbcobwVIeSURNgraV/v3tlmGIX82OcPCl0K6RbHQ==}
     dev: false
 
   /next@13.2.4(react-dom@18.2.0)(react@18.2.0):
@@ -11813,6 +11915,12 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
 
+  /swr@1.3.0:
+    resolution: {integrity: sha512-dkghQrOl2ORX9HYrMDtPa7LTVHJjCTeZoB1dqTbnnEDlSvN8JEKpYIYurDfvbQFUUS8Cg8PceFVZNkW0KNNYPw==}
+    peerDependencies:
+      react: ^16.11.0 || ^17.0.0 || ^18.0.0
+    dev: false
+
   /swr@1.3.0(react@18.2.0):
     resolution: {integrity: sha512-dkghQrOl2ORX9HYrMDtPa7LTVHJjCTeZoB1dqTbnnEDlSvN8JEKpYIYurDfvbQFUUS8Cg8PceFVZNkW0KNNYPw==}
     peerDependencies:
@@ -11997,6 +12105,10 @@ packages:
   /tinyspy@1.0.2:
     resolution: {integrity: sha512-bSGlgwLBYf7PnUsQ6WOc6SJ3pGOcd+d8AA6EUnLDDM0kWEstC1JIlSZA3UNliDXhd9ABoS7hiRBDCu+XP/sf1Q==}
     engines: {node: '>=14.0.0'}
+    dev: false
+
+  /tls@0.0.1:
+    resolution: {integrity: sha512-GzHpG+hwupY8VMR6rYsnAhTHqT/97zT45PG8WD5eTT1lq+dFE0nN+1PYpsoBcHJgSmTz5ceK2Cv88IkPmIPOtQ==}
     dev: false
 
   /tmp@0.0.33:

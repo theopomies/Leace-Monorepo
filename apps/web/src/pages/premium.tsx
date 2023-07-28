@@ -6,8 +6,23 @@ import { PotentialMatchesAgencyOwner } from "../components/premium/PotentialMatc
 import { PotentialMatchesTenant } from "../components/premium/PotentialMatchesTenant";
 import { Role } from "@prisma/client";
 import { Header } from "../components/shared/Header";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
+import mixpanel from "../utils/mixpanel";
 
 const Premium = () => {
+  const { data: session } = trpc.auth.getSession.useQuery();
+
+  const router = useRouter();
+
+  useEffect(() => {
+    mixpanel.track("pageview", {
+      path: router.asPath,
+      title: "Premium Page",
+      userId: session?.userId,
+    });
+  }, [router.asPath, session?.userId]);
+
   return (
     <LoggedLayout title="Premium | Leace">
       <PremiumPage />
