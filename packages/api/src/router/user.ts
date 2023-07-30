@@ -1,7 +1,7 @@
 import { router, protectedProcedure, AuthenticatedProcedure } from "../trpc";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
-import { Role, UserStatus } from "@prisma/client";
+import { Role, UserStatus, MaritalStatus } from "@prisma/client";
 import { isPossiblePhoneNumber } from "libphonenumber-js";
 import { getId } from "../utils/getId";
 import { filterStrings } from "../utils/filter";
@@ -83,6 +83,19 @@ export const userRouter = router({
         phoneNumber: z.string().optional(),
         description: z.string().optional(),
         birthDate: z.date().optional(),
+        job: z.string().optional(),
+        employmentContract: z.string().optional(),
+        income: z.number().optional(),
+        creditScore: z.number().optional(),
+        maritalStatus: z
+          .enum([
+            MaritalStatus.SINGLE,
+            MaritalStatus.MARRIED,
+            MaritalStatus.ONE_CHILD,
+            MaritalStatus.TWO_CHILD,
+            MaritalStatus.OTHER,
+          ])
+          .optional(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
@@ -118,6 +131,15 @@ export const userRouter = router({
         if (!updated) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
       }
 
+      if (
+        input.creditScore &&
+        (input.creditScore < 0 || input.creditScore > 1000)
+      )
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "credit score must be between 0 and 1000",
+        });
+
       const updated = await ctx.prisma.user.update({
         where: { id: userId },
         data: {
@@ -125,6 +147,11 @@ export const userRouter = router({
           lastName: input.lastName,
           phoneNumber: input.phoneNumber,
           description: input.description,
+          job: input.job,
+          employmentContract: input.employmentContract,
+          income: input.income,
+          creditScore: input.creditScore,
+          maritalStatus: input.maritalStatus,
         },
       });
 
@@ -138,6 +165,8 @@ export const userRouter = router({
           input.lastName,
           input.phoneNumber,
           input.description,
+          input.job,
+          input.employmentContract,
         ],
       });
     }),

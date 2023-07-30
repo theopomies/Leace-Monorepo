@@ -49,6 +49,14 @@ enum PostType {
   TO_BE_RENTED
 }
 
+enum MaritalStatus {
+  SINGLE
+  MARRIED
+  ONE_CHILD
+  TWO_CHILD
+  OTHER
+}
+
 enum HomeType {
   APARTMENT
   HOUSE
@@ -67,6 +75,11 @@ model User {
   country       String?
   description   String?     @db.Text
   birthDate     DateTime?
+  job String?
+  employmentContract String?
+  income Int?
+  creditScore Int?
+  maritalStatus MaritalStatus?
   status        UserStatus? @default(INACTIVE)
   isPremium     Boolean?    @default(false)
 
