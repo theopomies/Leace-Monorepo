@@ -99,7 +99,7 @@ export const postRouter = router({
           type: input.type,
           constructionDate: input.constructionDate,
           estimatedCosts: input.estimatedCosts,
-          nearedShops: input.nearedShops,
+          nearestShops: input.nearedShops,
           securityAlarm: input.securityAlarm,
           internetFiber: input.internetFiber,
         },
