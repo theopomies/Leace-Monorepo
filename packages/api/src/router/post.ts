@@ -1,6 +1,6 @@
 import { router, protectedProcedure } from "../trpc";
 import { z } from "zod";
-import { RelationType, PostType, Role } from "@prisma/client";
+import { RelationType, PostType, Role, EnergyClass } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { getId } from "../utils/getId";
 import {
@@ -60,6 +60,17 @@ export const postRouter = router({
         content: z.string().optional(),
         desc: z.string().optional(),
         type: z.enum([PostType.RENTED, PostType.TO_BE_RENTED]).optional(),
+        energyClass: z
+          .enum([EnergyClass.A, EnergyClass.B, EnergyClass.C, EnergyClass.D])
+          .optional(),
+        ges: z
+          .enum([EnergyClass.A, EnergyClass.B, EnergyClass.C, EnergyClass.D])
+          .optional(),
+        constructionDate: z.date().optional(),
+        estimatedCosts: z.number().optional(),
+        nearedShops: z.number().optional(),
+        securityAlarm: z.boolean().optional(),
+        internetFiber: z.boolean().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -86,6 +97,11 @@ export const postRouter = router({
           content: input.content,
           desc: input.desc,
           type: input.type,
+          constructionDate: input.constructionDate,
+          estimatedCosts: input.estimatedCosts,
+          nearedShops: input.nearedShops,
+          securityAlarm: input.securityAlarm,
+          internetFiber: input.internetFiber,
         },
       });
 

@@ -57,6 +57,13 @@ enum MaritalStatus {
   OTHER
 }
 
+enum EnergyClass {
+  A
+  B
+  C
+  D
+}
+
 enum HomeType {
   APARTMENT
   HOUSE
@@ -125,6 +132,13 @@ model Post {
   content String?
   desc    String?   @db.Text
   type    PostType? @default(TO_BE_RENTED)
+  energyClass EnergyClass?
+  ges EnergyClass?
+  constructionDate DateTime?
+  estimatedCosts Int?
+  nearestShops Int?
+  securityAlarm Boolean?
+  internetFiber Boolean?
 
   attribute Attribute?
 
