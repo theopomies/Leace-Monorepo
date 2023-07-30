@@ -10,7 +10,7 @@ import { EditProfile, ShowProfile } from "../../screens/Profile";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ShowPost } from "../../screens/Post";
-import { Likes } from "../../screens/Premium";
+import { Likes, PaymentScreen, TenantLikes } from "../../screens/Premium";
 
 const Tab = createBottomTabNavigator<TabStackParamList>();
 const Tenant = ({ userId }: { userId: string }) => {
@@ -64,7 +64,7 @@ const Tenant = ({ userId }: { userId: string }) => {
       />
       <Tab.Screen
         name="Premium"
-        component={Likes}
+        component={PaymentScreen}
         options={{
           tabBarIcon: ({ focused }) => (
             <Icon
