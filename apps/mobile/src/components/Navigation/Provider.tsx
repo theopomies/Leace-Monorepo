@@ -1,5 +1,5 @@
 import React from "react";
-import { TouchableOpacity, View } from "react-native";
+import { TouchableOpacity } from "react-native";
 import { Icon } from "react-native-elements";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -10,11 +10,17 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { EditProfile, ShowProfile } from "../../screens/Profile";
 import ProviderStack from "../../screens/Provider/ProviderStack";
-import { Likes, OwnerLikes, PaymentScreen } from "../../screens/Premium";
+import { OwnerLikes, OffersList, Result, Details } from "../../screens/Premium";
 
 const Tab = createBottomTabNavigator<TabStackParamList>();
 
-const Provider = ({ userId }: { userId: string }) => {
+const Provider = ({
+  userId,
+  isPremium,
+}: {
+  userId: string;
+  isPremium: boolean;
+}) => {
   const navigation =
     useNavigation<NativeStackNavigationProp<TabStackParamList>>();
 
@@ -98,7 +104,6 @@ const Provider = ({ userId }: { userId: string }) => {
       />
       <Tab.Screen
         name="Premium"
-        component={PaymentScreen}
         options={{
           tabBarIcon: ({ focused }) => (
             <Icon
@@ -109,7 +114,42 @@ const Provider = ({ userId }: { userId: string }) => {
           tabBarLabel: "",
           headerShown: false,
         }}
+      >
+        {() => (isPremium ? <OwnerLikes /> : <OffersList />)}
+      </Tab.Screen>
+      <Tab.Screen
+        name="Likes"
+        options={{
+          tabBarButton: () => null,
+          tabBarLabel: "",
+          headerShown: false,
+        }}
+      >
+        {() => <OwnerLikes />}
+      </Tab.Screen>
+
+      <Tab.Screen
+        name="PaymentDetails"
+        component={Details}
+        options={{
+          tabBarButton: () => null,
+          tabBarStyle: { display: "none" },
+          tabBarLabel: "",
+          headerShown: false,
+        }}
       />
+
+      <Tab.Screen
+        name="PaymentResults"
+        component={Result}
+        options={{
+          tabBarButton: () => null,
+          tabBarStyle: { display: "none" },
+          tabBarLabel: "",
+          headerShown: false,
+        }}
+      />
+
       <Tab.Screen
         name="Profile"
         component={ShowProfile}

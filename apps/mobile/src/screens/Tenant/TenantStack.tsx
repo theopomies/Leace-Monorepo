@@ -110,8 +110,8 @@ export default function TenantStack() {
       setPost(data[0]);
       return;
     }
-    //  if (move === "LEFT") dislikePost.mutate({ userId, postId: post.id });
-    //  else likePost.mutate({ userId, postId: post.id });
+    if (move === "LEFT") dislikePost.mutate({ userId, postId: post.id });
+    else likePost.mutate({ userId, postId: post.id });
     if (idx < data.length - 1) {
       setPost(data[idx + 1]);
       setIdx(() => idx + 1);
@@ -160,7 +160,9 @@ export default function TenantStack() {
                         Type:
                       </Text>
                       <Text className="font-light text-white">
-                        {post.attribute?.appartment ? "Appartment" : "House"}
+                        {post.attribute?.homeType === "APARTMENT"
+                          ? "Apartment"
+                          : "House"}
                       </Text>
                     </View>
                     <View className="flex flex-row">
