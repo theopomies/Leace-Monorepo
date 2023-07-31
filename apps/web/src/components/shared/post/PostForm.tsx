@@ -194,7 +194,7 @@ export const PostForm = (props: PostFormProps) => {
       </div>
       <PostAttributesForm {...attributesStates} />
       <ImageList images={props.imagesGet} onDelete={props.onImgDelete} />
-      <div className="mt-2 mb-5 flex flex-wrap justify-center gap-4">
+      <div className="mb-5 mt-2 flex flex-wrap justify-center gap-4">
         <FileInput multiple onChange={props.setImages || props.onImgsUpload}>
           Upload Image
         </FileInput>
