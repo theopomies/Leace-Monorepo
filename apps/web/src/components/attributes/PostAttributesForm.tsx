@@ -4,7 +4,6 @@ import { HomeType } from "../../types/homeType";
 import React from "react";
 import { AddressAutocomplete } from "../shared/forms/AddressAutocomplete";
 import { NumberInput } from "../shared/forms/NumberInput";
-import { TextInput } from "../shared/forms/TextInput";
 
 interface PostAttributesFormProps {
   location: string;

@@ -18,7 +18,6 @@ import { FileInput } from "../shared/forms/FileInput";
 import { TextArea } from "../shared/forms/TextArea";
 import { TextInput } from "../shared/forms/TextInput";
 import { NumberInput } from "../shared/forms/NumberInput";
-import { Select } from "../shared/button/Select";
 
 export type UserFormData = {
   birthDate: string;
