@@ -149,11 +149,11 @@ export const PostCard = ({
           <ul className="gap-4 sm:flex sm:flex-wrap md:grid md:grid-cols-3">
             <li className="mr-8 flex-grow border-b border-indigo-300 pb-2">
               <h3 className="text-xl font-medium">Estimated fees costs</h3>
-              {post.estimatedCosts ? post.estimatedCosts : "Not specified"}
+              {post.estimatedCosts ? post.estimatedCosts + " $" : "Not specified"}
             </li>
             <li className="mr-8 flex-grow border-b border-indigo-300 pb-2">
               <h3 className="text-xl font-medium">Nearest shops</h3>
-              {post.nearestShops ? post.nearestShops : "Not specified"}
+              {post.nearestShops ? post.nearestShops + " km": "Not specified"}
             </li>
           </ul>
           <ul className="mt-6 gap-4 sm:flex sm:flex-wrap md:grid md:grid-cols-3">
