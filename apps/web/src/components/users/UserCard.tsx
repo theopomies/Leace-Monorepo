@@ -261,7 +261,7 @@ export function UserCard({
                 <li className="mr-8 flex-grow border-b border-indigo-300 pb-2">
                   <h3 className="text-xl font-medium">Annual salary</h3>
                   <p className={user.income ? "" : " text-indigo-600"}>
-                    {user.income ??
+                    {user.income + " $" ??
                       (isLoggedUser
                         ? "Please add your annual income by updating your profile"
                         : "Not specified")}

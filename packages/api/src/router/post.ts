@@ -102,6 +102,8 @@ export const postRouter = router({
           nearestShops: input.nearedShops,
           securityAlarm: input.securityAlarm,
           internetFiber: input.internetFiber,
+          ges: input.ges,
+          energyClass: input.energyClass,
         },
       });
 
