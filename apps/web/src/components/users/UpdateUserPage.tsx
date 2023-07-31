@@ -8,7 +8,6 @@ import { UserForm, UserFormData } from "./UserForm";
 import { UserLayout } from "./UserLayout";
 import { Button } from "../shared/button/Button";
 import { ToastDescription, ToastTitle, useToast } from "../shared/toast/Toast";
-import { NewMatchToast } from "../matches/NewMatchToast";
 
 export interface UpdateUserPageProps {
   userId: string;

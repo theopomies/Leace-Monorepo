@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Button } from "../shared/button/Button";
 import { XOR } from "../../utils/types";
 
-type NewMatchToastProps = XOR<
+type NewMessageToastProps = XOR<
   {
     name: string;
     conversationId: string;
@@ -16,20 +16,20 @@ type NewMatchToastProps = XOR<
   }
 >;
 
-export const NewMatchToast = ({
+export const NewMessageToast = ({
   name,
   conversationId,
   count,
   userId,
-}: NewMatchToastProps) => {
+}: NewMessageToastProps) => {
   if (count) {
     return (
       <>
-        <ToastTitle>New matches! 🎉</ToastTitle>
-        <ToastDescription>You have {count} new matches!</ToastDescription>
+        <ToastTitle>New messages! 💬</ToastTitle>
+        <ToastDescription>You have {count} new messages!</ToastDescription>
         <ToastAction altText="Go to matches page">
           <Link href="/users/${userId}/matches">
-            <Button className="px-4 py-2 text-sm">View matches</Button>
+            <Button className="px-4 py-2 text-sm">Check them</Button>
           </Link>
         </ToastAction>
       </>
@@ -38,8 +38,8 @@ export const NewMatchToast = ({
 
   return (
     <>
-      <ToastTitle>New match! 🎉</ToastTitle>
-      <ToastDescription>You have a new match with {name}!</ToastDescription>
+      <ToastTitle>New message! 💬</ToastTitle>
+      <ToastDescription>You have a new message from {name}!</ToastDescription>
       <ToastAction altText="Go to chat with them">
         <Link href={`/users/${userId}/matches/${conversationId}`}>
           <Button className="px-4 py-2 text-sm">Chat with {name}</Button>
