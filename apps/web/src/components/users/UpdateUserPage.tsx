@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import { MouseEventHandler, useRef } from "react";
 import { trpc } from "../../utils/trpc";
 import { Role } from "@prisma/client";
@@ -8,6 +7,8 @@ import { cropImage } from "../../utils/cropImage";
 import { UserForm, UserFormData } from "./UserForm";
 import { UserLayout } from "./UserLayout";
 import { Button } from "../shared/button/Button";
+import { ToastDescription, ToastTitle, useToast } from "../shared/toast/Toast";
+import { NewMatchToast } from "../matches/NewMatchToast";
 
 export interface UpdateUserPageProps {
   userId: string;
@@ -28,6 +29,7 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
     trpc.document.getSignedUrl.useQuery({ userId });
   const uploadDocument = trpc.document.putSignedUrl.useMutation();
   const deleteDocument = trpc.document.deleteSignedUrl.useMutation();
+  const { renderToast } = useToast();
 
   const handleSubmit = async (data: UserFormData) => {
     await updateUser.mutateAsync({
@@ -64,8 +66,16 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
       });
     }
     router.push(`/users/${userId}`);
+    renderToast(
+      <>
+        <ToastTitle>Success</ToastTitle>
+        <ToastDescription>Your profile is up to date ✅</ToastDescription>
+      </>,
+    );
   };
 
+  // TODO
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleUploadImg = async (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {

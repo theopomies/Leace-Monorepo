@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import { trpc } from "../../utils/trpc";
 import { Loader } from "../shared/Loader";
 import { useClerk } from "@clerk/nextjs";
