@@ -92,7 +92,7 @@ const TabNavigator = () => {
       if (session) setRole(session.role as keyof typeof UserRoles);
     };
     getSession();
-  }, [session]);
+  }, [session, isPremium]);
 
   if (isLoading) {
     return (

@@ -104,11 +104,6 @@ const OwnerLikes = () => {
   return (
     <ScrollView className="mx-5 mt-20" showsVerticalScrollIndicator={false}>
       <View>
-        <View className="ml-10 flex-row items-center justify-center">
-          <Text className="font-p text-custom mx-auto mb-10	text-center text-3xl font-bold">
-            LIKES
-          </Text>
-        </View>
         {rs.data?.relationship && rs.data.relationship.length > 0 ? (
           rs.data.relationship.map((item) => (
             <View key={item.id} className="mb-2 items-center">

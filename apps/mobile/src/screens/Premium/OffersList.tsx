@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, Image } from "react-native";
 import React, { useState } from "react";
 import { Icon } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
@@ -43,15 +43,15 @@ const OffersList = ({}) => {
   const items = [
     {
       id: 1,
-      name: "T Shirt - With React Native Logo",
+      name: "1 Month",
       amount: 19.99,
-      period: "1 month",
+      period: "Monthly",
     },
     {
       id: 2,
-      name: "Hoodie - With React Native Logo",
+      name: "1 Year",
       amount: 199.99,
-      period: "1 year",
+      period: "Yearly",
     },
   ];
 
@@ -107,26 +107,50 @@ const OffersList = ({}) => {
           ))}
         </View>
 
-        <View className={`flex h-60 flex-row items-center justify-center px-4`}>
+        <View className={`flex h-72 flex-row items-center justify-center px-4`}>
           {items.map((offer, index) => (
             <TouchableOpacity
               key={offer.id}
               className={`my-4 ${
                 index === 0 ? "mr-2" : "ml-2"
-              } flex h-5/6 w-1/2 flex-col items-center justify-center rounded-lg p-4 ${
+              } flex h-5/6 w-1/2 flex-col items-center justify-center rounded-lg border border-gray-400 p-4 shadow-2xl ${
                 selectedOffer === offer.id
                   ? offer.id === 1
-                    ? "bg-blue-400"
-                    : "bg-red-400"
+                    ? "bg-gray-400"
+                    : "bg-gray-400"
                   : "bg-gray-200"
               }`}
               onPress={() => handleOfferSelection(offer.id)}
             >
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  width: "100%",
+                  alignItems: "flex-start",
+                }}
+              >
+                <Text className={`text-lg font-bold`}>
+                  {offer.period === "Monthly" ? "Monthly" : "Yearly"}
+                </Text>
+
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <Text className={`text-lg font-bold`}>{offer.amount}€</Text>
+                </View>
+              </View>
+
+              <Image
+                source={require("../../../assets/logo.png")}
+                style={{
+                  width: 120,
+                  height: 120,
+                  marginTop: 20,
+                  marginBottom: 10,
+                  borderRadius: 10,
+                }}
+              />
+
               <Text className={`mb-1 text-lg font-bold`}>Premium</Text>
-              <Text className={`mb-2 font-bold`}>{offer.name}</Text>
-              <Text className={``}>
-                Pay {offer.amount} {offer.period}
-              </Text>
             </TouchableOpacity>
           ))}
         </View>

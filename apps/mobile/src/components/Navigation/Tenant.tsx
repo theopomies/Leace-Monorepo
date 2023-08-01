@@ -102,7 +102,6 @@ const Tenant = ({
         component={Details}
         options={{
           tabBarButton: () => null,
-          tabBarStyle: { display: "none" },
           tabBarLabel: "",
           headerShown: false,
         }}
@@ -113,7 +112,6 @@ const Tenant = ({
         component={Result}
         options={{
           tabBarButton: () => null,
-          tabBarStyle: { display: "none" },
           tabBarLabel: "",
           headerShown: false,
         }}

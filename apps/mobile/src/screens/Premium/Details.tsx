@@ -5,6 +5,7 @@ import { PaymentView } from "./View";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { TabStackParamList } from "../../navigation/TabNavigator";
+import { View } from "react-native";
 
 const Details = () => {
   const navigation =

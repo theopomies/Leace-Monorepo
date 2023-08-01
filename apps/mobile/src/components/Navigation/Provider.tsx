@@ -117,6 +117,7 @@ const Provider = ({
       >
         {() => (isPremium ? <OwnerLikes /> : <OffersList />)}
       </Tab.Screen>
+
       <Tab.Screen
         name="Likes"
         options={{
@@ -133,7 +134,6 @@ const Provider = ({
         component={Details}
         options={{
           tabBarButton: () => null,
-          tabBarStyle: { display: "none" },
           tabBarLabel: "",
           headerShown: false,
         }}
@@ -144,7 +144,6 @@ const Provider = ({
         component={Result}
         options={{
           tabBarButton: () => null,
-          tabBarStyle: { display: "none" },
           tabBarLabel: "",
           headerShown: false,
         }}
