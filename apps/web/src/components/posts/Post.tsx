@@ -3,6 +3,7 @@ import { Loader } from "../shared/Loader";
 import { useMemo } from "react";
 import { PostCard } from "../shared/post/PostCard";
 import { useRouter } from "next/router";
+import { PostType } from "@prisma/client";
 
 export interface PostProps {
   postId: string;
@@ -12,6 +13,7 @@ export interface PostProps {
 
 export const Post = ({ postId, authorId, updateLink }: PostProps) => {
   const router = useRouter();
+
   const { data: post, isLoading: postLoading } = trpc.post.getPostById.useQuery(
     { postId },
   );
@@ -21,6 +23,12 @@ export const Post = ({ postId, authorId, updateLink }: PostProps) => {
     trpc.document.getSignedUrl.useQuery({ postId });
 
   const deletePost = trpc.post.deletePostById.useMutation();
+  const utils = trpc.useContext();
+  const updatePost = trpc.post.updatePostById.useMutation({
+    async onSuccess() {
+      await utils.post.getPostById.invalidate({ postId });
+    },
+  });
 
   const isLoading = useMemo(() => {
     return postLoading || imagesLoading || documentLoading;
@@ -39,6 +47,14 @@ export const Post = ({ postId, authorId, updateLink }: PostProps) => {
     }
   };
 
+  const handlePause = async () => {
+    await updatePost.mutateAsync({ postId, type: PostType.HIDE });
+  };
+
+  const handleUnpause = async () => {
+    await updatePost.mutateAsync({ postId, type: PostType.TO_BE_RENTED });
+  };
+
   return (
     <PostCard
       post={post}
@@ -47,8 +63,8 @@ export const Post = ({ postId, authorId, updateLink }: PostProps) => {
       documents={documents}
       updateLink={updateLink}
       isLoggedIn={post.createdById === authorId}
-      onPauseButton={handleDeletePost}
-      onUnpauseButton={handleDeletePost}
+      onPauseButton={handlePause}
+      onUnpauseButton={handleUnpause}
     />
   );
 };

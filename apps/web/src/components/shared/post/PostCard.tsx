@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { displayDate } from "../../../utils/displayDate";
 import { DisplayReports } from "../../moderation/report/DisplayReports";
 import { DocumentList } from "../document/DocumentList";
-import { Post, Attribute, Report, Image, Document } from "@prisma/client";
+import { Post, Attribute, Report, Image, Document, PostType } from "@prisma/client";
 import Link from "next/link";
 import { DialogButton } from "../button/DialogButton";
 import { Button } from "../button/Button";
@@ -22,8 +22,8 @@ export interface PostCardProps {
   isLoggedIn?: boolean;
   isAdmin?: boolean;
 
-  onPauseButton?: () => Promise<void>;
-  onUnpauseButton?: () => Promise<void>;
+  onPause?: () => Promise<void>;
+  onUnpause?: () => Promise<void>;
 }
 
 export const PostCard = ({
@@ -35,8 +35,8 @@ export const PostCard = ({
   updateLink,
   isLoggedIn,
   isAdmin,
-  onPauseButton,
-  onUnpauseButton,
+  onPause,
+  onUnpause,
 }: PostCardProps) => {
   return (
     <div className="flex w-full flex-col overflow-auto rounded-lg bg-white p-8 shadow">
@@ -107,16 +107,16 @@ export const PostCard = ({
               Update
             </Link>
           )}
-          {onPauseButton ? (
+          {post.type != PostType.HIDE ? (
             <Button
               title="Pause"
-              onClick={onPauseButton}
+              onClick={onPause}
               className="bg-yellow-500 hover:bg-yellow-600 active:bg-yellow-700"
             >
               Pause
             </Button>
-          ) : onUnpauseButton ? (
-            <Button title="unpause" onClick={onUnpauseButton} theme="success">
+          ) : post.type == PostType.HIDE ? (
+            <Button title="unpause" onClick={onUnpause} theme="success">
               Unpause
             </Button>
           ) : null}
