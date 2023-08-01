@@ -13,7 +13,8 @@ export type TabStackParamList = {
   Role: undefined;
   Profile: { userId: string };
   Stack: { userId: string };
-  Match: undefined;
+  MatchTenant: { userId: string; role: "TENANT" | "OWNER" | "AGENCY" };
+  MatchOwner: { userId: string; role: "TENANT" | "OWNER" | "AGENCY" };
   Dashboard: { userId: string };
 
   Notifications: undefined;
@@ -55,6 +56,14 @@ export type TabStackParamList = {
   EditPost: {
     userId: string;
     data: string;
+  };
+
+  ChatTenant: {
+    role: "TENANT" | "OWNER" | "AGENCY";
+    tenantId: string;
+    ownerId: string;
+    conversationId: string;
+    userId: string;
   };
 };
 

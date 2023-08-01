@@ -4,12 +4,13 @@ import { Icon } from "react-native-elements";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { TabStackParamList } from "../../navigation/TabNavigator";
 import { UserRoles } from "../../utils/enum";
-import { TenantStack, TenantMatches, TenantChat } from "../../screens/Tenant";
+import { TenantStack, TenantMatches } from "../../screens/Tenant";
 import Role from "../../screens/Role";
 import { EditProfile, ShowProfile } from "../../screens/Profile";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ShowPost } from "../../screens/Post";
+import { TenantChat } from "../../screens/Chat";
 
 const Tab = createBottomTabNavigator<TabStackParamList>();
 const Tenant = ({ userId }: { userId: string }) => {
@@ -34,8 +35,9 @@ const Tenant = ({ userId }: { userId: string }) => {
         }}
       />
       <Tab.Screen
-        name="Match"
+        name="MatchTenant"
         component={TenantMatches}
+        initialParams={{ userId, role: "TENANT" }}
         options={{
           tabBarIcon: ({ focused }) => (
             <Icon
@@ -48,17 +50,28 @@ const Tenant = ({ userId }: { userId: string }) => {
         }}
       />
       <Tab.Screen
-        name="MatchChat"
+        name="ChatTenant"
         component={TenantChat}
         options={{
-          tabBarIcon: ({ focused }) => (
-            <Icon
-              name={focused ? "chat" : "chat-bubble-outline"}
-              type="material"
-            />
+          tabBarStyle: { display: "none" },
+          headerShown: true,
+          title: "Chat",
+          tabBarButton: () => null,
+          headerLeft: () => (
+            <TouchableOpacity
+              className="ml-4"
+              onPress={() =>
+                navigation.navigate("MatchTenant", { userId, role: "TENANT" })
+              }
+            >
+              <Icon
+                name="arrow-back"
+                color="#10316B"
+                size={30}
+                type="material-icons"
+              ></Icon>
+            </TouchableOpacity>
           ),
-          tabBarLabel: "",
-          headerShown: false,
         }}
       />
       <Tab.Screen
