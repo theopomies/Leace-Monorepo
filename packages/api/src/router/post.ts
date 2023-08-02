@@ -17,6 +17,17 @@ export const postRouter = router({
         title: z.string(),
         content: z.string(),
         desc: z.string(),
+        energyClass: z
+          .enum([EnergyClass.A, EnergyClass.B, EnergyClass.C, EnergyClass.D])
+          .optional(),
+        ges: z
+          .enum([EnergyClass.A, EnergyClass.B, EnergyClass.C, EnergyClass.D])
+          .optional(),
+        constructionDate: z.date().optional(),
+        estimatedCosts: z.number().optional(),
+        nearedShops: z.number().optional(),
+        securityAlarm: z.boolean().optional(),
+        internetFiber: z.boolean().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -39,6 +50,11 @@ export const postRouter = router({
           content: input.content,
           desc: input.desc,
           type: PostType.TO_BE_RENTED,
+          constructionDate: input.constructionDate,
+          estimatedCosts: input.estimatedCosts,
+          nearestShops: input.nearedShops,
+          securityAlarm: input.securityAlarm,
+          internetFiber: input.internetFiber,
         },
       });
 
