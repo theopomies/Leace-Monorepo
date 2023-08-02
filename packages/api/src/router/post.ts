@@ -297,4 +297,54 @@ export const postRouter = router({
         utilitiesCost: relationship.lease.utilitiesCost,
       };
     }),
+  addReview: protectedProcedure([Role.TENANT])
+    .input(
+      z.object({ postId: z.string(), comment: z.string(), stars: z.number() }),
+    )
+    .query(async ({ ctx, input }) => {
+      const post = await ctx.prisma.post.findFirst({
+        where: { id: input.postId },
+      });
+
+      if (!post) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+      if (input.stars < 0 || input.stars > 5)
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "stars must be between 0-5",
+        });
+
+      const created = await ctx.prisma.review.create({
+        data: {
+          createdById: ctx.auth.userId,
+          postId: input.postId,
+          comment: input.comment,
+          stars: input.stars,
+        },
+      });
+      if (!created) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+    }),
+  likePost: protectedProcedure([Role.TENANT])
+    .input(z.object({ postId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const post = await ctx.prisma.post.findFirst({
+        where: { id: input.postId },
+      });
+
+      if (!post) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+      let like = 0;
+      if (post.like) {
+        like = post.like;
+      }
+
+      const updated = await ctx.prisma.post.update({
+        where: {
+          id: post.id,
+        },
+        data: { like: like + 1 },
+      });
+
+      if (!updated) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+    }),
 });
