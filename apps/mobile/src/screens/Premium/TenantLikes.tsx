@@ -13,11 +13,13 @@ import { trpc } from "../../../../web/src/utils/trpc";
 const ClientCard = ({
   firstName,
   lastName,
+  image,
   onDislike,
   onLike,
 }: {
   firstName: string | null;
   lastName: string | null;
+  image: string | null;
   onDislike: () => void;
   onLike: () => void;
 }) => {
@@ -40,16 +42,21 @@ const ClientCard = ({
     );
   };
 
+  const imageUrl: string | undefined = image ?? undefined;
+
   return (
     <TouchableOpacity
       className="max-w-400 w-full overflow-hidden rounded-2xl border border-gray-300"
       onPress={() => {}}
     >
       <View className="flex-row items-center p-2">
+        <Image
+          source={{ uri: imageUrl }}
+          className="mr-10 h-20 w-20 rounded-full"
+        />
         <View className="flex-1">
-          <Text className="text-18 mb-5 font-bold">
-            {firstName} {lastName}
-          </Text>
+          <Text className="text-18 mb-5 font-bold">{firstName}</Text>
+          <Text className="text-18 mb-5 font-bold">{lastName}</Text>
         </View>
         <TouchableOpacity onPress={onLike}>
           <Text style={{ color: "green", fontWeight: "bold", marginRight: 20 }}>
@@ -74,7 +81,6 @@ const TenantLikes = () => {
 
   const accept = trpc.relationship.likePostForTenant.useMutation();
 
-  console.log(rs);
   const acceptClient = async (postId: string, userId: string) => {
     await accept.mutateAsync({
       userId,
@@ -102,6 +108,9 @@ const TenantLikes = () => {
                 lastName={item.post.desc}
                 onDislike={() => deleteClient(item.postId, item.userId)}
                 onLike={() => acceptClient(item.postId, item.userId)}
+                image={
+                  "https://www.livehome3d.com/assets/img/social/how-to-design-a-house.jpg"
+                }
               />
             </View>
           ))

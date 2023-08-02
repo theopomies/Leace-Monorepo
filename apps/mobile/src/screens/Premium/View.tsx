@@ -379,7 +379,6 @@ const PaymentView = (props) => {
 
   const onMessage = (event) => {
     const { data } = event.nativeEvent;
-    console.log(data);
     onCheckStatus(data);
   };
 

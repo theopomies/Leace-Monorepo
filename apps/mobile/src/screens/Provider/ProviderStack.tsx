@@ -55,14 +55,11 @@ export default function ProviderStack() {
     postType: Type.TO_BE_RENTED,
   });
 
-  console.log(posts);
   let postId = "";
 
   if (posts) {
     postId = posts[0]?.attribute?.postId as string;
   }
-
-  console.log(postId);
 
   const { data: users } = trpc.post.getUsersToBeSeen.useQuery({
     postId,

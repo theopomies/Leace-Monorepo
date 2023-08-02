@@ -26,22 +26,17 @@ const Details = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (response && paymentStatus) {
-      handlePaymentStatus(response, paymentStatus);
+    if (response) {
+      handlePaymentStatus(response);
     }
-    console.log("type " + typeof response);
   }, [response, loading]);
 
-  const onCheckStatus = (paymentResponse: string, paymentStatus: boolean) => {
+  const onCheckStatus = (paymentResponse: string) => {
     setLoading(true);
     setResponse(paymentResponse);
-    setPaymentStatus(!paymentStatus);
   };
 
-  const handlePaymentStatus = async (
-    paymentResponse: string,
-    paymentStatus: boolean,
-  ) => {
+  const handlePaymentStatus = async (paymentResponse: string) => {
     const jsonResponse = JSON.parse(paymentResponse);
 
     try {
@@ -53,7 +48,11 @@ const Details = () => {
 
       if (stripeResponse) {
         const { paid } = stripeResponse.data;
-        setPaymentStatus(paid);
+        if (paid === true) {
+          setPaymentStatus(true);
+        } else {
+          setPaymentStatus(false);
+        }
       }
     } catch (error) {
       console.log(error);
