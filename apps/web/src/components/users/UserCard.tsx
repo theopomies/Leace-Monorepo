@@ -96,6 +96,9 @@ export function UserCard({
       }
       mainPanel={
         <div className="flex flex-grow flex-col gap-5">
+          <h2 className="justify-end text-right font-medium">
+            Member since: <i>{user.createdAt.toDateString()}</i>
+          </h2>
           <h1 className="text-4xl font-semibold">
             {isLoggedUser
               ? "Your Profile"
@@ -235,8 +238,8 @@ export function UserCard({
               <ul className="gap-4 sm:flex sm:flex-wrap md:grid md:grid-cols-3">
                 <li className="mr-8 flex-grow border-b border-indigo-300 pb-2">
                   <h3 className="text-xl font-medium">Job</h3>
-                  <p className={"Developer" ? "" : " text-indigo-600"}>
-                    {"Developer" ??
+                  <p className={user.job ? "" : " text-indigo-600"}>
+                    {user.job ??
                       (isLoggedUser
                         ? "Please add your job by updating your profile"
                         : "Not specified")}
@@ -244,36 +247,38 @@ export function UserCard({
                 </li>
                 <li className="mr-8 flex-grow border-b border-indigo-300 pb-2">
                   <h3 className="text-xl font-medium">Type of contract</h3>
-                  <p className={"CDI" ? "" : " text-indigo-600"}>
-                    {"CDI"
-                      ? "CDI"
-                      : isLoggedUser
-                      ? "Please add your type of contract by updating your profile"
-                      : "Not specified"}
+                  <p
+                    className={
+                      user.employmentContract ? "" : " text-indigo-600"
+                    }
+                  >
+                    {user.employmentContract ??
+                      (isLoggedUser
+                        ? "Please add your type of contract by updating your profile"
+                        : "Not specified")}
                   </p>
                 </li>
                 <li className="mr-8 flex-grow border-b border-indigo-300 pb-2">
                   <h3 className="text-xl font-medium">Annual salary</h3>
-                  <p className={"100K" ? "" : " text-indigo-600"}>
-                    {"100K"
-                      ? "100K"
-                      : isLoggedUser
-                      ? "Please add your annual salary by updating your profile"
-                      : "Not specified"}
+                  <p className={user.income ? "" : " text-indigo-600"}>
+                    {user.income + " $" ??
+                      (isLoggedUser
+                        ? "Please add your annual income by updating your profile"
+                        : "Not specified")}
                   </p>
                 </li>
               </ul>
               <ul className="gap-4 sm:flex sm:flex-wrap md:grid md:grid-cols-3">
                 <li className="mr-8 flex-grow border-b border-indigo-300 pb-2">
                   <h3 className="text-xl font-medium">Credit score</h3>
-                  <p className={"850" ? "" : " text-indigo-600"}>
-                    {"850" ??
+                  <p className={user.creditScore ? "" : " text-indigo-600"}>
+                    {user.creditScore ??
                       (isLoggedUser
                         ? "Please add your credit score by updating your profile"
                         : "Not specified")}
                   </p>
                 </li>
-                <li className="mr-8 flex-grow border-b border-indigo-300 pb-2">
+                {/* <li className="mr-8 flex-grow border-b border-indigo-300 pb-2">
                   <h3 className="text-xl font-medium">Desired rental period</h3>
                   <p className={"2 years" ? "" : " text-indigo-600"}>
                     {"2 years" ??
@@ -281,11 +286,11 @@ export function UserCard({
                         ? "Please add your desired rental period by updating your profile"
                         : "Not specified")}
                   </p>
-                </li>
+                </li> */}
                 <li className="mr-8 flex-grow border-b border-indigo-300 pb-2">
                   <h3 className="text-xl font-medium">Family situation</h3>
-                  <p className={"Married" ? "" : " text-indigo-600"}>
-                    {"Married" ??
+                  <p className={user.maritalStatus ? "" : " text-indigo-600"}>
+                    {user.maritalStatus ??
                       (isLoggedUser
                         ? "Please add your family situation by updating your profile"
                         : "Not specified")}

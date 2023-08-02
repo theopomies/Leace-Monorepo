@@ -37,6 +37,11 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
       lastName: data.lastName,
       description: data.description,
       country: data.country,
+      job: data.job,
+      creditScore: data.creditScore,
+      employmentContract: data.employmentContract,
+      income: data.income,
+      maritalStatus: data.maritalStatus,
     });
     if (user?.role === Role.TENANT) {
       await updateAttributes.mutateAsync({
@@ -135,7 +140,7 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
                 className="mx-auto h-full w-full overflow-hidden rounded-full"
               />
             </div>
-            <button className="absolute top-0 left-0 flex h-full w-full items-end justify-center rounded-full opacity-0 transition-all hover:opacity-100">
+            <button className="absolute left-0 top-0 flex h-full w-full items-end justify-center rounded-full opacity-0 transition-all hover:opacity-100">
               <span className=" translate-y-[50%] rounded-full bg-white px-4 shadow-md">
                 Edit
               </span>

@@ -133,35 +133,27 @@ export const PostCard = ({
           <ul className="gap-4 sm:flex sm:flex-wrap md:grid md:grid-cols-3">
             <li className="mr-8 flex-grow border-b border-indigo-300 pb-2">
               <h3 className="text-xl font-medium">Energy class</h3>
-              {"A" ? "A" : "Not specified"}
+              {post.energyClass ? post.energyClass : "Not specified"}
             </li>
             <li className="mr-8 flex-grow border-b border-indigo-300 pb-2">
               <h3 className="text-xl font-medium">GES</h3>
-              {"A" ? "A" : "Not specified"}
+              {post.ges ? post.ges : "Not specified"}
             </li>
             <li className="mr-8 flex-grow border-b border-indigo-300 pb-2">
               <h3 className="text-xl font-medium">Construction date</h3>
-              {"2014" ? "2014" : "Not specified"}
+              {post.constructionDate?.toDateString()
+                ? post.constructionDate?.toDateString()
+                : "Not specified"}
             </li>
           </ul>
           <ul className="gap-4 sm:flex sm:flex-wrap md:grid md:grid-cols-3">
             <li className="mr-8 flex-grow border-b border-indigo-300 pb-2">
-              <h3 className="text-xl font-medium">Fees</h3>
-              {"50$" ? "50$" : "Not specified"}
+              <h3 className="text-xl font-medium">Estimated fees costs</h3>
+              {post.estimatedCosts ? post.estimatedCosts + " $" : "Not specified"}
             </li>
             <li className="mr-8 flex-grow border-b border-indigo-300 pb-2">
-              <h3 className="text-xl font-medium">Store distance</h3>
-              {"2 miles" ? "2 miles" : "Not specified"}
-            </li>
-            <li className="mr-8 flex-grow border-b border-indigo-300 pb-2">
-              <h3 className="text-xl font-medium">Alarm / security</h3>
-              {"YES" ? "YES" : "Not specified"}
-            </li>
-          </ul>
-          <ul className="gap-4 sm:flex sm:flex-wrap md:grid md:grid-cols-3">
-            <li className="mr-8 flex-grow border-b border-indigo-300 pb-2">
-              <h3 className="text-xl font-medium">Internet</h3>
-              {"YES" ? "YES" : "Not specified"}
+              <h3 className="text-xl font-medium">Nearest shops</h3>
+              {post.nearestShops ? post.nearestShops + " km": "Not specified"}
             </li>
           </ul>
           <ul className="mt-6 gap-4 sm:flex sm:flex-wrap md:grid md:grid-cols-3">
@@ -200,6 +192,16 @@ export const PostCard = ({
                 </li>
               );
             })}
+          </ul>
+          <ul className="gap-4 sm:flex sm:flex-wrap md:grid md:grid-cols-3">
+            <li className="mr-8 flex-grow border-b border-indigo-300 pb-2">
+              <h3 className="text-xl font-medium">Alarm / security</h3>
+              {post.securityAlarm ? "✅" : "❌"}
+            </li>
+            <li className="mr-8 flex-grow border-b border-indigo-300 pb-2">
+              <h3 className="text-xl font-medium">Internet</h3>
+              {post.internetFiber ? "✅" : "❌"}
+            </li>
           </ul>
         </div>
         <DocumentList documents={documents} onValidation={onDocValidation} />

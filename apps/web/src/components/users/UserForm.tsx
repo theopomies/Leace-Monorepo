@@ -9,7 +9,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import { User, Attribute, Document, Role } from "@prisma/client";
+import { User, Attribute, Document, Role, MaritalStatus } from "@prisma/client";
 import { HomeType } from "../../types/homeType";
 import { UserAttributesForm } from "../attributes/UserAttributesForm";
 import { DocumentList } from "../shared/document/DocumentList";
@@ -17,6 +17,7 @@ import { DateInput } from "../shared/forms/DateInput";
 import { FileInput } from "../shared/forms/FileInput";
 import { TextArea } from "../shared/forms/TextArea";
 import { TextInput } from "../shared/forms/TextInput";
+import { NumberInput } from "../shared/forms/NumberInput";
 
 export type UserFormData = {
   birthDate: string;
@@ -39,6 +40,12 @@ export type UserFormData = {
   parking?: boolean;
   elevator?: boolean;
   pool?: boolean;
+
+  job?: string;
+  employmentContract?: string;
+  income?: number;
+  creditScore?: number;
+  maritalStatus?: MaritalStatus;
 };
 
 export interface UserFormProps {
@@ -75,6 +82,14 @@ const UserFormBeforeRef = (
   const [elevator, setElevator] = useState<boolean | undefined>();
   const [pool, setPool] = useState<boolean | undefined>();
 
+  const [job, setJob] = useState<string>("");
+  const [employmentContract, setEmploymentContract] = useState<string>("");
+  const [income, setIncome] = useState<number | undefined>();
+  const [creditScore, setCreditScore] = useState<number | undefined>();
+  const [maritalStatus, setMaritalStatus] = useState<MaritalStatus | undefined>(
+    undefined,
+  );
+
   useEffect(() => {
     const date = user.birthDate
       ? `${user.birthDate.getUTCFullYear()}-${
@@ -92,6 +107,7 @@ const UserFormBeforeRef = (
     setLastName(user.lastName ?? "");
     setDescription(user.description ?? "");
     setCountry(user.country ?? "");
+
     if (user.role === Role.TENANT) {
       setLocation(user.attribute?.location ?? undefined);
       setHomeType(user.attribute?.homeType ?? undefined);
@@ -108,6 +124,12 @@ const UserFormBeforeRef = (
       setParking(user.attribute?.parking ?? undefined);
       setElevator(user.attribute?.elevator ?? undefined);
       setPool(user.attribute?.pool ?? undefined);
+
+      setJob(user.job ?? "");
+      setEmploymentContract(user.employmentContract ?? "");
+      setIncome(user.income ?? undefined);
+      setCreditScore(user.creditScore ?? undefined);
+      setMaritalStatus(user.maritalStatus ?? undefined);
     }
   }, [user]);
 
@@ -131,6 +153,12 @@ const UserFormBeforeRef = (
     (setter: Dispatch<SetStateAction<HomeType | undefined>>) =>
     (event: React.ChangeEvent<HTMLInputElement>) => {
       setter(event.target.value as HomeType);
+    };
+
+  const handleMaritalStatusChange =
+    (setter: Dispatch<SetStateAction<MaritalStatus | undefined>>) =>
+    (event: React.ChangeEvent<HTMLSelectElement>) => {
+      setter(event.target.value as MaritalStatus);
     };
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
@@ -157,6 +185,11 @@ const UserFormBeforeRef = (
       elevator,
       pool,
       country,
+      job,
+      employmentContract,
+      income,
+      creditScore,
+      maritalStatus,
     };
 
     onSubmit(data);
@@ -201,7 +234,11 @@ const UserFormBeforeRef = (
       ref={ref}
       className="flex flex-grow flex-col gap-5"
     >
+      <h2 className="justify-end text-right font-medium">
+        Member since: <i>{user.createdAt.toDateString()}</i>
+      </h2>
       <h1 className="text-4xl font-semibold">Update Your Profile</h1>
+
       <section>
         <p className="text-sm text-slate-500">
           These informations will be shared across Leace to help build trust and
@@ -269,19 +306,18 @@ const UserFormBeforeRef = (
             <li className="flex-grow pr-8">
               <h3 className="text-xl font-medium">Job</h3>
               <TextInput
-                required
-                placeholder="France"
-                onChange={handleChange(setCountry)}
-                value={country}
+                placeholder="Developer"
+                onChange={handleChange(setJob)}
+                value={job}
                 className="w-full"
               />
             </li>
             <li className="flex-grow">
               <h3 className="text-xl font-medium">Type of contract</h3>
-              <DateInput
-                required
-                onChange={handleChange(setBirthDate)}
-                value={birthDate}
+              <TextInput
+                placeholder="CDI"
+                onChange={handleChange(setEmploymentContract)}
+                value={employmentContract}
                 className="w-full"
               />
             </li>
@@ -289,25 +325,40 @@ const UserFormBeforeRef = (
           <ul className="flex flex-wrap gap-4 pt-4">
             <li className="flex-grow pr-8">
               <h3 className="text-xl font-medium">Annual salary</h3>
-              <TextInput
-                required
-                placeholder="France"
-                onChange={handleChange(setCountry)}
-                value={country}
+              <NumberInput
+                placeholder="60000"
+                onChange={handleNumberChange(setIncome)}
+                value={income?.toString() ?? ""}
                 className="w-full"
+                unit="$"
               />
             </li>
             <li className="flex-grow">
               <h3 className="text-xl font-medium">Credit score</h3>
-              <DateInput
-                required
-                onChange={handleChange(setBirthDate)}
-                value={birthDate}
+              <NumberInput
+                placeholder="800"
+                onChange={handleNumberChange(setCreditScore)}
+                value={creditScore ?? ""}
                 className="w-full"
               />
             </li>
+            <li className="flex-grow">
+              <h3 className="text-xl font-medium">Marital status</h3>
+              <select
+                id="maritalStatus"
+                onChange={handleMaritalStatusChange(setMaritalStatus)}
+                value={maritalStatus ?? ""}
+                className="w-full rounded-lg border-2 border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-600 focus:outline-none"
+              >
+                <option value={MaritalStatus.SINGLE}>SINGLE</option>
+                <option value={MaritalStatus.MARRIED}>MARRIED</option>
+                <option value={MaritalStatus.ONE_CHILD}>ONE_CHILD</option>
+                <option value={MaritalStatus.TWO_CHILD}>TWO_CHILD</option>
+                <option value={MaritalStatus.OTHER}>OTHER</option>
+              </select>
+            </li>
           </ul>
-          <ul className="flex flex-wrap gap-4 pt-4">
+          {/* <ul className="flex justify-center pt-4">
             <li className="flex-grow pr-8">
               <h3 className="text-xl font-medium">Desired rental period</h3>
               <TextInput
@@ -318,16 +369,7 @@ const UserFormBeforeRef = (
                 className="w-full"
               />
             </li>
-            <li className="flex-grow">
-              <h3 className="text-xl font-medium">Family situation</h3>
-              <DateInput
-                required
-                onChange={handleChange(setBirthDate)}
-                value={birthDate}
-                className="w-full"
-              />
-            </li>
-          </ul>
+          </ul> */}
         </section>
       )}
       <DocumentList
