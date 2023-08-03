@@ -41,6 +41,11 @@ export const userRouter = router({
     });
 
     if (!newAccount) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+    ctx.mixPanel.track("Signed Up", {
+      distinct_id: ctx.auth.userId,
+      "Signup Type": "Referral",
+    });
   }),
   /** Update a user role with the given id and role. */
   updateUserRoleById: AuthenticatedProcedure.input(
@@ -61,6 +66,12 @@ export const userRouter = router({
     });
 
     if (!updated) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+    ctx.mixPanel.track("Update Role", {
+      distinct_id: ctx.auth.userId,
+      Items: "Referral",
+      role: input.role,
+    });
   }),
   /** Update one user's data with the given id
       Also check for:

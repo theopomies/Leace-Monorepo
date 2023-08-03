@@ -7,6 +7,7 @@ import type {
   SignedInAuthObject,
   SignedOutAuthObject,
 } from "@clerk/nextjs/api";
+import mixpanel, { Mixpanel } from "mixpanel";
 
 /**
  * Replace this with an object if you want to pass things to createContextInner
@@ -14,6 +15,7 @@ import type {
 type AuthContextProps = {
   clerkClient: typeof clerkClient;
   s3Client: S3Client;
+  mixPanel: Mixpanel;
 
   auth: SignedInAuthObject | SignedOutAuthObject;
   role: Role | undefined;
@@ -27,12 +29,14 @@ type AuthContextProps = {
 export const createContextInner = async ({
   clerkClient,
   s3Client,
+  mixPanel,
   auth,
   role,
 }: AuthContextProps) => {
   return {
     clerkClient,
-    s3Client: s3Client,
+    s3Client,
+    mixPanel,
     prisma,
     auth,
     role,
@@ -48,6 +52,8 @@ export const createContext = async (opts: CreateNextContextOptions) => {
     apiKey: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
     secretKey: process.env.CLERK_SECRET_KEY,
   });
+
+  const mixPanel = mixpanel.init(process.env.MIXPANEL_TOKEN || "");
 
   const s3Client = new S3Client({
     region: "eu-west-3",
@@ -74,6 +80,7 @@ export const createContext = async (opts: CreateNextContextOptions) => {
   return await createContextInner({
     auth,
     s3Client,
+    mixPanel,
     role,
     clerkClient,
   });
