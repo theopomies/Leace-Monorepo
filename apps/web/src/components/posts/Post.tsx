@@ -40,8 +40,8 @@ export const Post = ({ postId, authorId, updateLink }: PostProps) => {
   if (!post) return <p>Something went wrong</p>;
 
   const handleDeletePost = async () => {
-    await deletePost.mutateAsync({ postId });
     deleteCacheId("lastSelectedPostId");
+    await deletePost.mutateAsync({ postId });
     router.push(`/users/${authorId}/posts`);
   };
 
