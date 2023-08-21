@@ -96,14 +96,16 @@ export function UserCard({
       }
       mainPanel={
         <div className="flex flex-grow flex-col gap-5">
-          <h2 className="justify-end text-right font-medium">
-            Member since: <i>{user.createdAt.toDateString()}</i>
-          </h2>
-          <h1 className="text-4xl font-semibold">
-            {isLoggedUser
-              ? "Your Profile"
-              : `${user.firstName} ${user.lastName}`}
-          </h1>
+          <div className="flex items-end justify-between">
+            <h1 className="text-4xl font-semibold">
+              {isLoggedUser
+                ? "Your Profile"
+                : `${user.firstName} ${user.lastName}`}
+            </h1>
+            <h2 className="text-sm font-medium text-slate-500">
+              Member since: <i>{user.createdAt.toDateString()}</i>
+            </h2>
+          </div>
           {isLoggedUser && (
             <p className="text-sm text-slate-500">
               These informations will be shared across Leace to help build trust
