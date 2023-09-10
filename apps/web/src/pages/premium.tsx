@@ -6,6 +6,7 @@ import { PotentialMatchesAgencyOwner } from "../components/premium/PotentialMatc
 import { PotentialMatchesTenant } from "../components/premium/PotentialMatchesTenant";
 import { Role } from "@prisma/client";
 import { Header } from "../components/shared/Header";
+import { PremiumBanner } from "../components/premium/PremiumBanner";
 
 const Premium = () => {
   return (
@@ -37,6 +38,7 @@ const PremiumPage = () => {
 
   return (
     <div className="w-full">
+      <PremiumBanner user={me} />
       <Header heading="Potential Matches" />
       {role == Role.TENANT && (
         <PotentialMatchesTenant userId={session.userId} />

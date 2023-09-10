@@ -1,7 +1,6 @@
 import Script from "next/script";
 
 export const StripePricingTable = ({ userId }: { userId: string }) => {
-  console.log(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
   return (
     <>
       <Script async src="https://js.stripe.com/v3/pricing-table.js"></Script>
