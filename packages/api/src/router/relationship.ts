@@ -5,6 +5,7 @@ import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";
 import { getId } from "../utils/getId";
 import { movePostToSeen, moveUserToSeen } from "../utils/algorithm";
+import mixpanel from "mixpanel";
 
 export const relationshipRouter = router({
   likeTenantForPost: protectedProcedure([Role.OWNER, Role.AGENCY])
@@ -62,6 +63,11 @@ export const relationshipRouter = router({
         });
         if (!created) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
 
+        ctx.mixPanel.track("Like Tenant", {
+          distinct_id: ctx.auth.userId,
+          match: RelationType.POST,
+        });
+
         return created;
       }
 
@@ -83,6 +89,11 @@ export const relationshipRouter = router({
         data: { relationId: updated.id },
       });
       if (!chat) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+      ctx.mixPanel.track("Like Tenant", {
+        distinct_id: ctx.auth.userId,
+        match: RelationType.MATCH,
+      });
 
       return updated;
     }),
@@ -125,7 +136,13 @@ export const relationshipRouter = router({
         where: { postId: post.id, userId: user.id },
       });
 
-      if (!relationship) return { missed: false, message: "Nothing to do" };
+      if (!relationship) {
+        ctx.mixPanel.track("Dislike Tenant", {
+          distinct_id: ctx.auth.userId,
+        });
+
+        return { missed: false, message: "Nothing to do" };
+      }
 
       if (relationship.relationType == RelationType.POST) {
         throw new TRPCError({
@@ -139,6 +156,10 @@ export const relationshipRouter = router({
       });
 
       if (!deleted) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+      ctx.mixPanel.track("Dislike Tenant", {
+        distinct_id: ctx.auth.userId,
+      });
 
       return { missed: true, message: "You missed a match!" };
     }),
@@ -184,6 +205,11 @@ export const relationshipRouter = router({
         });
 
         if (!created) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+        ctx.mixPanel.track("Like Post", {
+          distinct_id: ctx.auth.userId,
+          match: RelationType.TENANT,
+        });
 
         return created;
       }
@@ -235,13 +261,23 @@ export const relationshipRouter = router({
         where: { postId: post.id, userId: user.id },
       });
 
-      if (!relationship) return { missed: false, message: "Nothing to do" };
+      if (!relationship) {
+        ctx.mixPanel.track("Dislike Post", {
+          distinct_id: ctx.auth.userId,
+        });
+
+        return { missed: false, message: "Nothing to do" };
+      }
 
       const deleted = await ctx.prisma.relationship.delete({
         where: { id: relationship.id },
       });
 
       if (!deleted) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+      ctx.mixPanel.track("Dislike Post", {
+        distinct_id: ctx.auth.userId,
+      });
 
       return { missed: true, message: "You missed a match!" };
     }),
