@@ -14,13 +14,13 @@ export interface UpdateUserPageProps {
 
 export function UpdateUserPage({ userId }: UpdateUserPageProps) {
   const router = useRouter();
-  const { data: user } = trpc.user.getUserById.useQuery({ userId });
+  const { data: user, refetch: refetchUser } = trpc.user.getUserById.useQuery({
+    userId,
+  });
   const updateUser = trpc.user.updateUserById.useMutation();
 
   const updateAttributes = trpc.attribute.updateUserAttributes.useMutation();
 
-  const { data: imageGet, refetch: refetchImageGet } =
-    trpc.image.getSignedUserUrl.useQuery({ userId });
   const uploadImage = trpc.image.putSignedUrl.useMutation();
 
   const { data: documentsGet, refetch: refetchDocumentsGet } =
@@ -59,6 +59,7 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
     router.push(`/users/${userId}`);
   };
 
+  // TODO: Upload Image USER
   const handleUploadImg = async (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
@@ -73,8 +74,14 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
           })
           .then(async (url) => {
             if (url) {
+              // Problem with axios.put
               await axios.put(url, croppedBlob);
-              refetchImageGet();
+              // Add url of image to user table
+              await updateUser.mutateAsync({
+                userId,
+                image: url,
+              });
+              refetchUser();
             }
           });
       });
@@ -119,7 +126,6 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
       <UserForm
         user={user}
         onImgUpload={handleUploadImg}
-        imageGet={imageGet}
         onDocsUpload={handleUploadDocs}
         onDocDelete={handleDeleteDoc}
         documentsGet={documentsGet}

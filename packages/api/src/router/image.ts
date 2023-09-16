@@ -27,27 +27,15 @@ export const imageRouter = router({
       if (!ext || (ext != "png" && ext != "jpeg"))
         throw new TRPCError({ code: "BAD_REQUEST" });
 
+      // TODO
       if (input.userId) {
         const userId = getId({ ctx: ctx, userId: input.userId });
 
         const user = await ctx.prisma.user.findUnique({
           where: { id: userId },
-          include: { images: true },
         });
         if (!user) throw new TRPCError({ code: "NOT_FOUND" });
 
-        if (user.images[0]) {
-          const updated = await ctx.prisma.image.update({
-            where: { id: user.images[0].id },
-            data: { ext: ext },
-          });
-          if (!updated) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
-        } else {
-          const created = await ctx.prisma.image.create({
-            data: { id: id, userId, ext: ext },
-          });
-          if (!created) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
-        }
         const key = `users/${userId}/image/profilePicture.${ext}`;
         const bucketParams = {
           Bucket: "leaceawsbucket",
@@ -76,27 +64,6 @@ export const imageRouter = router({
 
         return await getSignedUrl(ctx.s3Client, command);
       }
-    }),
-  getSignedUserUrl: protectedProcedure([Role.TENANT, Role.AGENCY, Role.OWNER])
-    .input(z.object({ userId: z.string() }))
-    .query(async ({ ctx, input }) => {
-      const user = await ctx.prisma.user.findUnique({
-        where: { id: input.userId },
-      });
-      if (!user) throw new TRPCError({ code: "NOT_FOUND" });
-
-      const image = await ctx.prisma.image.findFirst({
-        where: { userId: user.id },
-      });
-      if (!image) return null;
-
-      const bucketParams = {
-        Bucket: "leaceawsbucket",
-        Key: `users/${user.id}/image/profilePicture.${image.ext}`,
-      };
-      const command = new GetObjectCommand(bucketParams);
-      const url = await getSignedUrl(ctx.s3Client, command);
-      return { ...image, url };
     }),
   getSignedPostUrl: protectedProcedure([
     Role.TENANT,

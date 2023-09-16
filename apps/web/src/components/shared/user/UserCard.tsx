@@ -3,7 +3,7 @@ import Link from "next/link";
 import { displayDate } from "../../../utils/displayDate";
 import { DisplayReports } from "../../moderation/report/DisplayReports";
 import { DocumentList } from "../document/DocumentList";
-import { User, Attribute, Report, Image, Document } from "@prisma/client";
+import { User, Attribute, Report, Document } from "@prisma/client";
 import { Button } from "../button/Button";
 import { DialogButton } from "../button/DialogButton";
 
@@ -14,7 +14,6 @@ export interface UserCardProps {
   };
   isBanned: boolean | undefined;
   onUserDelete?: () => Promise<void>;
-  image: (Image & { url: string }) | null | undefined;
   documents: (Document & { url: string })[] | null | undefined;
   onDocValidation?: (document: Document & { url: string }) => Promise<void>;
   updateLink?: string;
@@ -26,7 +25,6 @@ export const UserCard = ({
   user,
   isBanned,
   onUserDelete,
-  image,
   documents,
   onDocValidation,
   updateLink,
@@ -37,7 +35,7 @@ export const UserCard = ({
     <div className="flex w-full flex-col overflow-auto rounded-lg bg-white p-8 shadow">
       <div className="flex justify-center">
         <img
-          src={user.image || (image && image.url) || "/defaultImage.png"}
+          src={user.image || "/defaultImage.png"}
           referrerPolicy="no-referrer"
           alt="image"
           className="mx-auto h-32 rounded-full shadow-xl"

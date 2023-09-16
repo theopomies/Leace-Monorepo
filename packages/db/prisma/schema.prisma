@@ -80,7 +80,6 @@ model User {
   seenBy     Post[] @relation("users_seen")
   toBeSeenBy Post[] @relation("users_to_be_seen")
 
-  images        Image[]
   documents     Document[]
   relationships Relationship[]
   messages      Message[]
@@ -264,16 +263,12 @@ model Image {
 
   ext String
 
-  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId String?
-
   post   Post?   @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([userId])
   @@index([postId])
   @@map("pictures")
 }

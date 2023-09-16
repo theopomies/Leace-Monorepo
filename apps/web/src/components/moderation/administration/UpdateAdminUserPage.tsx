@@ -10,15 +10,13 @@ import { cropImage } from "../../../utils/cropImage";
 
 export function UpdateAdminUserPage({ userId }: { userId: string }) {
   const router = useRouter();
-  const { data: user } = trpc.moderation.user.getUser.useQuery({ userId });
+  const { data: user, refetch: refetchUser } =
+    trpc.moderation.user.getUser.useQuery({ userId });
   const updateUser = trpc.user.updateUserById.useMutation();
 
   const updateAttributes = trpc.attribute.updateUserAttributes.useMutation();
 
-  const { data: imageGet, refetch: refetchImageGet } =
-    trpc.moderation.image.getSignedUserUrl.useQuery({ userId });
   const uploadImage = trpc.moderation.image.putSignedUrl.useMutation();
-  const deleteImage = trpc.moderation.image.deleteSignedUrl.useMutation();
 
   const { data: documentsGet, refetch: refetchDocumentsGet } =
     trpc.moderation.document.getSignedUrl.useQuery({ userId });
@@ -56,6 +54,7 @@ export function UpdateAdminUserPage({ userId }: { userId: string }) {
     router.push(`administration/users/${userId}`);
   };
 
+  // TODO: Upload Image USER (Same as UpdateUserPage.tsx)
   const handleUploadImg = async (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
@@ -68,20 +67,14 @@ export function UpdateAdminUserPage({ userId }: { userId: string }) {
           .then(async (url) => {
             if (url && event.target.files) {
               await axios.put(url, croppedBlob);
-              refetchImageGet();
+              await updateUser.mutateAsync({
+                userId,
+                image: url,
+              });
+              refetchUser();
             }
           });
       });
-    }
-  };
-
-  const handleDeleteImg = async () => {
-    if (imageGet) {
-      await deleteImage
-        .mutateAsync({ userId, imageId: imageGet.id })
-        .then(() => {
-          refetchImageGet();
-        });
     }
   };
 
@@ -118,8 +111,6 @@ export function UpdateAdminUserPage({ userId }: { userId: string }) {
       <UserForm
         user={user}
         onImgUpload={handleUploadImg}
-        onImgDelete={handleDeleteImg}
-        imageGet={imageGet}
         onDocsUpload={handleUploadDocs}
         onDocDelete={handleDeleteDoc}
         documentsGet={documentsGet}

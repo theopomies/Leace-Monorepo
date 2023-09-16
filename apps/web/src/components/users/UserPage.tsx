@@ -18,28 +18,14 @@ export const UserPage = ({ userId }: UserPageProps) => {
   const { data: user, isLoading: userLoading } = trpc.user.getUserById.useQuery(
     { userId },
   );
-  const { data: image, isLoading: imageLoading } =
-    trpc.image.getSignedUserUrl.useQuery({ userId });
   const { data: documents, isLoading: documentsLoading } =
     trpc.document.getSignedUrl.useQuery({ userId });
 
   const deleteUser = trpc.user.deleteUserById.useMutation();
 
   const isLoading = useMemo(() => {
-    return (
-      sessionLoading ||
-      isBannedLoading ||
-      userLoading ||
-      imageLoading ||
-      documentsLoading
-    );
-  }, [
-    sessionLoading,
-    isBannedLoading,
-    userLoading,
-    imageLoading,
-    documentsLoading,
-  ]);
+    return sessionLoading || isBannedLoading || userLoading || documentsLoading;
+  }, [sessionLoading, isBannedLoading, userLoading, documentsLoading]);
 
   if (isLoading) {
     return <Loader />;
@@ -64,7 +50,6 @@ export const UserPage = ({ userId }: UserPageProps) => {
         user={user}
         isBanned={isBanned}
         onUserDelete={handleDeleteUser}
-        image={image}
         documents={documents}
         updateLink="/users/[userId]/update"
         isLoggedIn={userId === session.userId}
