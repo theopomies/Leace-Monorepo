@@ -90,6 +90,8 @@ model User {
 
   LeaseCreated Lease[]
 
+  reviewsCreated Review[]
+
   reports        Report[] @relation("reported")
   reportsCreated Report[] @relation("reports_created")
 
@@ -112,6 +114,8 @@ model Post {
   content String?
   desc    String?   @db.Text
   type    PostType? @default(TO_BE_RENTED)
+  like Int?
+  reviews  Review[]
 
   attribute Attribute?
 
@@ -376,5 +380,22 @@ model Lease {
   createdById String
 
   @@index([relationshipId])
+  @@index([createdById])
+}
+
+model Review {
+  id String @id @default(cuid())
+  
+  comment String?
+  stars Int?
+
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId String
+
+  createdBy   User   @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  createdById String
+
+
+  @@index([postId])
   @@index([createdById])
 }
