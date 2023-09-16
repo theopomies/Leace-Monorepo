@@ -101,7 +101,7 @@ const PaymentView = (props) => {
       }
       
       .submit {
-        background-color: #60A5FACC; /* Darker background color for the front side of the card */
+        background-color: #60A5FACC;
         color: white
       }
 

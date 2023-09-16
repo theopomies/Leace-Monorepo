@@ -49,7 +49,7 @@ const Tenant = ({
         options={{
           tabBarIcon: ({ focused }) => (
             <Icon
-              name={focused ? "star-four-points" : "star-four-points-outline"}
+              name={focused ? "account-heart" : "account-heart-outline"}
               type="material-community"
             />
           ),

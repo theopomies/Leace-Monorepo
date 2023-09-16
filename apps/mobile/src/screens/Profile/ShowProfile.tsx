@@ -60,9 +60,27 @@ export default function ShowProfile() {
           showAttrs={data.role === "TENANT" ? true : false}
         />
       </View>
+      <SignOut />
     </SafeAreaView>
   );
 }
+
+import { useAuth } from "@clerk/clerk-expo";
+import { Button } from "react-native-elements";
+
+const SignOut = () => {
+  const { signOut } = useAuth();
+  return (
+    <View>
+      <Button
+        title="Sign Out"
+        onPress={() => {
+          signOut();
+        }}
+      />
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
