@@ -14,26 +14,30 @@ export default function Btn({
   iconName,
   iconType,
   bgColor = "#002642",
+  className,
 }: {
-  title: string;
+  title?: string;
   onPress?: ((event: GestureResponderEvent) => void) | undefined;
   textColor?: string;
   iconName?: string;
   iconType?: string;
   bgColor?: string;
+  className?: string;
 }) {
   return (
     <TouchableOpacity
-      className={`flex flex-row items-center justify-center rounded-lg p-2.5`}
+      className={`flex flex-row items-center justify-center rounded-lg p-2.5 ${className}`}
       onPress={onPress}
       style={{ backgroundColor: bgColor }}
     >
       {iconName && iconType && (
         <Icon size={20} name={iconName} type={iconType} color={"white"}></Icon>
       )}
-      <Text className="font-bold" style={{ color: textColor }}>
-        {title}
-      </Text>
+      {title && (
+        <Text className="font-bold" style={{ color: textColor }}>
+          {title}
+        </Text>
+      )}
     </TouchableOpacity>
   );
 }

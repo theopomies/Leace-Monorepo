@@ -8,6 +8,7 @@ import { useAuth } from "@clerk/clerk-expo";
 import { Btn } from "../components/Btn";
 import Loading from "../components/Loading";
 import Role from "../screens/Role";
+import { Lease } from "@leace/db";
 
 export type TabStackParamList = {
   Role: undefined;
@@ -64,6 +65,8 @@ export type TabStackParamList = {
     ownerId: string;
     conversationId: string;
     userId: string;
+    lease: Lease | null;
+    relationshipId: string;
   };
 };
 

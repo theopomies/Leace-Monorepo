@@ -104,7 +104,7 @@ const Provider = ({ userId }: { userId: string }) => {
         options={{
           tabBarIcon: ({ focused }) => (
             <Icon
-              name={focused ? "star-four-points" : "star-four-points-outline"}
+              name={focused ? "account-multiple" : "account-multiple-outline"}
               type="material-community"
             />
           ),

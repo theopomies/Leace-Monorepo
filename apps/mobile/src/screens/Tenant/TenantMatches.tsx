@@ -10,7 +10,12 @@ import {
   Image,
 } from "react-native";
 import React from "react";
-import { RouteProp, useRoute, useNavigation } from "@react-navigation/native";
+import {
+  RouteProp,
+  useRoute,
+  useNavigation,
+  useFocusEffect,
+} from "@react-navigation/native";
 import Header from "../../components/Header";
 import { trpc } from "../../utils/trpc";
 import Loading from "../../components/Loading";
@@ -42,11 +47,13 @@ function MatchCard({ data, tenantId, ownerId, role, userId }: IMatchCard) {
       className="mt-3 flex min-h-[100px] flex-row rounded-md bg-[#10316B] p-2"
       onPress={() =>
         navigation.navigate("ChatTenant", {
+          relationshipId: data.id,
           tenantId,
           ownerId,
           role,
           conversationId: data.conversation?.id ?? "",
           userId,
+          lease: data.lease,
         })
       }
     >
@@ -119,6 +126,12 @@ export default function TenantMatches() {
         </View>
       </View>
     );
+
+  /*useFocusEffect(
+    React.useCallback(() => {
+      if (data) refetch();
+    }, [userId]),
+  );*/
 
   return (
     <SafeAreaView style={styles.container}>
