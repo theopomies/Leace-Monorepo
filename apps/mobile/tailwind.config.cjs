@@ -10,6 +10,7 @@ module.exports = {
       }),
       colors: {
         custom: "#002642",
+        navy: "#10316B",
       },
     },
   },

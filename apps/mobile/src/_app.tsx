@@ -8,7 +8,7 @@ import RootNavigator from "./navigation/RootNavigator";
 import { tokenCache } from "./utils/cache";
 import AuthScreen from "./screens/auth";
 
-// LogBox.ignoreAllLogs(); //Ignore all log notifications
+LogBox.ignoreAllLogs(); //Ignore all log notifications
 
 export const App = () => {
   return (
