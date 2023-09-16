@@ -82,6 +82,7 @@ export const userRouter = router({
         phoneNumber: z.string().optional(),
         description: z.string().optional(),
         birthDate: z.date().optional(),
+        isPremium: z.boolean().optional(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
@@ -110,6 +111,7 @@ export const userRouter = router({
             phoneNumber: input.phoneNumber,
             description: input.description,
             birthDate,
+            isPremium: true,
             status: UserStatus.ACTIVE,
           },
         });
@@ -123,6 +125,7 @@ export const userRouter = router({
           lastName: input.lastName,
           phoneNumber: input.phoneNumber,
           description: input.description,
+          isPremium: true,
         },
       });
 

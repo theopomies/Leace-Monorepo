@@ -42,12 +42,14 @@ export default function PostCard({ data, userId }: IPostCard) {
       </View>
       <View className="flex-1 justify-between pl-2">
         <Text className="font-bold text-white">{data.title}</Text>
+        <Text className="font-bold text-white">{data.desc}</Text>
         <View>
           <Text className="font-light text-white">
             Price: {data.attribute?.price} €
           </Text>
           <Text className="font-light text-white">
-            Type: {data.attribute?.homeType}
+            Type:{" "}
+            {data.attribute?.homeType === "APARTMENT" ? "Apartment" : "House"}
           </Text>
           <Text className="font-light text-white">
             Status:{" "}

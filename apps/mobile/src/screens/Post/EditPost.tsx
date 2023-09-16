@@ -52,7 +52,7 @@ export default function EditPost() {
 
   useFocusEffect(
     useCallback(() => {
-      let parsed = JSON.parse(data);
+      const parsed = JSON.parse(data);
       const { id, desc, title, content, attribute } = parsed;
       setPostInfo({ postId: id, desc, title, content });
       setPostAttrs({

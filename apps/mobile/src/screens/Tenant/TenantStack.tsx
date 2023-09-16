@@ -160,7 +160,9 @@ export default function TenantStack() {
                         Type:
                       </Text>
                       <Text className="font-light text-white">
-                        {post.attribute?.homeType}
+                        {post.attribute?.homeType === "APARTMENT"
+                          ? "Apartment"
+                          : "House"}
                       </Text>
                     </View>
                     <View className="flex flex-row">

@@ -1,5 +1,5 @@
 import React from "react";
-import { TouchableOpacity, View } from "react-native";
+import { TouchableOpacity } from "react-native";
 import { Icon } from "react-native-elements";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -10,12 +10,17 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { EditProfile, ShowProfile } from "../../screens/Profile";
 import ProviderStack from "../../screens/Provider/ProviderStack";
-import { TenantMatches } from "../../screens/Tenant";
-import { TenantChat } from "../../screens/Chat";
+import { OwnerLikes, OffersList, Result, Details } from "../../screens/Premium";
 
 const Tab = createBottomTabNavigator<TabStackParamList>();
 
-const Provider = ({ userId }: { userId: string }) => {
+const Provider = ({
+  userId,
+  isPremium,
+}: {
+  userId: string;
+  isPremium: boolean;
+}) => {
   const navigation =
     useNavigation<NativeStackNavigationProp<TabStackParamList>>();
 
@@ -98,45 +103,52 @@ const Provider = ({ userId }: { userId: string }) => {
         }}
       />
       <Tab.Screen
-        name="MatchTenant"
-        component={TenantMatches}
-        initialParams={{ userId, role: "OWNER" }}
+        name="Premium"
         options={{
           tabBarIcon: ({ focused }) => (
             <Icon
-              name={focused ? "account-multiple" : "account-multiple-outline"}
+              name={focused ? "star-four-points" : "star-four-points-outline"}
               type="material-community"
             />
           ),
           tabBarLabel: "",
           headerShown: false,
         }}
-      />
+      >
+        {() => (isPremium ? <OwnerLikes /> : <OffersList />)}
+      </Tab.Screen>
+
       <Tab.Screen
-        name="ChatTenant"
-        component={TenantChat}
+        name="Likes"
         options={{
-          tabBarStyle: { display: "none" },
-          headerShown: true,
-          title: "Chat",
           tabBarButton: () => null,
-          headerLeft: () => (
-            <TouchableOpacity
-              className="ml-4"
-              onPress={() =>
-                navigation.navigate("MatchTenant", { userId, role: "OWNER" })
-              }
-            >
-              <Icon
-                name="arrow-back"
-                color="#10316B"
-                size={30}
-                type="material-icons"
-              ></Icon>
-            </TouchableOpacity>
-          ),
+          tabBarLabel: "",
+          headerShown: false,
+        }}
+      >
+        {() => <OwnerLikes />}
+      </Tab.Screen>
+
+      <Tab.Screen
+        name="PaymentDetails"
+        component={Details}
+        options={{
+          tabBarButton: () => null,
+          tabBarLabel: "",
+          headerShown: false,
         }}
       />
+
+      <Tab.Screen
+        name="PaymentResults"
+        component={Result}
+        options={{
+          tabBarButton: () => null,
+          tabBarLabel: "",
+          headerShown: false,
+        }}
+      />
+
       <Tab.Screen
         name="Profile"
         component={ShowProfile}

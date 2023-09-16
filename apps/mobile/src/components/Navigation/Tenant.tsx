@@ -3,17 +3,27 @@ import { TouchableOpacity } from "react-native";
 import { Icon } from "react-native-elements";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { TabStackParamList } from "../../navigation/TabNavigator";
-import { UserRoles } from "../../utils/enum";
 import { TenantStack, TenantMatches } from "../../screens/Tenant";
-import Role from "../../screens/Role";
 import { EditProfile, ShowProfile } from "../../screens/Profile";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ShowPost } from "../../screens/Post";
+import {
+  Details,
+  OffersList,
+  Result,
+  TenantLikes,
+} from "../../screens/Premium";
 import { TenantChat } from "../../screens/Chat";
 
 const Tab = createBottomTabNavigator<TabStackParamList>();
-const Tenant = ({ userId }: { userId: string }) => {
+const Tenant = ({
+  userId,
+  isPremium,
+}: {
+  userId: string;
+  isPremium: boolean;
+}) => {
   const navigation =
     useNavigation<NativeStackNavigationProp<TabStackParamList>>();
 
@@ -41,7 +51,7 @@ const Tenant = ({ userId }: { userId: string }) => {
         options={{
           tabBarIcon: ({ focused }) => (
             <Icon
-              name={focused ? "star-four-points" : "star-four-points-outline"}
+              name={focused ? "account-heart" : "account-heart-outline"}
               type="material-community"
             />
           ),
@@ -74,6 +84,52 @@ const Tenant = ({ userId }: { userId: string }) => {
           ),
         }}
       />
+      <Tab.Screen
+        name="Premium"
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <Icon
+              name={focused ? "star-four-points" : "star-four-points-outline"}
+              type="material-community"
+            />
+          ),
+          tabBarLabel: "",
+          headerShown: false,
+        }}
+      >
+        {() => (isPremium ? <TenantLikes /> : <OffersList />)}
+      </Tab.Screen>
+      <Tab.Screen
+        name="Likes"
+        options={{
+          tabBarButton: () => null,
+          tabBarLabel: "",
+          headerShown: false,
+        }}
+      >
+        {() => <TenantLikes />}
+      </Tab.Screen>
+
+      <Tab.Screen
+        name="PaymentDetails"
+        component={Details}
+        options={{
+          tabBarButton: () => null,
+          tabBarLabel: "",
+          headerShown: false,
+        }}
+      />
+
+      <Tab.Screen
+        name="PaymentResults"
+        component={Result}
+        options={{
+          tabBarButton: () => null,
+          tabBarLabel: "",
+          headerShown: false,
+        }}
+      />
+
       <Tab.Screen
         name="Profile"
         component={ShowProfile}
