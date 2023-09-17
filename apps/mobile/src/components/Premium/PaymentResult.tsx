@@ -96,7 +96,6 @@ const PaymentResult = ({
             </View>
           </View>
         ) : (
-          // Render the "Payment failed!" message and buttons if the payment failed
           <View className="my-4 w-full max-w-md rounded bg-white p-6 shadow-lg">
             <View className={"items-center justify-center"}>
               <View
@@ -126,7 +125,6 @@ const PaymentResult = ({
                 <Text className="text-base">
                   - Expired or invalid card details
                 </Text>
-                {/* Add more possible reasons here as needed */}
               </View>
               <View className="mt-4 flex-row space-x-20">
                 <TouchableOpacity

@@ -9,6 +9,7 @@ import {
 import React from "react";
 
 import { trpc } from "../../../../web/src/utils/trpc";
+import { Btn } from "../../components/Btn";
 
 const ClientCard = ({
   firstName,
@@ -97,32 +98,59 @@ const TenantLikes = () => {
     });
   };
 
+  const { data: user } = trpc.user.getUserById.useQuery({
+    userId: session?.userId as string,
+  });
+
+  const updateUser = trpc.user.updateUserById.useMutation();
+
+  const updateStatus = async () => {
+    updateUser.mutateAsync({
+      isPremium: false,
+      userId: user?.id as string,
+    });
+  };
+
   return (
-    <ScrollView className="mx-5 mt-20" showsVerticalScrollIndicator={false}>
-      <View>
-        {rs.data?.relationship && rs.data.relationship.length > 0 ? (
-          rs.data.relationship.map((item) => (
-            <View key={item.id} className="mb-2 items-center">
-              <ClientCard
-                firstName={item.post.title}
-                lastName={item.post.desc}
-                onDislike={() => deleteClient(item.postId, item.userId)}
-                onLike={() => acceptClient(item.postId, item.userId)}
-                image={
-                  "https://www.livehome3d.com/assets/img/social/how-to-design-a-house.jpg"
-                }
-              />
-            </View>
-          ))
-        ) : (
-          <View className="bottom-80 left-0 right-0 top-80 items-center justify-center">
-            <Text className="items-center justify-center text-center text-3xl font-bold">
-              No one liked your post (Tenant)
-            </Text>
-          </View>
-        )}
+    <>
+      <View className="mt-20 items-center justify-center px-3 pb-2">
+        <Text className="mb-2 text-xl font-semibold">
+          You are now a premium member, to cancel this subscription click on
+          here
+        </Text>
+        <Btn
+          title="Cancel"
+          className="w-20 p-2"
+          bgColor="#EF4444"
+          onPress={updateStatus}
+        />
       </View>
-    </ScrollView>
+      <ScrollView className="mx-5 mt-20" showsVerticalScrollIndicator={false}>
+        <View>
+          {rs.data?.relationship && rs.data.relationship.length > 0 ? (
+            rs.data.relationship.map((item) => (
+              <View key={item.id} className="mb-2 items-center">
+                <ClientCard
+                  firstName={item.post.title}
+                  lastName={item.post.desc}
+                  onDislike={() => deleteClient(item.postId, item.userId)}
+                  onLike={() => acceptClient(item.postId, item.userId)}
+                  image={
+                    "https://www.livehome3d.com/assets/img/social/how-to-design-a-house.jpg"
+                  }
+                />
+              </View>
+            ))
+          ) : (
+            <View className="bottom-80 left-0 right-0 top-80 items-center justify-center">
+              <Text className="items-center justify-center text-center text-3xl font-bold">
+                No one liked your post (Tenant)
+              </Text>
+            </View>
+          )}
+        </View>
+      </ScrollView>
+    </>
   );
 };
 

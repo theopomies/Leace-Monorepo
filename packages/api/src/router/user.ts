@@ -111,7 +111,7 @@ export const userRouter = router({
             phoneNumber: input.phoneNumber,
             description: input.description,
             birthDate,
-            isPremium: true,
+            isPremium: input.isPremium,
             status: UserStatus.ACTIVE,
           },
         });
@@ -125,7 +125,7 @@ export const userRouter = router({
           lastName: input.lastName,
           phoneNumber: input.phoneNumber,
           description: input.description,
-          isPremium: true,
+          isPremium: input.isPremium,
         },
       });
 
