@@ -11,6 +11,8 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { EditProfile, ShowProfile } from "../../screens/Profile";
 import ProviderStack from "../../screens/Provider/ProviderStack";
 import { OwnerLikes, OffersList, Result, Details } from "../../screens/Premium";
+import { TenantChat } from "../../screens/Chat";
+import { TenantMatches } from "../../screens/Tenant";
 
 const Tab = createBottomTabNavigator<TabStackParamList>();
 
@@ -163,6 +165,46 @@ const Provider = ({
           ),
           tabBarLabel: "",
           headerShown: false,
+        }}
+      />
+      <Tab.Screen
+        name="MatchTenant"
+        component={TenantMatches}
+        initialParams={{ userId, role: "OWNER" }}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <Icon
+              name={focused ? "account-multiple" : "account-multiple-outline"}
+              type="material-community"
+            />
+          ),
+          tabBarLabel: "",
+          headerShown: false,
+        }}
+      />
+      <Tab.Screen
+        name="ChatTenant"
+        component={TenantChat}
+        options={{
+          tabBarStyle: { display: "none" },
+          headerShown: true,
+          title: "Chat",
+          tabBarButton: () => null,
+          headerLeft: () => (
+            <TouchableOpacity
+              className="ml-4"
+              onPress={() =>
+                navigation.navigate("MatchTenant", { userId, role: "OWNER" })
+              }
+            >
+              <Icon
+                name="arrow-back"
+                color="#10316B"
+                size={30}
+                type="material-icons"
+              ></Icon>
+            </TouchableOpacity>
+          ),
         }}
       />
       <Tab.Screen
