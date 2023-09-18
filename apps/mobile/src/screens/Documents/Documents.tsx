@@ -19,7 +19,6 @@ import { useRoute, RouteProp } from "@react-navigation/native";
 import { TabStackParamList } from "../../navigation/TabNavigator";
 import Loading from "../../components/Loading";
 import Header from "../../components/Header";
-import { Icon } from "react-native-elements";
 
 export default function Documents() {
   const route = useRoute<RouteProp<TabStackParamList, "Profile">>();

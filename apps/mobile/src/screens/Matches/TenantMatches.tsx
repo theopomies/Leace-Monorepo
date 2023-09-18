@@ -22,6 +22,7 @@ import Loading from "../../components/Loading";
 import { Relationship, User, Post, Lease, Conversation } from "@prisma/client";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { TabStackParamList } from "../../navigation/TabNavigator";
+import { Btn } from "../../components/Btn";
 
 interface IMatchCard {
   data: Relationship & {
@@ -36,15 +37,23 @@ interface IMatchCard {
   ownerId: string;
   role: "TENANT" | "OWNER" | "AGENCY";
   userId: string;
+  handleMatch: (id: string) => void;
 }
 
-function MatchCard({ data, tenantId, ownerId, role, userId }: IMatchCard) {
+function MatchCard({
+  data,
+  tenantId,
+  ownerId,
+  role,
+  userId,
+  handleMatch,
+}: IMatchCard) {
   const navigation =
     useNavigation<NativeStackNavigationProp<TabStackParamList>>();
 
   return (
     <TouchableOpacity
-      className="mt-3 flex min-h-[100px] flex-row rounded-md bg-[#10316B] p-2"
+      className="relative mt-3 flex min-h-[100px] flex-row rounded-md bg-[#10316B] p-2"
       onPress={() =>
         navigation.navigate("ChatTenant", {
           relationshipId: data.id,
@@ -57,6 +66,13 @@ function MatchCard({ data, tenantId, ownerId, role, userId }: IMatchCard) {
         })
       }
     >
+      <Btn
+        className="absolute right-0 top-0 z-10 rounded-md rounded-br-none rounded-tl-none"
+        bgColor="#ef4444"
+        iconName="delete"
+        iconType="material"
+        onPress={() => handleMatch(data.id)}
+      />
       <Image
         className="h-24 w-24 rounded-full"
         style={{ borderWidth: 2, borderColor: "white" }}
@@ -109,6 +125,17 @@ export default function TenantMatches() {
       ? trpc.relationship.getMatchesForTenant.useQuery({ userId })
       : trpc.relationship.getMatchesForOwner.useQuery({ userId });
 
+  const deleteMatch =
+    role === "TENANT"
+      ? trpc.relationship.deleteRelationForTenant.useMutation()
+      : trpc.relationship.deleteRelationForOwner.useMutation();
+
+  async function handleMatch(id: string) {
+    await deleteMatch
+      .mutateAsync({ userId, relationshipId: id })
+      .then(() => refetch());
+  }
+
   if (isLoading)
     return (
       <View style={styles.container}>
@@ -151,6 +178,7 @@ export default function TenantMatches() {
                   ownerId={match.post.createdById}
                   role={role}
                   userId={userId}
+                  handleMatch={handleMatch}
                 />
               ))}
             </ScrollView>
