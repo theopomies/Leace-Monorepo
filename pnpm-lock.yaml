@@ -92,6 +92,9 @@ importers:
       '@trpc/server':
         specifier: ^10.26.0
         version: 10.26.0
+      axios:
+        specifier: ^1.2.4
+        version: 1.2.4
       bottom-tabs:
         specifier: link:@react/navigation/bottom-tabs
         version: link:@react/navigation/bottom-tabs
@@ -104,6 +107,9 @@ importers:
       expo-auth-session:
         specifier: ^4.0.3
         version: 4.0.3(expo@47.0.14)
+      expo-document-picker:
+        specifier: ^11.7.0
+        version: 11.7.0(expo@47.0.14)
       expo-secure-store:
         specifier: ^12.1.1
         version: 12.1.1(expo@47.0.14)
@@ -2855,6 +2861,7 @@ packages:
 
   /@emotion/memoize@0.7.4:
     resolution: {integrity: sha512-Ja/Vfqe3HpuzRsG1oBtWTHk2PGZ7GR+2Vz5iYGelAw8dx32K0y7PjVuxK6z1nMpZOqAFsRUPCkK1YjJ56qJlgw==}
+    requiresBuild: true
     dev: false
     optional: true
 
@@ -7868,6 +7875,14 @@ packages:
       expo: 47.0.14(@babel/core@7.21.8)
     dev: false
 
+  /expo-document-picker@11.7.0(expo@47.0.14):
+    resolution: {integrity: sha512-y5OgUuJlip/Vj3CXi6Rfx6PqMkoYwytKmgN6x8afRPehVcYVk3j/EZxvz1MLgUhCmjyFnIpfgG5WTf8uSNbIiA==}
+    peerDependencies:
+      expo: '*'
+    dependencies:
+      expo: 47.0.14(@babel/core@7.21.8)
+    dev: false
+
   /expo-error-recovery@4.0.1(expo@47.0.14):
     resolution: {integrity: sha512-wceptnRX+N3qCSVTNbIchUFu3GmY30onRH5L66OF8HMLpAIQfrZMLxJfz7SAMJTcr3jxsJ11vSa2l2RaPKgHsQ==}
     requiresBuild: true
@@ -8488,6 +8503,7 @@ packages:
 
   /glob@6.0.4:
     resolution: {integrity: sha512-MKZeRNyYZAVVVG1oZeLaWie1uweH40m9AZwIwxyPbTSX4hHrVYSzLg0Ro5Z5R7XKkIX+Cc6oD1rqeDJnwsB8/A==}
+    requiresBuild: true
     dependencies:
       inflight: 1.0.6
       inherits: 2.0.4
@@ -10363,6 +10379,7 @@ packages:
   /ncp@2.0.0:
     resolution: {integrity: sha512-zIdGUrPRFTUELUvr3Gmc7KZ2Sw/h1PiVM0Af/oHB6zgnV1ikqSfRk+TOufi79aHYCW3NiOXmr1BP5nWbzojLaA==}
     hasBin: true
+    requiresBuild: true
     dev: false
     optional: true
 
@@ -12042,6 +12059,7 @@ packages:
   /rimraf@2.4.5:
     resolution: {integrity: sha512-J5xnxTyqaiw06JjMftq7L9ouA448dw/E7dKghkP9WpKNuwmARNNg+Gk8/u5ryb9N/Yo2+z3MCwuqFK/+qPOPfQ==}
     hasBin: true
+    requiresBuild: true
     dependencies:
       glob: 6.0.4
     dev: false

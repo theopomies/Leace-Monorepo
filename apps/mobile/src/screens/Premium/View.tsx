@@ -4,10 +4,10 @@ import { WebView } from "react-native-webview";
 const STRIPE_PK =
   "pk_test_51NNNqUKqsAbQAwatETMGlUoLBiwWN5ZP27fCOs3YQbC76Sk5FNHN3xpdyrdD2gGIfTFFho7F5a8x8RCw8rWJXYb800BBEbzKLo";
 
-const PaymentView = (props) => {
+const PaymentView = (props: any) => {
   const { amount, product } = props;
 
-  const onCheckStatus = (response) => {
+  const onCheckStatus = (response: any) => {
     props.onCheckStatus(response);
   };
 
@@ -385,7 +385,7 @@ const PaymentView = (props) => {
         };
     })()`;
 
-  const onMessage = (event) => {
+  const onMessage = (event: any) => {
     const { data } = event.nativeEvent;
     onCheckStatus(data);
   };

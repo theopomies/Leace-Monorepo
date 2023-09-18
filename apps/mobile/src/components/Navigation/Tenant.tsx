@@ -3,7 +3,8 @@ import { TouchableOpacity } from "react-native";
 import { Icon } from "react-native-elements";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { TabStackParamList } from "../../navigation/TabNavigator";
-import { TenantStack, TenantMatches } from "../../screens/Tenant";
+import { TenantStack } from "../../screens/Stack";
+import { TenantMatches } from "../../screens/Matches";
 import { EditProfile, ShowProfile } from "../../screens/Profile";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -28,7 +29,7 @@ const Tenant = ({
     useNavigation<NativeStackNavigationProp<TabStackParamList>>();
 
   return (
-    <Tab.Navigator>
+    <Tab.Navigator initialRouteName="Profile">
       <Tab.Screen
         name="Stack"
         component={TenantStack}

@@ -11,32 +11,11 @@ import Role from "../screens/Role";
 import { Lease } from "@leace/db";
 
 export type TabStackParamList = {
-  Role: undefined;
   Profile: { userId: string };
   Stack: { userId: string };
   MatchTenant: { userId: string; role: "TENANT" | "OWNER" | "AGENCY" };
-  MatchOwner: { userId: string; role: "TENANT" | "OWNER" | "AGENCY" };
-  Dashboard: { userId: string };
-
-  Notifications: undefined;
-
-  MatchChat: { id: string };
 
   CreatePost: { userId: string };
-  CreatePostAttributes: { postId: string; userId: string };
-  ViewPost: { userId: string };
-  PostDetails: { postId: string; userId: string };
-
-  Expenses: { userId: string };
-  Income: { userId: string };
-  Clients: { userId: string };
-  Occupied: { userId: string };
-  Available: { userId: string };
-  Chat: { userId: string };
-  Portal: { userId: string; relationshipId: string; leaseId: string };
-
-  Lease: { userId: string; relationshipId: string };
-  UpdateLease: { userId: string; relationshipId: string; leaseId: string };
 
   Premium: undefined;
   Likes: undefined;
@@ -82,6 +61,8 @@ export type TabStackParamList = {
     lease: Lease | null;
     relationshipId: string;
   };
+
+  Documents: { userId: string };
 };
 
 const TabNavigator = () => {
