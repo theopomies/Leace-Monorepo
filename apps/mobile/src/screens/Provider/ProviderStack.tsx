@@ -145,7 +145,15 @@ export default function ProviderStack() {
     if (idx < (users?.length ?? 0) - 1) {
       setCurrentUserIndex((prevIndex) => prevIndex + 1);
 
-      setPost([users[idx + 1]]);
+      const filteredUsers = users[idx + 1]
+        ? [users[idx + 1]].filter(Boolean)
+        : undefined;
+
+      if (filteredUsers && filteredUsers.length > 0) {
+        setPost(filteredUsers as User[]);
+      } else {
+        setPost(undefined);
+      }
       setIdx(() => idx + 1);
     }
   }
