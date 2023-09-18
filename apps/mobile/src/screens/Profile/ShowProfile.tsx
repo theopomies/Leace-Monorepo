@@ -51,6 +51,7 @@ export default function ShowProfile() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar barStyle={"dark-content"} />
       <View style={styles.view}>
         <Header />
         <UserProfile

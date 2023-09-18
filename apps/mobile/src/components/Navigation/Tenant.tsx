@@ -3,7 +3,8 @@ import { TouchableOpacity } from "react-native";
 import { Icon } from "react-native-elements";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { TabStackParamList } from "../../navigation/TabNavigator";
-import { TenantStack, TenantMatches } from "../../screens/Tenant";
+import { TenantStack } from "../../screens/Stack";
+import { TenantMatches } from "../../screens/Matches";
 import { EditProfile, ShowProfile } from "../../screens/Profile";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -15,6 +16,7 @@ import {
   TenantLikes,
 } from "../../screens/Premium";
 import { TenantChat } from "../../screens/Chat";
+import { Documents } from "../../screens/Documents";
 
 const Tab = createBottomTabNavigator<TabStackParamList>();
 const Tenant = ({
@@ -28,7 +30,7 @@ const Tenant = ({
     useNavigation<NativeStackNavigationProp<TabStackParamList>>();
 
   return (
-    <Tab.Navigator>
+    <Tab.Navigator initialRouteName="Profile">
       <Tab.Screen
         name="Stack"
         component={TenantStack}
@@ -194,6 +196,18 @@ const Tenant = ({
               ></Icon>
             </TouchableOpacity>
           ),
+        }}
+      />
+      <Tab.Screen
+        name="Documents"
+        component={Documents}
+        initialParams={{ userId }}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <Icon name="description" type="material" />
+          ),
+          tabBarLabel: "",
+          headerShown: false,
         }}
       />
     </Tab.Navigator>
