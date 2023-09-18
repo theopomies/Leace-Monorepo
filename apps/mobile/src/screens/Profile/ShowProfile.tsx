@@ -58,6 +58,7 @@ export default function ShowProfile() {
           data={data}
           editable={true}
           showAttrs={data.role === "TENANT" ? true : false}
+          showLogout={true}
         />
       </View>
     </SafeAreaView>

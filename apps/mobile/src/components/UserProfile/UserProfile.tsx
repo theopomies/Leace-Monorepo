@@ -16,6 +16,7 @@ interface IUserProfile {
   data: User & { attribute: Attribute | null };
   editable?: boolean;
   showAttrs?: boolean;
+  showLogout: boolean;
 }
 
 export default function UserProfile({
@@ -23,6 +24,7 @@ export default function UserProfile({
   data,
   editable = false,
   showAttrs = true,
+  showLogout,
 }: IUserProfile) {
   const navigation =
     useNavigation<NativeStackNavigationProp<TabStackParamList>>();
@@ -131,9 +133,11 @@ export default function UserProfile({
           )}
         </>
       )}
-      <View className="px-3 pb-2">
-        <Btn title="Log out" bgColor="#EF4444" onPress={() => signOut()} />
-      </View>
+      {showLogout && (
+        <View className="px-3 pb-2">
+          <Btn title="Log out" bgColor="#EF4444" onPress={() => signOut()} />
+        </View>
+      )}
     </View>
   );
 }

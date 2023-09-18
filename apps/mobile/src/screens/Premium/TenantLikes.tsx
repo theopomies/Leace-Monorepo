@@ -5,22 +5,27 @@ import {
   Image,
   TouchableOpacity,
   Alert,
+  StyleSheet,
+  Modal,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 
 import { trpc } from "../../../../web/src/utils/trpc";
 import { Btn } from "../../components/Btn";
+import { UserProfile } from "../../components/UserProfile";
 
 const ClientCard = ({
   firstName,
   lastName,
   image,
+  otherId,
   onDislike,
   onLike,
 }: {
   firstName: string | null;
   lastName: string | null;
   image: string | null;
+  otherId: string;
   onDislike: () => void;
   onLike: () => void;
 }) => {
@@ -45,31 +50,66 @@ const ClientCard = ({
 
   const imageUrl: string | undefined = image ?? undefined;
 
+  const { data: user } = trpc.user.getUserById.useQuery({
+    userId: otherId,
+  });
+
+  const [isModalVisible, setModalVisible] = useState(false);
+
+  const openUserProfile = () => {
+    setModalVisible(true);
+  };
+
+  const closeUserProfile = () => {
+    setModalVisible(false);
+  };
+
   return (
-    <TouchableOpacity
-      className="max-w-400 w-full overflow-hidden rounded-2xl border border-gray-300"
-      onPress={() => {}}
-    >
-      <View className="flex-row items-center p-2">
-        <Image
-          source={{ uri: imageUrl }}
-          className="mr-10 h-20 w-20 rounded-full"
-        />
-        <View className="flex-1">
-          <Text className="text-18 mb-5 font-bold">{firstName}</Text>
-          <Text className="text-18 mb-5 font-bold">{lastName}</Text>
+    <View>
+      <TouchableOpacity
+        className="max-w-400 w-full overflow-hidden rounded-2xl border border-gray-300"
+        onPress={openUserProfile}
+      >
+        <View className="flex-row items-center p-2">
+          <Image
+            source={{ uri: imageUrl }}
+            className="mr-10 h-20 w-20 rounded-full"
+          />
+          <View className="mr-10">
+            <Text className="text-18 mb-5  font-bold">
+              {firstName} {lastName}
+            </Text>
+          </View>
+          <TouchableOpacity onPress={onLike}>
+            <Text
+              style={{ color: "green", fontWeight: "bold", marginRight: 20 }}
+            >
+              Accept
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleDelete}>
+            <Text style={{ color: "red", fontWeight: "bold" }}>Delete</Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity onPress={onLike}>
-          <Text style={{ color: "green", fontWeight: "bold", marginRight: 20 }}>
-            Accept
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleDelete}>
-          <Text style={{ color: "red", fontWeight: "bold" }}>Delete</Text>
-        </TouchableOpacity>
-      </View>
-      <View className="rounded-10 border-1 overflow-hidden border-gray-300" />
-    </TouchableOpacity>
+        <View className="rounded-10 border-1 overflow-hidden border-gray-300" />
+      </TouchableOpacity>
+
+      <Modal
+        visible={isModalVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={closeUserProfile}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            {user && (
+              <UserProfile userId={otherId} data={user} showLogout={false} />
+            )}
+            <Btn title="Close" onPress={closeUserProfile} />
+          </View>
+        </View>
+      </Modal>
+    </View>
   );
 };
 
@@ -114,13 +154,13 @@ const TenantLikes = () => {
   return (
     <>
       <View className="mt-20 items-center justify-center px-3 pb-2">
-        <Text className="mb-2 text-xl font-semibold">
+        <Text className="mb-2 text-center text-xl font-semibold">
           You are now a premium member, to cancel this subscription click on
           here
         </Text>
         <Btn
           title="Cancel"
-          className="w-20 p-2"
+          className="mt-5 w-20 p-2"
           bgColor="#EF4444"
           onPress={updateStatus}
         />
@@ -138,6 +178,7 @@ const TenantLikes = () => {
                   image={
                     "https://www.livehome3d.com/assets/img/social/how-to-design-a-house.jpg"
                   }
+                  otherId={item.userId}
                 />
               </View>
             ))
@@ -155,3 +196,21 @@ const TenantLikes = () => {
 };
 
 export default TenantLikes;
+
+const styles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    width: "100%",
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    width: "100%",
+    height: "90%",
+    backgroundColor: "white",
+    borderRadius: 10,
+    padding: 20,
+  },
+});
