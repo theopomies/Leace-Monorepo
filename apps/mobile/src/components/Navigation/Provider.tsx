@@ -208,22 +208,6 @@ const Provider = ({
         }}
       />
       <Tab.Screen
-        name="Documents"
-        component={Documents}
-        initialParams={{ userId }}
-        options={{
-          tabBarIcon: ({ focused }) => (
-            <Icon
-              name={focused ? "person" : "person-outline"}
-              color="#002642"
-              type="material-icons"
-            />
-          ),
-          tabBarLabel: "",
-          headerShown: false,
-        }}
-      />
-      <Tab.Screen
         name="EditProfile"
         initialParams={{ userId, showAttrs: false }}
         component={EditProfile}
@@ -246,6 +230,18 @@ const Provider = ({
               ></Icon>
             </TouchableOpacity>
           ),
+        }}
+      />
+      <Tab.Screen
+        name="Documents"
+        component={Documents}
+        initialParams={{ userId }}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <Icon name="description" type="material" />
+          ),
+          tabBarLabel: "",
+          headerShown: false,
         }}
       />
     </Tab.Navigator>

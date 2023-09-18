@@ -1,12 +1,13 @@
 import React from "react";
 import {
-  Button,
+  Image,
   View,
   Text,
   Platform,
   SafeAreaView,
   StatusBar,
   StyleSheet,
+  ScrollView,
 } from "react-native";
 import axios from "axios";
 import { Buffer } from "buffer";
@@ -16,11 +17,18 @@ import * as FileSystem from "expo-file-system";
 import * as DocumentPicker from "expo-document-picker";
 import { useRoute, RouteProp } from "@react-navigation/native";
 import { TabStackParamList } from "../../navigation/TabNavigator";
+import Loading from "../../components/Loading";
+import Header from "../../components/Header";
+import { Icon } from "react-native-elements";
 
 export default function Documents() {
   const route = useRoute<RouteProp<TabStackParamList, "Profile">>();
   const { userId } = route.params;
-  const { data: documents, refetch } = trpc.document.getSignedUrl.useQuery({
+  const {
+    data: documents,
+    refetch,
+    isLoading,
+  } = trpc.document.getSignedUrl.useQuery({
     userId,
   });
   const uploadDocument = trpc.document.putSignedUrl.useMutation();
@@ -57,25 +65,66 @@ export default function Documents() {
     }
   };
 
+  if (isLoading)
+    return (
+      <View style={styles.container}>
+        <View style={styles.view}>
+          <Loading />
+        </View>
+      </View>
+    );
+
+  if (!documents)
+    return (
+      <View style={styles.container}>
+        <View style={styles.view}>
+          <Text>Data not found</Text>
+        </View>
+      </View>
+    );
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.view}>
-        <View>
-          <Button title="Pick a Document" onPress={pickDocument} />
-        </View>
-        <View>
+        <Header />
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
           {documents &&
             documents.map((doc, key) => (
-              <View key={key} className="mt-2 px-3">
-                <Text>{doc.url}</Text>
+              <View
+                key={key}
+                className="bg-navy relative mx-3 mt-2 h-36 rounded-md p-2"
+              >
+                <View className="flex h-32 w-32 items-center justify-center">
+                  <Image
+                    className={`${
+                      doc.ext === "pdf" ? " h-20 w-20" : "h-32 w-32"
+                    } rounded-md`}
+                    source={
+                      doc.ext === "pdf"
+                        ? require("../../../assets/pdf-logo.png")
+                        : { uri: doc.url }
+                    }
+                  ></Image>
+                </View>
                 <Btn
-                  title="Delete"
+                  className="absolute right-0 top-0 rounded-md rounded-br-none rounded-tl-none"
+                  bgColor="#ef4444"
+                  iconName="delete"
+                  iconType="material"
                   onPress={() =>
                     deleteDocument.mutate({ userId, documentId: doc.id })
                   }
                 />
               </View>
             ))}
+        </ScrollView>
+        <View>
+          <Btn
+            title="Upload a document"
+            bgColor="#38a169"
+            className="rounded-none"
+            onPress={pickDocument}
+          />
         </View>
       </View>
     </SafeAreaView>

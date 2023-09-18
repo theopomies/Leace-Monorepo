@@ -16,6 +16,7 @@ import {
   TenantLikes,
 } from "../../screens/Premium";
 import { TenantChat } from "../../screens/Chat";
+import { Documents } from "../../screens/Documents";
 
 const Tab = createBottomTabNavigator<TabStackParamList>();
 const Tenant = ({
@@ -195,6 +196,18 @@ const Tenant = ({
               ></Icon>
             </TouchableOpacity>
           ),
+        }}
+      />
+      <Tab.Screen
+        name="Documents"
+        component={Documents}
+        initialParams={{ userId }}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <Icon name="description" type="material" />
+          ),
+          tabBarLabel: "",
+          headerShown: false,
         }}
       />
     </Tab.Navigator>
