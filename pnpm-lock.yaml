@@ -110,6 +110,9 @@ importers:
       expo-document-picker:
         specifier: ^11.7.0
         version: 11.7.0(expo@47.0.14)
+      expo-file-system:
+        specifier: ^15.6.0
+        version: 15.6.0(expo@47.0.14)
       expo-secure-store:
         specifier: ^12.1.1
         version: 12.1.1(expo@47.0.14)
@@ -7895,6 +7898,15 @@ packages:
 
   /expo-file-system@15.1.1(expo@47.0.14):
     resolution: {integrity: sha512-MYYDKxjLo9VOkvGHqym5EOAUS+ero9O66X5zI+EXJzqNznKvnfScdXeeAaQzShmWtmLkdVDCoYFGOaTvTA1wTQ==}
+    peerDependencies:
+      expo: '*'
+    dependencies:
+      expo: 47.0.14(@babel/core@7.21.8)
+      uuid: 3.4.0
+    dev: false
+
+  /expo-file-system@15.6.0(expo@47.0.14):
+    resolution: {integrity: sha512-a2hvSWPQLgzw6/u7QuVjVs44Zqgkq3EQJ94tUpw9GbAxj2RsdS3tPnzakBb3Mc6VoQ2Aop6FIgSKeYCeYJAzsg==}
     peerDependencies:
       expo: '*'
     dependencies:
