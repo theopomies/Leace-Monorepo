@@ -9,6 +9,8 @@ import {
 } from "@prisma/client";
 import Link from "next/link";
 import { SupportButton } from "./SupportButton";
+import { Select } from "../button/Select";
+import { useRouter } from "next/router";
 
 export type Relationships =
   | (Relationship & {
@@ -33,6 +35,8 @@ export interface ChatListProps {
   relationships?: Relationships;
   supportRelationships?: SupportRelationships;
   conversationLink?: string;
+  posts?: Post[];
+  postId?: string;
 }
 
 export const ChatList = ({
@@ -41,8 +45,11 @@ export const ChatList = ({
   relationships,
   supportRelationships,
   role,
+  posts,
+  postId,
   conversationLink = "/users/[userId]/matches/[conversationId]",
 }: ChatListProps) => {
+  const router = useRouter();
   return (
     <div className="flex h-full w-1/5 flex-shrink-0 flex-col rounded-tl-lg rounded-bl-lg bg-white">
       <div className="flex w-full flex-row items-center justify-center rounded-tl-lg bg-indigo-500 p-6">
@@ -63,7 +70,35 @@ export const ChatList = ({
         </div>
         <div className="ml-2 text-2xl font-bold">Leace</div>
       </div>
-      <div className="mt-8 flex flex-col overflow-auto px-5">
+      {posts !== undefined && posts.length > 1 && (
+        <div className=" border-t border-slate-300 p-6">
+          <h3 className="text-center text-lg font-medium">See matches for</h3>
+          <Select
+            options={[{ value: "RESET", label: "Reset filter" }].concat(
+              posts.map((post) => ({
+                label: post.title || "Untitled post",
+                value: post.id,
+              })),
+            )}
+            value={postId}
+            onChange={(value) => {
+              if (value === "RESET") {
+                if (conversationId)
+                  router.push(`/users/${userId}/matches/${conversationId}`);
+                else router.push(`/users/${userId}/matches`);
+                return;
+              }
+              if (conversationId)
+                router.push(
+                  `/users/${userId}/matches/${conversationId}?postId=${value}`,
+                );
+              else router.push(`/users/${userId}/matches?postId=${value}`);
+            }}
+            placeholder="Select a post to filter matches"
+          />
+        </div>
+      )}
+      <div className="mt-8 flex flex-shrink flex-grow flex-col overflow-auto px-5">
         <div className="flex flex-row items-center justify-between pl-2 text-xs">
           <span className="font-bold">Conversations</span>
           <div className="flex gap-2">
