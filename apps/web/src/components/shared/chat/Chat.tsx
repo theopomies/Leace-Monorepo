@@ -14,7 +14,7 @@ export type ChatProps = {
   role: Role;
   conversationId?: string;
   conversationLink?: string;
-  contact?: User;
+  contact?: { name: string; link: string };
   additionnalBarComponent?: ReactNode;
   posts?: Post[];
   postId?: string;
