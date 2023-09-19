@@ -1,4 +1,4 @@
-import { Role, User, Post } from "@prisma/client";
+import { Role, Post } from "@prisma/client";
 import { ChatBox } from "./ChatBox";
 import { Relationships, SupportRelationships } from "./ChatList";
 import { ChatList } from "./ChatList";

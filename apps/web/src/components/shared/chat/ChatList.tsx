@@ -189,7 +189,9 @@ export const ChatList = ({
                 </div>
                 <div className="ml-2 text-sm font-semibold">
                   {relationship.user.id === userId
-                    ? `${relationship.post.createdBy.firstName} ${relationship.post.createdBy.lastName}`
+                    ? `${relationship.post.title || "Untitled Post"} - ${
+                        relationship.post.createdBy.firstName
+                      }`
                     : `${relationship.user.firstName} ${relationship.user.lastName}`}
                 </div>
               </button>
