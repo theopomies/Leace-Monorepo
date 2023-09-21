@@ -4,9 +4,10 @@ import { motion } from "framer-motion";
 import { displayDate } from "../../../utils/displayDate";
 import { DisplayReports } from "../../moderation/report/DisplayReports";
 import { DocumentList } from "../document/DocumentList";
-import { Post, Attribute, Report, Image, Document } from "@prisma/client";
+import { Post, Attribute, Report, Image, Document, PostType } from "@prisma/client";
 import Link from "next/link";
 import { DialogButton } from "../button/DialogButton";
+import { Button } from "../button/Button";
 
 export interface PostCardProps {
   post: Post & {
@@ -20,6 +21,8 @@ export interface PostCardProps {
   updateLink?: string;
   isLoggedIn?: boolean;
   isAdmin?: boolean;
+  onPause?: () => Promise<void>;
+  onUnpause?: () => Promise<void>;
 }
 
 export const PostCard = ({
@@ -31,6 +34,8 @@ export const PostCard = ({
   updateLink,
   isLoggedIn,
   isAdmin,
+  onPause,
+  onUnpause,
 }: PostCardProps) => {
   return (
     <div className="flex w-full flex-col overflow-auto rounded-lg bg-white p-8 shadow">
@@ -101,6 +106,19 @@ export const PostCard = ({
               Update
             </Link>
           )}
+          {post.type != PostType.HIDE ? (
+            <Button
+              title="Pause"
+              onClick={onPause}
+              className="bg-yellow-500 hover:bg-yellow-600 active:bg-yellow-700"
+            >
+              Pause
+            </Button>
+          ) : post.type == PostType.HIDE ? (
+            <Button title="unpause" onClick={onUnpause} theme="success">
+              Unpause
+            </Button>
+          ) : null}
           {onPostDelete && (
             <DialogButton
               buttonText="Delete my post"
