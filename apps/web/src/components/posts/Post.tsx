@@ -27,7 +27,7 @@ export const Post = ({ postId, authorId, updateLink }: PostProps) => {
   const updatePost = trpc.post.updatePostById.useMutation({
     async onSuccess() {
       await utils.post.getPostById.invalidate({ postId });
-      await utils.post.getPostsByUserId.invalidate({ userId: authorId });
+      await utils.post.getPostsByUserId.invalidate();
     },
   });
 
