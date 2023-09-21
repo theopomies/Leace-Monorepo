@@ -51,7 +51,7 @@ export function UpdateAdminUserPage({ userId }: { userId: string }) {
         pool: data.pool,
       });
     }
-    router.push(`administration/users/${userId}`);
+    router.push(`/administration/users/${userId}`);
   };
 
   // TODO: Upload Image USER (Same as UpdateUserPage.tsx)

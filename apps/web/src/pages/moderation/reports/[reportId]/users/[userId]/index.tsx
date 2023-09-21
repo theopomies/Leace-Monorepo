@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { LoggedLayout } from "../../../../../../components/layout/LoggedLayout";
 import { ModerationUserPage } from "../../../../../../components/moderation/moderation/ModerationUserPage";
 
-export default function AdminUserView() {
+export default function ModerationUserView() {
   const router = useRouter();
   const { reportId, userId } = router.query;
 
@@ -17,7 +17,7 @@ export default function AdminUserView() {
 
   return (
     <LoggedLayout
-      title="User Administration | Leace"
+      title="User Moderation | Leace"
       roles={[Role.ADMIN, Role.MODERATOR]}
     >
       <ModerationUserPage reportId={reportId} userId={userId} />
