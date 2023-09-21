@@ -5,8 +5,6 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import mixpanel from "../utils/mixpanel";
 
-import React from "react";
-
 const Index = () => {
   const { data: session } = trpc.auth.getSession.useQuery();
   const router = useRouter();
