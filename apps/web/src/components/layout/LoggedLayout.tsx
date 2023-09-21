@@ -71,6 +71,26 @@ const AuthorizedLayout = ({
     children = <div>Not authorized</div>;
   }
 
+  let activePage = "Home";
+
+  if (router.pathname.startsWith("/dashboard")) {
+    activePage = "Dashboard";
+  } else if (router.pathname.startsWith("/users/[userId]/posts")) {
+    activePage = "My Posts";
+  } else if (router.pathname.startsWith("/users/[userId]/matches")) {
+    activePage = "Matches";
+  } else if (router.pathname.startsWith("/moderation/reports")) {
+    activePage = "Moderation";
+  } else if (router.pathname.startsWith("/users/[userId]")) {
+    activePage = "Profile";
+  } else if (router.pathname.startsWith("/premium")) {
+    activePage = "Premium";
+  } else if (router.pathname.startsWith("/support")) {
+    activePage = "Support";
+  } else {
+    activePage = "Home";
+  }
+
   return (
     <>
       <Head>
@@ -82,8 +102,8 @@ const AuthorizedLayout = ({
       >
         <NotificationButton />
 
-        <div className="flex min-h-screen flex-row bg-gray-100">
-          <NavBar userId={session.userId} />
+        <div className="flex h-screen bg-gray-100">
+          <NavBar userId={session.userId} activePage={activePage} />
           {session && session.ban ? <BanMessage ban={session.ban} /> : children}
         </div>
       </NovuProvider>

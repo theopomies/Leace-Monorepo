@@ -8,6 +8,7 @@ import type {
   SignedOutAuthObject,
 } from "@clerk/nextjs/api";
 import { Novu } from "@novu/node";
+import mixpanel, { Mixpanel } from "mixpanel";
 
 /**
  * Replace this with an object if you want to pass things to createContextInner
@@ -16,6 +17,7 @@ type AuthContextProps = {
   novu: Novu;
   clerkClient: typeof clerkClient;
   s3Client: S3Client;
+  mixPanel: Mixpanel;
 
   auth: SignedInAuthObject | SignedOutAuthObject;
   role: Role | undefined;
@@ -30,13 +32,15 @@ export const createContextInner = async ({
   novu,
   clerkClient,
   s3Client,
+  mixPanel,
   auth,
   role,
 }: AuthContextProps) => {
   return {
     novu,
     clerkClient,
-    s3Client: s3Client,
+    s3Client,
+    mixPanel,
     prisma,
     auth,
     role,
@@ -54,6 +58,7 @@ export const createContext = async (opts: CreateNextContextOptions) => {
   });
 
   const novu = new Novu(process.env.NOVU_KEY || "");
+  const mixPanel = mixpanel.init(process.env.MIXPANEL_TOKEN || "");
 
   const s3Client = new S3Client({
     region: "eu-west-3",
@@ -74,6 +79,11 @@ export const createContext = async (opts: CreateNextContextOptions) => {
     });
     if (user && user.role) {
       role = user.role;
+      // Update last login
+      prisma.user.update({
+        where: { id: auth.userId },
+        data: { lastLogin: new Date() },
+      });
     }
   }
 
@@ -81,6 +91,7 @@ export const createContext = async (opts: CreateNextContextOptions) => {
     novu,
     auth,
     s3Client,
+    mixPanel,
     role,
     clerkClient,
   });

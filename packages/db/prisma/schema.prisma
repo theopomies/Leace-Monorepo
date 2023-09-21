@@ -45,6 +45,7 @@ enum Role {
 }
 
 enum PostType {
+  HIDE
   RENTED
   TO_BE_RENTED
 }
@@ -67,8 +68,10 @@ model User {
   country       String?
   description   String?     @db.Text
   birthDate     DateTime?
-  status        UserStatus? @default(INACTIVE)
   isPremium     Boolean?    @default(false)
+
+  status        UserStatus? @default(INACTIVE)
+  lastLogin     DateTime   @default(now())
 
   attribute Attribute?
 
