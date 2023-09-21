@@ -51,7 +51,7 @@ export const PostBar = ({
             </div>
           )}
           <div
-            className={`my-auto mx-5 w-3/5 min-w-max ${
+            className={`mx-5 my-auto w-3/5 min-w-max ${
               (!img || !img[0]) && "py-6"
             }`}
           >
@@ -59,7 +59,11 @@ export const PostBar = ({
               {post.title}
             </div>
             <p className="mt-2 text-slate-500">
-              {post.type == PostType.RENTED ? "Rented ✅" : "Available"}
+              {post.type === PostType.RENTED
+                ? "Rented ✅"
+                : post.type === PostType.HIDE
+                ? "On pause"
+                : "Available"}
             </p>
           </div>
         </Link>
