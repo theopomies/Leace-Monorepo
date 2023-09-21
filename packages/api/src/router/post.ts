@@ -52,7 +52,7 @@ export const postRouter = router({
 
       return post;
     }),
-  updatePostById: protectedProcedure([Role.AGENCY, Role.OWNER])
+  updatePostById: protectedProcedure([Role.AGENCY, Role.OWNER, Role.ADMIN])
     .input(
       z.object({
         postId: z.string(),
@@ -99,7 +99,7 @@ export const postRouter = router({
         check: [input.title, input.content, input.desc],
       });
     }),
-  deletePostById: protectedProcedure([Role.AGENCY, Role.OWNER])
+  deletePostById: protectedProcedure([Role.AGENCY, Role.OWNER, Role.ADMIN])
     .input(z.object({ postId: z.string() }))
     .mutation(async ({ input, ctx }) => {
       const post = await ctx.prisma.post.findUnique({
@@ -123,7 +123,13 @@ export const postRouter = router({
 
       if (!deleted) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
     }),
-  getPostById: protectedProcedure([Role.TENANT, Role.AGENCY, Role.OWNER])
+  getPostById: protectedProcedure([
+    Role.TENANT,
+    Role.AGENCY,
+    Role.OWNER,
+    Role.ADMIN,
+    Role.MODERATOR,
+  ])
     .input(z.object({ postId: z.string() }))
     .query(async ({ ctx, input }) => {
       const post = await ctx.prisma.post.findUnique({

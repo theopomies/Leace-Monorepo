@@ -17,11 +17,12 @@ export function ModerationUserPage({
   if (user.isLoading) return <Loader />;
   if (user && user.data && !user.error) {
     return (
-      <div className="flex w-full">
+      <div className="flex w-full py-10 pl-10">
         <div className="flex w-5/6 flex-col">
           {user.data.posts[0] && (
             <Link
               href={`/moderation/reports/${reportId}/posts/${user.data.posts[0].id}`}
+              className="pb-5"
             >
               <Button className="w-full">View posts</Button>
             </Link>
