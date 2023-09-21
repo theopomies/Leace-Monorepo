@@ -59,7 +59,9 @@ export const postRouter = router({
         title: z.string().optional(),
         content: z.string().optional(),
         desc: z.string().optional(),
-        type: z.enum([PostType.RENTED, PostType.TO_BE_RENTED]).optional(),
+        type: z
+          .enum([PostType.RENTED, PostType.TO_BE_RENTED, PostType.HIDE])
+          .optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
