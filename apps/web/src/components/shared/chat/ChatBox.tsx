@@ -6,7 +6,7 @@ import { User } from "@prisma/client";
 export interface ChatBoxProps {
   userId: string;
   messages: MessageWithSender[];
-  onSend?: (content: string) => void;
+  onSend?: (content: string, userId: string) => void;
   contact?: User;
   additionnalBarComponent?: ReactNode;
 }
@@ -48,7 +48,7 @@ export const ChatBox = ({
         </div>
         {onSend !== undefined && (
           <div className="flex-shrink-0">
-            <ChatInput onSend={onSend} />
+            <ChatInput receiverId={contact?.id || ""} onSend={onSend} />
           </div>
         )}
       </div>

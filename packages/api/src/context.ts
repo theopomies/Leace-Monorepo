@@ -7,11 +7,13 @@ import type {
   SignedInAuthObject,
   SignedOutAuthObject,
 } from "@clerk/nextjs/api";
+import { Novu } from "@novu/node";
 
 /**
  * Replace this with an object if you want to pass things to createContextInner
  */
 type AuthContextProps = {
+  novu: Novu;
   clerkClient: typeof clerkClient;
   s3Client: S3Client;
 
@@ -25,12 +27,14 @@ type AuthContextProps = {
  * @see https://beta.create.t3.gg/en/usage/trpc#-servertrpccontextts
  */
 export const createContextInner = async ({
+  novu,
   clerkClient,
   s3Client,
   auth,
   role,
 }: AuthContextProps) => {
   return {
+    novu,
     clerkClient,
     s3Client: s3Client,
     prisma,
@@ -48,6 +52,8 @@ export const createContext = async (opts: CreateNextContextOptions) => {
     apiKey: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
     secretKey: process.env.CLERK_SECRET_KEY,
   });
+
+  const novu = new Novu(process.env.NOVU_KEY || "");
 
   const s3Client = new S3Client({
     region: "eu-west-3",
@@ -72,6 +78,7 @@ export const createContext = async (opts: CreateNextContextOptions) => {
   }
 
   return await createContextInner({
+    novu,
     auth,
     s3Client,
     role,

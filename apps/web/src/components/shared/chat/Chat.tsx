@@ -7,7 +7,7 @@ import { ReactNode } from "react";
 export type ChatProps = {
   userId: string;
   messages?: MessageWithSender[];
-  onSend?: (content: string) => void;
+  onSend?: (content: string, userId: string) => void;
   relationships?: Relationships;
   supportRelationships?: SupportRelationships;
   role: Role;
