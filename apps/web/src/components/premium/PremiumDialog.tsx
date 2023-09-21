@@ -15,6 +15,7 @@ export function PremiumDialog({ open, setOpen }: PremiumDialogProps) {
     router.push("/premium");
     setOpen(false);
   };
+
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Portal>

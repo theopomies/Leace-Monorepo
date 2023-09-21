@@ -59,8 +59,19 @@ export const PremiumPage = ({ userId }: PremiumPageProps) => {
     }
   }
 
-  if (isLoading || !user) {
+  if (isLoading) {
     return <Loader />;
+  }
+
+  if (!user) {
+    return (
+      <div className="mt-8 flex w-full flex-col items-center justify-center">
+        <h1 className="text-xl font-bold text-gray-700">
+          Something went wrong :(
+        </h1>
+        <p className="mt-4 text-gray-500">User not found</p>
+      </div>
+    );
   }
 
   return (

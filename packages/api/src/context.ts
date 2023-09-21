@@ -75,13 +75,10 @@ export const createContext = async (opts: CreateNextContextOptions) => {
     if (user && user.role) {
       role = user.role;
       // Update last login
-      prisma.user
-        .update({
-          where: { id: auth.userId },
-          data: { lastLogin: new Date() },
-        })
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        .then(() => {});
+      prisma.user.update({
+        where: { id: auth.userId },
+        data: { lastLogin: new Date() },
+      });
     }
   }
 

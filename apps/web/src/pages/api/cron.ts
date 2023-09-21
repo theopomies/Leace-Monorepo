@@ -13,6 +13,7 @@ const checkInactivity = async (req: NextApiRequest, res: NextApiResponse) => {
     });
     return;
   }
+
   try {
     const result = await caller.cron.checkInactivity();
     res.status(200).json(result);

@@ -5,9 +5,7 @@ export const cronRouter = router({
     try {
       // retrieve all active users
       const users = await ctx.prisma.user.findMany({
-        where: {
-          status: "ACTIVE",
-        },
+        where: { status: "ACTIVE" },
       });
 
       const now = new Date();
