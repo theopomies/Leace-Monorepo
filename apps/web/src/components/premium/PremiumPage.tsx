@@ -1,7 +1,3 @@
-import { trpc } from "../../utils/trpc";
-import { Loader } from "../shared/Loader";
-import { StripePricingTable } from "./StripePricingTable";
-import { FeatureCard } from "./FeatureCard";
 import {
   faHourglassHalf,
   faInfinity,
@@ -9,6 +5,12 @@ import {
   faRectangleAd,
   faRocket,
 } from "@fortawesome/free-solid-svg-icons";
+import { useState } from "react";
+import { trpc } from "../../utils/trpc";
+import { Loader } from "../shared/Loader";
+import { FeatureCard } from "./FeatureCard";
+import { PremiumDialog } from "./PremiumDialog";
+import { StripePricingTable } from "./StripePricingTable";
 
 export const featureList = [
   {
@@ -52,6 +54,8 @@ export const PremiumPage = ({ userId }: PremiumPageProps) => {
     userId,
   });
 
+  const [open, setOpen] = useState(false);
+
   const isBrowser = () => typeof window !== "undefined"; //The approach recommended by Next.js
 
   function scrollToBottom() {
@@ -66,45 +70,51 @@ export const PremiumPage = ({ userId }: PremiumPageProps) => {
     return <Loader />;
   }
 
+  console.log(open);
+
   return (
-    <div className="from--blue-500 flex w-full flex-col overflow-hidden bg-gradient-to-tr from-blue-100 to-white">
-      <div className="flex h-screen flex-col items-center justify-evenly">
-        <div>
-          <h1 className="mt-12 text-center text-6xl font-extrabold text-blue-500">
-            LEACE{" "}
-            <b className="bg-clip-text font-extrabold text-amber-400">
-              Premium
-            </b>
-          </h1>
-          <h2 className="mb-8 text-5xl font-extrabold text-blue-500">
-            Enjoy the <span className="text-amber-400">full experience</span>
-          </h2>
+    <>
+      <PremiumDialog open={open} setOpen={setOpen} />
+
+      <div className="flex w-full flex-col overflow-hidden bg-gradient-to-tr from-blue-200 to-white">
+        <div className="flex h-screen flex-col items-center justify-evenly">
+          <div>
+            <h1 className="mt-12 text-center text-6xl font-extrabold text-gray-600">
+              LEACE{" "}
+              <b className="bg-clip-text font-extrabold text-blue-400">
+                Premium
+              </b>
+            </h1>
+            <h2 className="mb-8 text-5xl font-extrabold text-gray-600">
+              Enjoy the <span className="text-blue-400">full experience</span>
+            </h2>
+          </div>
+          <div className="animate-curtain relative mb-5 grid w-2/3 grid-cols-2 flex-row items-stretch justify-center">
+            {featureList.map((feature, index) => (
+              <div key={index}>
+                <FeatureCard {...feature}></FeatureCard>
+              </div>
+            ))}
+          </div>
+          <button
+            onClick={scrollToBottom}
+            className="mb-8 transform rounded-full bg-blue-400 px-10 py-6 text-2xl font-bold text-white shadow-lg transition duration-500 ease-in-out hover:scale-105"
+          >
+            Get Premium
+          </button>
         </div>
-        <div className="animate-curtain relative mb-5 grid w-2/3 grid-cols-2 flex-row items-stretch justify-center">
-          {featureList.map((feature, index) => (
-            <div key={index}>
-              <FeatureCard {...feature}></FeatureCard>
-            </div>
-          ))}
+        <div className="flex h-screen w-full flex-col items-center justify-center text-gray-600">
+          <h3 className="mb-5 text-5xl font-extrabold">
+            Enjoy the full experience
+          </h3>
+          <p className="mb-5 text-4xl font-extrabold">
+            with LEACE <b className=" font-extrabold text-blue-400">Premium</b>
+          </p>
+          <div className="mb-5 rounded-2xl bg-white p-3 shadow-lg shadow-gray-400">
+            <StripePricingTable userId={user.id} />
+          </div>
         </div>
-        <button
-          onClick={scrollToBottom}
-          className="mb-8 transform rounded-full bg-amber-400 px-8 py-3 text-lg font-bold text-white shadow-lg transition duration-500 ease-in-out hover:scale-105"
-        >
-          Get Premium
-        </button>
       </div>
-      <div className="flex h-screen w-full flex-col items-center justify-center text-blue-400">
-        <h3 className="mb-5 text-5xl font-extrabold">
-          Enjoy the full experience
-        </h3>
-        <p className="mb-5 text-4xl font-extrabold">
-          with LEACE <b className=" font-extrabold text-amber-400">Premium</b>
-        </p>
-        <div className="mb-5 rounded-2xl bg-white p-3 shadow-lg shadow-gray-400">
-          <StripePricingTable userId={user.id} />
-        </div>
-      </div>
-    </div>
+    </>
   );
 };
