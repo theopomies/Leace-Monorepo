@@ -1,4 +1,9 @@
-export const PremiumBanner = ({ user }: { user: User }) => {
+import { User } from "@prisma/client";
+export interface PremiumBannerProps {
+  user: User;
+}
+
+export const PremiumBanner = ({ user }: PremiumBannerProps) => {
   return (
     <div className="flex h-32 w-full items-center justify-center rounded-b-2xl bg-gradient-to-tr from-amber-400 via-blue-500 to-black">
       <div className="flex flex-col items-center justify-center space-y-2">
