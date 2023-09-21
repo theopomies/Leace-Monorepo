@@ -7,6 +7,8 @@ import { RedirectToSignIn, SignedIn, SignedOut } from "@clerk/nextjs";
 import { ReactNode, useEffect } from "react";
 import { useRouter } from "next/router";
 import { BanMessage } from "../moderation/ban/BanMessage";
+import { NotificationButton } from "../shared/button/Notification";
+import { NovuProvider } from "@novu/notification-center";
 
 export interface LoggedLayoutProps {
   children: React.ReactNode;
@@ -74,10 +76,17 @@ const AuthorizedLayout = ({
       <Head>
         <title>{title ?? "Leace"}</title>
       </Head>
-      <div className="flex min-h-screen flex-row bg-gray-100">
-        <NavBar userId={session.userId} />
-        {session && session.ban ? <BanMessage ban={session.ban} /> : children}
-      </div>
+      <NovuProvider
+        subscriberId={session?.userId}
+        applicationIdentifier={"jSSfV5eCMrsu"}
+      >
+        <NotificationButton />
+
+        <div className="flex min-h-screen flex-row bg-gray-100">
+          <NavBar userId={session.userId} />
+          {session && session.ban ? <BanMessage ban={session.ban} /> : children}
+        </div>
+      </NovuProvider>
     </>
   );
 };
