@@ -1,14 +1,14 @@
-import { router, protectedProcedure } from "../trpc";
-import { z } from "zod";
-import { RelationType, PostType, Role } from "@prisma/client";
+import { PostType, RelationType, Role } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
-import { getId } from "../utils/getId";
+import { z } from "zod";
+import { protectedProcedure, router } from "../trpc";
 import {
   getPostsWithAttribute,
   getUsersWithAttribute,
   shuffle,
 } from "../utils/algorithm";
 import { filterStrings } from "../utils/filter";
+import { getId } from "../utils/getId";
 
 export const postRouter = router({
   createPost: protectedProcedure([Role.AGENCY, Role.OWNER])
@@ -59,9 +59,7 @@ export const postRouter = router({
         title: z.string().optional(),
         content: z.string().optional(),
         desc: z.string().optional(),
-        type: z
-          .enum([PostType.RENTED, PostType.TO_BE_RENTED, PostType.HIDE])
-          .optional(),
+        type: z.enum([PostType.RENTED, PostType.TO_BE_RENTED, PostType.HIDE]).optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -225,6 +223,11 @@ export const postRouter = router({
           postsToBeSeen: { include: { images: true, attribute: true } },
         },
       });
+
+      // Remove hidden and inactive posts
+      user.postsToBeSeen = user.postsToBeSeen.filter(
+        (post) => post.type === PostType.TO_BE_RENTED,
+      );
 
       // If less or equal than 3 posts, add more
       if (user.postsToBeSeen.length <= 3) {
