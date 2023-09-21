@@ -25,7 +25,7 @@ export function PremiumDialog({ open, setOpen }: PremiumDialogProps) {
               <h1 className="text-center text-6xl font-extrabold text-gray-600">
                 LEACE <b className="font-extrabold text-blue-400">Premium</b>
               </h1>
-              <ul className="space-y-4 rounded-xl bg-white p-4 text-3xl font-bold text-gray-600">
+              <ul className="space-y-4 rounded-xl bg-white p-4 text-2xl font-bold text-gray-600">
                 {featureList.map((feature, index) => (
                   <li
                     key={index}
