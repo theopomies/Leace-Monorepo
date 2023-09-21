@@ -21,7 +21,6 @@ export interface PostCardProps {
   updateLink?: string;
   isLoggedIn?: boolean;
   isAdmin?: boolean;
-
   onPause?: () => Promise<void>;
   onUnpause?: () => Promise<void>;
 }
