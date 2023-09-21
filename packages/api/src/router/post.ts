@@ -324,25 +324,22 @@ export const postRouter = router({
       });
       if (!created) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
     }),
-  likePost: protectedProcedure([Role.TENANT])
-    .input(z.object({ postId: z.string() }))
+  likeAgency: protectedProcedure([Role.TENANT])
+    .input(z.object({ agencyId: z.string() }))
     .query(async ({ ctx, input }) => {
-      const post = await ctx.prisma.post.findFirst({
-        where: { id: input.postId },
+      const user = await ctx.prisma.user.findFirst({
+        where: { id: input.agencyId },
       });
 
-      if (!post) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+      if (!user) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+      if (user.role != Role.AGENCY)
+        throw new TRPCError({ code: "BAD_REQUEST" });
 
-      let like = 0;
-      if (post.like) {
-        like = post.like;
-      }
-
-      const updated = await ctx.prisma.post.update({
+      const updated = await ctx.prisma.user.update({
         where: {
-          id: post.id,
+          id: user.id,
         },
-        data: { like: like + 1 },
+        data: { like: user.like + 1 },
       });
 
       if (!updated) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });

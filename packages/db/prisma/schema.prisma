@@ -69,6 +69,7 @@ model User {
   birthDate     DateTime?
   status        UserStatus? @default(INACTIVE)
   isPremium     Boolean?    @default(false)
+  like Int @default(0)
 
   attribute Attribute?
 
@@ -114,7 +115,7 @@ model Post {
   content String?
   desc    String?   @db.Text
   type    PostType? @default(TO_BE_RENTED)
-  like Int?
+  like Int @default(0)
   reviews  Review[]
 
   attribute Attribute?
