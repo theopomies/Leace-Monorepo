@@ -11,7 +11,7 @@ export interface UserCardProps {
     attribute: Attribute | null;
   };
   isBanned?: boolean;
-  onDelete: () => void;
+  onUserDelete: () => void;
   image?: (Image & { url: string }) | null;
   documents?: (Document & { url: string })[] | null | undefined;
   isLoggedUser: boolean;
@@ -39,7 +39,7 @@ const attributes = {
 export function UserCard({
   user,
   isBanned = false,
-  onDelete,
+  onUserDelete,
   isLoggedUser,
   image,
   documents,
@@ -85,7 +85,7 @@ export function UserCard({
                 title="Confirm Account Deletion"
                 description="Are you sure you want to delete your Leace account ?"
                 confirmButtonText="Yes, Delete my account"
-                onDelete={async () => onDelete()}
+                onDelete={async () => onUserDelete()}
               />
               <Link href={`/users/${user.id}/update`}>
                 <Button>Update</Button>
