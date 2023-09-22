@@ -358,18 +358,6 @@ const UserFormBeforeRef = (
               </select>
             </li>
           </ul>
-          {/* <ul className="flex justify-center pt-4">
-            <li className="flex-grow pr-8">
-              <h3 className="text-xl font-medium">Desired rental period</h3>
-              <TextInput
-                required
-                placeholder="France"
-                onChange={handleChange(setCountry)}
-                value={country}
-                className="w-full"
-              />
-            </li>
-          </ul> */}
         </section>
       )}
       <DocumentList
