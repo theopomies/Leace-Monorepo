@@ -113,7 +113,8 @@ model User {
 
   LeaseCreated Lease[]
 
-  reviewsCreated Review[]
+  reviewsCreated Review[] @relation("review_created")
+  reviews  Review[] @relation("agency_review")
 
   reports        Report[] @relation("reported")
   reportsCreated Report[] @relation("reports_created")
@@ -137,7 +138,6 @@ model Post {
   content String?
   desc    String?   @db.Text
   type    PostType? @default(TO_BE_RENTED)
-  reviews  Review[]
   energyClass EnergyClass?
   ges EnergyClass?
   constructionDate DateTime?
@@ -414,13 +414,13 @@ model Review {
   comment String?
   stars Int?
 
-  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
-  postId String
+  agency   User   @relation(fields: [agencyId], references: [id],"agency_review", onDelete: Cascade)
+  agencyId String
 
-  createdBy   User   @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  createdBy   User   @relation(fields: [createdById], references: [id],"review_created", onDelete: Cascade)
   createdById String
 
 
-  @@index([postId])
+  @@index([agencyId])
   @@index([createdById])
 }
