@@ -16,7 +16,7 @@ export const UpdateAdminPostPage = ({ postId }: { postId: string }) => {
   const { data: imagesGet, refetch: refetchImagesGet } =
     trpc.moderation.image.getSignedPostUrl.useQuery({ postId });
   const uploadImage = trpc.moderation.image.putSignedUrl.useMutation();
-  const deleteImage = trpc.moderation.image.deleteSignedUrl.useMutation();
+  const deleteImage = trpc.moderation.image.deleteSignedPostUrl.useMutation();
 
   const { data: documentsGet, refetch: refetchDocumentsGet } =
     trpc.moderation.document.getSignedUrl.useQuery({ postId });
