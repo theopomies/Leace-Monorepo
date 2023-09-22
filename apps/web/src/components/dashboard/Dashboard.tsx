@@ -1,5 +1,5 @@
 import { Post, PostType, User } from "@prisma/client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { trpc } from "../../utils/trpc";
 import { Header } from "../shared/Header";
 import { PostBar } from "../shared/post/PostBar";
@@ -28,19 +28,21 @@ export const Dashboard = ({ userId }: DashboardProps) => {
     }
   }, [relationshipData]);
 
+  const sortPosts = useCallback(
+    (data: { post: Post; user: User | undefined }[]) => {
+      if (filter === null || filter === "") {
+        return data;
+      } else {
+        return posts.filter((d) => d.post.type === filter);
+      }
+    },
+    [filter, posts],
+  );
+
   useEffect(() => {
     const filteredPosts = sortPosts(posts);
     setFilteredCount(filteredPosts.length);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filter, posts]);
-
-  const sortPosts = (data: { post: Post; user: User | undefined }[]) => {
-    if (filter === null || filter === "") {
-      return data;
-    } else {
-      return posts.filter((d) => d.post.type === filter);
-    }
-  };
+  }, [filter, posts, sortPosts]);
 
   const handleFilterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedFilter = event.target.value as PostType | "";
