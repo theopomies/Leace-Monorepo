@@ -23,14 +23,13 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
   const updateAttributes = trpc.attribute.updateUserAttributes.useMutation();
 
   const uploadImage = trpc.image.putSignedUrl.useMutation();
-  const { data: userPicture, refetch: refetchPicture } =
-    trpc.image.getSignedUserUrl.useQuery(
-      {
-        userId,
-        fileType,
-      },
-      { enabled: false },
-    );
+  const { refetch: refetchPicture } = trpc.image.getSignedUserUrl.useQuery(
+    {
+      userId,
+      fileType,
+    },
+    { enabled: false },
+  );
   const { data: documentsGet, refetch: refetchDocumentsGet } =
     trpc.document.getSignedUrl.useQuery({ userId });
   const uploadDocument = trpc.document.putSignedUrl.useMutation();

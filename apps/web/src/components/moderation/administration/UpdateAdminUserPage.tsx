@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { MouseEventHandler } from "react";
+import { MouseEventHandler, useState } from "react";
 import { trpc } from "../../../utils/trpc";
 import { Role } from "@prisma/client";
 import { Header } from "../../shared/Header";
@@ -10,6 +10,7 @@ import { cropImage } from "../../../utils/cropImage";
 
 export function UpdateAdminUserPage({ userId }: { userId: string }) {
   const router = useRouter();
+  const [fileType, setFileType] = useState("");
   const { data: user, refetch: refetchUser } =
     trpc.moderation.user.getUser.useQuery({ userId });
   const updateUser = trpc.user.updateUserById.useMutation();
@@ -17,7 +18,13 @@ export function UpdateAdminUserPage({ userId }: { userId: string }) {
   const updateAttributes = trpc.attribute.updateUserAttributes.useMutation();
 
   const uploadImage = trpc.moderation.image.putSignedUrl.useMutation();
-
+  const { refetch: refetchPicture } = trpc.image.getSignedUserUrl.useQuery(
+    {
+      userId,
+      fileType,
+    },
+    { enabled: false },
+  );
   const { data: documentsGet, refetch: refetchDocumentsGet } =
     trpc.moderation.document.getSignedUrl.useQuery({ userId });
   const uploadDocument = trpc.moderation.document.putSignedUrl.useMutation();
@@ -54,24 +61,29 @@ export function UpdateAdminUserPage({ userId }: { userId: string }) {
     router.push(`/administration/users/${userId}`);
   };
 
-  // TODO: Upload Image USER (Same as UpdateUserPage.tsx)
   const handleUploadImg = async (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const file = event.target.files && event.target.files[0];
 
     if (file) {
+      setFileType(file.type);
       cropImage(file, async (croppedBlob) => {
         await uploadImage
-          .mutateAsync({ userId, fileType: croppedBlob.type })
+          .mutateAsync({
+            userId,
+            fileType: croppedBlob.type,
+          })
           .then(async (url) => {
-            if (url && event.target.files) {
-              await axios.put(url, croppedBlob);
-              await updateUser.mutateAsync({
-                userId,
-                image: url,
+            if (url) {
+              await axios.put(url, croppedBlob).then(async () => {
+                const { data: res } = await refetchPicture();
+                await updateUser.mutateAsync({
+                  userId,
+                  image: res,
+                });
+                await refetchUser();
               });
-              refetchUser();
             }
           });
       });

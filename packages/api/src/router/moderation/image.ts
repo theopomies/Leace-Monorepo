@@ -27,7 +27,6 @@ export const imageModeration = router({
       if (!ext || (ext != "png" && ext != "jpeg"))
         throw new TRPCError({ code: "BAD_REQUEST" });
 
-      // TODO: Same as router/image.ts
       if (input.userId) {
         const userId = getId({ ctx: ctx, userId: input.userId });
 
@@ -40,6 +39,8 @@ export const imageModeration = router({
         const bucketParams = {
           Bucket: "leaceawsbucket",
           Key: key,
+          ACL: "public-read",
+          ContentType: input.fileType,
         };
         const command = new PutObjectCommand(bucketParams);
 
