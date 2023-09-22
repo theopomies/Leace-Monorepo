@@ -29,7 +29,7 @@ export function TenantChat({
   const { data: supportRelationships, isLoading: supportRelationshipsLoading } =
     trpc.support.getRelationshipsForTenant.useQuery({ userId });
   const sendMessage = (content: string) => {
-    sendMutation.mutate({ conversationId, content });
+    sendMutation.mutate({ conversationId, content, userId });
   };
 
   const report = trpc.report.reportPostById.useMutation();

@@ -28,8 +28,8 @@ export function OwnerChat({
 
   const { data: supportRelationships, isLoading: supportRelationshipsLoading } =
     trpc.support.getRelationshipsForOwner.useQuery({ userId });
-  const sendMessage = (content: string) => {
-    sendMutation.mutate({ conversationId, content });
+  const sendMessage = (content: string, userId: string) => {
+    sendMutation.mutate({ conversationId, content, userId: userId });
   };
 
   const report = trpc.report.reportUserById.useMutation();

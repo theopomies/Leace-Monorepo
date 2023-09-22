@@ -7,12 +7,14 @@ import type {
   SignedInAuthObject,
   SignedOutAuthObject,
 } from "@clerk/nextjs/api";
+import { Novu } from "@novu/node";
 import mixpanel, { Mixpanel } from "mixpanel";
 
 /**
  * Replace this with an object if you want to pass things to createContextInner
  */
 type AuthContextProps = {
+  novu: Novu;
   clerkClient: typeof clerkClient;
   s3Client: S3Client;
   mixPanel: Mixpanel;
@@ -27,6 +29,7 @@ type AuthContextProps = {
  * @see https://beta.create.t3.gg/en/usage/trpc#-servertrpccontextts
  */
 export const createContextInner = async ({
+  novu,
   clerkClient,
   s3Client,
   mixPanel,
@@ -34,6 +37,7 @@ export const createContextInner = async ({
   role,
 }: AuthContextProps) => {
   return {
+    novu,
     clerkClient,
     s3Client,
     mixPanel,
@@ -53,6 +57,7 @@ export const createContext = async (opts: CreateNextContextOptions) => {
     secretKey: process.env.CLERK_SECRET_KEY,
   });
 
+  const novu = new Novu(process.env.NOVU_KEY || "");
   const mixPanel = mixpanel.init(process.env.MIXPANEL_TOKEN || "");
 
   const s3Client = new S3Client({
@@ -83,6 +88,7 @@ export const createContext = async (opts: CreateNextContextOptions) => {
   }
 
   return await createContextInner({
+    novu,
     auth,
     s3Client,
     mixPanel,

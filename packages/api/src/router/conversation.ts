@@ -6,7 +6,13 @@ import { checkConversation } from "../utils/checkConversation";
 
 export const conversationRouter = router({
   sendMessage: protectedProcedure([Role.AGENCY, Role.OWNER, Role.TENANT])
-    .input(z.object({ conversationId: z.string(), content: z.string() }))
+    .input(
+      z.object({
+        conversationId: z.string(),
+        userId: z.string(),
+        content: z.string(),
+      }),
+    )
     .mutation(async ({ ctx, input }) => {
       const conversation = await ctx.prisma.conversation
         .findUnique({
@@ -15,12 +21,32 @@ export const conversationRouter = router({
         .then((conversation) => {
           return checkConversation({ ctx, conversation });
         });
+      if (!conversation) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+      const sender = await ctx.prisma.user.findUnique({
+        where: { id: ctx.auth.userId },
+      });
+      if (!sender) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+      const receiver = await ctx.prisma.user.findUnique({
+        where: { id: input.userId },
+      });
+      if (!receiver) throw new TRPCError({ code: "NOT_FOUND" });
 
       await ctx.prisma.message.create({
         data: {
           content: input.content,
           conversationId: conversation.id,
           senderId: ctx.auth.userId,
+        },
+      });
+
+      ctx.novu.trigger("mention-in-a-comment", {
+        to: {
+          subscriberId: receiver.id,
+        },
+        payload: {
+          commenterName: sender.firstName + " " + sender.lastName,
         },
       });
     }),

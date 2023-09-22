@@ -1,16 +1,17 @@
 import { FormEventHandler, useState } from "react";
 
 export interface ChatInputProps {
-  onSend: (message: string) => void;
+  receiverId: string;
+  onSend: (message: string, userId: string) => void;
 }
 
-export const ChatInput = ({ onSend }: ChatInputProps) => {
+export const ChatInput = ({ onSend, receiverId }: ChatInputProps) => {
   const [input, setInput] = useState("");
 
   const handleSend: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
     if (!input) return;
-    onSend(input);
+    onSend(input, receiverId);
     setInput("");
   };
 
