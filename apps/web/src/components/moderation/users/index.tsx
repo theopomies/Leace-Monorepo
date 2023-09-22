@@ -16,8 +16,6 @@ export const User = ({ userId }: UserProps) => {
     trpc.moderation.ban.getIsBan.useQuery({ userId });
   const { data: user, isLoading: userLoading } =
     trpc.moderation.user.getUser.useQuery({ userId });
-  const { data: image, isLoading: imageLoading } =
-    trpc.moderation.image.getSignedUserUrl.useQuery({ userId });
   const {
     data: documents,
     isLoading: documentsLoading,
@@ -28,20 +26,8 @@ export const User = ({ userId }: UserProps) => {
     trpc.moderation.document.documentValidation.useMutation();
 
   const isLoading = useMemo(() => {
-    return (
-      sessionLoading ||
-      isBannedLoading ||
-      userLoading ||
-      imageLoading ||
-      documentsLoading
-    );
-  }, [
-    sessionLoading,
-    isBannedLoading,
-    userLoading,
-    imageLoading,
-    documentsLoading,
-  ]);
+    return sessionLoading || isBannedLoading || userLoading || documentsLoading;
+  }, [sessionLoading, isBannedLoading, userLoading, documentsLoading]);
 
   if (isLoading) {
     return <Loader />;
@@ -67,7 +53,6 @@ export const User = ({ userId }: UserProps) => {
     <UserCard
       user={user}
       isBanned={isBanned}
-      image={image}
       documents={documents}
       onDocValidation={handleDocValidation}
       updateLink={"/administration/users/[userId]/update"}

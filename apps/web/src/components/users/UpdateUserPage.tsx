@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { MouseEventHandler } from "react";
+import { MouseEventHandler, useState } from "react";
 import { trpc } from "../../utils/trpc";
 import { Role } from "@prisma/client";
 import { Header } from "../shared/Header";
@@ -14,15 +14,22 @@ export interface UpdateUserPageProps {
 
 export function UpdateUserPage({ userId }: UpdateUserPageProps) {
   const router = useRouter();
-  const { data: user } = trpc.user.getUserById.useQuery({ userId });
+  const [fileType, setFileType] = useState("");
+  const { data: user, refetch: refetchUser } = trpc.user.getUserById.useQuery({
+    userId,
+  });
   const updateUser = trpc.user.updateUserById.useMutation();
 
   const updateAttributes = trpc.attribute.updateUserAttributes.useMutation();
 
-  const { data: imageGet, refetch: refetchImageGet } =
-    trpc.image.getSignedUserUrl.useQuery({ userId });
   const uploadImage = trpc.image.putSignedUrl.useMutation();
-
+  const { refetch: refetchPicture } = trpc.image.getSignedUserUrl.useQuery(
+    {
+      userId,
+      fileType,
+    },
+    { enabled: false },
+  );
   const { data: documentsGet, refetch: refetchDocumentsGet } =
     trpc.document.getSignedUrl.useQuery({ userId });
   const uploadDocument = trpc.document.putSignedUrl.useMutation();
@@ -65,6 +72,7 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
     const file = event.target.files && event.target.files[0];
 
     if (file) {
+      setFileType(file.type);
       cropImage(file, async (croppedBlob) => {
         await uploadImage
           .mutateAsync({
@@ -73,8 +81,14 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
           })
           .then(async (url) => {
             if (url) {
-              await axios.put(url, croppedBlob);
-              refetchImageGet();
+              await axios.put(url, croppedBlob).then(async () => {
+                const { data: res } = await refetchPicture();
+                await updateUser.mutateAsync({
+                  userId,
+                  image: res,
+                });
+                await refetchUser();
+              });
             }
           });
       });
@@ -119,7 +133,6 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
       <UserForm
         user={user}
         onImgUpload={handleUploadImg}
-        imageGet={imageGet}
         onDocsUpload={handleUploadDocs}
         onDocDelete={handleDeleteDoc}
         documentsGet={documentsGet}

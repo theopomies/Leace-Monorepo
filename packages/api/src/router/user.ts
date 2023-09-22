@@ -88,6 +88,7 @@ export const userRouter = router({
     .input(
       z.object({
         userId: z.string(),
+        image: z.string().optional(),
         firstName: z.string().optional(),
         lastName: z.string().optional(),
         phoneNumber: z.string().optional(),
@@ -116,6 +117,7 @@ export const userRouter = router({
         const updated = await ctx.prisma.user.update({
           where: { id: userId },
           data: {
+            image: input.image,
             firstName: input.firstName,
             lastName: input.lastName,
             phoneNumber: input.phoneNumber,
@@ -130,6 +132,7 @@ export const userRouter = router({
       const updated = await ctx.prisma.user.update({
         where: { id: userId },
         data: {
+          image: input.image,
           firstName: input.firstName,
           lastName: input.lastName,
           phoneNumber: input.phoneNumber,

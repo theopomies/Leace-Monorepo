@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { MouseEventHandler } from "react";
+import { MouseEventHandler, useState } from "react";
 import { trpc } from "../../../utils/trpc";
 import { Role } from "@prisma/client";
 import { Header } from "../../shared/Header";
@@ -10,16 +10,21 @@ import { cropImage } from "../../../utils/cropImage";
 
 export function UpdateAdminUserPage({ userId }: { userId: string }) {
   const router = useRouter();
-  const { data: user } = trpc.moderation.user.getUser.useQuery({ userId });
+  const [fileType, setFileType] = useState("");
+  const { data: user, refetch: refetchUser } =
+    trpc.moderation.user.getUser.useQuery({ userId });
   const updateUser = trpc.user.updateUserById.useMutation();
 
   const updateAttributes = trpc.attribute.updateUserAttributes.useMutation();
 
-  const { data: imageGet, refetch: refetchImageGet } =
-    trpc.moderation.image.getSignedUserUrl.useQuery({ userId });
   const uploadImage = trpc.moderation.image.putSignedUrl.useMutation();
-  const deleteImage = trpc.moderation.image.deleteSignedUrl.useMutation();
-
+  const { refetch: refetchPicture } = trpc.image.getSignedUserUrl.useQuery(
+    {
+      userId,
+      fileType,
+    },
+    { enabled: false },
+  );
   const { data: documentsGet, refetch: refetchDocumentsGet } =
     trpc.moderation.document.getSignedUrl.useQuery({ userId });
   const uploadDocument = trpc.moderation.document.putSignedUrl.useMutation();
@@ -62,26 +67,26 @@ export function UpdateAdminUserPage({ userId }: { userId: string }) {
     const file = event.target.files && event.target.files[0];
 
     if (file) {
+      setFileType(file.type);
       cropImage(file, async (croppedBlob) => {
         await uploadImage
-          .mutateAsync({ userId, fileType: croppedBlob.type })
+          .mutateAsync({
+            userId,
+            fileType: croppedBlob.type,
+          })
           .then(async (url) => {
-            if (url && event.target.files) {
-              await axios.put(url, croppedBlob);
-              refetchImageGet();
+            if (url) {
+              await axios.put(url, croppedBlob).then(async () => {
+                const { data: res } = await refetchPicture();
+                await updateUser.mutateAsync({
+                  userId,
+                  image: res,
+                });
+                await refetchUser();
+              });
             }
           });
       });
-    }
-  };
-
-  const handleDeleteImg = async () => {
-    if (imageGet) {
-      await deleteImage
-        .mutateAsync({ userId, imageId: imageGet.id })
-        .then(() => {
-          refetchImageGet();
-        });
     }
   };
 
@@ -118,8 +123,6 @@ export function UpdateAdminUserPage({ userId }: { userId: string }) {
       <UserForm
         user={user}
         onImgUpload={handleUploadImg}
-        onImgDelete={handleDeleteImg}
-        imageGet={imageGet}
         onDocsUpload={handleUploadDocs}
         onDocDelete={handleDeleteDoc}
         documentsGet={documentsGet}
