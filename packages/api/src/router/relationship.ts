@@ -5,7 +5,6 @@ import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";
 import { getId } from "../utils/getId";
 import { movePostToSeen, moveUserToSeen } from "../utils/algorithm";
-import mixpanel from "mixpanel";
 
 export const relationshipRouter = router({
   likeTenantForPost: protectedProcedure([Role.OWNER, Role.AGENCY])
