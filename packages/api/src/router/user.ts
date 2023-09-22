@@ -41,6 +41,11 @@ export const userRouter = router({
     });
 
     if (!newAccount) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+    ctx.mixPanel.track("Signed Up", {
+      distinct_id: ctx.auth.userId,
+      "Signup Type": "Referral",
+    });
   }),
   /** Update a user role with the given id and role. */
   updateUserRoleById: AuthenticatedProcedure.input(
@@ -61,6 +66,12 @@ export const userRouter = router({
     });
 
     if (!updated) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+    ctx.mixPanel.track("Update Role", {
+      distinct_id: ctx.auth.userId,
+      Items: "Referral",
+      role: input.role,
+    });
   }),
   /** Update one user's data with the given id
       Also check for:
@@ -77,6 +88,7 @@ export const userRouter = router({
     .input(
       z.object({
         userId: z.string(),
+        image: z.string().optional(),
         firstName: z.string().optional(),
         lastName: z.string().optional(),
         country: z.string().optional(),
@@ -119,6 +131,7 @@ export const userRouter = router({
         const updated = await ctx.prisma.user.update({
           where: { id: userId },
           data: {
+            image: input.image,
             firstName: input.firstName,
             lastName: input.lastName,
             phoneNumber: input.phoneNumber,
@@ -143,6 +156,7 @@ export const userRouter = router({
       const updated = await ctx.prisma.user.update({
         where: { id: userId },
         data: {
+          image: input.image,
           firstName: input.firstName,
           lastName: input.lastName,
           phoneNumber: input.phoneNumber,

@@ -16,8 +16,7 @@ import { DocumentList } from "../document/DocumentList";
 import { UserAttributesForm } from "../../attributes/UserAttributesForm";
 import { DateInput } from "../forms/DateInput";
 import { TextInput } from "../forms/TextInput";
-import { User, Attribute, Image, Document, Role } from "@prisma/client";
-import { CrossSvg } from "../icons/CrossSvg";
+import { User, Attribute, Document, Role } from "@prisma/client";
 
 export type ModerationUserFormData = {
   birthDate: string;
@@ -44,8 +43,6 @@ export type ModerationUserFormData = {
 export interface UserFormProps {
   user: (User & { attribute: Attribute | null }) | undefined;
   onImgUpload?: (event: ChangeEvent<HTMLInputElement>) => Promise<void>;
-  onImgDelete?: () => Promise<void>;
-  imageGet: (Image & { url: string }) | null | undefined;
   onDocsUpload: (event: ChangeEvent<HTMLInputElement>) => void;
   onDocDelete: (documentId: string) => Promise<void>;
   documentsGet: (Document & { url: string })[] | null | undefined;
@@ -205,28 +202,11 @@ export const ModerationUserForm = (props: UserFormProps) => {
       <div className="mx-auto flex">
         <div className="relative">
           <img
-            src={
-              (props.user && props.user.image) ||
-              (props.imageGet && props.imageGet.url) ||
-              "/defaultImage.png"
-            }
+            src={(props.user && props.user.image) || "/defaultImage.png"}
             referrerPolicy="no-referrer"
             alt="image"
             className="mx-auto h-32 rounded-full shadow-xl"
           />
-          {props.imageGet && props.imageGet.url && props.onImgDelete && (
-            <Button
-              theme="danger"
-              onClick={(e) => {
-                e.preventDefault();
-                props.onImgDelete && props.onImgDelete();
-              }}
-              overrideStyles
-              className="absolute right-0 top-0 inline-flex h-7 w-7 items-center justify-center rounded-md bg-red-500 stroke-white p-1.5 hover:bg-red-700"
-            >
-              <CrossSvg />
-            </Button>
-          )}
         </div>
         {props.onImgUpload && (
           <div className="ml-2 flex items-center">

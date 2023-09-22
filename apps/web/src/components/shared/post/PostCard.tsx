@@ -1,6 +1,13 @@
 import { DisplayReports } from "../../moderation/report/DisplayReports";
 import { DocumentList } from "../document/DocumentList";
-import { Post, Attribute, Report, Image, Document } from "@prisma/client";
+import {
+  Post,
+  Attribute,
+  Report,
+  Image,
+  Document,
+  PostType,
+} from "@prisma/client";
 import Link from "next/link";
 import { DialogButton } from "../button/DialogButton";
 import { ImageSelector } from "./ImageSelector";
@@ -10,6 +17,7 @@ import { RxDimensions } from "react-icons/rx";
 import { LiaCouchSolid } from "react-icons/lia";
 import { MdOutlineShower, MdOutlineBed } from "react-icons/md";
 import { displayDate } from "../../../utils/displayDate";
+import { Button } from "../button/Button";
 
 export interface PostCardProps {
   post: Post & {
@@ -23,6 +31,8 @@ export interface PostCardProps {
   updateLink?: string;
   isLoggedIn?: boolean;
   isAdmin?: boolean;
+  onPause?: () => Promise<void>;
+  onUnpause?: () => Promise<void>;
 }
 
 const attributes = {
@@ -45,6 +55,8 @@ export const PostCard = ({
   updateLink,
   isLoggedIn,
   isAdmin,
+  onPause,
+  onUnpause,
 }: PostCardProps) => {
   if (!post.attribute) return <h1>Something went wrong</h1>;
 
@@ -149,11 +161,13 @@ export const PostCard = ({
           <ul className="gap-4 sm:flex sm:flex-wrap md:grid md:grid-cols-3">
             <li className="mr-8 flex-grow border-b border-indigo-300 pb-2">
               <h3 className="text-xl font-medium">Estimated fees costs</h3>
-              {post.estimatedCosts ? post.estimatedCosts + " $" : "Not specified"}
+              {post.estimatedCosts
+                ? post.estimatedCosts + " $"
+                : "Not specified"}
             </li>
             <li className="mr-8 flex-grow border-b border-indigo-300 pb-2">
               <h3 className="text-xl font-medium">Nearest shops</h3>
-              {post.nearestShops ? post.nearestShops + " km": "Not specified"}
+              {post.nearestShops ? post.nearestShops + " km" : "Not specified"}
             </li>
           </ul>
           <ul className="mt-6 gap-4 sm:flex sm:flex-wrap md:grid md:grid-cols-3">
@@ -217,6 +231,19 @@ export const PostCard = ({
               Update
             </Link>
           )}
+          {post.type != PostType.HIDE ? (
+            <Button
+              title="Pause"
+              onClick={onPause}
+              className="bg-yellow-500 hover:bg-yellow-600 active:bg-yellow-700"
+            >
+              Pause
+            </Button>
+          ) : post.type == PostType.HIDE ? (
+            <Button title="unpause" onClick={onUnpause} theme="success">
+              Unpause
+            </Button>
+          ) : null}
           {onPostDelete && (
             <DialogButton
               buttonText="Delete my post"

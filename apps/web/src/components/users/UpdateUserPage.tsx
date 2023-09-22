@@ -1,4 +1,5 @@
-import { MouseEventHandler, useRef } from "react";
+/* eslint-disable @next/next/no-img-element */
+import { MouseEventHandler, useState, useRef } from "react";
 import { trpc } from "../../utils/trpc";
 import { Role } from "@prisma/client";
 import { useRouter } from "next/router";
@@ -15,15 +16,22 @@ export interface UpdateUserPageProps {
 
 export function UpdateUserPage({ userId }: UpdateUserPageProps) {
   const router = useRouter();
-  const { data: user } = trpc.user.getUserById.useQuery({ userId });
+  const [fileType, setFileType] = useState("");
+  const { data: user, refetch: refetchUser } = trpc.user.getUserById.useQuery({
+    userId,
+  });
   const updateUser = trpc.user.updateUserById.useMutation();
 
   const updateAttributes = trpc.attribute.updateUserAttributes.useMutation();
 
-  const { data: image, refetch: refetchImage } =
-    trpc.image.getSignedUserUrl.useQuery({ userId });
   const uploadImage = trpc.image.putSignedUrl.useMutation();
-
+  const { refetch: refetchPicture } = trpc.image.getSignedUserUrl.useQuery(
+    {
+      userId,
+      fileType,
+    },
+    { enabled: false },
+  );
   const { data: documents, refetch: refetchDocuments } =
     trpc.document.getSignedUrl.useQuery({ userId });
   const uploadDocument = trpc.document.putSignedUrl.useMutation();
@@ -81,6 +89,7 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
     const file = event.target.files && event.target.files[0];
 
     if (file) {
+      setFileType(file.type);
       cropImage(file, async (croppedBlob) => {
         await uploadImage
           .mutateAsync({
@@ -89,8 +98,14 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
           })
           .then(async (url) => {
             if (url) {
-              await axios.put(url, croppedBlob);
-              refetchImage();
+              await axios.put(url, croppedBlob).then(async () => {
+                const { data: res } = await refetchPicture();
+                await updateUser.mutateAsync({
+                  userId,
+                  image: res,
+                });
+                await refetchUser();
+              });
             }
           });
       });
@@ -143,7 +158,7 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
             <div className="relative h-full w-full overflow-hidden rounded-full shadow-xl">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={user.image || (image && image.url) || "/defaultImage.png"}
+                src={user.image || "/defaultImage.png"}
                 referrerPolicy="no-referrer"
                 alt="image"
                 className="mx-auto h-full w-full overflow-hidden rounded-full"

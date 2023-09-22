@@ -13,15 +13,19 @@ export function AdminPostPage({ postId }: { postId: string }) {
   if (post.isLoading) return <Loader />;
   if (post && post.data && !post.error) {
     return (
-      <div className="flex w-full">
+      <div className="flex w-full py-10 pl-10">
         <div className="flex w-5/6 flex-col">
           <Search />
-          <Link href={`/administration/users/${post.data.createdById}`}>
+          <Link
+            href={`/administration/users/${post.data.createdById}`}
+            className="pt-10 pb-5"
+          >
             <Button className="w-full">View profile</Button>
           </Link>
-          <div className="flex">
+          <div className="flex gap-5">
             <PostList
               userId={post.data.createdById}
+              postId={postId}
               postLink="/administration/posts/[postId]"
             />
             <Post postId={postId} />

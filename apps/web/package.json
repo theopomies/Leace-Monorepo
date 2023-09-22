@@ -14,6 +14,9 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^4.11.1",
+    "@fortawesome/fontawesome-svg-core": "^6.4.0",
+    "@fortawesome/free-solid-svg-icons": "^6.4.0",
+    "@fortawesome/react-fontawesome": "^0.2.0",
     "@leace/api": "*",
     "@leace/db": "*",
     "@leace/tailwind-config": "*",
@@ -27,11 +30,15 @@
     "@trpc/next": "^10.1.0",
     "@trpc/react-query": "^10.1.0",
     "@trpc/server": "^10.1.0",
+    "@types/mixpanel-browser": "^2.47.1",
     "axios": "^1.2.4",
     "framer": "^2.2.1",
     "framer-motion": "^8.1.3",
     "micro": "^10.0.1",
     "micro-cors": "^0.1.1",
+    "mixpanel": "^0.17.0",
+    "mixpanel-browser": "^2.47.0",
+    "net": "^1.0.2",
     "next": "^13.2.4",
     "nodemailer": "^6.8.0",
     "raw-body": "^2.5.1",
@@ -40,6 +47,7 @@
     "react-icons": "^4.10.1",
     "recharts": "^2.8.0",
     "stripe": "^11.8.0",
+    "tls": "^0.0.1",
     "zod": "^3.18.0"
   },
   "devDependencies": {

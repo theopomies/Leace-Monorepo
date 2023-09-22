@@ -54,12 +54,20 @@ export const PostBar = ({
               />
             </div>
           )}
-          <div className="flex flex-col gap-2 p-3">
+          <div
+            className={`mx-5 my-auto w-3/5 min-w-max ${
+              (!img || !img[0]) && "py-6"
+            }`}
+          >
             <div className=" font-semibold uppercase tracking-wide text-indigo-500">
               {post.title}
             </div>
-            <p className="text-slate-500">
-              {post.type == PostType.RENTED ? "Rented ✅" : "Available"}
+            <p className="mt-2 text-slate-500">
+              {post.type === PostType.RENTED
+                ? "Rented ✅"
+                : post.type === PostType.HIDE
+                ? "On pause"
+                : "Available"}
             </p>
           </div>
         </Link>

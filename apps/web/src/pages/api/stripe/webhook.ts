@@ -4,6 +4,7 @@ import rawBody from "raw-body";
 
 import { stripe } from "../../../utils/stripe";
 import { prisma } from "@leace/db";
+import mixpanel from "../../../utils/mixpanel";
 
 export const config = {
   api: {
@@ -38,6 +39,12 @@ export default async function handler(
     if (!session.client_reference_id) {
       return res.status(400).send(`Error with client_reference_id: ${session}`);
     }
+    console.log(`${session.client_reference_id} is now a premium user!`);
+
+    mixpanel.track("Premium User", {
+      userId: session.client_reference_id,
+    });
+
     await prisma.user.update({
       where: { id: session.client_reference_id },
       data: { isPremium: true },
