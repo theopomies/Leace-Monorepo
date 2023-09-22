@@ -8,16 +8,27 @@ import { ReportDialog } from "./ReportDialog";
 
 export function OwnerChat({
   userId,
-  conversationId = "",
+  conversationId,
   role,
+  postId,
 }: {
   userId: string;
   conversationId?: string;
   role: Role;
+  postId?: string;
 }) {
   const utils = trpc.useContext();
-  const { data: conversation, isLoading: conversationIsLoading } =
-    trpc.conversation.getConversation.useQuery({ conversationId });
+  const { data: conversation, isLoading: conversationIsLoadingOrNotEnabled } =
+    trpc.conversation.getConversation.useQuery(
+      {
+        conversationId: conversationId ?? "",
+      },
+      { enabled: !!conversationId },
+    );
+  const conversationIsLoading = useMemo(
+    () => conversationIsLoadingOrNotEnabled && !!conversationId,
+    [conversationIsLoadingOrNotEnabled, conversationId],
+  );
   const sendMutation = trpc.conversation.sendMessage.useMutation({
     onSuccess() {
       utils.conversation.getConversation.invalidate();
@@ -29,8 +40,22 @@ export function OwnerChat({
   const { data: supportRelationships, isLoading: supportRelationshipsLoading } =
     trpc.support.getRelationshipsForOwner.useQuery({ userId });
   const sendMessage = (content: string) => {
-    sendMutation.mutate({ conversationId, content });
+    if (conversationId) sendMutation.mutate({ conversationId, content });
   };
+  const { data: posts, isLoading: postsLoading } =
+    trpc.post.getPostsByUserId.useQuery({ userId });
+
+  const relationshipsFiltered = useMemo(() => {
+    if (!relationships) {
+      return [];
+    }
+    return relationships.filter(
+      (r) =>
+        r.id === conversation?.relationId ||
+        r.postId === postId ||
+        postId === undefined,
+    );
+  }, [relationships, conversation?.relationId, postId]);
 
   const report = trpc.report.reportUserById.useMutation();
 
@@ -38,35 +63,47 @@ export function OwnerChat({
     () =>
       conversationIsLoading ||
       relationshipsLoading ||
+      postsLoading ||
       supportRelationshipsLoading,
-    [conversationIsLoading, relationshipsLoading, supportRelationshipsLoading],
+    [
+      conversationIsLoading,
+      relationshipsLoading,
+      supportRelationshipsLoading,
+      postsLoading,
+    ],
   );
 
   const relationship = useMemo(() => {
-    if (!relationships) {
-      return undefined;
-    }
-    return relationships.find((r) => r.id === conversation?.relationId);
-  }, [relationships, conversation]);
+    return relationshipsFiltered.find((r) => r.id === conversation?.relationId);
+  }, [relationshipsFiltered, conversation?.relationId]);
 
   if (isLoading) {
     return <Loader />;
   }
 
-  if (!conversation) {
-    return <div>Conversation not found</div>; // TODO: 404
-  }
+  const sendHandler = conversation ? sendMessage : undefined;
+
+  const contact = relationship?.user
+    ? {
+        name:
+          relationship.user.firstName + " " + relationship.user.lastName ??
+          "Anonymous user",
+        link: `/users/${relationship.user.id}`,
+      }
+    : undefined;
 
   return (
     <Chat
       userId={userId}
-      messages={conversation.messages}
-      onSend={conversationId !== "" ? sendMessage : undefined}
-      relationships={relationships}
+      messages={conversation?.messages}
+      onSend={sendHandler}
+      relationships={relationshipsFiltered}
       supportRelationships={supportRelationships}
       role={role}
       conversationId={conversationId}
-      contact={relationship?.user}
+      contact={contact}
+      posts={posts}
+      postId={postId}
       additionnalBarComponent={
         <div className="flex items-center gap-8">
           {relationship && (

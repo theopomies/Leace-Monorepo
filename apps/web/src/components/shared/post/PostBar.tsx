@@ -43,11 +43,15 @@ export const PostBar = ({
       <div className="flex items-center">
         <Link
           href={postLink.replace("[postId]", post.id)}
-          className="flex w-full"
+          className="flex w-full flex-col"
         >
           {img && img[0] && (
-            <div className="h-full w-2/5">
-              <img src={img[0].url} alt="Post image" className="object-cover" />
+            <div className="w-full">
+              <img
+                src={img[0].url}
+                alt="Post image"
+                className="w-full object-cover"
+              />
             </div>
           )}
           <div

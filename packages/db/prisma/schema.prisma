@@ -50,6 +50,21 @@ enum PostType {
   TO_BE_RENTED
 }
 
+enum MaritalStatus {
+  SINGLE
+  MARRIED
+  ONE_CHILD
+  TWO_CHILD
+  OTHER
+}
+
+enum EnergyClass {
+  A
+  B
+  C
+  D
+}
+
 enum HomeType {
   APARTMENT
   HOUSE
@@ -68,9 +83,14 @@ model User {
   country       String?
   description   String?     @db.Text
   birthDate     DateTime?
+  job String?
+  employmentContract String?
+  income Int?
+  creditScore Int?
+  maritalStatus MaritalStatus?
+  status        UserStatus? @default(INACTIVE)
   isPremium     Boolean?    @default(false)
 
-  status        UserStatus? @default(INACTIVE)
   lastLogin     DateTime   @default(now())
 
   attribute Attribute?
@@ -114,6 +134,13 @@ model Post {
   content String?
   desc    String?   @db.Text
   type    PostType? @default(TO_BE_RENTED)
+  energyClass EnergyClass?
+  ges EnergyClass?
+  constructionDate DateTime?
+  estimatedCosts Int?
+  nearestShops Int?
+  securityAlarm Boolean?
+  internetFiber Boolean?
 
   attribute Attribute?
 

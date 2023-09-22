@@ -15,10 +15,16 @@ export default function MatchChat() {
     return <div>BAD REQ</div>;
   }
 
+  const postId = router.query.postId as string | undefined;
+
   return (
     <LoggedLayout title="Chat | Leace">
       <div className="flex h-screen w-full justify-center p-4">
-        <ChatPage userId={userId} conversationId={conversationId} />
+        <ChatPage
+          userId={userId}
+          conversationId={conversationId}
+          postId={postId}
+        />
       </div>
     </LoggedLayout>
   );

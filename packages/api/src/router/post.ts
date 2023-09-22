@@ -1,4 +1,4 @@
-import { PostType, RelationType, Role } from "@prisma/client";
+import { RelationType, PostType, Role, EnergyClass } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";
@@ -17,6 +17,17 @@ export const postRouter = router({
         title: z.string(),
         content: z.string(),
         desc: z.string(),
+        energyClass: z
+          .enum([EnergyClass.A, EnergyClass.B, EnergyClass.C, EnergyClass.D])
+          .optional(),
+        ges: z
+          .enum([EnergyClass.A, EnergyClass.B, EnergyClass.C, EnergyClass.D])
+          .optional(),
+        constructionDate: z.date().optional(),
+        estimatedCosts: z.number().optional(),
+        nearedShops: z.number().optional(),
+        securityAlarm: z.boolean().optional(),
+        internetFiber: z.boolean().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -39,6 +50,11 @@ export const postRouter = router({
           content: input.content,
           desc: input.desc,
           type: PostType.TO_BE_RENTED,
+          constructionDate: input.constructionDate,
+          estimatedCosts: input.estimatedCosts,
+          nearestShops: input.nearedShops,
+          securityAlarm: input.securityAlarm,
+          internetFiber: input.internetFiber,
         },
       });
 
@@ -59,7 +75,20 @@ export const postRouter = router({
         title: z.string().optional(),
         content: z.string().optional(),
         desc: z.string().optional(),
-        type: z.enum([PostType.RENTED, PostType.TO_BE_RENTED, PostType.HIDE]).optional(),
+        energyClass: z
+          .enum([EnergyClass.A, EnergyClass.B, EnergyClass.C, EnergyClass.D])
+          .optional(),
+        ges: z
+          .enum([EnergyClass.A, EnergyClass.B, EnergyClass.C, EnergyClass.D])
+          .optional(),
+        constructionDate: z.date().optional(),
+        estimatedCosts: z.number().optional(),
+        nearedShops: z.number().optional(),
+        securityAlarm: z.boolean().optional(),
+        internetFiber: z.boolean().optional(),
+        type: z
+          .enum([PostType.RENTED, PostType.TO_BE_RENTED, PostType.HIDE])
+          .optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -86,6 +115,13 @@ export const postRouter = router({
           content: input.content,
           desc: input.desc,
           type: input.type,
+          constructionDate: input.constructionDate,
+          estimatedCosts: input.estimatedCosts,
+          nearestShops: input.nearedShops,
+          securityAlarm: input.securityAlarm,
+          internetFiber: input.internetFiber,
+          ges: input.ges,
+          energyClass: input.energyClass,
         },
       });
 

@@ -74,32 +74,33 @@ export const attributesRouter = router({
           console.error(error);
         }
       }
+      const data = {
+        userId: userId,
+        location: input.location,
+        lat: lat,
+        lng: lng,
+        range: input.range,
+        maxPrice: input.maxPrice ?? null,
+        minPrice: input.minPrice ?? null,
+        maxSize: input.maxSize ?? null,
+        minSize: input.minSize ?? null,
+        rentStartDate: input.rentStartDate ?? null,
+        rentEndDate: input.rentEndDate ?? null,
+        furnished: input.furnished ?? null,
+        homeType: input.homeType || null,
+        terrace: input.terrace ?? null,
+        pets: input.pets ?? null,
+        smoker: input.smoker ?? null,
+        disability: input.disability ?? null,
+        garden: input.garden ?? null,
+        parking: input.parking ?? null,
+        elevator: input.elevator ?? null,
+        pool: input.pool ?? null,
+      } as const;
 
       if (!attribute) {
         const created = await ctx.prisma.attribute.create({
-          data: {
-            userId: userId,
-            location: input.location,
-            lat: lat,
-            lng: lng,
-            range: input.range,
-            maxPrice: input.maxPrice,
-            minPrice: input.minPrice,
-            maxSize: input.maxSize,
-            minSize: input.minSize,
-            rentStartDate: input.rentStartDate,
-            rentEndDate: input.rentEndDate,
-            furnished: input.furnished,
-            homeType: input.homeType || null,
-            terrace: input.terrace,
-            pets: input.pets,
-            smoker: input.smoker,
-            disability: input.disability,
-            garden: input.garden,
-            parking: input.parking,
-            elevator: input.elevator,
-            pool: input.pool,
-          },
+          data,
         });
 
         if (!created) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
@@ -112,28 +113,7 @@ export const attributesRouter = router({
 
       const updated = await ctx.prisma.attribute.update({
         where: { id: attribute.id },
-        data: {
-          location: input.location,
-          lat: lat,
-          lng: lng,
-          range: input.range,
-          maxPrice: input.maxPrice,
-          minPrice: input.minPrice,
-          maxSize: input.maxSize,
-          minSize: input.minSize,
-          rentStartDate: input.rentStartDate,
-          rentEndDate: input.rentEndDate,
-          furnished: input.furnished,
-          homeType: input.homeType || null,
-          terrace: input.terrace,
-          pets: input.pets,
-          smoker: input.smoker,
-          disability: input.disability,
-          garden: input.garden,
-          parking: input.parking,
-          elevator: input.elevator,
-          pool: input.pool,
-        },
+        data,
       });
 
       if (!updated) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });

@@ -5,7 +5,10 @@ import { Role } from "@prisma/client";
 import { Header } from "../../shared/Header";
 import { useRouter } from "next/router";
 import axios from "axios";
-import { UserForm, UserFormData } from "../../shared/user/UserForm";
+import {
+  ModerationUserForm,
+  ModerationUserFormData,
+} from "../../shared/user/ModerationUserForm";
 import { cropImage } from "../../../utils/cropImage";
 
 export function UpdateAdminUserPage({ userId }: { userId: string }) {
@@ -30,7 +33,7 @@ export function UpdateAdminUserPage({ userId }: { userId: string }) {
   const uploadDocument = trpc.moderation.document.putSignedUrl.useMutation();
   const deleteDocument = trpc.moderation.document.deleteSignedUrl.useMutation();
 
-  const handleSubmit = async (data: UserFormData) => {
+  const handleSubmit = async (data: ModerationUserFormData) => {
     await updateUser.mutateAsync({
       userId,
       birthDate: new Date(data.birthDate + "T00:00:00.000Z"),
@@ -120,7 +123,7 @@ export function UpdateAdminUserPage({ userId }: { userId: string }) {
   return (
     <div className="w-full">
       <Header heading="Update Profile" />
-      <UserForm
+      <ModerationUserForm
         user={user}
         onImgUpload={handleUploadImg}
         onDocsUpload={handleUploadDocs}
