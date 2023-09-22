@@ -1,10 +1,29 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { trpc } from "../../../utils/trpc";
 import { Loader } from "../Loader";
 import { Chat } from "./Chat";
 import { Role } from "@prisma/client";
 import { TenantContractPopover } from "./contracts/TenantContractPopover";
 import { ReportDialog } from "./ReportDialog";
+import { Button } from "../button/Button";
+
+function LikeButton({ agencyId }: { agencyId: string }) {
+  const [label, setLabel] = useState("Recommend this agency");
+  const mutation = trpc.post.likeAgency.useQuery({
+    agencyId,
+  });
+
+  const handleClick = () => {
+    // mutation.mutate();
+    setLabel("Thank you!");
+  };
+
+  return (
+    <Button onClick={handleClick} disabled={mutation.isLoading}>
+      {label}
+    </Button>
+  );
+}
 
 export function TenantChat({
   userId,
@@ -57,6 +76,10 @@ export function TenantChat({
     return <div>Conversation not found</div>; // TODO: 404
   }
 
+  if (!relationship) {
+    return <div>Relationship not found</div>; // TODO: 404
+  }
+
   return (
     <Chat
       userId={userId}
@@ -69,18 +92,23 @@ export function TenantChat({
       contact={relationship?.post.createdBy}
       additionnalBarComponent={
         <div className="flex items-center gap-8">
-          {relationship && (
-            <ReportDialog
-              title={relationship.post.title ?? "title"}
-              onReport={({ reason, description }) =>
-                report.mutate({
-                  postId: relationship.post.id,
-                  reason,
-                  desc: description,
-                })
-              }
-            />
-          )}
+          {relationship &&
+            (relationship.lease?.isSigned ? (
+              relationship.post.createdBy.role == Role.AGENCY && (
+                <LikeButton agencyId={relationship?.post.createdBy.id} />
+              )
+            ) : (
+              <ReportDialog
+                title={relationship.post.title ?? "title"}
+                onReport={({ reason, description }) =>
+                  report.mutate({
+                    postId: relationship.post.id,
+                    reason,
+                    desc: description,
+                  })
+                }
+              />
+            ))}
           <TenantContractPopover relationship={relationship} />
         </div>
       }
