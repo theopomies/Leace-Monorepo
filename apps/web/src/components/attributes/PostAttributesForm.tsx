@@ -32,6 +32,10 @@ interface PostAttributesFormProps {
   handleElevatorChange: ChangeEventHandler<HTMLInputElement>;
   pool: boolean;
   handlePoolChange: ChangeEventHandler<HTMLInputElement>;
+  securityAlarm: boolean;
+  handleSecurityAlarmChange: ChangeEventHandler<HTMLInputElement>;
+  internetFiber: boolean;
+  handleInternetFiberChange: ChangeEventHandler<HTMLInputElement>;
 }
 
 export function PostAttributesForm({ ...attributes }: PostAttributesFormProps) {
@@ -84,6 +88,16 @@ export function PostAttributesForm({ ...attributes }: PostAttributesFormProps) {
       name: "pool",
       label: "Pool",
       handleChange: attributes.handlePoolChange,
+    },
+    {
+      name: "securityAlarm",
+      label: "Security alarm",
+      handleChange: attributes.handleSecurityAlarmChange,
+    },
+    {
+      name: "internetFiber",
+      label: "Internet fiber",
+      handleChange: attributes.handleInternetFiberChange,
     },
   ];
 

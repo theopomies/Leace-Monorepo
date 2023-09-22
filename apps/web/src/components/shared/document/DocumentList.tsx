@@ -37,7 +37,6 @@ export const DocumentList = ({
 
   return (
     <div className="border-t py-5 text-center">
-      <h2 className="mb-5 text-xl">Documents:</h2>
       <div className="flex justify-center gap-4">
         {documents.map((doc, index) => (
           <div key={index} className="relative flex items-center">

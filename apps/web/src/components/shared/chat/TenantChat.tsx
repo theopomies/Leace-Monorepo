@@ -35,8 +35,17 @@ export function TenantChat({
   role: Role;
 }) {
   const utils = trpc.useContext();
-  const { data: conversation, isLoading: conversationIsLoading } =
-    trpc.conversation.getConversation.useQuery({ conversationId });
+  const { data: conversation, isLoading: conversationIsLoadingOrNotEnabled } =
+    trpc.conversation.getConversation.useQuery(
+      {
+        conversationId: conversationId ?? "",
+      },
+      { enabled: !!conversationId },
+    );
+  const conversationIsLoading = useMemo(
+    () => conversationIsLoadingOrNotEnabled && !!conversationId,
+    [conversationIsLoadingOrNotEnabled, conversationId],
+  );
   const sendMutation = trpc.conversation.sendMessage.useMutation({
     onSuccess() {
       utils.conversation.getConversation.invalidate();
@@ -72,9 +81,17 @@ export function TenantChat({
     return <Loader />;
   }
 
-  if (!conversation) {
-    return <div>Conversation not found</div>; // TODO: 404
-  }
+  const sendHandler = conversation ? sendMessage : undefined;
+
+  const contact = relationship
+    ? {
+        name:
+          relationship.post.createdBy.firstName +
+          " - " +
+          (relationship.post.title || "Untitled Post"),
+        link: `/posts/${relationship.post.id}`,
+      }
+    : undefined;
 
   if (!relationship) {
     return <div>Relationship not found</div>; // TODO: 404
@@ -83,13 +100,13 @@ export function TenantChat({
   return (
     <Chat
       userId={userId}
-      messages={conversation.messages}
-      onSend={conversationId !== "" ? sendMessage : undefined}
+      messages={conversation?.messages}
+      onSend={sendHandler}
       relationships={relationships}
       supportRelationships={supportRelationships}
       role={role}
       conversationId={conversationId}
-      contact={relationship?.post.createdBy}
+      contact={contact}
       additionnalBarComponent={
         <div className="flex items-center gap-8">
           {relationship &&

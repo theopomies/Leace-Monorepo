@@ -1,6 +1,7 @@
-import { Role, User } from "@prisma/client";
+import { Role, Post } from "@prisma/client";
 import { ChatBox } from "./ChatBox";
-import { ChatList, Relationships, SupportRelationships } from "./ChatList";
+import { Relationships, SupportRelationships } from "./ChatList";
+import { ChatList } from "./ChatList";
 import { MessageWithSender } from "./ChatMessage";
 import { ReactNode } from "react";
 
@@ -13,8 +14,10 @@ export type ChatProps = {
   role: Role;
   conversationId?: string;
   conversationLink?: string;
-  contact?: User;
+  contact?: { name: string; link: string };
   additionnalBarComponent?: ReactNode;
+  posts?: Post[];
+  postId?: string;
 };
 
 export const Chat = ({

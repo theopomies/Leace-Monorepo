@@ -2,7 +2,7 @@
 import { trpc } from "../../../utils/trpc";
 import { Loader } from "../../shared/Loader";
 import { useMemo } from "react";
-import { UserCard } from "../../shared/user/UserCard";
+import { ModerationUserCard } from "../../shared/user/ModerationUserCard";
 import { Document, Role } from "@prisma/client";
 
 export interface UserProps {
@@ -50,7 +50,7 @@ export const User = ({ userId }: UserProps) => {
   };
 
   return (
-    <UserCard
+    <ModerationUserCard
       user={user}
       isBanned={isBanned}
       documents={documents}

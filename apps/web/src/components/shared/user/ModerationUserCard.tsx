@@ -7,7 +7,7 @@ import { User, Attribute, Report, Document } from "@prisma/client";
 import { Button } from "../button/Button";
 import { DialogButton } from "../button/DialogButton";
 
-export interface UserCardProps {
+export interface ModerationUserCardProps {
   user: User & {
     attribute: Attribute | null;
     reports?: Report[];
@@ -21,7 +21,7 @@ export interface UserCardProps {
   isAdmin?: boolean;
 }
 
-export const UserCard = ({
+export const ModerationUserCard = ({
   user,
   isBanned,
   onUserDelete,
@@ -30,7 +30,7 @@ export const UserCard = ({
   updateLink,
   isLoggedIn,
   isAdmin,
-}: UserCardProps) => {
+}: ModerationUserCardProps) => {
   return (
     <div className="flex w-full flex-col overflow-auto rounded-lg bg-white p-8 shadow">
       <div className="flex justify-center">

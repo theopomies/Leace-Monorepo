@@ -13,31 +13,37 @@ import { TextArea } from "../forms/TextArea";
 import { FileInput } from "../forms/FileInput";
 import { HomeType } from "../../../types/homeType";
 import { DocumentList } from "../document/DocumentList";
-import { UserAttributesForm } from "../../attributes/UserAttributesForm";
 import { DateInput } from "../forms/DateInput";
 import { TextInput } from "../forms/TextInput";
-import { User, Attribute, Document, Role } from "@prisma/client";
+import { User, Attribute, Document, Role, MaritalStatus } from "@prisma/client";
 
-export type UserFormData = {
+export type ModerationUserFormData = {
   birthDate: string;
   firstName: string;
   lastName: string;
+  country?: string;
   description: string;
-  location: string;
-  maxPrice: number;
-  minPrice: number;
-  maxSize: number;
-  minSize: number;
-  furnished: boolean;
-  homeType: HomeType | undefined;
-  terrace: boolean;
-  pets: boolean;
-  smoker: boolean;
-  disability: boolean;
-  garden: boolean;
-  parking: boolean;
-  elevator: boolean;
-  pool: boolean;
+  location?: string;
+  maxPrice?: number;
+  minPrice?: number;
+  maxSize?: number;
+  minSize?: number;
+  furnished?: boolean;
+  homeType?: HomeType;
+  terrace?: boolean;
+  pets?: boolean;
+  smoker?: boolean;
+  disability?: boolean;
+  garden?: boolean;
+  parking?: boolean;
+  elevator?: boolean;
+  pool?: boolean;
+
+  job?: string;
+  employmentContract?: string;
+  income?: number;
+  creditScore?: number;
+  maritalStatus?: MaritalStatus;
 };
 
 export interface UserFormProps {
@@ -46,11 +52,11 @@ export interface UserFormProps {
   onDocsUpload: (event: ChangeEvent<HTMLInputElement>) => void;
   onDocDelete: (documentId: string) => Promise<void>;
   documentsGet: (Document & { url: string })[] | null | undefined;
-  onSubmit: (data: UserFormData) => Promise<void>;
+  onSubmit: (data: ModerationUserFormData) => Promise<void>;
   onCancel: MouseEventHandler<HTMLButtonElement>;
 }
 
-export const UserForm = (props: UserFormProps) => {
+export const ModerationUserForm = (props: UserFormProps) => {
   const [birthDate, setBirthDate] = useState<string>("");
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
@@ -136,7 +142,7 @@ export const UserForm = (props: UserFormProps) => {
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
 
-    const data: UserFormData = {
+    const data: ModerationUserFormData = {
       birthDate,
       firstName,
       lastName,
@@ -240,9 +246,6 @@ export const UserForm = (props: UserFormProps) => {
           value={description}
         />
       </div>
-      {props.user?.role === Role.TENANT && (
-        <UserAttributesForm {...attributesStates} />
-      )}
       <DocumentList
         documents={props.documentsGet}
         onDelete={props.onDocDelete}

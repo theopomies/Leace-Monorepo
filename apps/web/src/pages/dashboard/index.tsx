@@ -2,12 +2,12 @@ import { LoggedLayout } from "../../components/layout/LoggedLayout";
 import { Role } from "@prisma/client";
 import { trpc } from "../../utils/trpc";
 import { Loader } from "../../components/shared/Loader";
-import { Dashboard } from "../../components/dashboard/Dashboard";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import mixpanel from "../../utils/mixpanel";
+import { DashboardPage } from "../../components/dashboard/DashboardPage";
 
-export default function DashboardPage() {
+export default function DashboardIndex() {
   const { data: session, isLoading } = trpc.auth.getSession.useQuery();
   const router = useRouter();
 
@@ -23,7 +23,7 @@ export default function DashboardPage() {
 
   return (
     <LoggedLayout title="Dashboard | Leace" roles={[Role.AGENCY, Role.OWNER]}>
-      {!!session && <Dashboard userId={session.userId} />}
+      {!!session && <DashboardPage userId={session.userId} />}
     </LoggedLayout>
   );
 }

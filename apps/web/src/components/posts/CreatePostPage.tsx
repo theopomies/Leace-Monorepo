@@ -9,9 +9,11 @@ import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
 import { PostForm, PostFormData } from "../shared/post/PostForm";
 import axios from "axios";
+import { ToastDescription, ToastTitle, useToast } from "../shared/toast/Toast";
 
 export const CreatePostPage = ({ userId }: { userId: string }) => {
   const router = useRouter();
+  const { renderToast } = useToast();
   const post = trpc.post.createPost.useMutation();
 
   const updatePost = trpc.attribute.updatePostAttributes.useMutation();
@@ -68,6 +70,12 @@ export const CreatePostPage = ({ userId }: { userId: string }) => {
       });
     }
     router.push(`/users/${userId}/posts/${postId}`);
+    renderToast(
+      <>
+        <ToastTitle>Success</ToastTitle>
+        <ToastDescription>Your property is now posted ✅</ToastDescription>
+      </>,
+    );
   };
 
   const handleImage =
