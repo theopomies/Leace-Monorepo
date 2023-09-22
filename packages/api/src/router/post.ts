@@ -373,7 +373,7 @@ export const postRouter = router({
     }),
   likeAgency: protectedProcedure([Role.TENANT])
     .input(z.object({ agencyId: z.string() }))
-    .query(async ({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
       const user = await ctx.prisma.user.findFirst({
         where: { id: input.agencyId },
       });

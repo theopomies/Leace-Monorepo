@@ -137,7 +137,6 @@ model Post {
   content String?
   desc    String?   @db.Text
   type    PostType? @default(TO_BE_RENTED)
-  like Int @default(0)
   reviews  Review[]
   energyClass EnergyClass?
   ges EnergyClass?

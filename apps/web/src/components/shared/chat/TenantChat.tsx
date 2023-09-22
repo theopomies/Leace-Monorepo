@@ -7,24 +7,6 @@ import { TenantContractPopover } from "./contracts/TenantContractPopover";
 import { ReportDialog } from "./ReportDialog";
 import { Button } from "../button/Button";
 
-function LikeButton({ agencyId }: { agencyId: string }) {
-  const [label, setLabel] = useState("Recommend this agency");
-  const mutation = trpc.post.likeAgency.useQuery({
-    agencyId,
-  });
-
-  const handleClick = () => {
-    // mutation.mutate();
-    setLabel("Thank you!");
-  };
-
-  return (
-    <Button onClick={handleClick} disabled={mutation.isLoading}>
-      {label}
-    </Button>
-  );
-}
-
 export function TenantChat({
   userId,
   conversationId = "",
@@ -77,6 +59,9 @@ export function TenantChat({
     return relationships.find((r) => r.id === conversation?.relationId);
   }, [relationships, conversation]);
 
+  const [liked, setLiked] = useState(false);
+  const likeMutation = trpc.post.likeAgency.useMutation();
+
   if (isLoading) {
     return <Loader />;
   }
@@ -111,8 +96,17 @@ export function TenantChat({
         <div className="flex items-center gap-8">
           {relationship &&
             (relationship.lease?.isSigned ? (
-              relationship.post.createdBy.role == Role.AGENCY && (
-                <LikeButton agencyId={relationship?.post.createdBy.id} />
+              relationship.post.createdBy.role == Role.AGENCY &&
+              !liked && (
+                <Button
+                  onClick={() =>
+                    likeMutation.mutate({
+                      agencyId: relationship.post.createdBy.id,
+                    })
+                  }
+                >
+                  Like Agency
+                </Button>
               )
             ) : (
               <ReportDialog
