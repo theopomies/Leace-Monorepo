@@ -143,6 +143,7 @@ export function UpdateAdminUserPage({ userId }: UpdateAdminUserPageProps) {
 
   return (
     <UserLayout
+      className="m-20"
       sidePanel={
         <>
           <div className="relative h-40 w-40">
