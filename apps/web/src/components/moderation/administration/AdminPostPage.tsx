@@ -13,8 +13,8 @@ export function AdminPostPage({ postId }: { postId: string }) {
   if (post.isLoading) return <Loader />;
   if (post && post.data && !post.error) {
     return (
-      <div className="flex w-full py-10 pl-10">
-        <div className="flex w-5/6 flex-col">
+      <div className="flex h-screen w-full overflow-auto pl-10">
+        <div className="flex w-5/6 flex-col py-10">
           <Search />
           <Link
             href={`/administration/users/${post.data.createdById}`}

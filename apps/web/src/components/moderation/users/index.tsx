@@ -2,8 +2,8 @@
 import { trpc } from "../../../utils/trpc";
 import { Loader } from "../../shared/Loader";
 import { useMemo } from "react";
-import { ModerationUserCard } from "../../shared/user/ModerationUserCard";
 import { Document, Role } from "@prisma/client";
+import { UserCard } from "../../shared/user/UserCard";
 
 export interface UserProps {
   userId: string;
@@ -24,6 +24,7 @@ export const User = ({ userId }: UserProps) => {
 
   const documentValidation =
     trpc.moderation.document.documentValidation.useMutation();
+  const deleteUser = trpc.user.deleteUserById.useMutation();
 
   const isLoading = useMemo(() => {
     return sessionLoading || isBannedLoading || userLoading || documentsLoading;
@@ -37,7 +38,9 @@ export const User = ({ userId }: UserProps) => {
     return <div>Not logged in</div>;
   }
 
-  if (!user) return <p>Something went wrong</p>;
+  if (!user) {
+    return <p>Not found</p>;
+  }
 
   const handleDocValidation = async (document: Document & { url: string }) => {
     if (document) {
@@ -49,10 +52,15 @@ export const User = ({ userId }: UserProps) => {
     }
   };
 
+  const handleDeleteUser = async () => {
+    await deleteUser.mutateAsync({ userId });
+  };
+
   return (
-    <ModerationUserCard
+    <UserCard
       user={user}
       isBanned={isBanned}
+      onUserDelete={handleDeleteUser}
       documents={documents}
       onDocValidation={handleDocValidation}
       updateLink={"/administration/users/[userId]/update"}

@@ -12,8 +12,8 @@ export function AdminUserPage({ userId }: { userId: string }) {
   if (user.isLoading) return <Loader />;
   if (user && user.data && !user.error) {
     return (
-      <div className="flex w-full py-10 pl-10">
-        <div className="flex w-5/6 flex-col">
+      <div className="flex h-screen w-full overflow-auto pl-10">
+        <div className="flex w-5/6 flex-col py-10">
           <Search />
           {user.data.posts[0] && (
             <Link

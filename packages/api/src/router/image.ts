@@ -97,13 +97,7 @@ export const imageRouter = router({
         }),
       );
     }),
-  getSignedUserUrl: protectedProcedure([
-    Role.TENANT,
-    Role.AGENCY,
-    Role.OWNER,
-    Role.ADMIN,
-    Role.MODERATOR,
-  ])
+  getSignedUserUrl: protectedProcedure([Role.TENANT, Role.AGENCY, Role.OWNER])
     .input(z.object({ userId: z.string(), fileType: z.string() }))
     .query(async ({ ctx, input }) => {
       const getUser = await ctx.prisma.user.findUnique({

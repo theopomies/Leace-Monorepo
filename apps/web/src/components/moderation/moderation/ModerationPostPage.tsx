@@ -18,8 +18,8 @@ export function ModeratioPostPage({
   if (post.isLoading) return <Loader />;
   if (post && post.data && !post.error) {
     return (
-      <div className="flex w-full py-10 pl-10">
-        <div className="flex w-5/6 flex-col">
+      <div className="flex w-full overflow-auto pl-10">
+        <div className="flex w-5/6 flex-col py-10">
           <Link
             href={`/moderation/reports/${reportId}/users/${post.data.createdById}`}
             className="pb-5"

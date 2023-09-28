@@ -5,10 +5,11 @@ import { Role } from "@prisma/client";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { cropImage } from "../../utils/cropImage";
-import { UserForm, UserFormData } from "./UserForm";
+import { UserForm, UserFormData } from "../shared/user/UserForm";
 import { UserLayout } from "./UserLayout";
 import { Button } from "../shared/button/Button";
 import { ToastDescription, ToastTitle, useToast } from "../shared/toast/Toast";
+import { FileInput } from "../shared/forms/FileInput";
 
 export interface UpdateUserPageProps {
   userId: string;
@@ -81,8 +82,6 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
     );
   };
 
-  // TODO
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleUploadImg = async (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
@@ -92,10 +91,7 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
       setFileType(file.type);
       cropImage(file, async (croppedBlob) => {
         await uploadImage
-          .mutateAsync({
-            userId,
-            fileType: croppedBlob.type,
-          })
+          .mutateAsync({ userId, fileType: croppedBlob.type })
           .then(async (url) => {
             if (url) {
               await axios.put(url, croppedBlob).then(async () => {
@@ -116,16 +112,11 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
     if (event.target.files && event.target.files.length > 0) {
       Array.from(event.target.files).map(async (document) => {
         await uploadDocument
-          .mutateAsync({
-            userId,
-            fileType: document.type,
-          })
+          .mutateAsync({ userId, fileType: document.type })
           .then(async (url) => {
             if (url) {
               await axios.put(url, document, {
-                headers: {
-                  "Content-Type": document.type,
-                },
+                headers: { "Content-Type": document.type },
               });
               refetchDocuments();
             }
@@ -165,8 +156,8 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
               />
             </div>
             <button className="absolute left-0 top-0 flex h-full w-full items-end justify-center rounded-full opacity-0 transition-all hover:opacity-100">
-              <span className=" translate-y-[50%] rounded-full bg-white px-4 shadow-md">
-                Edit
+              <span className=" translate-y-[50%]">
+                <FileInput onChange={handleUploadImg}>Edit</FileInput>
               </span>
             </button>
           </div>

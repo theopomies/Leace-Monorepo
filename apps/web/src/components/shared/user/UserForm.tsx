@@ -10,14 +10,14 @@ import {
   useState,
 } from "react";
 import { User, Attribute, Document, Role, MaritalStatus } from "@prisma/client";
-import { HomeType } from "../../types/homeType";
-import { UserAttributesForm } from "../attributes/UserAttributesForm";
-import { DocumentList } from "../shared/document/DocumentList";
-import { DateInput } from "../shared/forms/DateInput";
-import { FileInput } from "../shared/forms/FileInput";
-import { TextArea } from "../shared/forms/TextArea";
-import { TextInput } from "../shared/forms/TextInput";
-import { NumberInput } from "../shared/forms/NumberInput";
+import { HomeType } from "../../../types/homeType";
+import { UserAttributesForm } from "../../attributes/UserAttributesForm";
+import { DocumentList } from "../document/DocumentList";
+import { DateInput } from "../forms/DateInput";
+import { FileInput } from "../forms/FileInput";
+import { TextArea } from "../forms/TextArea";
+import { TextInput } from "../forms/TextInput";
+import { NumberInput } from "../forms/NumberInput";
 
 export type UserFormData = {
   birthDate: string;
