@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import { cropImage } from "../../utils/cropImage";
 import { UserForm, UserFormData } from "../shared/user/UserForm";
-import { UserLayout } from "./UserLayout";
+import { UserLayout } from "../shared/user/UserLayout";
 import { Button } from "../shared/button/Button";
 import { ToastDescription, ToastTitle, useToast } from "../shared/toast/Toast";
 import { FileInput } from "../shared/forms/FileInput";
@@ -40,6 +40,7 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
   const { renderToast } = useToast();
 
   const handleSubmit = async (data: UserFormData) => {
+    console.log(data.maritalStatus);
     await updateUser.mutateAsync({
       userId,
       birthDate: new Date(data.birthDate + "T00:00:00.000Z"),
@@ -143,6 +144,7 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
 
   return (
     <UserLayout
+      className="m-20"
       sidePanel={
         <>
           <div className="relative h-40 w-40">

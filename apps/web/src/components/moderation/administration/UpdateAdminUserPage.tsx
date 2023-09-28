@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import { cropImage } from "../../../utils/cropImage";
 import { UserForm, UserFormData } from "../../shared/user/UserForm";
-import { UserLayout } from "../../users/UserLayout";
+import { UserLayout } from "../../shared/user/UserLayout";
 import { Button } from "../../shared/button/Button";
 import {
   ToastDescription,

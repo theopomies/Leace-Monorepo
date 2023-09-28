@@ -4,7 +4,7 @@ import Link from "next/link";
 import { DialogButton } from "../button/DialogButton";
 import { DocumentList } from "../document/DocumentList";
 import { displayDate } from "../../../utils/displayDate";
-import { UserLayout } from "../../users/UserLayout";
+import { UserLayout } from "./UserLayout";
 import { DisplayReports } from "../../moderation/report/DisplayReports";
 
 export interface UserCardProps {

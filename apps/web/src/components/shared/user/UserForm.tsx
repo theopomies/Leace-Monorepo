@@ -350,6 +350,9 @@ const UserFormBeforeRef = (
                 value={maritalStatus ?? ""}
                 className="w-full rounded-lg border-2 border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-600 focus:outline-none"
               >
+                <option value="" disabled selected>
+                  Select one
+                </option>
                 <option value={MaritalStatus.SINGLE}>SINGLE</option>
                 <option value={MaritalStatus.MARRIED}>MARRIED</option>
                 <option value={MaritalStatus.ONE_CHILD}>ONE_CHILD</option>
