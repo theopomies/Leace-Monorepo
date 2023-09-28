@@ -40,7 +40,6 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
   const { renderToast } = useToast();
 
   const handleSubmit = async (data: UserFormData) => {
-    console.log(data.maritalStatus);
     await updateUser.mutateAsync({
       userId,
       birthDate: new Date(data.birthDate + "T00:00:00.000Z"),
