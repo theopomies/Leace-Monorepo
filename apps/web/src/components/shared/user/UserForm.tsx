@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 import {
-  ChangeEvent,
   Dispatch,
   FormEventHandler,
   ForwardedRef,
@@ -14,10 +13,10 @@ import { HomeType } from "../../../types/homeType";
 import { UserAttributesForm } from "../../attributes/UserAttributesForm";
 import { DocumentList } from "../document/DocumentList";
 import { DateInput } from "../forms/DateInput";
-import { FileInput } from "../forms/FileInput";
 import { TextArea } from "../forms/TextArea";
 import { TextInput } from "../forms/TextInput";
 import { NumberInput } from "../forms/NumberInput";
+import { FileUploadSection } from "../button/FileUploadSection";
 
 export type UserFormData = {
   birthDate: string;
@@ -50,7 +49,7 @@ export type UserFormData = {
 
 export interface UserFormProps {
   user: User & { attribute: Attribute | null };
-  onDocsUpload: (event: ChangeEvent<HTMLInputElement>) => void;
+  onDocsUpload: (files: File[]) => void;
   onDocDelete: (documentId: string) => Promise<void>;
   documents?: (Document & { url: string })[] | null;
   onSubmit: (data: UserFormData) => Promise<void>;
@@ -89,6 +88,8 @@ const UserFormBeforeRef = (
   const [maritalStatus, setMaritalStatus] = useState<MaritalStatus | undefined>(
     undefined,
   );
+
+  const [selectedDocuments, setSelectedDocuments] = useState<File[]>([]);
 
   useEffect(() => {
     const date = user.birthDate
@@ -192,6 +193,7 @@ const UserFormBeforeRef = (
       maritalStatus,
     };
 
+    onDocsUpload(selectedDocuments);
     onSubmit(data);
   };
 
@@ -368,11 +370,12 @@ const UserFormBeforeRef = (
         onDelete={onDocDelete}
         isLoggedInOrAdmin
       />
-      <section className="flex justify-center pt-4">
-        <FileInput multiple onChange={onDocsUpload} accept=".pdf">
-          Upload Documents
-        </FileInput>
-      </section>
+      <p className="bold pt-4 text-xl">Upload Documents</p>
+      <FileUploadSection
+        selectedFiles={selectedDocuments}
+        setSelectedFiles={setSelectedDocuments}
+        accept=".pdf"
+      />
     </form>
   );
 };

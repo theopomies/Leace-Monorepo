@@ -155,7 +155,7 @@ export function UserCard({
               </li>
             </ul>
           </section>
-          {isLoggedUser && (
+          {(isLoggedUser || isAdmin) && (
             <>
               <section>
                 <h2 className="py-4 text-3xl font-medium">

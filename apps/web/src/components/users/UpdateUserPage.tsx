@@ -108,9 +108,9 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
     }
   };
 
-  const handleUploadDocs = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files.length > 0) {
-      Array.from(event.target.files).map(async (document) => {
+  const handleUploadDocs = (files: File[]) => {
+    if (files && files.length > 0) {
+      Array.from(files).map(async (document) => {
         await uploadDocument
           .mutateAsync({ userId, fileType: document.type })
           .then(async (url) => {
@@ -118,7 +118,6 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
               await axios.put(url, document, {
                 headers: { "Content-Type": document.type },
               });
-              refetchDocuments();
             }
           });
       });
