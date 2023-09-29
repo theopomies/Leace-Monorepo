@@ -93,6 +93,25 @@ export const imageModeration = router({
         }),
       );
     }),
+  getSignedUserUrl: protectedProcedure([Role.ADMIN, Role.MODERATOR])
+    .input(z.object({ userId: z.string(), fileType: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const getUser = await ctx.prisma.user.findUnique({
+        where: { id: input.userId },
+      });
+      if (!getUser) throw new TRPCError({ code: "NOT_FOUND" });
+
+      const ext = input.fileType.split("/")[1];
+      if (!ext || (ext != "png" && ext != "jpeg"))
+        throw new TRPCError({ code: "BAD_REQUEST" });
+
+      const bucketParams = {
+        Bucket: "leaceawsbucket",
+        Key: `users/${input.userId}/image/profilePicture.${ext}`,
+      };
+      const command = new GetObjectCommand(bucketParams);
+      return await getSignedUrl(ctx.s3Client, command);
+    }),
   deleteSignedPostUrl: protectedProcedure([Role.ADMIN])
     .input(
       z.object({

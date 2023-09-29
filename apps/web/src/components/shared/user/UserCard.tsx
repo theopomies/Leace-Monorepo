@@ -1,20 +1,24 @@
-import { User, Image, Document, Role, Attribute } from "@prisma/client";
-import { Button } from "../shared/button/Button";
+import { User, Document, Role, Attribute, Report } from "@prisma/client";
+import { Button } from "../button/Button";
 import Link from "next/link";
-import { DialogButton } from "../shared/button/DialogButton";
-import { DocumentList } from "../shared/document/DocumentList";
-import { displayDate } from "../../utils/displayDate";
+import { DialogButton } from "../button/DialogButton";
+import { DocumentList } from "../document/DocumentList";
+import { displayDate } from "../../../utils/displayDate";
 import { UserLayout } from "./UserLayout";
+import { DisplayReports } from "../../moderation/report/DisplayReports";
 
 export interface UserCardProps {
   user: User & {
     attribute: Attribute | null;
+    reports?: Report[];
   };
   isBanned?: boolean;
   onUserDelete: () => void;
-  image?: (Image & { url: string }) | null;
   documents?: (Document & { url: string })[] | null | undefined;
-  isLoggedUser: boolean;
+  onDocValidation?: (document: Document & { url: string }) => Promise<void>;
+  updateLink?: string;
+  isLoggedUser?: boolean;
+  isAdmin?: boolean;
 }
 
 const attributes = {
@@ -40,9 +44,11 @@ export function UserCard({
   user,
   isBanned = false,
   onUserDelete,
-  isLoggedUser,
-  image,
   documents,
+  onDocValidation,
+  updateLink,
+  isLoggedUser,
+  isAdmin = false,
 }: UserCardProps) {
   return (
     <UserLayout
@@ -61,7 +67,7 @@ export function UserCard({
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={user.image || (image && image.url) || "/defaultImage.png"}
+                src={user.image || "/defaultImage.png"}
                 referrerPolicy="no-referrer"
                 alt="image"
                 className="mx-auto h-full w-full overflow-hidden rounded-full"
@@ -78,7 +84,7 @@ export function UserCard({
               )}
             </div>
           </div>
-          {isLoggedUser && (
+          {(isLoggedUser || isAdmin) && (
             <div className="flex gap-4">
               <DialogButton
                 buttonText="Delete"
@@ -87,9 +93,11 @@ export function UserCard({
                 confirmButtonText="Yes, Delete my account"
                 onDelete={async () => onUserDelete()}
               />
-              <Link href={`/users/${user.id}/update`}>
-                <Button>Update</Button>
-              </Link>
+              {updateLink && (
+                <Link href={updateLink.replace("[userId]", user.id)}>
+                  <Button>Update</Button>
+                </Link>
+              )}
             </div>
           )}
         </>
@@ -147,7 +155,7 @@ export function UserCard({
               </li>
             </ul>
           </section>
-          {isLoggedUser && (
+          {(isLoggedUser || isAdmin) && (
             <>
               <section>
                 <h2 className="py-4 text-3xl font-medium">
@@ -182,7 +190,10 @@ export function UserCard({
               <section>
                 <h2 className="py-4 text-3xl font-medium">Documents</h2>
                 {documents && documents.length > 0 ? (
-                  <DocumentList documents={documents} />
+                  <DocumentList
+                    documents={documents}
+                    onValidation={onDocValidation}
+                  />
                 ) : (
                   <p className="text-indigo-600">
                     No document available, please add any necessary documents by
@@ -301,6 +312,7 @@ export function UserCard({
               </ul>
             </section>
           )}
+          <DisplayReports reports={user.reports} />
         </div>
       }
     />

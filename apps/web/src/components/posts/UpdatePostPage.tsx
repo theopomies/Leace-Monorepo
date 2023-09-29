@@ -17,12 +17,12 @@ export const UpdatePostPage = ({ postId }: UpdatePostProps) => {
   const updatePostAttributes =
     trpc.attribute.updatePostAttributes.useMutation();
 
-  const { data: imagesGet, refetch: refetchImagesGet } =
+  const { data: images, refetch: refetchImages } =
     trpc.image.getSignedPostUrl.useQuery({ postId });
   const uploadImage = trpc.image.putSignedUrl.useMutation();
   const deleteImage = trpc.image.deleteSignedPostUrl.useMutation();
 
-  const { data: documentsGet, refetch: refetchDocumentsGet } =
+  const { data: documents, refetch: refetchDocuments } =
     trpc.document.getSignedUrl.useQuery({ postId });
   const uploadDocument = trpc.document.putSignedUrl.useMutation();
   const deleteDocument = trpc.document.deleteSignedUrl.useMutation();
@@ -65,15 +65,14 @@ export const UpdatePostPage = ({ postId }: UpdatePostProps) => {
     router.back();
   };
 
-  const handleUploadImages = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files.length > 0) {
-      Array.from(event.target.files).map(async (image) => {
+  const handleUploadImages = (files: File[]) => {
+    if (files && files.length > 0) {
+      Array.from(files).map(async (image) => {
         await uploadImage
           .mutateAsync({ postId, fileType: image.type })
           .then(async (url) => {
             if (url) {
               await axios.put(url, image);
-              refetchImagesGet();
             }
           });
       });
@@ -82,12 +81,12 @@ export const UpdatePostPage = ({ postId }: UpdatePostProps) => {
 
   const handleDeleteImage = async (imageId: string) => {
     await deleteImage.mutateAsync({ postId, imageId });
-    refetchImagesGet();
+    refetchImages();
   };
 
-  const handleUploadDocs = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files.length > 0) {
-      Array.from(event.target.files).map(async (document) => {
+  const handleUploadDocs = (files: File[]) => {
+    if (files && files.length > 0) {
+      Array.from(files).map(async (document) => {
         await uploadDocument
           .mutateAsync({ postId, fileType: document.type })
           .then(async (url) => {
@@ -95,7 +94,6 @@ export const UpdatePostPage = ({ postId }: UpdatePostProps) => {
               await axios.put(url, document, {
                 headers: { "Content-Type": document.type },
               });
-              refetchDocumentsGet();
             }
           });
       });
@@ -104,11 +102,11 @@ export const UpdatePostPage = ({ postId }: UpdatePostProps) => {
 
   const handleDeleteDoc = async (documentId: string) => {
     await deleteDocument.mutateAsync({ postId, documentId });
-    refetchDocumentsGet();
+    refetchDocuments();
   };
 
   return (
-    <div className="w-full">
+    <div className="flex w-full flex-grow flex-col">
       <Header heading={"Update Post"} />
       <PostForm
         post={post}
@@ -116,10 +114,10 @@ export const UpdatePostPage = ({ postId }: UpdatePostProps) => {
         onCancel={handleCancel}
         onImgsUpload={handleUploadImages}
         onImgDelete={handleDeleteImage}
-        imagesGet={imagesGet}
+        images={images}
         onDocsUpload={handleUploadDocs}
         onDocDelete={handleDeleteDoc}
-        documentsGet={documentsGet}
+        documents={documents}
       />
     </div>
   );

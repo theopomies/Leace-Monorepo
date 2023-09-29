@@ -2,16 +2,21 @@
 import { MouseEventHandler, useState } from "react";
 import { trpc } from "../../../utils/trpc";
 import { Role } from "@prisma/client";
-import { Header } from "../../shared/Header";
 import { useRouter } from "next/router";
 import axios from "axios";
-import {
-  ModerationUserForm,
-  ModerationUserFormData,
-} from "../../shared/user/ModerationUserForm";
 import { cropImage } from "../../../utils/cropImage";
+import { UserForm, UserFormData } from "../../shared/user/UserForm";
+import {
+  ToastDescription,
+  ToastTitle,
+  useToast,
+} from "../../shared/toast/Toast";
 
-export function UpdateAdminUserPage({ userId }: { userId: string }) {
+export interface UpdateAdminUserPageProps {
+  userId: string;
+}
+
+export function UpdateAdminUserPage({ userId }: UpdateAdminUserPageProps) {
   const router = useRouter();
   const [fileType, setFileType] = useState("");
   const { data: user, refetch: refetchUser } =
@@ -21,25 +26,33 @@ export function UpdateAdminUserPage({ userId }: { userId: string }) {
   const updateAttributes = trpc.attribute.updateUserAttributes.useMutation();
 
   const uploadImage = trpc.moderation.image.putSignedUrl.useMutation();
-  const { refetch: refetchPicture } = trpc.image.getSignedUserUrl.useQuery(
-    {
-      userId,
-      fileType,
-    },
-    { enabled: false },
-  );
-  const { data: documentsGet, refetch: refetchDocumentsGet } =
+  const { refetch: refetchPicture } =
+    trpc.moderation.image.getSignedUserUrl.useQuery(
+      {
+        userId,
+        fileType,
+      },
+      { enabled: false },
+    );
+  const { data: documents, refetch: refetchDocuments } =
     trpc.moderation.document.getSignedUrl.useQuery({ userId });
   const uploadDocument = trpc.moderation.document.putSignedUrl.useMutation();
   const deleteDocument = trpc.moderation.document.deleteSignedUrl.useMutation();
+  const { renderToast } = useToast();
 
-  const handleSubmit = async (data: ModerationUserFormData) => {
+  const handleSubmit = async (data: UserFormData) => {
     await updateUser.mutateAsync({
       userId,
       birthDate: new Date(data.birthDate + "T00:00:00.000Z"),
       firstName: data.firstName,
       lastName: data.lastName,
       description: data.description,
+      country: data.country,
+      job: data.job,
+      creditScore: data.creditScore,
+      employmentContract: data.employmentContract,
+      income: data.income,
+      maritalStatus: data.maritalStatus,
     });
     if (user?.role === Role.TENANT) {
       await updateAttributes.mutateAsync({
@@ -62,29 +75,25 @@ export function UpdateAdminUserPage({ userId }: { userId: string }) {
       });
     }
     router.push(`/administration/users/${userId}`);
+    renderToast(
+      <>
+        <ToastTitle>Success</ToastTitle>
+        <ToastDescription>Profile is up to date ✅</ToastDescription>
+      </>,
+    );
   };
 
-  const handleUploadImg = async (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    const file = event.target.files && event.target.files[0];
-
+  const handleUploadImg = async (file: File | undefined) => {
     if (file) {
       setFileType(file.type);
       cropImage(file, async (croppedBlob) => {
         await uploadImage
-          .mutateAsync({
-            userId,
-            fileType: croppedBlob.type,
-          })
+          .mutateAsync({ userId, fileType: croppedBlob.type })
           .then(async (url) => {
             if (url) {
               await axios.put(url, croppedBlob).then(async () => {
                 const { data: res } = await refetchPicture();
-                await updateUser.mutateAsync({
-                  userId,
-                  image: res,
-                });
+                await updateUser.mutateAsync({ userId, image: res });
                 await refetchUser();
               });
             }
@@ -93,9 +102,9 @@ export function UpdateAdminUserPage({ userId }: { userId: string }) {
     }
   };
 
-  const handleUploadDocs = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files.length > 0) {
-      Array.from(event.target.files).map(async (document) => {
+  const handleUploadDocs = (files: File[]) => {
+    if (files && files.length > 0) {
+      Array.from(files).map(async (document) => {
         await uploadDocument
           .mutateAsync({ userId, fileType: document.type })
           .then(async (url) => {
@@ -103,7 +112,6 @@ export function UpdateAdminUserPage({ userId }: { userId: string }) {
               await axios.put(url, document, {
                 headers: { "Content-Type": document.type },
               });
-              refetchDocumentsGet();
             }
           });
       });
@@ -112,7 +120,7 @@ export function UpdateAdminUserPage({ userId }: { userId: string }) {
 
   const handleDeleteDoc = async (documentId: string) => {
     await deleteDocument.mutateAsync({ userId, documentId });
-    refetchDocumentsGet();
+    refetchDocuments();
   };
 
   const handleCancel: MouseEventHandler<HTMLButtonElement> = (e) => {
@@ -120,18 +128,19 @@ export function UpdateAdminUserPage({ userId }: { userId: string }) {
     router.back();
   };
 
+  if (!user) {
+    return <div>User not found</div>;
+  }
+
   return (
-    <div className="w-full">
-      <Header heading="Update Profile" />
-      <ModerationUserForm
-        user={user}
-        onImgUpload={handleUploadImg}
-        onDocsUpload={handleUploadDocs}
-        onDocDelete={handleDeleteDoc}
-        documentsGet={documentsGet}
-        onSubmit={handleSubmit}
-        onCancel={handleCancel}
-      />
-    </div>
+    <UserForm
+      user={user}
+      onImgUpload={handleUploadImg}
+      onDocsUpload={handleUploadDocs}
+      onDocDelete={handleDeleteDoc}
+      documents={documents}
+      onSubmit={handleSubmit}
+      onCancel={handleCancel}
+    />
   );
 }
