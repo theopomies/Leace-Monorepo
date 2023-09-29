@@ -95,7 +95,7 @@ export const UpdateAdminPostPage = ({ postId }: { postId: string }) => {
   };
 
   return (
-    <div className="w-full">
+    <div className="flex w-full flex-grow flex-col">
       <Header heading={"Update Post"} />
       <PostForm
         post={post}

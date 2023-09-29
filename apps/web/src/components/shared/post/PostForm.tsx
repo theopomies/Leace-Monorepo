@@ -224,7 +224,7 @@ export const PostForm = (props: PostFormProps) => {
 
   return (
     <form
-      className="m-auto my-5 flex w-fit flex-col justify-center rounded-lg bg-white p-12 shadow"
+      className="m-auto my-5 flex w-fit flex-grow flex-col overflow-auto rounded-lg bg-white p-12 shadow"
       onSubmit={handleSubmit}
     >
       <div className="pb-5">

@@ -106,7 +106,7 @@ export const UpdatePostPage = ({ postId }: UpdatePostProps) => {
   };
 
   return (
-    <div className="w-full">
+    <div className="flex w-full flex-grow flex-col">
       <Header heading={"Update Post"} />
       <PostForm
         post={post}

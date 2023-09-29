@@ -86,7 +86,7 @@ export const CreatePostPage = ({ userId }: { userId: string }) => {
   };
 
   return (
-    <div className="w-full">
+    <div className="flex w-full flex-grow flex-col">
       <Header heading={"Create Post"} />
       <PostForm
         onSubmit={handleSubmit}

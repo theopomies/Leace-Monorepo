@@ -44,7 +44,7 @@ export const UserPage = ({ userId }: UserPageProps) => {
   };
 
   return (
-    <div className="flex h-screen w-full flex-col overflow-hidden p-20">
+    <div className="flex w-full flex-grow flex-col overflow-hidden p-20">
       <UserCard
         user={user}
         isBanned={isBanned}
