@@ -7,7 +7,7 @@
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
     "with-env": "dotenv -e ../../.env --",
-    "dev": "pnpm with-env prisma studio --port 5556",
+    "dev": "",
     "db-push": "pnpm with-env prisma db push",
     "db-push-accept": "pnpm with-env prisma db push --accept-data-loss",
     "db-generate": "pnpm with-env prisma generate",

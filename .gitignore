@@ -26,6 +26,11 @@ build
 # misc
 .DS_Store
 *.pem
+clean.sh
+build.sh
+eas_*.*
+bundletool.jar
+*.apk*
 
 # debug
 npm-debug.log*
