@@ -40,7 +40,7 @@ importers:
     dependencies:
       '@clerk/clerk-expo':
         specifier: ^0.19.4
-        version: 0.19.4(@babel/core@7.21.8)(@types/react@18.2.14)(expo-auth-session@5.2.0)(expo-web-browser@12.5.0)(react-dom@18.2.0)(react-native@0.72.5)(react@18.2.0)
+        version: 0.19.4(@babel/core@7.21.8)(@types/react@18.2.6)(expo-auth-session@5.2.0)(expo-web-browser@12.5.0)(react-dom@18.2.0)(react-native@0.72.5)(react@18.2.0)
       '@leace/api':
         specifier: workspace:*
         version: link:../../packages/api
@@ -50,9 +50,24 @@ importers:
       '@leace/tailwind-config':
         specifier: workspace:*
         version: link:../../packages/config/tailwind
+      '@tanstack/react-query':
+        specifier: ^4.29.7
+        version: 4.29.7(react-dom@18.2.0)(react-native@0.72.5)(react@18.2.0)
+      '@trpc/client':
+        specifier: ^10.26.0
+        version: 10.26.0(@trpc/server@10.26.0)
+      '@trpc/react-query':
+        specifier: ^10.26.0
+        version: 10.26.0(@tanstack/react-query@4.29.7)(@trpc/client@10.26.0)(@trpc/server@10.26.0)(react-dom@18.2.0)(react@18.2.0)
+      '@trpc/server':
+        specifier: ^10.26.0
+        version: 10.26.0
       expo:
         specifier: ~49.0.13
         version: 49.0.13(@babel/core@7.21.8)
+      expo-secure-store:
+        specifier: ~12.3.1
+        version: 12.3.1(expo@49.0.13)
       expo-status-bar:
         specifier: ~1.6.0
         version: 1.6.0
@@ -62,6 +77,9 @@ importers:
       react:
         specifier: 18.2.0
         version: 18.2.0
+      react-dom:
+        specifier: 18.2.0
+        version: 18.2.0(react@18.2.0)
       react-native:
         specifier: 0.72.5
         version: 0.72.5(@babel/core@7.21.8)(@babel/preset-env@7.21.5)(react@18.2.0)
@@ -73,14 +91,14 @@ importers:
         specifier: ^7.20.0
         version: 7.21.8
       '@types/react':
-        specifier: ~18.2.14
-        version: 18.2.14
+        specifier: ^18.2.6
+        version: 18.2.6
       tailwindcss:
-        specifier: ^3.2.4
+        specifier: ^3.3.2
         version: 3.3.2
       typescript:
-        specifier: ^5.1.3
-        version: 5.1.3
+        specifier: ^4.9.5
+        version: 4.9.5
 
   apps/web:
     dependencies:
@@ -104,7 +122,7 @@ importers:
         version: 1.0.5(@types/react@18.2.6)(react-dom@18.2.0)(react@18.2.0)
       '@tanstack/react-query':
         specifier: ^4.16.1
-        version: 4.29.7(react-dom@18.2.0)(react@18.2.0)
+        version: 4.29.7(react-dom@18.2.0)(react-native@0.72.5)(react@18.2.0)
       '@trpc/client':
         specifier: ^10.1.0
         version: 10.26.0(@trpc/server@10.26.0)
@@ -1736,7 +1754,6 @@ packages:
   /@babel/plugin-proposal-object-rest-spread@7.20.7(@babel/core@7.21.8):
     resolution: {integrity: sha512-d2S98yCiLxDVmBmE8UjGcfPvNEUbA1U5q5WxaWFUGRzJSVAZqm5W6MbPct0jxnegUZ0niLeNX+IOzEs7wYg9Dg==}
     engines: {node: '>=6.9.0'}
-    deprecated: This proposal has been merged to the ECMAScript standard and thus this plugin is no longer maintained. Please use @babel/plugin-transform-object-rest-spread instead.
     peerDependencies:
       '@babel/core': ^7.0.0-0
     dependencies:
@@ -2673,7 +2690,7 @@ packages:
       tslib: 2.4.1
     dev: false
 
-  /@clerk/clerk-expo@0.19.4(@babel/core@7.21.8)(@types/react@18.2.14)(expo-auth-session@5.2.0)(expo-web-browser@12.5.0)(react-dom@18.2.0)(react-native@0.72.5)(react@18.2.0):
+  /@clerk/clerk-expo@0.19.4(@babel/core@7.21.8)(@types/react@18.2.6)(expo-auth-session@5.2.0)(expo-web-browser@12.5.0)(react-dom@18.2.0)(react-native@0.72.5)(react@18.2.0):
     resolution: {integrity: sha512-rzDUAjodpVjZYAY1cKhyF+QFkROcrAbqMOH3MNRKDE8DDJE6eM1lmGa7kry6f94KIrHgmfpgs+KclszswgSxLQ==}
     engines: {node: '>=14'}
     peerDependencies:
@@ -2681,8 +2698,8 @@ packages:
       expo-web-browser: '>=12'
       react: '>=16'
     dependencies:
-      '@clerk/clerk-js': 4.58.2(@babel/core@7.21.8)(@types/react@18.2.14)(react-dom@18.2.0)(react@18.2.0)
-      '@clerk/clerk-react': 4.25.2(react@18.2.0)
+      '@clerk/clerk-js': 4.59.0(@babel/core@7.21.8)(@types/react@18.2.6)(react-dom@18.2.0)(react@18.2.0)
+      '@clerk/clerk-react': 4.26.0(react@18.2.0)
       base-64: 1.0.0
       expo-auth-session: 5.2.0(expo@49.0.13)
       expo-web-browser: 12.5.0(expo@49.0.13)
@@ -2695,16 +2712,16 @@ packages:
       - react-native
     dev: false
 
-  /@clerk/clerk-js@4.58.2(@babel/core@7.21.8)(@types/react@18.2.14)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-Pf6aF1bu3vwB19984x+DjIAxuvnKdJYhKON91RDdJ0Hoiu8GouvXEM/LU+QAria1/D2X4zUhtq5MmvzenCjHyQ==}
+  /@clerk/clerk-js@4.59.0(@babel/core@7.21.8)(@types/react@18.2.6)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-Ue2QP87L1jVVYHEcEjcHN55q8UUwv43iSTVCIjl7NWrJ7GfGFrfACjUKc01l692GdXHrC4w+MeBGysMzr4T7Ig==}
     peerDependencies:
       react: '>=18'
     dependencies:
-      '@clerk/localizations': 1.26.1(react@18.2.0)
-      '@clerk/shared': 0.23.1(react@18.2.0)
-      '@clerk/types': 3.52.1
+      '@clerk/localizations': 1.26.2(react@18.2.0)
+      '@clerk/shared': 0.24.0(react@18.2.0)
+      '@clerk/types': 3.53.0
       '@emotion/cache': 11.10.5
-      '@emotion/react': 11.10.5(@babel/core@7.21.8)(@types/react@18.2.14)(react@18.2.0)
+      '@emotion/react': 11.10.5(@babel/core@7.21.8)(@types/react@18.2.6)(react@18.2.0)
       '@floating-ui/react': 0.25.4(react-dom@18.2.0)(react@18.2.0)
       '@zxcvbn-ts/core': 2.2.1
       '@zxcvbn-ts/language-common': 3.0.2
@@ -2735,14 +2752,14 @@ packages:
       tslib: 2.4.1
     dev: false
 
-  /@clerk/clerk-react@4.25.2(react@18.2.0):
-    resolution: {integrity: sha512-e6oJTaXL5sH/cA4co6O+XLoT1X3hlwYrcnlLWtAcBp9DmBvYficoFJIHIHUXNM9xLRDXamb9TQY38VX98zJ2dQ==}
+  /@clerk/clerk-react@4.26.0(react@18.2.0):
+    resolution: {integrity: sha512-MPdvYq1YKrsgfruUUKHdA2WSBYszGVgzML13AjWTnv4HuALL8xeLLMfbW8+Met/7ABFTtfBywNhRLf/3t5SBrg==}
     engines: {node: '>=14'}
     peerDependencies:
       react: '>=16'
     dependencies:
-      '@clerk/shared': 0.23.1(react@18.2.0)
-      '@clerk/types': 3.52.1
+      '@clerk/shared': 0.24.0(react@18.2.0)
+      '@clerk/types': 3.53.0
       react: 18.2.0
       tslib: 2.4.1
     dev: false
@@ -2761,13 +2778,13 @@ packages:
       tslib: 2.4.1
     dev: false
 
-  /@clerk/localizations@1.26.1(react@18.2.0):
-    resolution: {integrity: sha512-iyW5RY3/QxJx9XDsUATfWDXWTezAKDX1qaCZk5QqNYL8QpSPR9Zb1fp3404MnEI5voPA/y+MpMpHGDe6EMzHwA==}
+  /@clerk/localizations@1.26.2(react@18.2.0):
+    resolution: {integrity: sha512-O6mq5ow0CKkrw9N9Hcza9eQ7gA3317nsb3oQte2w7+xNDtlzyl1+mkN2JpHrYMbwfhYcpfzCeaWpZonJbYm9Cw==}
     engines: {node: '>=14'}
     peerDependencies:
       react: '>=16'
     dependencies:
-      '@clerk/types': 3.52.1
+      '@clerk/types': 3.53.0
       react: 18.2.0
     dev: false
 
@@ -2800,8 +2817,8 @@ packages:
       swr: 1.3.0(react@18.2.0)
     dev: false
 
-  /@clerk/shared@0.23.1(react@18.2.0):
-    resolution: {integrity: sha512-cs212IV2HjiLoem4FtIqU6pmjZGKm+gG4DLagi05HjHywTJMz7MrlM1RSyWftFzVYSkZwZ7VaHTrmTFTRni4eg==}
+  /@clerk/shared@0.24.0(react@18.2.0):
+    resolution: {integrity: sha512-xdLQwz8hFoN7ebU3HCQzCC4Acx0+7EiFXMTN0ClCHXbsc5B4yFgGzzngOEDjVLOpvU2CvSKYcNLfzDUOnpFXXw==}
     peerDependencies:
       react: '>=16'
     dependencies:
@@ -2818,8 +2835,8 @@ packages:
       csstype: 3.1.1
     dev: false
 
-  /@clerk/types@3.52.1:
-    resolution: {integrity: sha512-mLKBJZdlTbST0wuU6bMJJYWwqtDLiHOy3qPC8pV58DO4NEs7ebiUU7Q6RuoP7qLh7P3BO+S/0CBjpRX4jogjSw==}
+  /@clerk/types@3.53.0:
+    resolution: {integrity: sha512-V+9BvKAo9f2ShgP+RpQ/MgJTbx4ayk3sYiFbMtLYlmtLCsn0xwglfP7i++7640d6+MAtCnMTAcrTp61IvUxSFw==}
     engines: {node: '>=14'}
     dependencies:
       csstype: 3.1.1
@@ -2873,7 +2890,7 @@ packages:
     resolution: {integrity: sha512-W2P2c/VRW1/1tLox0mVUalvnWXxavmv/Oum2aPsRcoDJuob75FC3Y8FbpfLwUegRcxINtGUMPq0tFCvYNTBXNA==}
     dev: false
 
-  /@emotion/react@11.10.5(@babel/core@7.21.8)(@types/react@18.2.14)(react@18.2.0):
+  /@emotion/react@11.10.5(@babel/core@7.21.8)(@types/react@18.2.6)(react@18.2.0):
     resolution: {integrity: sha512-TZs6235tCJ/7iF6/rvTaOH4oxQg2gMAcdHemjwLKIjKz4rRuYe1HJ2TQJKnAcRAfOUDdU8XoDadCe1rl72iv8A==}
     peerDependencies:
       '@babel/core': ^7.0.0
@@ -2893,7 +2910,7 @@ packages:
       '@emotion/use-insertion-effect-with-fallbacks': 1.0.1(react@18.2.0)
       '@emotion/utils': 1.2.1
       '@emotion/weak-memoize': 0.3.1
-      '@types/react': 18.2.14
+      '@types/react': 18.2.6
       hoist-non-react-statics: 3.3.2
       react: 18.2.0
     dev: false
@@ -3919,7 +3936,7 @@ packages:
     resolution: {integrity: sha512-d77/1BbNLbJDBV6tH7ctYpau+3tnU5YMhg36uGabW4VDrl1Arp6E0jDRioHFoFqIbm+BXMVbyQc9MpfKo6OIQQ==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
-      '@jest/types': 29.6.1
+      '@jest/types': 29.6.3
     dev: false
 
   /@jest/environment@29.6.1:
@@ -3927,7 +3944,7 @@ packages:
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
       '@jest/fake-timers': 29.6.1
-      '@jest/types': 29.6.1
+      '@jest/types': 29.6.3
       '@types/node': 18.0.0
       jest-mock: 29.6.1
     dev: false
@@ -3936,19 +3953,12 @@ packages:
     resolution: {integrity: sha512-RdgHgbXyosCDMVYmj7lLpUwXA4c69vcNzhrt69dJJdf8azUrpRh3ckFCaTPNjsEeRi27Cig0oKDGxy5j7hOgHg==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
-      '@jest/types': 29.6.1
+      '@jest/types': 29.6.3
       '@sinonjs/fake-timers': 10.3.0
       '@types/node': 18.0.0
       jest-message-util: 29.6.1
       jest-mock: 29.6.1
       jest-util: 29.6.1
-    dev: false
-
-  /@jest/schemas@29.6.0:
-    resolution: {integrity: sha512-rxLjXyJBTL4LQeJW3aKo0M/+GkCOXsO+8i9Iu7eDb6KwtP65ayoDsitrdPBtujxQ88k4wI2FNYfa6TOGwSn6cQ==}
-    engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
-    dependencies:
-      '@sinclair/typebox': 0.27.8
     dev: false
 
   /@jest/schemas@29.6.3:
@@ -3977,18 +3987,6 @@ packages:
       '@types/istanbul-reports': 3.0.1
       '@types/node': 18.0.0
       '@types/yargs': 16.0.5
-      chalk: 4.1.2
-    dev: false
-
-  /@jest/types@29.6.1:
-    resolution: {integrity: sha512-tPKQNMPuXgvdOn2/Lg9HNfUvjYVGolt04Hp03f5hAk878uwOLikN+JzeLY0HcVgKgFl9Hs3EIqpu3WX27XNhnw==}
-    engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
-    dependencies:
-      '@jest/schemas': 29.6.0
-      '@types/istanbul-lib-coverage': 2.0.4
-      '@types/istanbul-reports': 3.0.1
-      '@types/node': 18.0.0
-      '@types/yargs': 17.0.24
       chalk: 4.1.2
     dev: false
 
@@ -4303,14 +4301,14 @@ packages:
     dependencies:
       asn1js: 3.0.5
       pvtsutils: 1.3.2
-      tslib: 2.4.1
+      tslib: 2.6.0
     dev: false
 
   /@peculiar/json-schema@1.1.12:
     resolution: {integrity: sha512-coUfuoMeIB7B8/NMekxaDzLhaYmp0HZNPEjYRm9goRou8UZIC3z21s0sL9AWoCw4EG876QyO3kYrc61WNF9B/w==}
     engines: {node: '>=8.0.0'}
     dependencies:
-      tslib: 2.4.1
+      tslib: 2.6.0
     dev: false
 
   /@peculiar/webcrypto@1.4.1:
@@ -4853,10 +4851,6 @@ packages:
     resolution: {integrity: sha512-285lfdqSXaqKuBbbtP9qL2tDrfxdOFtIMvkKadtleRQkdOxx+uzGvFr82KHmc/sSiMtfXGp7JnFYWVh4sFl7Yw==}
     dev: false
 
-  /@react-native/normalize-colors@0.73.0:
-    resolution: {integrity: sha512-EmSCmJ0djeMJadeFsms6Pl/R85i9xSJMc+tyJu/GEMkKXBVyYQyqanK4RHFU0v8MO90OWj+SiFXjCkKYiJ6mkg==}
-    dev: false
-
   /@react-native/virtualized-lists@0.72.8(react-native@0.72.5):
     resolution: {integrity: sha512-J3Q4Bkuo99k7mu+jPS9gSUSgq+lLRSI/+ahXNwV92XgJ/8UgOTxu2LPwhJnBk/sQKxq7E8WkZBnBiozukQMqrw==}
     peerDependencies:
@@ -4930,7 +4924,7 @@ packages:
     resolution: {integrity: sha512-GXG4b5hV2Loir+h2G+RXhJdoZhJLnrBWsuLB2r0qBRyhWuXq9w/dWxzvpP89H0UARlH6Mr9DiVj4SMtpkF/aUA==}
     dev: false
 
-  /@tanstack/react-query@4.29.7(react-dom@18.2.0)(react@18.2.0):
+  /@tanstack/react-query@4.29.7(react-dom@18.2.0)(react-native@0.72.5)(react@18.2.0):
     resolution: {integrity: sha512-ijBWEzAIo09fB1yd22slRZzprrZ5zMdWYzBnCg5qiXuFbH78uGN1qtGz8+Ed4MuhaPaYSD+hykn+QEKtQviEtg==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
@@ -4945,6 +4939,7 @@ packages:
       '@tanstack/query-core': 4.29.7
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+      react-native: 0.72.5(@babel/core@7.21.8)(@babel/preset-env@7.21.5)(react@18.2.0)
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
@@ -4967,7 +4962,7 @@ packages:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
     dependencies:
-      '@tanstack/react-query': 4.29.7(react-dom@18.2.0)(react@18.2.0)
+      '@tanstack/react-query': 4.29.7(react-dom@18.2.0)(react-native@0.72.5)(react@18.2.0)
       '@trpc/client': 10.26.0(@trpc/server@10.26.0)
       '@trpc/react-query': 10.26.0(@tanstack/react-query@4.29.7)(@trpc/client@10.26.0)(@trpc/server@10.26.0)(react-dom@18.2.0)(react@18.2.0)
       '@trpc/server': 10.26.0
@@ -4986,7 +4981,7 @@ packages:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
     dependencies:
-      '@tanstack/react-query': 4.29.7(react-dom@18.2.0)(react@18.2.0)
+      '@tanstack/react-query': 4.29.7(react-dom@18.2.0)(react-native@0.72.5)(react@18.2.0)
       '@trpc/client': 10.26.0(@trpc/server@10.26.0)
       '@trpc/server': 10.26.0
       react: 18.2.0
@@ -5147,6 +5142,7 @@ packages:
       '@types/prop-types': 15.7.5
       '@types/scheduler': 0.16.3
       csstype: 3.1.2
+    dev: true
 
   /@types/react@18.2.6:
     resolution: {integrity: sha512-wRZClXn//zxCFW+ye/D2qY65UsYP1Fpex2YXorHc8awoNamkMZSvBxwxdYVInsHOZZd2Ppq8isnSzJL5Mpf8OA==}
@@ -6701,7 +6697,7 @@ packages:
   /deprecated-react-native-prop-types@4.1.0:
     resolution: {integrity: sha512-WfepZHmRbbdTvhcolb8aOKEvQdcmTMn5tKLbqbXmkBvjFjRVWAYqsXk/DBsV8TZxws8SdGHLuHaJrHSQUPRdfw==}
     dependencies:
-      '@react-native/normalize-colors': 0.73.0
+      '@react-native/normalize-colors': 0.72.0
       invariant: 2.2.4
       prop-types: 15.8.1
     dev: false
@@ -7493,6 +7489,14 @@ packages:
     dependencies:
       compare-versions: 3.6.0
       invariant: 2.2.4
+    dev: false
+
+  /expo-secure-store@12.3.1(expo@49.0.13):
+    resolution: {integrity: sha512-XLIgWDiIuiR0c+AA4NCWWibAMHCZUyRcy+lQBU49U6rvG+xmd3YrBJfQjfqAPyLroEqnLPGTWUX57GyRsfDOQw==}
+    peerDependencies:
+      expo: '*'
+    dependencies:
+      expo: 49.0.13(@babel/core@7.21.8)
     dev: false
 
   /expo-status-bar@1.6.0:
@@ -8578,7 +8582,7 @@ packages:
     dependencies:
       '@jest/environment': 29.6.1
       '@jest/fake-timers': 29.6.1
-      '@jest/types': 29.6.1
+      '@jest/types': 29.6.3
       '@types/node': 18.0.0
       jest-mock: 29.6.1
       jest-util: 29.6.1
@@ -8594,12 +8598,12 @@ packages:
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
       '@babel/code-frame': 7.22.5
-      '@jest/types': 29.6.1
+      '@jest/types': 29.6.3
       '@types/stack-utils': 2.0.1
       chalk: 4.1.2
       graceful-fs: 4.2.11
       micromatch: 4.0.5
-      pretty-format: 29.6.1
+      pretty-format: 29.7.0
       slash: 3.0.0
       stack-utils: 2.0.6
     dev: false
@@ -8608,7 +8612,7 @@ packages:
     resolution: {integrity: sha512-brovyV9HBkjXAEdRooaTQK42n8usKoSRR3gihzUpYeV/vwqgSoNfrksO7UfSACnPmxasO/8TmHM3w9Hp3G1dgw==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
-      '@jest/types': 29.6.1
+      '@jest/types': 29.6.3
       '@types/node': 18.0.0
       jest-util: 29.6.1
     dev: false
@@ -8634,7 +8638,7 @@ packages:
     resolution: {integrity: sha512-NRFCcjc+/uO3ijUVyNOQJluf8PtGCe/W6cix36+M3cTFgiYqFOOW5MgN4JOOcvbUhcKTYVd1CvHz/LWi8d16Mg==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
-      '@jest/types': 29.6.1
+      '@jest/types': 29.6.3
       '@types/node': 18.0.0
       chalk: 4.1.2
       ci-info: 3.8.0
@@ -9630,11 +9634,11 @@ packages:
       css-mediaquery: 0.1.2
       css-to-react-native: 3.2.0
       micromatch: 4.0.5
-      postcss: 8.4.27
-      postcss-calc: 8.2.4(postcss@8.4.27)
-      postcss-color-functional-notation: 4.2.4(postcss@8.4.27)
-      postcss-css-variables: 0.18.0(postcss@8.4.27)
-      postcss-nested: 5.0.6(postcss@8.4.27)
+      postcss: 8.4.23
+      postcss-calc: 8.2.4(postcss@8.4.23)
+      postcss-color-functional-notation: 4.2.4(postcss@8.4.23)
+      postcss-css-variables: 0.18.0(postcss@8.4.23)
+      postcss-nested: 5.0.6(postcss@8.4.23)
       react-is: 18.2.0
       tailwindcss: 3.3.2
       use-sync-external-store: 1.2.0(react@18.2.0)
@@ -10231,27 +10235,27 @@ packages:
     engines: {node: '>=4.0.0'}
     dev: false
 
-  /postcss-calc@8.2.4(postcss@8.4.27):
+  /postcss-calc@8.2.4(postcss@8.4.23):
     resolution: {integrity: sha512-SmWMSJmB8MRnnULldx0lQIyhSNvuDl9HfrZkaqqE/WHAhToYsAvDq+yAsA/kIyINDszOp3Rh0GFoNuH5Ypsm3Q==}
     peerDependencies:
       postcss: ^8.2.2
     dependencies:
-      postcss: 8.4.27
+      postcss: 8.4.23
       postcss-selector-parser: 6.0.13
       postcss-value-parser: 4.2.0
     dev: false
 
-  /postcss-color-functional-notation@4.2.4(postcss@8.4.27):
+  /postcss-color-functional-notation@4.2.4(postcss@8.4.23):
     resolution: {integrity: sha512-2yrTAUZUab9s6CpxkxC4rVgFEVaR6/2Pipvi6qcgvnYiVqZcbDHEoBDhrXzyb7Efh2CCfHQNtcqWcIruDTIUeg==}
     engines: {node: ^12 || ^14 || >=16}
     peerDependencies:
       postcss: ^8.2
     dependencies:
-      postcss: 8.4.27
+      postcss: 8.4.23
       postcss-value-parser: 4.2.0
     dev: false
 
-  /postcss-css-variables@0.18.0(postcss@8.4.27):
+  /postcss-css-variables@0.18.0(postcss@8.4.23):
     resolution: {integrity: sha512-lYS802gHbzn1GI+lXvy9MYIYDuGnl1WB4FTKoqMQqJ3Mab09A7a/1wZvGTkCEZJTM8mSbIyb1mJYn8f0aPye0Q==}
     peerDependencies:
       postcss: ^8.2.6
@@ -10259,7 +10263,7 @@ packages:
       balanced-match: 1.0.2
       escape-string-regexp: 1.0.5
       extend: 3.0.2
-      postcss: 8.4.27
+      postcss: 8.4.23
     dev: false
 
   /postcss-import@15.1.0(postcss@8.4.27):
@@ -10298,13 +10302,13 @@ packages:
       postcss: 8.4.27
       yaml: 2.3.1
 
-  /postcss-nested@5.0.6(postcss@8.4.27):
+  /postcss-nested@5.0.6(postcss@8.4.23):
     resolution: {integrity: sha512-rKqm2Fk0KbA8Vt3AdGN0FB9OBOMDVajMG6ZCf/GoHgdxUJ4sBFp0A/uMIRm+MJUdo33YXEtjqIz8u7DAp8B7DA==}
     engines: {node: '>=12.0'}
     peerDependencies:
       postcss: ^8.2.14
     dependencies:
-      postcss: 8.4.27
+      postcss: 8.4.23
       postcss-selector-parser: 6.0.13
     dev: false
 
@@ -10343,7 +10347,6 @@ packages:
       nanoid: 3.3.6
       picocolors: 1.0.0
       source-map-js: 1.0.2
-    dev: true
 
   /postcss@8.4.27:
     resolution: {integrity: sha512-gY/ACJtJPSmUFPDCHtX78+01fHa64FaU4zaaWfuh1MhGJISufJAH4cun6k/8fwsHYeK4UQmENQK+tRLCFJE8JQ==}
@@ -10438,15 +10441,6 @@ packages:
       react-is: 17.0.2
     dev: false
 
-  /pretty-format@29.6.1:
-    resolution: {integrity: sha512-7jRj+yXO0W7e4/tSJKoR7HRIHLPPjtNaUGG2xxKQnGvPNRkgWcQ0AZX6P4KBRJN4FcTBWb3sa7DVUJmocYuoog==}
-    engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
-    dependencies:
-      '@jest/schemas': 29.6.0
-      ansi-styles: 5.2.0
-      react-is: 18.2.0
-    dev: false
-
   /pretty-format@29.7.0:
     resolution: {integrity: sha512-Pdlw/oPxN+aXdmM9R00JVC9WVFoCLTKJvDVLgmJ+qAffBMxsV85l/Lu7sNx4zSzPyoL2euImuEwHhOXdEgNFZQ==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -10535,7 +10529,7 @@ packages:
   /pvtsutils@1.3.2:
     resolution: {integrity: sha512-+Ipe2iNUyrZz+8K/2IOo+kKikdtfhRKzNpQbruF2URmqPtoqAs8g3xS7TJvFF2GcPXjh7DkqMnpVveRFq4PgEQ==}
     dependencies:
-      tslib: 2.4.1
+      tslib: 2.6.0
     dev: false
 
   /pvutils@1.1.3:
@@ -11327,7 +11321,7 @@ packages:
     resolution: {integrity: sha512-LAOh4z89bGQvl9pFfNF8V146i7o7/CqFPbqzYgP+yYzDIDeS9HaNFtXABamRW+AQzEVODcvE79ljJ+8a9YSdMg==}
     dependencies:
       dot-case: 3.0.4
-      tslib: 2.4.1
+      tslib: 2.6.0
     dev: false
 
   /snakecase-keys@3.2.1:
@@ -12093,12 +12087,6 @@ packages:
     engines: {node: '>=4.2.0'}
     hasBin: true
 
-  /typescript@5.1.3:
-    resolution: {integrity: sha512-XH627E9vkeqhlZFQuL+UsyAXEnibT0kWR2FWONlr4sTjvxyJYnyefgrkyECLzM5NenmKzRAy2rR/OlYLA1HkZw==}
-    engines: {node: '>=14.17'}
-    hasBin: true
-    dev: true
-
   /ua-parser-js@1.0.35:
     resolution: {integrity: sha512-fKnGuqmTBnIE+/KXSzCn4db8RTigUzw1AN0DmdU6hJovUTbYJKyqj+8Mt1c4VfRDnOVJnENmfYkIPZ946UrSAA==}
     dev: false
@@ -12431,7 +12419,7 @@ packages:
       '@peculiar/json-schema': 1.1.12
       asn1js: 3.0.5
       pvtsutils: 1.3.2
-      tslib: 2.4.1
+      tslib: 2.6.0
     dev: false
 
   /webidl-conversions@3.0.1:

@@ -17,6 +17,16 @@
     "assetBundlePatterns": [
       "**/*"
     ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/logo.png",
+        "backgroundColor": "#FFFFFF"
+      },
+      "package": "com.azerty123456789.leace"
+    },
     "web": {
       "favicon": "./assets/favicon.png"
     },
@@ -25,9 +35,6 @@
       "eas": {
         "projectId": "2ea9ed7c-f661-48c0-a195-f8c050dc2cc9"
       }
-    },
-    "android": {
-      "package": "com.azerty123456789.leace"
     }
   }
 }
