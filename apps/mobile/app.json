@@ -14,10 +14,20 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": []
+    "plugins": [],
+    "extra": {
+      "eas": {
+        "projectId": "2ea9ed7c-f661-48c0-a195-f8c050dc2cc9"
+      }
+    },
+    "android": {
+      "package": "com.azerty123456789.leace"
+    }
   }
 }
