@@ -15,7 +15,7 @@ export const FileUploadSection = ({
 }: FileUploadSectionProps) => {
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
 
-  const handleFile = (event: ChangeEvent<HTMLInputElement>): void => {
+  const handleFiles = (event: ChangeEvent<HTMLInputElement>): void => {
     if (event.target.files) {
       const files: File[] = Array.from(event.target.files);
       setSelectedFiles(files);
@@ -37,31 +37,33 @@ export const FileUploadSection = ({
 
   return (
     <section className="flex flex-col items-center justify-center gap-5 rounded-lg border-2 border-dashed p-5">
-      <div className="flex flex-wrap">
-        {selectedFiles.map((file, index) => (
-          <div
-            key={index}
-            className="flex flex-col items-center justify-center p-3"
-          >
-            {imagePreviews[index] && (
-              <img
-                src={
-                  file.type === "application/pdf"
-                    ? "/pdfLogo.jpg"
-                    : imagePreviews[index]
-                }
-                alt={`Preview of ${file.name}`}
-                className="w-32"
-              />
-            )}
-            {file.name.length > 15
-              ? file.name.substring(0, 15) + "..."
-              : file.name}
-          </div>
-        ))}
-      </div>
+      {selectedFiles.length > 0 && (
+        <div className="flex flex-wrap">
+          {selectedFiles.map((file, index) => (
+            <div
+              key={index}
+              className="flex flex-col items-center justify-center p-3"
+            >
+              {imagePreviews[index] && (
+                <img
+                  src={
+                    file.type === "application/pdf"
+                      ? "/pdfLogo.jpg"
+                      : imagePreviews[index]
+                  }
+                  alt={`Preview of ${file.name}`}
+                  className="w-32"
+                />
+              )}
+              {file.name.length > 15
+                ? file.name.substring(0, 15) + "..."
+                : file.name}
+            </div>
+          ))}
+        </div>
+      )}
       <div className="self-center">
-        <FileInput multiple onChange={handleFile} {...inputProps}>
+        <FileInput multiple onChange={handleFiles} {...inputProps}>
           Choose file
         </FileInput>
       </div>

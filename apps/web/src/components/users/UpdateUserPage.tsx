@@ -1,15 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
-import { MouseEventHandler, useState, useRef } from "react";
+import { MouseEventHandler, useState } from "react";
 import { trpc } from "../../utils/trpc";
 import { Role } from "@prisma/client";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { cropImage } from "../../utils/cropImage";
 import { UserForm, UserFormData } from "../shared/user/UserForm";
-import { UserLayout } from "../shared/user/UserLayout";
-import { Button } from "../shared/button/Button";
 import { ToastDescription, ToastTitle, useToast } from "../shared/toast/Toast";
-import { FileInput } from "../shared/forms/FileInput";
 
 export interface UpdateUserPageProps {
   userId: string;
@@ -18,6 +15,7 @@ export interface UpdateUserPageProps {
 export function UpdateUserPage({ userId }: UpdateUserPageProps) {
   const router = useRouter();
   const [fileType, setFileType] = useState("");
+
   const { data: user, refetch: refetchUser } = trpc.user.getUserById.useQuery({
     userId,
   });
@@ -82,11 +80,7 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
     );
   };
 
-  const handleUploadImg = async (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    const file = event.target.files && event.target.files[0];
-
+  const handleUploadImg = (file: File | undefined) => {
     if (file) {
       setFileType(file.type);
       cropImage(file, async (croppedBlob) => {
@@ -134,53 +128,19 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
     router.back();
   };
 
-  const formRef = useRef<HTMLFormElement>(null);
-
   if (!user) {
     return <div>User not found</div>;
   }
 
   return (
-    <UserLayout
-      className="m-20"
-      sidePanel={
-        <>
-          <div className="relative h-40 w-40">
-            <div className="relative h-full w-full overflow-hidden rounded-full shadow-xl">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={user.image || "/defaultImage.png"}
-                referrerPolicy="no-referrer"
-                alt="image"
-                className="mx-auto h-full w-full overflow-hidden rounded-full"
-              />
-            </div>
-            <button className="absolute left-0 top-0 flex h-full w-full items-end justify-center rounded-full opacity-0 transition-all hover:opacity-100">
-              <span className=" translate-y-[50%]">
-                <FileInput onChange={handleUploadImg}>Edit</FileInput>
-              </span>
-            </button>
-          </div>
-          <div className="flex gap-4">
-            <Button theme="danger" onClick={handleCancel}>
-              Cancel
-            </Button>
-            <Button onClick={() => formRef.current?.requestSubmit()}>
-              Submit
-            </Button>
-          </div>
-        </>
-      }
-      mainPanel={
-        <UserForm
-          ref={formRef}
-          user={user}
-          onDocsUpload={handleUploadDocs}
-          onDocDelete={handleDeleteDoc}
-          documents={documents}
-          onSubmit={handleSubmit}
-        />
-      }
+    <UserForm
+      user={user}
+      onImgUpload={handleUploadImg}
+      onDocsUpload={handleUploadDocs}
+      onDocDelete={handleDeleteDoc}
+      documents={documents}
+      onSubmit={handleSubmit}
+      onCancel={handleCancel}
     />
   );
 }

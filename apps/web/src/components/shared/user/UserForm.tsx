@@ -1,11 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
 import {
+  ChangeEvent,
   Dispatch,
   FormEventHandler,
-  ForwardedRef,
+  MouseEventHandler,
   SetStateAction,
-  forwardRef,
   useEffect,
+  useRef,
   useState,
 } from "react";
 import { User, Attribute, Document, Role, MaritalStatus } from "@prisma/client";
@@ -17,6 +18,9 @@ import { TextArea } from "../forms/TextArea";
 import { TextInput } from "../forms/TextInput";
 import { NumberInput } from "../forms/NumberInput";
 import { FileUploadSection } from "../button/FileUploadSection";
+import { FileInput } from "../forms/FileInput";
+import { UserLayout } from "./UserLayout";
+import { Button } from "../button/Button";
 
 export type UserFormData = {
   birthDate: string;
@@ -49,16 +53,23 @@ export type UserFormData = {
 
 export interface UserFormProps {
   user: User & { attribute: Attribute | null };
+  onImgUpload: (file: File | undefined) => void;
   onDocsUpload: (files: File[]) => void;
   onDocDelete: (documentId: string) => Promise<void>;
   documents?: (Document & { url: string })[] | null;
   onSubmit: (data: UserFormData) => Promise<void>;
+  onCancel: MouseEventHandler<HTMLButtonElement>;
 }
 
-const UserFormBeforeRef = (
-  { user, onDocsUpload, onDocDelete, documents, onSubmit }: UserFormProps,
-  ref: ForwardedRef<HTMLFormElement>,
-) => {
+export const UserForm = ({
+  user,
+  onImgUpload,
+  onDocsUpload,
+  onDocDelete,
+  documents,
+  onSubmit,
+  onCancel,
+}: UserFormProps) => {
   const [birthDate, setBirthDate] = useState<string>("");
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
@@ -90,6 +101,8 @@ const UserFormBeforeRef = (
   );
 
   const [selectedDocuments, setSelectedDocuments] = useState<File[]>([]);
+  const [selectedImage, setSelectedImage] = useState<File>();
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   useEffect(() => {
     const date = user.birthDate
@@ -193,6 +206,7 @@ const UserFormBeforeRef = (
       maritalStatus,
     };
 
+    onImgUpload(selectedImage);
     onDocsUpload(selectedDocuments);
     onSubmit(data);
   };
@@ -230,156 +244,203 @@ const UserFormBeforeRef = (
     handlePoolChange: setPool,
   };
 
+  const handleFile = (event: ChangeEvent<HTMLInputElement>): void => {
+    if (event.target.files) {
+      const file = event.target.files[0] as File;
+      setSelectedImage(file);
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        if (e.target && e.target.result) {
+          const preview = e.target.result as string;
+          setImagePreview(preview);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const formRef = useRef<HTMLFormElement | null>(null);
+
   return (
-    <form
-      onSubmit={handleSubmit}
-      ref={ref}
-      className="flex flex-grow flex-col gap-5"
-    >
-      <h2 className="justify-end text-right font-medium">
-        Member since: <i>{user.createdAt.toDateString()}</i>
-      </h2>
-      <h1 className="text-4xl font-semibold">Update Your Profile</h1>
+    <UserLayout
+      className="m-20"
+      sidePanel={
+        <>
+          <div className="relative h-40 w-40">
+            <div className="relative h-full w-full overflow-hidden rounded-full shadow-xl">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={imagePreview || user.image || "/defaultImage.png"}
+                referrerPolicy="no-referrer"
+                alt="image"
+                className="mx-auto h-full w-full overflow-hidden rounded-full"
+              />
+            </div>
+            <button className="absolute left-0 top-0 flex h-full w-full items-end justify-center rounded-full opacity-0 transition-all hover:opacity-100">
+              <span className="translate-y-[50%]">
+                <FileInput onChange={handleFile}>Edit</FileInput>
+              </span>
+            </button>
+          </div>
+          <div className="flex gap-4">
+            <Button theme="danger" onClick={onCancel}>
+              Cancel
+            </Button>
+            <Button onClick={() => formRef.current?.requestSubmit()}>
+              Submit
+            </Button>
+          </div>
+        </>
+      }
+      mainPanel={
+        <form
+          ref={formRef}
+          onSubmit={handleSubmit}
+          className="flex flex-grow flex-col gap-5"
+        >
+          <h2 className="justify-end text-right font-medium">
+            Member since: <i>{user.createdAt.toDateString()}</i>
+          </h2>
+          <h1 className="text-4xl font-semibold">Update Your Profile</h1>
 
-      <section>
-        <p className="text-sm text-slate-500">
-          These informations will be shared across Leace to help build trust and
-          find you suitable prospects.
-        </p>
-      </section>
-      <section>
-        <h2 className="py-4 text-3xl font-medium">About You</h2>
-        <ul className="flex flex-wrap gap-4">
-          <li className="flex-grow pr-8">
-            <h3 className="pb-2 text-xl font-medium">First Name</h3>
-            <TextInput
-              required
-              placeholder="Satoshi"
-              onChange={handleChange(setFirstName)}
-              value={firstName}
-              className="w-full"
+          <section>
+            <p className="text-sm text-slate-500">
+              These informations will be shared across Leace to help build trust
+              and find you suitable prospects.
+            </p>
+          </section>
+          <section>
+            <h2 className="py-4 text-3xl font-medium">About You</h2>
+            <ul className="flex flex-wrap gap-4">
+              <li className="flex-grow pr-8">
+                <h3 className="pb-2 text-xl font-medium">First Name</h3>
+                <TextInput
+                  required
+                  placeholder="Satoshi"
+                  onChange={handleChange(setFirstName)}
+                  value={firstName}
+                  className="w-full"
+                />
+              </li>
+              <li className="flex-grow">
+                <h3 className="pb-2 text-xl font-medium">Last Name</h3>
+                <TextInput
+                  required
+                  placeholder="Nakamoto"
+                  onChange={handleChange(setLastName)}
+                  value={lastName}
+                  className="w-full"
+                />
+              </li>
+            </ul>
+            <TextArea
+              placeholder="Fashionista and tech enthusiast. I'm the perfect tenant for your apartment! 💁🏻‍♀️"
+              onChange={handleChange(setDescription)}
+              value={description}
+              className="mt-4 w-full"
             />
-          </li>
-          <li className="flex-grow">
-            <h3 className="pb-2 text-xl font-medium">Last Name</h3>
-            <TextInput
-              required
-              placeholder="Nakamoto"
-              onChange={handleChange(setLastName)}
-              value={lastName}
-              className="w-full"
-            />
-          </li>
-        </ul>
-        <TextArea
-          placeholder="Fashionista and tech enthusiast. I'm the perfect tenant for your apartment! 💁🏻‍♀️"
-          onChange={handleChange(setDescription)}
-          value={description}
-          className="mt-4 w-full"
-        />
-        <ul className="flex flex-wrap gap-4 pt-4">
-          <li className="flex-grow pr-8">
-            <h3 className="text-xl font-medium">Country</h3>
-            <TextInput
-              required
-              placeholder="France"
-              onChange={handleChange(setCountry)}
-              value={country}
-              className="w-full"
-            />
-          </li>
-          <li className="flex-grow">
-            <h3 className="text-xl font-medium">Birthdate</h3>
-            <DateInput
-              required
-              onChange={handleChange(setBirthDate)}
-              value={birthDate}
-              className="w-full"
-            />
-          </li>
-        </ul>
-      </section>
+            <ul className="flex flex-wrap gap-4 pt-4">
+              <li className="flex-grow pr-8">
+                <h3 className="text-xl font-medium">Country</h3>
+                <TextInput
+                  required
+                  placeholder="France"
+                  onChange={handleChange(setCountry)}
+                  value={country}
+                  className="w-full"
+                />
+              </li>
+              <li className="flex-grow">
+                <h3 className="text-xl font-medium">Birthdate</h3>
+                <DateInput
+                  required
+                  onChange={handleChange(setBirthDate)}
+                  value={birthDate}
+                  className="w-full"
+                />
+              </li>
+            </ul>
+          </section>
 
-      {user.role === Role.TENANT && (
-        <section>
-          <h2 className="py-4 text-3xl font-medium">Preferences</h2>
-          <UserAttributesForm {...attributesStates} />
-          <ul className="flex flex-wrap gap-4 pt-4">
-            <li className="flex-grow pr-8">
-              <h3 className="text-xl font-medium">Job</h3>
-              <TextInput
-                placeholder="Developer"
-                onChange={handleChange(setJob)}
-                value={job}
-                className="w-full"
-              />
-            </li>
-            <li className="flex-grow">
-              <h3 className="text-xl font-medium">Type of contract</h3>
-              <TextInput
-                placeholder="CDI"
-                onChange={handleChange(setEmploymentContract)}
-                value={employmentContract}
-                className="w-full"
-              />
-            </li>
-          </ul>
-          <ul className="flex flex-wrap gap-4 pt-4">
-            <li className="flex-grow pr-8">
-              <h3 className="text-xl font-medium">Annual salary</h3>
-              <NumberInput
-                placeholder="60000"
-                onChange={handleNumberChange(setIncome)}
-                value={income?.toString() ?? ""}
-                className="w-full"
-                unit="$"
-              />
-            </li>
-            <li className="flex-grow">
-              <h3 className="text-xl font-medium">Credit score</h3>
-              <NumberInput
-                placeholder="800"
-                onChange={handleNumberChange(setCreditScore)}
-                value={creditScore ?? ""}
-                className="w-full"
-              />
-            </li>
-            <li className="flex-grow">
-              <h3 className="text-xl font-medium">Marital status</h3>
-              <select
-                id="maritalStatus"
-                onChange={handleMaritalStatusChange(setMaritalStatus)}
-                value={maritalStatus ?? ""}
-                className="w-full rounded-lg border-2 border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-600 focus:outline-none"
-              >
-                <option value="" disabled selected>
-                  Select one
-                </option>
-                <option value={MaritalStatus.SINGLE}>SINGLE</option>
-                <option value={MaritalStatus.MARRIED}>MARRIED</option>
-                <option value={MaritalStatus.ONE_CHILD}>ONE_CHILD</option>
-                <option value={MaritalStatus.TWO_CHILD}>TWO_CHILD</option>
-                <option value={MaritalStatus.OTHER}>OTHER</option>
-              </select>
-            </li>
-          </ul>
-        </section>
-      )}
-      <DocumentList
-        documents={documents}
-        onDelete={onDocDelete}
-        isLoggedInOrAdmin
-      />
-      <p className="bold pt-4 text-xl">Upload Documents</p>
-      <FileUploadSection
-        selectedFiles={selectedDocuments}
-        setSelectedFiles={setSelectedDocuments}
-        accept=".pdf"
-      />
-    </form>
+          {user.role === Role.TENANT && (
+            <section>
+              <h2 className="py-4 text-3xl font-medium">Preferences</h2>
+              <UserAttributesForm {...attributesStates} />
+              <ul className="flex flex-wrap gap-4 pt-4">
+                <li className="flex-grow pr-8">
+                  <h3 className="text-xl font-medium">Job</h3>
+                  <TextInput
+                    placeholder="Developer"
+                    onChange={handleChange(setJob)}
+                    value={job}
+                    className="w-full"
+                  />
+                </li>
+                <li className="flex-grow">
+                  <h3 className="text-xl font-medium">Type of contract</h3>
+                  <TextInput
+                    placeholder="CDI"
+                    onChange={handleChange(setEmploymentContract)}
+                    value={employmentContract}
+                    className="w-full"
+                  />
+                </li>
+              </ul>
+              <ul className="flex flex-wrap gap-4 pt-4">
+                <li className="flex-grow pr-8">
+                  <h3 className="text-xl font-medium">Annual salary</h3>
+                  <NumberInput
+                    placeholder="60000"
+                    onChange={handleNumberChange(setIncome)}
+                    value={income?.toString() ?? ""}
+                    className="w-full"
+                    unit="$"
+                  />
+                </li>
+                <li className="flex-grow">
+                  <h3 className="text-xl font-medium">Credit score</h3>
+                  <NumberInput
+                    placeholder="800"
+                    onChange={handleNumberChange(setCreditScore)}
+                    value={creditScore ?? ""}
+                    className="w-full"
+                  />
+                </li>
+                <li className="flex-grow">
+                  <h3 className="text-xl font-medium">Marital status</h3>
+                  <select
+                    id="maritalStatus"
+                    onChange={handleMaritalStatusChange(setMaritalStatus)}
+                    value={maritalStatus ?? ""}
+                    className="w-full rounded-lg border-2 border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-600 focus:outline-none"
+                  >
+                    <option value="" disabled selected>
+                      Select one
+                    </option>
+                    <option value={MaritalStatus.SINGLE}>SINGLE</option>
+                    <option value={MaritalStatus.MARRIED}>MARRIED</option>
+                    <option value={MaritalStatus.ONE_CHILD}>ONE_CHILD</option>
+                    <option value={MaritalStatus.TWO_CHILD}>TWO_CHILD</option>
+                    <option value={MaritalStatus.OTHER}>OTHER</option>
+                  </select>
+                </li>
+              </ul>
+            </section>
+          )}
+          <DocumentList
+            documents={documents}
+            onDelete={onDocDelete}
+            isLoggedInOrAdmin
+          />
+          <p className="bold pt-4 text-xl">Upload Documents</p>
+          <FileUploadSection
+            selectedFiles={selectedDocuments}
+            setSelectedFiles={setSelectedDocuments}
+            accept=".pdf"
+          />
+        </form>
+      }
+    />
   );
 };
-
-export const UserForm = forwardRef<HTMLFormElement, UserFormProps>(
-  UserFormBeforeRef,
-);
