@@ -14,27 +14,10 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "supportsTablet": true
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/logo.png",
-        "backgroundColor": "#FFFFFF"
-      },
-      "package": "com.azerty123456789.leace"
-    },
+    "assetBundlePatterns": ["**/*"],
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [],
-    "extra": {
-      "eas": {
-        "projectId": "2ea9ed7c-f661-48c0-a195-f8c050dc2cc9"
-      }
-    }
+    "plugins": []
   }
 }
