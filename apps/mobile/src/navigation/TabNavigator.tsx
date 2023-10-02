@@ -1,0 +1,160 @@
+import React, { useEffect, useLayoutEffect, useState } from "react";
+import { useNavigation } from "@react-navigation/native";
+import { UserRoles } from "../utils/enum";
+import { trpc } from "../utils/trpc";
+// import { Tenant, Provider } from "../components/Navigation";
+import {
+  View,
+  Platform,
+  StatusBar,
+  Text,
+  TouchableOpacity,
+} from "react-native";
+import { SignedOut, useAuth } from "@clerk/clerk-expo";
+// import { Btn } from "../components/Btn";
+// import Loading from "../components/Loading";
+// import Role from "../screens/Role";
+import { Lease } from "@leace/db";
+
+export type TabStackParamList = {
+  Profile: { userId: string };
+  Stack: { userId: string };
+  MatchTenant: { userId: string; role: "TENANT" | "OWNER" | "AGENCY" };
+
+  CreatePost: { userId: string };
+
+  Premium: undefined;
+  Likes: undefined;
+  PaymentDetails: { selectedProduct: any; makePayment: boolean };
+
+  PaymentResults: {
+    loading: boolean;
+    paymentStatus: boolean;
+    response: any;
+    selectedProduct: any;
+  };
+
+  EditProfile: {
+    userId: string;
+    data: string;
+    showAttrs: boolean;
+  };
+
+  PostInfo: {
+    userId: string;
+    postId: string;
+    editable: boolean;
+  };
+
+  MyPosts: {
+    userId: string;
+  };
+
+  EditPost: {
+    userId: string;
+    data: string;
+  };
+
+  ChatTenant: {
+    role: "TENANT" | "OWNER" | "AGENCY";
+    tenantId: string;
+    ownerId: string;
+    conversationId: string;
+    userId: string;
+    lease: Lease | null;
+    relationshipId: string;
+  };
+
+  Documents: { userId: string };
+};
+
+const TabNavigator = () => {
+  const navigation = useNavigation();
+  const { signOut } = useAuth();
+  const [role, setRole] = useState<keyof typeof UserRoles | null>(null);
+  const { data: session, isLoading } = trpc.auth.getSession.useQuery();
+  const { data: user } = trpc.user.getUserById.useQuery(
+    {
+      userId: session?.userId as string,
+    },
+    { enabled: !!session?.userId },
+  );
+
+  const isPremium = user?.isPremium as boolean;
+
+  useLayoutEffect(() => {
+    navigation.setOptions({ headerShown: false });
+  }, []);
+
+  useEffect(() => {
+    const getSession = async () => {
+      if (session) setRole(session.role as keyof typeof UserRoles);
+    };
+    getSession();
+  }, [session, isPremium]);
+
+  if (isLoading) {
+    return (
+      <View
+        className="flex-1 items-center justify-center bg-white"
+        style={{
+          paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+        }}
+      >
+        {/**        <Loading />         */}
+        <Text>Loading screen</Text>
+        <TouchableOpacity
+          className={`flex flex-row items-center justify-center rounded-lg p-2.5`}
+          onPress={() => signOut()}
+        >
+          <Text className="font-bold">SignedOut</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
+  if (!session) {
+    return (
+      <View
+        className="flex-1 items-center justify-center bg-white"
+        style={{
+          paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+        }}
+      >
+        {/*
+        <Btn
+          title="Sign Out"
+          onPress={() => signOut()}
+          iconName="arrow-back-ios"
+          iconType="material-icons"
+        />
+        */}
+        <Text>Sign Out button</Text>
+        <TouchableOpacity
+          className={`flex flex-row items-center justify-center rounded-lg p-2.5`}
+          onPress={() => signOut()}
+        >
+          <Text className="font-bold">SignedOut</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
+  // if (!role) return <Role />;
+  // if (role === UserRoles.TENANT)
+  //   return <Tenant userId={session.userId} isPremium={isPremium} />;
+  // return <Provider userId={session.userId} isPremium={isPremium} />;
+  return (
+    <View>
+      <Text>Signed in</Text>
+      <TouchableOpacity
+        className={`flex flex-row items-center justify-center rounded-lg p-2.5`}
+        onPress={() => signOut()}
+      >
+        <Text className="font-bold">SignedOut</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
+
+export default TabNavigator;

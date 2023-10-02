@@ -1,15 +1,33 @@
-import { StatusBar } from "expo-status-bar";
-import { LogBox } from "react-native";
 import React from "react";
-import { Text, View } from "react-native";
+import { Logs } from "expo";
+import { Auth } from "./screens/Auth";
+import { StatusBar } from "react-native";
+import { tokenCache } from "./utils/cache";
+import { TRPCProvider } from "./utils/trpc";
+import { RootNavigator } from "./navigation";
+import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-expo";
 
-LogBox.ignoreAllLogs(); //Ignore all log notifications
+import { SafeAreaProvider } from "react-native-safe-area-context";
+
+Logs.disableExpoCliLogging();
 
 export const App = () => {
   return (
-    <View className="flex-1 items-center justify-center bg-white">
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <ClerkProvider
+      publishableKey={`pk_test_Y2VydGFpbi1jcmFiLTU0LmNsZXJrLmFjY291bnRzLmRldiQ`}
+      tokenCache={tokenCache}
+    >
+      <SignedIn>
+        <TRPCProvider>
+          <SafeAreaProvider>
+            <StatusBar />
+            <RootNavigator />
+          </SafeAreaProvider>
+        </TRPCProvider>
+      </SignedIn>
+      <SignedOut>
+        <Auth />
+      </SignedOut>
+    </ClerkProvider>
   );
 };
