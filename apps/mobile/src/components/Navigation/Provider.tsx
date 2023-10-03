@@ -12,7 +12,7 @@ import { EditProfile, ShowProfile } from "../../screens/Profile";
 import { OwnerLikes, OffersList, Result, Details } from "../../screens/Premium";
 import { TenantChat } from "../../screens/Chat";
 import { TenantMatches } from "../../screens/Matches";
-import { ProviderStack } from "../../screens/Stack";
+// import { ProviderStack } from "../../screens/Stack";
 import { Documents } from "../../screens/Documents";
 
 const Tab = createBottomTabNavigator<TabStackParamList>();
@@ -29,6 +29,7 @@ const Provider = ({
 
   return (
     <Tab.Navigator initialRouteName="Profile">
+      {/*
       <Tab.Screen
         name="Stack"
         component={ProviderStack}
@@ -43,6 +44,7 @@ const Provider = ({
           headerShown: false,
         }}
       />
+      */}
       <Tab.Screen
         name="MyPosts"
         component={PostStack}
@@ -141,7 +143,6 @@ const Provider = ({
           headerShown: false,
         }}
       />
-
       <Tab.Screen
         name="PaymentResults"
         component={Result}
@@ -192,6 +193,18 @@ const Provider = ({
         }}
       />
       <Tab.Screen
+        name="Documents"
+        component={Documents}
+        initialParams={{ userId }}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <Icon name="description" type="material" />
+          ),
+          tabBarLabel: "",
+          headerShown: false,
+        }}
+      />
+      <Tab.Screen
         name="Profile"
         component={ShowProfile}
         initialParams={{ userId }}
@@ -230,18 +243,6 @@ const Provider = ({
               ></Icon>
             </TouchableOpacity>
           ),
-        }}
-      />
-      <Tab.Screen
-        name="Documents"
-        component={Documents}
-        initialParams={{ userId }}
-        options={{
-          tabBarIcon: ({ focused }) => (
-            <Icon name="description" type="material" />
-          ),
-          tabBarLabel: "",
-          headerShown: false,
         }}
       />
     </Tab.Navigator>

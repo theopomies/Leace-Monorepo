@@ -17,7 +17,7 @@ import * as FileSystem from "expo-file-system";
 import * as DocumentPicker from "expo-document-picker";
 import { useRoute, RouteProp } from "@react-navigation/native";
 import { TabStackParamList } from "../../navigation/TabNavigator";
-import Loading from "../../components/Loading";
+import { Loading } from "../../components/Loading";
 import Header from "../../components/Header";
 
 export default function Documents() {
@@ -39,11 +39,15 @@ export default function Documents() {
 
   const pickDocument = async () => {
     try {
-      const document: DocumentPicker.DocumentPickerAsset & {
-        type: "success" | "cancel";
+      const documents: {
+        assets: DocumentPicker.DocumentPickerAsset[];
+        canceled: boolean;
       } = (await DocumentPicker.getDocumentAsync({ type: "*/*" })) as any;
-      if (document.type !== "success") return;
-      if (!document.mimeType || !document.uri) return;
+      if (documents.canceled) throw new Error("Document picker canceled");
+      const [document] = documents.assets;
+      if (!document) throw new Error("Document picker failed");
+      if (!document.mimeType || !document.uri)
+        throw new Error("Invalid document");
       await uploadDocument
         .mutateAsync({ userId, fileType: document.mimeType })
         .then(async (url) => {
@@ -57,21 +61,16 @@ export default function Documents() {
             url: url,
             data: buffer,
             headers: { "Content-Type": document.mimeType },
-          }).then(() => refetch());
+          })
+            .then(() => refetch())
+            .catch((e) => console.error(e));
         });
     } catch (e) {
       console.error(e);
     }
   };
 
-  if (isLoading)
-    return (
-      <View style={styles.container}>
-        <View style={styles.view}>
-          <Loading />
-        </View>
-      </View>
-    );
+  if (isLoading) return <Loading />;
 
   if (!documents)
     return (
@@ -137,7 +136,7 @@ const styles = StyleSheet.create({
   },
   view: {
     flex: 1,
-    marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+    // marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
     backgroundColor: "white",
   },
 });

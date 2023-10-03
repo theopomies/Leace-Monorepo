@@ -11,7 +11,7 @@ import { RouteProp, useFocusEffect, useRoute } from "@react-navigation/native";
 import { TabStackParamList } from "../../navigation/TabNavigator";
 import Header from "../../components/Header";
 import { trpc } from "../../utils/trpc";
-import Loading from "../../components/Loading";
+import { Loading } from "../../components/Loading";
 import { UserProfile } from "../../components/UserProfile";
 import { LocalStorage } from "../../utils/cache";
 
@@ -51,7 +51,6 @@ export default function ShowProfile() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle={"dark-content"} />
       <View style={styles.view}>
         <Header />
         <UserProfile
@@ -73,7 +72,7 @@ const styles = StyleSheet.create({
   },
   view: {
     flex: 1,
-    marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+    // marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
     backgroundColor: "white", // #F2F7FF
   },
 });

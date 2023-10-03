@@ -5,10 +5,10 @@ import { trpc } from "../utils/trpc";
 import { Tenant, Provider } from "../components/Navigation";
 import { View, Platform, StatusBar } from "react-native";
 import { useAuth } from "@clerk/clerk-expo";
-import { Btn } from "../components/Btn";
-import Loading from "../components/Loading";
-import Role from "../screens/Role";
 import { Lease } from "@leace/db";
+import Role from "../screens/Role";
+import { Loading } from "../components/Loading";
+import { Btn } from "../components/Btn";
 
 export type TabStackParamList = {
   Profile: { userId: string };
@@ -19,10 +19,7 @@ export type TabStackParamList = {
 
   Premium: undefined;
   Likes: undefined;
-  PaymentDetails: {
-    selectedProduct: any;
-    makePayment: boolean;
-  };
+  PaymentDetails: { selectedProduct: any; makePayment: boolean };
 
   PaymentResults: {
     loading: boolean;
@@ -70,9 +67,12 @@ const TabNavigator = () => {
   const { signOut } = useAuth();
   const [role, setRole] = useState<keyof typeof UserRoles | null>(null);
   const { data: session, isLoading } = trpc.auth.getSession.useQuery();
-  const { data: user } = trpc.user.getUserById.useQuery({
-    userId: session?.userId as string,
-  });
+  const { data: user } = trpc.user.getUserById.useQuery(
+    {
+      userId: session?.userId as string,
+    },
+    { enabled: !!session?.userId },
+  );
 
   const isPremium = user?.isPremium as boolean;
 
@@ -87,18 +87,7 @@ const TabNavigator = () => {
     getSession();
   }, [session, isPremium]);
 
-  if (isLoading) {
-    return (
-      <View
-        className="flex-1 items-center justify-center bg-white"
-        style={{
-          paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-        }}
-      >
-        <Loading />
-      </View>
-    );
-  }
+  if (isLoading) return <Loading />;
 
   if (!session) {
     return (
@@ -118,10 +107,11 @@ const TabNavigator = () => {
     );
   }
 
-  if (!role) return <Role />;
   if (role === UserRoles.TENANT)
     return <Tenant userId={session.userId} isPremium={isPremium} />;
-  return <Provider userId={session.userId} isPremium={isPremium} />;
+  else if (role === UserRoles.OWNER)
+    return <Provider userId={session.userId} isPremium={isPremium} />;
+  return <Role />;
 };
 
 export default TabNavigator;

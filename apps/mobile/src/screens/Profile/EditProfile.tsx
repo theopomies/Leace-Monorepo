@@ -21,7 +21,7 @@ import Separator from "../../components/Separator";
 import { trpc } from "../../utils/trpc";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { LocalStorage } from "../../utils/cache";
-import { IUserAttrs } from "../../types";
+// import { IUserAttrs } from "../../types";
 import { EditInfo } from "../../components/UserProfile";
 import { Btn } from "../../components/Btn";
 import { useAuth } from "@clerk/clerk-expo";
@@ -48,7 +48,7 @@ export default function EditProfile() {
     role: string;
     email: string;
   }>();
-  const [attrs, setAttrs] = useState<IUserAttrs>();
+  const [attrs, setAttrs] = useState<any>();
 
   const userMutation = trpc.user.updateUserById.useMutation({
     onSuccess() {

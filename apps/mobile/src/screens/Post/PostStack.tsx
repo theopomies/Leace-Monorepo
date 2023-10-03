@@ -12,7 +12,7 @@ import Header from "../../components/Header";
 import { trpc } from "../../utils/trpc";
 import { RouteProp, useRoute, useFocusEffect } from "@react-navigation/native";
 import { TabStackParamList } from "../../navigation/TabNavigator";
-import Loading from "../../components/Loading";
+import { Loading } from "../../components/Loading";
 import { PostCard } from "../../components/Post";
 import { LocalStorage } from "../../utils/cache";
 import { Post, Attribute, Image } from "@leace/db";

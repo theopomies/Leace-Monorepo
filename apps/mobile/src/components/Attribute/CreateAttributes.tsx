@@ -1,13 +1,13 @@
 import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
-import { IDefaulAttributes } from "../../types";
+// import { IDefaulAttributes } from "../../types";
 import { Icon } from "react-native-elements";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import RNPickerSelect from "react-native-picker-select";
 
 interface ICreateAttributes {
-  attrs: IDefaulAttributes | undefined;
-  setAttrs: React.Dispatch<React.SetStateAction<IDefaulAttributes | undefined>>;
+  attrs: any | undefined;
+  setAttrs: React.Dispatch<React.SetStateAction<any | undefined>>;
 }
 interface IAttributeBtn {
   name: string;

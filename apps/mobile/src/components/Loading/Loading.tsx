@@ -1,42 +1,15 @@
-import { Image, Animated } from "react-native";
-import React, { useEffect, useRef } from "react";
-import { View } from "react-native";
+import { View, Platform, StatusBar, Image } from "react-native";
+import React from "react";
 
 export default function Loading() {
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-
-  function animateFadeInOut() {
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(fadeAnim, {
-          toValue: 1,
-          duration: 1500,
-          useNativeDriver: true,
-        }),
-        Animated.timing(fadeAnim, {
-          toValue: 0.2,
-          duration: 1500,
-          useNativeDriver: true,
-        }),
-      ]),
-      {},
-    ).start();
-  }
-
-  useEffect(() => {
-    animateFadeInOut();
-  }, []);
-
   return (
-    <Animated.View
+    <View
+      className="flex-1 items-center justify-center bg-white"
       style={{
-        opacity: fadeAnim,
-        flex: 1,
-        alignItems: "center",
-        justifyContent: "center",
+        paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
       }}
     >
       <Image source={require("../../../assets/logo.png")} alt="leace-logo" />
-    </Animated.View>
+    </View>
   );
 }

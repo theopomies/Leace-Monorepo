@@ -14,7 +14,7 @@ import Header from "../../components/Header";
 import { Icon } from "react-native-elements";
 import GestureRecognizer from "react-native-swipe-gestures";
 import { trpc } from "../../utils/trpc";
-import Loading from "../../components/Loading";
+import { Loading } from "../../components/Loading";
 import Separator from "../../components/Separator";
 import { Report } from "../../components/Report";
 import { User } from "@leace/db";

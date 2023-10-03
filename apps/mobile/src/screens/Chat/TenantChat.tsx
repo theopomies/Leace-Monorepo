@@ -14,7 +14,7 @@ import React, { useEffect, useState } from "react";
 import { useRoute, RouteProp } from "@react-navigation/native";
 import { TabStackParamList } from "../../navigation/TabNavigator";
 import { trpc } from "../../utils/trpc";
-import Loading from "../../components/Loading";
+import { Loading } from "../../components/Loading";
 import { Message, User, Lease } from "@prisma/client";
 import { Btn } from "../../components/Btn";
 import { Report } from "../../components/Report";

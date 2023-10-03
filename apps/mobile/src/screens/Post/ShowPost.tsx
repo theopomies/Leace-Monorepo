@@ -10,7 +10,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { TabStackParamList } from "../../navigation/TabNavigator";
 import { Report } from "../../components/Report";
 import { trpc } from "../../utils/trpc";
-import Loading from "../../components/Loading";
+import { Loading } from "../../components/Loading";
 import Carousel from "react-native-snap-carousel";
 import Separator from "../../components/Separator";
 import { ShowAttributes } from "../../components/Attribute";
@@ -99,7 +99,7 @@ export default function ShowPost() {
                 itemWidth={352}
                 renderItem={_renderItem}
                 onSnapToItem={(index) => setIdx(index)}
-              />
+              ></Carousel>
             ) : (
               <Image
                 className="rounded-md"

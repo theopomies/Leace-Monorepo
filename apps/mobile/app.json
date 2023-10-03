@@ -14,9 +14,7 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
@@ -24,22 +22,18 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/logo.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.azerty123456789.leace"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [
-      [
-        "@stripe/stripe-react-native",
-        {
-          "merchantIdentifier": "",
-          "enableGooglePay": true
-        }
-      ],
-      [
-        "expo-document-picker"
-      ]
-    ]
+    "plugins": [["expo-document-picker"]],
+    "extra": {
+      "eas": {
+        "projectId": "2ea9ed7c-f661-48c0-a195-f8c050dc2cc9"
+      }
+    },
+    "scheme": "com.azerty123456789.leace"
   }
 }
