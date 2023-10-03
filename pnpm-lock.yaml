@@ -128,6 +128,9 @@ importers:
       react-native-safe-area-context:
         specifier: ^4.7.2
         version: 4.7.2(react-native@0.72.5)(react@18.2.0)
+      react-native-screens:
+        specifier: ^3.25.0
+        version: 3.25.0(react-native@0.72.5)(react@18.2.0)
       react-native-snap-carousel:
         specifier: ^3.9.1
         version: 3.9.1(react-native@0.72.5)(react@18.2.0)
