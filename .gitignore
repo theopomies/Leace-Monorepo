@@ -19,6 +19,7 @@ out/
 # expo
 .expo/
 dist/
+android/
 
 # production
 build

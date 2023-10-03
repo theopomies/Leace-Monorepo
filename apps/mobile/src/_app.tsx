@@ -14,13 +14,13 @@ Logs.disableExpoCliLogging();
 export const App = () => {
   return (
     <ClerkProvider
-      publishableKey={`pk_test_Y2VydGFpbi1jcmFiLTU0LmNsZXJrLmFjY291bnRzLmRldiQ`}
+      publishableKey={process.env.EXPO_PUBLIC_CLERK_PUBLIC_KEY || ""}
       tokenCache={tokenCache}
     >
       <SignedIn>
         <TRPCProvider>
           <SafeAreaProvider>
-            <StatusBar />
+            <StatusBar backgroundColor={"white"} barStyle={"dark-content"} />
             <RootNavigator />
           </SafeAreaProvider>
         </TRPCProvider>

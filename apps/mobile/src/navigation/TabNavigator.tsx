@@ -2,19 +2,13 @@ import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { UserRoles } from "../utils/enum";
 import { trpc } from "../utils/trpc";
-// import { Tenant, Provider } from "../components/Navigation";
-import {
-  View,
-  Platform,
-  StatusBar,
-  Text,
-  TouchableOpacity,
-} from "react-native";
-import { SignedOut, useAuth } from "@clerk/clerk-expo";
-// import { Btn } from "../components/Btn";
-// import Loading from "../components/Loading";
-// import Role from "../screens/Role";
+import { Tenant, Provider } from "../components/Navigation";
+import { View, Platform, StatusBar } from "react-native";
+import { useAuth } from "@clerk/clerk-expo";
 import { Lease } from "@leace/db";
+import Role from "../screens/Role";
+import { Loading } from "../components/Loading";
+import { Btn } from "../components/Btn";
 
 export type TabStackParamList = {
   Profile: { userId: string };
@@ -93,25 +87,7 @@ const TabNavigator = () => {
     getSession();
   }, [session, isPremium]);
 
-  if (isLoading) {
-    return (
-      <View
-        className="flex-1 items-center justify-center bg-white"
-        style={{
-          paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-        }}
-      >
-        {/**        <Loading />         */}
-        <Text>Loading screen</Text>
-        <TouchableOpacity
-          className={`flex flex-row items-center justify-center rounded-lg p-2.5`}
-          onPress={() => signOut()}
-        >
-          <Text className="font-bold">SignedOut</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  }
+  if (isLoading) return <Loading />;
 
   if (!session) {
     return (
@@ -121,40 +97,21 @@ const TabNavigator = () => {
           paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
         }}
       >
-        {/*
         <Btn
           title="Sign Out"
           onPress={() => signOut()}
           iconName="arrow-back-ios"
           iconType="material-icons"
         />
-        */}
-        <Text>Sign Out button</Text>
-        <TouchableOpacity
-          className={`flex flex-row items-center justify-center rounded-lg p-2.5`}
-          onPress={() => signOut()}
-        >
-          <Text className="font-bold">SignedOut</Text>
-        </TouchableOpacity>
       </View>
     );
   }
 
-  // if (!role) return <Role />;
-  // if (role === UserRoles.TENANT)
-  //   return <Tenant userId={session.userId} isPremium={isPremium} />;
-  // return <Provider userId={session.userId} isPremium={isPremium} />;
-  return (
-    <View>
-      <Text>Signed in</Text>
-      <TouchableOpacity
-        className={`flex flex-row items-center justify-center rounded-lg p-2.5`}
-        onPress={() => signOut()}
-      >
-        <Text className="font-bold">SignedOut</Text>
-      </TouchableOpacity>
-    </View>
-  );
+  if (role === UserRoles.TENANT)
+    return <Tenant userId={session.userId} isPremium={isPremium} />;
+  else if (role === UserRoles.OWNER)
+    return <Provider userId={session.userId} isPremium={isPremium} />;
+  return <Role />;
 };
 
 export default TabNavigator;
