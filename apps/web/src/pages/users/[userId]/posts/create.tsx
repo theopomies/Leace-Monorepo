@@ -29,7 +29,7 @@ const CreatePostView = () => {
       title="Profile Page | Leace"
       roles={[Role.ADMIN, Role.AGENCY, Role.OWNER]}
     >
-      <CreatePostPage userId={userId} />
+      <CreatePostPage />
     </LoggedLayout>
   );
 };
