@@ -130,6 +130,8 @@ model Post {
   createdBy   User   @relation(fields: [createdById], references: [id], "posts_created", onDelete: Cascade)
   createdById String
 
+  certified Boolean @default(false)
+
   title            String?
   content          String?
   desc             String?      @db.Text
@@ -141,7 +143,6 @@ model Post {
   nearestShops     Int?
   securityAlarm    Boolean?
   internetFiber    Boolean?
-  certified        Boolean      @default(false)
 
   attribute Attribute?
 
