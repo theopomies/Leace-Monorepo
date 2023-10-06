@@ -83,6 +83,8 @@ const AuthorizedLayout = ({
     activePage = "Profile";
   } else if (router.pathname.startsWith("/premium")) {
     activePage = "Premium";
+  } else if (router.pathname.startsWith("/certification")) {
+    activePage = "Certification";
   } else if (router.pathname.startsWith("/support")) {
     activePage = "Support";
   } else {

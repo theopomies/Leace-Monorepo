@@ -78,9 +78,16 @@ export const PostCard = ({
               <p className="text-lg font-medium">{post.attribute.location}</p>
             </div>
           </div>
-          <p className="text-sm text-slate-500">
-            Posted on Leace on {displayDate(post.createdAt)}
-          </p>
+          <div className="flex gap-2">
+            {post.certified && (
+              <p className="m-auto rounded-full border border-green-500 p-0.5 px-1 text-xs text-green-500">
+                Certified
+              </p>
+            )}
+            <p className="text-sm text-slate-500">
+              Posted on Leace on {displayDate(post.createdAt)}
+            </p>
+          </div>
         </div>
         <div className="my-12 w-full border-t border-slate-200" />
         <div className="flex justify-between px-6">
