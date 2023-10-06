@@ -23,11 +23,13 @@ export function AdminPostPage({ postId }: { postId: string }) {
             <Button className="w-full">View profile</Button>
           </Link>
           <div className="flex flex-grow gap-5 overflow-hidden">
-            <PostList
-              userId={post.data.createdById}
-              postId={postId}
-              postLink="/administration/posts/[postId]"
-            />
+            <div className="w-1/4 overflow-auto">
+              <PostList
+                userId={post.data.createdById}
+                postId={postId}
+                postLink="/administration/posts/[postId]"
+              />
+            </div>
             <Post postId={postId} />
           </div>
         </div>
