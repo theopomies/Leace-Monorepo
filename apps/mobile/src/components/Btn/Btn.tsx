@@ -28,6 +28,7 @@ export default function Btn({
     <TouchableOpacity
       className={`flex flex-row items-center justify-center rounded-lg p-2.5 ${className}`}
       onPress={onPress}
+      disabled={!onPress}
       style={{ backgroundColor: bgColor }}
     >
       {iconName && iconType && (
