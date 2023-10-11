@@ -100,9 +100,6 @@ model User {
   postsSeen     Post[] @relation("posts_seen")
   postsToBeSeen Post[] @relation("posts_to_be_seen")
 
-  seenBy     Post[] @relation("users_seen")
-  toBeSeenBy Post[] @relation("users_to_be_seen")
-
   documents     Document[]
   relationships Relationship[]
   messages      Message[]
@@ -148,9 +145,6 @@ model Post {
 
   seenBy     User[] @relation("posts_seen")
   toBeSeenBy User[] @relation("posts_to_be_seen")
-
-  usersSeen     User[] @relation("users_seen")
-  usersToBeSeen User[] @relation("users_to_be_seen")
 
   images    Image[]
   documents Document[]
