@@ -267,7 +267,10 @@ export const postRouter = router({
 
       // If less or equal than 3 posts, add more
       if (user.postsToBeSeen.length <= 3) {
-        const newPosts = await getPostsWithAttribute(user.id);
+        const newPosts = await getPostsWithAttribute(
+          user.id,
+          user.isPremium ?? false,
+        );
         if (newPosts.length === 0) return user.postsToBeSeen;
         const updatedUser = await ctx.prisma.user.update({
           where: { id: user.id },

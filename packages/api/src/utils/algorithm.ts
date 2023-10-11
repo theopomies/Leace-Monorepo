@@ -1,6 +1,7 @@
 import { PostType, PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
+const PREMIUM_DAYS_ADVANTAGE = 1;
 
 export async function movePostToSeen(userId: string, postId: string) {
   // move the specified post from postsTobeSeen to postsSeen in the user's profile
@@ -36,7 +37,10 @@ const deg2rad = (deg: number) => deg * (Math.PI / 180);
 const rad2deg = (rad: number) => rad * (180 / Math.PI);
 const earthRadius = 6371;
 
-export async function getPostsWithAttribute(userId: string) {
+export async function getPostsWithAttribute(
+  userId: string,
+  isPremium: boolean,
+) {
   const userAtt = await prisma.attribute.findUniqueOrThrow({
     where: { userId: userId },
   });
@@ -56,8 +60,19 @@ export async function getPostsWithAttribute(userId: string) {
     userAtt.lng -
     rad2deg(userAtt.range / earthRadius / Math.cos(deg2rad(userAtt.lat)));
 
+  let maxDate = new Date(); // Today
+  if (!isPremium) {
+    // 1 less day if not premium
+    maxDate = new Date(
+      maxDate.getTime() - 1000 * 60 * 60 * 24 * PREMIUM_DAYS_ADVANTAGE,
+    );
+  }
+
   const posts = await prisma.post.findMany({
     where: {
+      createdAt: {
+        lte: maxDate,
+      },
       type: PostType.TO_BE_RENTED,
       attribute: {
         AND: [
