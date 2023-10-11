@@ -209,7 +209,12 @@ export const userRouter = router({
       return user;
     }),
   /** Delete one user with the given id. */
-  deleteUserById: protectedProcedure([Role.TENANT, Role.OWNER, Role.AGENCY])
+  deleteUserById: protectedProcedure([
+    Role.TENANT,
+    Role.OWNER,
+    Role.AGENCY,
+    Role.ADMIN,
+  ])
     .input(z.object({ userId: z.string() }))
     .mutation(async ({ input, ctx }) => {
       const userId = getId({ ctx: ctx, userId: input.userId });

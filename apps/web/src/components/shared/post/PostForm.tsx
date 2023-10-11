@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 import React, {
-  ChangeEventHandler,
   Dispatch,
   FormEventHandler,
   MouseEventHandler,
@@ -11,7 +10,6 @@ import React, {
 import { Button } from "../button/Button";
 import { Input } from "../forms/Input";
 import { TextArea } from "../forms/TextArea";
-import { FileInput } from "../forms/FileInput";
 import { HomeType } from "../../../types/homeType";
 import { DocumentList } from "../document/DocumentList";
 import { ImageList } from "./ImageList";
@@ -19,6 +17,7 @@ import { Post, Attribute, Image, Document, EnergyClass } from "@prisma/client";
 import { PostAttributesForm } from "../../attributes/PostAttributesForm";
 import { TextInput } from "../forms/TextInput";
 import { NumberInput } from "../forms/NumberInput";
+import { FileUploadSection } from "../button/FileUploadSection";
 
 export type PostFormData = {
   title: string;
@@ -47,16 +46,12 @@ export type PostFormData = {
 
 export interface PostFormProps {
   post?: (Post & { attribute: Attribute | null }) | undefined;
-  images?: File[] | undefined;
-  setImages?: ChangeEventHandler;
-  onImgsUpload?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onImgsUpload: (file: File[]) => void;
   onImgDelete?: (imageId: string) => Promise<void>;
-  imagesGet?: (Image & { url: string })[] | null | undefined;
-  documents?: File[] | undefined;
-  setDocuments?: ChangeEventHandler;
-  onDocsUpload?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  images?: (Image & { url: string })[] | null | undefined;
+  onDocsUpload: (files: File[]) => void;
   onDocDelete?: (documentId: string) => Promise<void>;
-  documentsGet?: (Document & { url: string })[] | null | undefined;
+  documents?: (Document & { url: string })[] | null | undefined;
   onSubmit: (data: PostFormData) => Promise<void>;
   onCancel: MouseEventHandler<HTMLButtonElement>;
 }
@@ -87,6 +82,9 @@ export const PostForm = (props: PostFormProps) => {
   const [constructionDate, setConstructionDate] = useState<string>("");
   const [estimatedCosts, setEstimatedCosts] = useState<number>(0);
   const [nearestShops, setNearestShops] = useState<number>(0);
+
+  const [selectedDocuments, setSelectedDocuments] = useState<File[]>([]);
+  const [selectedImages, setSelectedImages] = useState<File[]>([]);
 
   useEffect(() => {
     const date = props.post?.constructionDate
@@ -126,11 +124,6 @@ export const PostForm = (props: PostFormProps) => {
     }
   }, [props.post]);
 
-  // const handleChange =
-  //   (setter: Dispatch<SetStateAction<string>>) =>
-  //   (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-  //     setter(event.target.value);
-  //   };
   const handleChange =
     (
       setter:
@@ -192,6 +185,8 @@ export const PostForm = (props: PostFormProps) => {
       internetFiber,
     };
     props.onSubmit(data);
+    props.onImgsUpload(selectedImages);
+    props.onDocsUpload(selectedDocuments);
   };
 
   const attributesStates = {
@@ -229,7 +224,7 @@ export const PostForm = (props: PostFormProps) => {
 
   return (
     <form
-      className="m-auto my-5 flex w-fit flex-col justify-center rounded-lg bg-white p-12 shadow"
+      className="m-auto my-5 flex w-fit flex-grow flex-col overflow-auto rounded-lg bg-white p-12 shadow"
       onSubmit={handleSubmit}
     >
       <div className="pb-5">
@@ -323,32 +318,23 @@ export const PostForm = (props: PostFormProps) => {
         </ul>
       </div>
       <PostAttributesForm {...attributesStates} />
-      <ImageList images={props.imagesGet} onDelete={props.onImgDelete} />
-      <div className="mb-5 mt-2 flex flex-wrap justify-center gap-4">
-        <FileInput multiple onChange={props.setImages || props.onImgsUpload}>
-          Upload Image
-        </FileInput>
-        {props.images?.map((image, index) => (
-          <p key={index}>{image.name}</p>
-        ))}
-      </div>
+      <ImageList images={props.images} onDelete={props.onImgDelete} />
+      <p className="bold pt-4 text-xl">Upload Images</p>
+      <FileUploadSection
+        selectedFiles={selectedImages}
+        setSelectedFiles={setSelectedImages}
+      />
       <DocumentList
-        documents={props.documentsGet}
+        documents={props.documents}
         onDelete={props.onDocDelete}
         isLoggedInOrAdmin
       />
-      <div className="mt-2 flex flex-wrap justify-center gap-4">
-        <FileInput
-          multiple
-          onChange={props.setDocuments || props.onDocsUpload}
-          accept=".pdf"
-        >
-          Upload Document
-        </FileInput>
-        {props.documents?.map((document, index) => (
-          <p key={index}>{document.name}</p>
-        ))}
-      </div>
+      <p className="bold pt-4 text-xl">Upload Documents</p>
+      <FileUploadSection
+        selectedFiles={selectedDocuments}
+        setSelectedFiles={setSelectedDocuments}
+        accept=".pdf"
+      />
       <div className="mt-10 flex justify-center gap-4">
         <Button type="button" theme="danger" onClick={props.onCancel}>
           Cancel

@@ -61,7 +61,7 @@ export const PostCard = ({
   if (!post.attribute) return <h1>Something went wrong</h1>;
 
   return (
-    <div className="flex h-full w-full flex-col justify-between overflow-scroll rounded-lg bg-white p-8 shadow">
+    <div className="flex h-full w-full flex-col justify-between overflow-auto rounded-lg bg-white p-8 shadow">
       <section>
         {images && images.length > 0 && (
           <div className="h-[40vh]">
