@@ -6,6 +6,7 @@ import { DocumentList } from "../document/DocumentList";
 import { displayDate } from "../../../utils/displayDate";
 import { UserLayout } from "./UserLayout";
 import { DisplayReports } from "../../moderation/report/DisplayReports";
+import { AiOutlineLike } from 'react-icons/ai';
 
 export interface UserCardProps {
   user: User & {
@@ -50,6 +51,7 @@ export function UserCard({
   isLoggedUser,
   isAdmin = false,
 }: UserCardProps) {
+  const nbrLikes = 103;
   return (
     <UserLayout
       sidePanel={
@@ -61,8 +63,8 @@ export function UserCard({
                 (isBanned
                   ? " border-2 border-red-600"
                   : user.isPremium
-                  ? " border-2 border-yellow-300"
-                  : "")
+                    ? " border-2 border-yellow-300"
+                    : "")
               }
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -105,11 +107,21 @@ export function UserCard({
       mainPanel={
         <div className="flex flex-grow flex-col gap-5">
           <div className="flex items-end justify-between">
-            <h1 className="text-4xl font-semibold">
-              {isLoggedUser
-                ? "Your Profile"
-                : `${user.firstName} ${user.lastName}`}
-            </h1>
+            <div className="flex items-center gap-5">
+              <h1 className="text-4xl font-semibold">
+                {isLoggedUser
+                  ? "Your Profile"
+                  : `${user.firstName} ${user.lastName}`}
+              </h1>
+              {user.role === Role.AGENCY && (
+                <div className="flex items-center">
+                  <span className="text-lg font-semibold">
+                    {user.like}
+                  </span>
+                  <AiOutlineLike className="text-blue-500 ml-2" />
+                </div>
+              )}
+            </div>
             <h2 className="text-sm font-medium text-slate-500">
               Member since: <i>{user.createdAt.toDateString()}</i>
             </h2>
@@ -149,8 +161,8 @@ export function UserCard({
                   {user.birthDate
                     ? displayDate(user.birthDate)
                     : isLoggedUser
-                    ? "Please add your birthdate by updating your profile"
-                    : "Not specified"}
+                      ? "Please add your birthdate by updating your profile"
+                      : "Not specified"}
                 </p>
               </li>
             </ul>
@@ -230,18 +242,18 @@ export function UserCard({
                               ? "✅"
                               : "❌"
                             : typeof attribute === "number"
-                            ? attribute
-                            : typeof attribute === "string"
-                            ? attribute
-                            : typeof attribute === "object" &&
-                              attribute !== null
-                            ? displayDate(attribute)
-                            : "Whatever"}{" "}
+                              ? attribute
+                              : typeof attribute === "string"
+                                ? attribute
+                                : typeof attribute === "object" &&
+                                  attribute !== null
+                                  ? displayDate(attribute)
+                                  : "Whatever"}{" "}
                           {value.toLowerCase().includes("price")
                             ? "€"
                             : value.toLowerCase().includes("surface")
-                            ? "m²"
-                            : ""}
+                              ? "m²"
+                              : ""}
                         </p>
                       )}
                     </li>

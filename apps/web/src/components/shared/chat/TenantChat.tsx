@@ -6,6 +6,7 @@ import { Role } from "@prisma/client";
 import { TenantContractPopover } from "./contracts/TenantContractPopover";
 import { ReportDialog } from "./ReportDialog";
 import { Button } from "../button/Button";
+import { AiOutlineLike, AiFillLike } from "react-icons/ai";
 
 export function TenantChat({
   userId,
@@ -17,6 +18,11 @@ export function TenantChat({
   role: Role;
 }) {
   const utils = trpc.useContext();
+
+  const user = trpc.user.getUserById.useQuery({ userId: userId }).data;
+  const [localLikeCount, setLocalLikeCount] = useState<number>(user?.like ?? 0);
+  const [hasLiked, setHasLiked] = useState<boolean>(false);
+
   const { data: conversation, isLoading: conversationIsLoadingOrNotEnabled } =
     trpc.conversation.getConversation.useQuery(
       {
@@ -42,6 +48,24 @@ export function TenantChat({
     sendMutation.mutate({ conversationId, content });
   };
 
+  // const likeMutation = trpc.user.updateUserById.useMutation({
+  //   onSuccess() {
+  //     utils.user.getUserById.invalidate({ userId });
+  //   },
+  // });
+
+  // Gestionnaire de clic pour "like"
+  const handleLikeClick = () => {
+    setLocalLikeCount(prev => hasLiked ? prev - 1 : prev + 1);
+    setHasLiked(!hasLiked);
+
+    // // Mettre à jour côté serveur
+    // likeMutation.mutate({
+    //   userId,
+    //   like: !hasLiked // nouvelle valeur de "like" pour l'utilisateur
+    // });
+  };
+
   const report = trpc.report.reportPostById.useMutation();
 
   const isLoading = useMemo(
@@ -60,7 +84,12 @@ export function TenantChat({
   }, [relationships, conversation]);
 
   const [liked, setLiked] = useState(false);
-  const likeMutation = trpc.post.likeAgency.useMutation();
+  const likeMutation = trpc.user.updateUserById.useMutation({
+    onSuccess() {
+      utils.user.getUserById.invalidate({ userId });
+      setLiked(true);
+    },
+  });
 
   if (isLoading) {
     return <Loader />;
@@ -70,12 +99,12 @@ export function TenantChat({
 
   const contact = relationship
     ? {
-        name:
-          relationship.post.createdBy.firstName +
-          " - " +
-          (relationship.post.title || "Untitled Post"),
-        link: `/posts/${relationship.post.id}`,
-      }
+      name:
+        relationship.post.createdBy.firstName +
+        " - " +
+        (relationship.post.title || "Untitled Post"),
+      link: `/posts/${relationship.post.id}`,
+    }
     : undefined;
 
   if (!relationship) {
@@ -94,6 +123,18 @@ export function TenantChat({
       contact={contact}
       additionnalBarComponent={
         <div className="flex items-center gap-8">
+          {user && user?.role === Role.TENANT && (
+            <div className="flex items-center">
+              <span className="text-lg font-semibold">
+                {localLikeCount}
+              </span>
+              {hasLiked ? (
+                <AiFillLike onClick={handleLikeClick} className="text-blue-500 ml-2 cursor-pointer" />
+              ) : (
+                <AiOutlineLike onClick={handleLikeClick} className="text-blue-500 ml-2 cursor-pointer" />
+              )}
+            </div>
+          )}
           {relationship &&
             (relationship.lease?.isSigned ? (
               relationship.post.createdBy.role == Role.AGENCY &&
@@ -101,7 +142,7 @@ export function TenantChat({
                 <Button
                   onClick={() =>
                     likeMutation.mutate({
-                      agencyId: relationship.post.createdBy.id,
+                      userId: relationship.post.createdBy.id,
                     })
                   }
                 >
