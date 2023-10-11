@@ -8,11 +8,11 @@ export default function AdminPostView() {
   const { postId } = router.query;
 
   if (!postId || typeof postId !== "string") {
-    return <div>Invalid User ID</div>;
+    return <div>Invalid Post ID</div>;
   }
 
   return (
-    <LoggedLayout title="User Administration | Leace" roles={[Role.ADMIN]}>
+    <LoggedLayout title="Post Administration | Leace" roles={[Role.ADMIN]}>
       <AdminPostPage postId={postId} />
     </LoggedLayout>
   );
