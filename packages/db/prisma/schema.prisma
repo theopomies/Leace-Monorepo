@@ -74,24 +74,24 @@ model User {
   id   String @id @default(cuid())
   role Role?
 
-  email         String?     @unique
-  emailVerified DateTime?
-  image         String?     @db.Text
-  firstName     String?
-  lastName      String?
-  phoneNumber   String?     @unique
-  country       String?
-  description   String?     @db.Text
-  birthDate     DateTime?
-  job String?
+  email              String?        @unique
+  emailVerified      DateTime?
+  image              String?        @db.Text
+  firstName          String?
+  lastName           String?
+  phoneNumber        String?        @unique
+  country            String?
+  description        String?        @db.Text
+  birthDate          DateTime?
+  job                String?
   employmentContract String?
-  income Int?
-  creditScore Int?
-  maritalStatus MaritalStatus?
-  status        UserStatus? @default(INACTIVE)
-  isPremium     Boolean?    @default(false)
+  income             Int?
+  creditScore        Int?
+  maritalStatus      MaritalStatus?
+  status             UserStatus?    @default(INACTIVE)
+  isPremium          Boolean?       @default(false)
 
-  lastLogin     DateTime   @default(now())
+  lastLogin DateTime @default(now())
 
   attribute Attribute?
 
@@ -130,17 +130,19 @@ model Post {
   createdBy   User   @relation(fields: [createdById], references: [id], "posts_created", onDelete: Cascade)
   createdById String
 
-  title   String?
-  content String?
-  desc    String?   @db.Text
-  type    PostType? @default(TO_BE_RENTED)
-  energyClass EnergyClass?
-  ges EnergyClass?
+  certified Boolean @default(false)
+
+  title            String?
+  content          String?
+  desc             String?      @db.Text
+  type             PostType?    @default(TO_BE_RENTED)
+  energyClass      EnergyClass?
+  ges              EnergyClass?
   constructionDate DateTime?
-  estimatedCosts Int?
-  nearestShops Int?
-  securityAlarm Boolean?
-  internetFiber Boolean?
+  estimatedCosts   Int?
+  nearestShops     Int?
+  securityAlarm    Boolean?
+  internetFiber    Boolean?
 
   attribute Attribute?
 

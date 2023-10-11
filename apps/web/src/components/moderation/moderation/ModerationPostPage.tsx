@@ -27,11 +27,13 @@ export function ModeratioPostPage({
             <Button className="w-full">View profile</Button>
           </Link>
           <div className="flex flex-grow gap-5 overflow-hidden">
-            <PostList
-              userId={post.data.createdById}
-              postId={postId}
-              postLink={`/moderation/reports/${reportId}/posts/[postId]`}
-            />
+            <div className="w-1/4 overflow-auto">
+              <PostList
+                userId={post.data.createdById}
+                postId={postId}
+                postLink={`/moderation/reports/${reportId}/posts/[postId]`}
+              />
+            </div>
             <Post postId={postId} />
           </div>
         </div>

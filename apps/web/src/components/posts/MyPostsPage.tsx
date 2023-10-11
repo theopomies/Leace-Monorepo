@@ -33,9 +33,9 @@ export const MyPostsPage = ({ userId, postId }: MyPostsPageProps) => {
   }
 
   return (
-    <div className="flex h-screen w-full gap-5 overflow-hidden p-10">
+    <div className="flex h-screen w-full flex-grow gap-5 overflow-hidden p-10">
       {posts && posts.length > 0 && (
-        <div className="w-1/5">
+        <div className="flex w-1/5 flex-grow flex-col">
           <Link href={`/users/${userId}/posts/create`}>
             <div
               className={
@@ -47,14 +47,16 @@ export const MyPostsPage = ({ userId, postId }: MyPostsPageProps) => {
               </div>
             </div>
           </Link>
-          {posts.map((post) => (
-            <PostBar
-              key={post.id}
-              post={post}
-              postLink={`/users/${userId}/posts/[postId]`}
-              selected={post.id === postId}
-            />
-          ))}
+          <div className="h-full overflow-auto">
+            {posts.map((post) => (
+              <PostBar
+                key={post.id}
+                post={post}
+                postLink={`/users/${userId}/posts/[postId]`}
+                selected={post.id === postId}
+              />
+            ))}
+          </div>
         </div>
       )}
       {postId ? (

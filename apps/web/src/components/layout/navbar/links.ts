@@ -44,6 +44,12 @@ export function getLinks(userId: string): {
       icon: "/mace",
     },
     {
+      href: "/certification",
+      label: "Certification",
+      roles: [Role.ADMIN, Role.MODERATOR],
+      icon: "/check",
+    },
+    {
       href: "/support",
       label: "Support",
       roles: [Role.ADMIN],

@@ -1,16 +1,13 @@
-import React, { MouseEventHandler, useState } from "react";
+import React, { MouseEventHandler } from "react";
 import { Header } from "../shared/Header";
 import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
 import { PostForm, PostFormData } from "../shared/post/PostForm";
 import axios from "axios";
-import { ToastDescription, ToastTitle, useToast } from "../shared/toast/Toast";
 
-export const CreatePostPage = ({ userId }: { userId: string }) => {
+export const CreatePostPage = () => {
   const router = useRouter();
-  const { renderToast } = useToast();
   const post = trpc.post.createPost.useMutation();
-  const [postId, setPostId] = useState<string | undefined>();
 
   const updatePost = trpc.attribute.updatePostAttributes.useMutation();
 
@@ -19,14 +16,20 @@ export const CreatePostPage = ({ userId }: { userId: string }) => {
   const uploadDocument = trpc.document.putSignedUrl.useMutation();
 
   const handleSubmit = async (data: PostFormData) => {
-    const { id: postId } = await post.mutateAsync({
+    const postCreated = await post.mutateAsync({
       title: data.title,
       desc: data.description,
       content: "",
+      constructionDate: new Date(data.constructionDate + "T00:00:00.000Z"),
+      energyClass: data.energyClass,
+      estimatedCosts: data.estimatedCosts,
+      ges: data.ges,
+      internetFiber: data.internetFiber,
+      securityAlarm: data.securityAlarm,
+      nearedShops: data.nearestShops,
     });
-    setPostId(postId);
     await updatePost.mutateAsync({
-      postId,
+      postId: postCreated.id,
       location: data.location,
       homeType: data.homeType,
       furnished: data.furnished,
@@ -38,19 +41,13 @@ export const CreatePostPage = ({ userId }: { userId: string }) => {
       elevator: data.elevator,
       pool: data.pool,
       disability: data.disability,
-      size: data.size,
       price: data.price,
+      size: data.size,
     });
-    router.push(`/users/${userId}/posts/${postId}`);
-    renderToast(
-      <>
-        <ToastTitle>Success</ToastTitle>
-        <ToastDescription>Your property is now posted ✅</ToastDescription>
-      </>,
-    );
+    return postCreated;
   };
 
-  const handleUploadImages = (files: File[]) => {
+  const handleUploadImages = (files: File[], postId?: string) => {
     if (files && files.length > 0 && postId) {
       Array.from(files).map(async (image) => {
         await uploadImage
@@ -64,7 +61,7 @@ export const CreatePostPage = ({ userId }: { userId: string }) => {
     }
   };
 
-  const handleUploadDocs = (files: File[]) => {
+  const handleUploadDocs = (files: File[], postId?: string) => {
     if (files && files.length > 0 && postId) {
       Array.from(files).map(async (document) => {
         await uploadDocument
@@ -89,7 +86,7 @@ export const CreatePostPage = ({ userId }: { userId: string }) => {
     <div className="flex w-full flex-grow flex-col">
       <Header heading={"Create Post"} />
       <PostForm
-        onSubmit={handleSubmit}
+        onSubmitNew={handleSubmit}
         onCancel={handleCancel}
         onImgsUpload={handleUploadImages}
         onDocsUpload={handleUploadDocs}

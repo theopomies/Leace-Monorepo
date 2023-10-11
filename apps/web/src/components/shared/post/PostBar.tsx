@@ -54,15 +54,11 @@ export const PostBar = ({
               />
             </div>
           )}
-          <div
-            className={`mx-5 my-auto w-3/5 min-w-max ${
-              (!img || !img[0]) && "py-6"
-            }`}
-          >
-            <div className=" font-semibold uppercase tracking-wide text-indigo-500">
+          <div className={`my-3 mx-4 w-3/5 ${(!img || !img[0]) && "py-5"}`}>
+            <div className="text-sm font-semibold text-indigo-500">
               {post.title}
             </div>
-            <p className="mt-2 text-slate-500">
+            <p className="mt-1 text-xs text-slate-500">
               {post.type === PostType.RENTED
                 ? "Rented ✅"
                 : post.type === PostType.HIDE
