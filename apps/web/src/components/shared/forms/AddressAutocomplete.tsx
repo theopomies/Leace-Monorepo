@@ -76,6 +76,7 @@ export const AddressAutocomplete = (props: AddressAutocompleteProps) => {
           type="text"
           placeholder="Search"
           name="location"
+          required
           onChange={(event) => {
             props.handleLocationChange(event);
             setShowList(true);
