@@ -90,7 +90,6 @@ model User {
   maritalStatus MaritalStatus?
   status        UserStatus? @default(INACTIVE)
   isPremium     Boolean?    @default(false)
-  like Int @default(0)
 
   lastLogin DateTime @default(now())
 
@@ -115,6 +114,11 @@ model User {
 
   reviewsCreated Review[] @relation("review_created")
   reviews  Review[] @relation("agency_review")
+
+  like Int @default(0)
+  likedBy Like[] @relation("likedUsers")
+  liked Like[] @relation("likedByUsers")
+
 
   reports        Report[] @relation("reported")
   reportsCreated Report[] @relation("reports_created")
@@ -425,4 +429,20 @@ model Review {
 
   @@index([agencyId])
   @@index([createdById])
+}
+
+model Like {
+  id String @id @default(cuid())
+
+  likedBy User   @relation(fields: [likedById], references: [id], "likedUsers", onDelete: Cascade)
+  likedById String
+
+  likedUser User   @relation(fields: [likedUserId], references: [id], "likedByUsers", onDelete: Cascade)
+  likedUserId String
+
+  createdAt DateTime @default(now())
+
+  @@index([likedById])
+  @@index([likedUserId])
+  @@map("likes")
 }
