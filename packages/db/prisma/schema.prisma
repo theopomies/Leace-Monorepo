@@ -85,11 +85,11 @@ model User {
   birthDate          DateTime?
   job                String?
   employmentContract String?
-  income             Int?
-  creditScore        Int?
-  maritalStatus      MaritalStatus?
-  status             UserStatus?    @default(INACTIVE)
-  isPremium          Boolean?       @default(false)
+  income Int?
+  creditScore Int?
+  maritalStatus MaritalStatus?
+  status        UserStatus? @default(INACTIVE)
+  isPremium     Boolean?    @default(false)
 
   lastLogin DateTime @default(now())
 
@@ -111,6 +111,14 @@ model User {
   bansCreated Ban[] @relation("bans_created")
 
   LeaseCreated Lease[]
+
+  reviewsCreated Review[] @relation("review_created")
+  reviews  Review[] @relation("agency_review")
+
+  like Int @default(0)
+  likedBy Like[] @relation("likedUsers")
+  liked Like[] @relation("likedByUsers")
+
 
   reports        Report[] @relation("reported")
   reportsCreated Report[] @relation("reports_created")
@@ -404,4 +412,37 @@ model Lease {
 
   @@index([relationshipId])
   @@index([createdById])
+}
+
+model Review {
+  id String @id @default(cuid())
+  
+  comment String?
+  stars Int?
+
+  agency   User   @relation(fields: [agencyId], references: [id],"agency_review", onDelete: Cascade)
+  agencyId String
+
+  createdBy   User   @relation(fields: [createdById], references: [id],"review_created", onDelete: Cascade)
+  createdById String
+
+
+  @@index([agencyId])
+  @@index([createdById])
+}
+
+model Like {
+  id String @id @default(cuid())
+
+  likedBy User   @relation(fields: [likedById], references: [id], "likedUsers", onDelete: Cascade)
+  likedById String
+
+  likedUser User   @relation(fields: [likedUserId], references: [id], "likedByUsers", onDelete: Cascade)
+  likedUserId String
+
+  createdAt DateTime @default(now())
+
+  @@index([likedById])
+  @@index([likedUserId])
+  @@map("likes")
 }

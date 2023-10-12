@@ -541,4 +541,71 @@ export const relationshipRouter = router({
 
       return data;
     }),
+  likeAgency: protectedProcedure([Role.TENANT])
+    .input(
+      z.object({
+        agencyId: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.auth.userId;
+
+      const user = await ctx.prisma.user.findUnique({ where: { id: userId } });
+
+      if (!user) throw new TRPCError({ code: "NOT_FOUND" });
+
+      const agency = await ctx.prisma.user.findUnique({
+        where: { id: input.agencyId },
+      });
+
+      if (!agency) throw new TRPCError({ code: "NOT_FOUND" });
+
+      if (agency.role != Role.AGENCY)
+        throw new TRPCError({ code: "BAD_REQUEST" });
+
+      const exist = await ctx.prisma.like.findFirst({
+        where: {
+          likedById: userId,
+          likedUserId: input.agencyId,
+        },
+      });
+
+      if (!exist) {
+        const created = await ctx.prisma.like.create({
+          data: {
+            likedById: userId,
+            likedUserId: input.agencyId,
+          },
+        });
+        if (!created) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+        const like = agency.like + 1;
+
+        const updated = await ctx.prisma.user.update({
+          where: { id: agency.id },
+          data: {
+            like,
+          },
+        });
+        if (!updated) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+        return;
+      }
+
+      const deleted = await ctx.prisma.like.delete({
+        where: {
+          id: exist.id,
+        },
+      });
+      if (!deleted) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+      const like = agency.like - 1;
+
+      const updated = await ctx.prisma.user.update({
+        where: { id: agency.id },
+        data: {
+          like,
+        },
+      });
+      if (!updated) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+    }),
 });

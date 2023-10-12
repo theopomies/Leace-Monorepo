@@ -85,11 +85,11 @@ export function OwnerChat({
 
   const contact = relationship?.user
     ? {
-        name:
-          relationship.user.firstName + " " + relationship.user.lastName ??
-          "Anonymous user",
-        link: `/users/${relationship.user.id}`,
-      }
+      name:
+        relationship.user.firstName + " " + relationship.user.lastName ??
+        "Anonymous user",
+      link: `/users/${relationship.user.id}`,
+    }
     : undefined;
 
   return (

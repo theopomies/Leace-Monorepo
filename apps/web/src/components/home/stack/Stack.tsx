@@ -135,13 +135,17 @@ export function Stack({ posts, onLike, onDislike, onRewind }: StackProps) {
         </>
       ) : (
         <div className="flex flex-col items-center justify-center">
-          <h1 className="text-2xl font-bold text-gray-700">No results :(</h1>
-
+          <img
+            src="/no_result.png"
+            referrerPolicy="no-referrer"
+            alt="logo"
+            className="w-[35%]"
+          />
           <div className="mt-4 flex flex-col items-center justify-center">
-            <p className="text-gray-500">
-              It seems that no one matches your current criterias ...
+            <p className="text-2xl font-bold text-gray-700">
+              It seems that no one matches your current criterias.
             </p>
-            <p className="text-gray-500">
+            <p className="text-2xl font-bold text-gray-700">
               Try to{" "}
               <a
                 className="font-bold text-blue-500"

@@ -344,4 +344,61 @@ export const postRouter = router({
         utilitiesCost: relationship.lease.utilitiesCost,
       };
     }),
+  addReview: protectedProcedure([Role.TENANT])
+    .input(
+      z.object({
+        agencyId: z.string(),
+        comment: z.string(),
+        stars: z.number(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const agency = await ctx.prisma.user.findFirst({
+        where: { id: input.agencyId },
+      });
+
+      if (!agency) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+      if (input.stars < 0 || input.stars > 5)
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "stars must be between 0-5",
+        });
+
+      const already = await ctx.prisma.review.findFirst({
+        where: { createdById: ctx.auth.userId, agencyId: input.agencyId },
+      });
+      if (already)
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "already a review",
+        });
+
+      const created = await ctx.prisma.review.create({
+        data: {
+          createdById: ctx.auth.userId,
+          agencyId: input.agencyId,
+          comment: input.comment,
+          stars: input.stars,
+        },
+      });
+      if (!created) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+    }),
+  deleteReview: protectedProcedure([Role.TENANT])
+    .input(
+      z.object({
+        agencyId: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const review = await ctx.prisma.review.findFirst({
+        where: {
+          createdById: ctx.auth.userId,
+          agencyId: input.agencyId,
+        },
+      });
+      if (!review) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+      return await ctx.prisma.review.delete({ where: { id: review.id } });
+    }),
 });
