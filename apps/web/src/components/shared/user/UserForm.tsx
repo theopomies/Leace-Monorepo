@@ -160,7 +160,11 @@ export const UserForm = ({
   const handleNumberChange =
     (setter: Dispatch<SetStateAction<number | undefined>>) =>
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      setter(event.target.valueAsNumber);
+      setter(
+        isNaN(event.target.valueAsNumber)
+          ? undefined
+          : event.target.valueAsNumber,
+      );
     };
 
   const handleHomeTypeChange =
