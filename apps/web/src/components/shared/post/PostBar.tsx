@@ -1,9 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
-import Link from "next/link";
 import { trpc } from "../../../utils/trpc";
 import { Post, PostType, RelationType, User } from "@prisma/client";
 import { PostBarActions } from "./PostBarActions";
 import { PostBarUser } from "./PostBarUser";
+import { setCacheId } from "../../../utils/useCache";
+import { useRouter } from "next/router";
 
 export interface PostBarProps {
   post: Post;
@@ -30,9 +31,15 @@ export const PostBar = ({
   onDeleteMatch,
   onLikeMatch,
 }: PostBarProps) => {
+  const router = useRouter();
   const { data: img } = trpc.image.getSignedPostUrl.useQuery({
     postId: post.id,
   });
+
+  const handleClick = () => {
+    setCacheId("lastSelectedPostId", post.id);
+    router.push(postLink.replace("[postId]", post.id));
+  };
 
   return (
     <div
@@ -41,10 +48,7 @@ export const PostBar = ({
       } mx-auto mb-5 flex flex-grow cursor-pointer flex-col overflow-hidden rounded-xl bg-white shadow-md md:max-w-2xl`}
     >
       <div className="flex items-center">
-        <Link
-          href={postLink.replace("[postId]", post.id)}
-          className="flex w-full flex-col"
-        >
+        <a onClick={handleClick} className="flex w-full flex-col">
           {img && img[0] && (
             <div className="w-full">
               <img
@@ -66,7 +70,7 @@ export const PostBar = ({
                 : "Available"}
             </p>
           </div>
-        </Link>
+        </a>
         {user && userLink && <PostBarUser user={user} userLink={userLink} />}
       </div>
       {relationshipId && onDeleteMatch && (
