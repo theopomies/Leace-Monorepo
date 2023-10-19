@@ -23,7 +23,7 @@ export const postRouter = router({
         ges: z
           .enum([EnergyClass.A, EnergyClass.B, EnergyClass.C, EnergyClass.D])
           .optional(),
-        constructionDate: z.date().optional(),
+        constructionDate: z.date().optional().nullable(),
         estimatedCosts: z.number().optional(),
         nearedShops: z.number().optional(),
         securityAlarm: z.boolean().optional(),

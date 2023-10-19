@@ -21,7 +21,7 @@ export function TenantChat({
       {
         conversationId: conversationId ?? "",
       },
-      { enabled: !!conversationId },
+      { enabled: !!conversationId, refetchOnWindowFocus: true },
     );
   const conversationIsLoading = useMemo(
     () => conversationIsLoadingOrNotEnabled && !!conversationId,
@@ -33,7 +33,10 @@ export function TenantChat({
     },
   });
   const { data: relationships, isLoading: relationshipsLoading } =
-    trpc.relationship.getMatchesForTenant.useQuery({ userId });
+    trpc.relationship.getMatchesForTenant.useQuery(
+      { userId },
+      { refetchOnWindowFocus: true },
+    );
 
   const { data: supportRelationships, isLoading: supportRelationshipsLoading } =
     trpc.support.getRelationshipsForTenant.useQuery({ userId });

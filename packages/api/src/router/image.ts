@@ -39,7 +39,6 @@ export const imageRouter = router({
         const bucketParams = {
           Bucket: "leaceawsbucket",
           Key: key,
-          ACL: "public-read",
           ContentType: input.fileType,
         };
         const command = new PutObjectCommand(bucketParams);

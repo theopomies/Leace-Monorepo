@@ -23,7 +23,7 @@ export function OwnerChat({
       {
         conversationId: conversationId ?? "",
       },
-      { enabled: !!conversationId },
+      { enabled: !!conversationId, refetchOnWindowFocus: true },
     );
   const conversationIsLoading = useMemo(
     () => conversationIsLoadingOrNotEnabled && !!conversationId,
@@ -35,7 +35,10 @@ export function OwnerChat({
     },
   });
   const { data: relationships, isLoading: relationshipsLoading } =
-    trpc.relationship.getMatchesForOwner.useQuery({ userId });
+    trpc.relationship.getMatchesForOwner.useQuery(
+      { userId },
+      { refetchOnWindowFocus: true },
+    );
 
   const { data: supportRelationships, isLoading: supportRelationshipsLoading } =
     trpc.support.getRelationshipsForOwner.useQuery({ userId });
