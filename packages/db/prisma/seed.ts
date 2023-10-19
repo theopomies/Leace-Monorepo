@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { S3Client } from "@aws-sdk/client-s3";
+//import { S3Client } from "@aws-sdk/client-s3";
 
 import {
   makeUserAttributes,
@@ -9,7 +9,7 @@ import {
   makeRelationships,
   makeConversations,
   makeMessages,
-  makeImages,
+  //makeImages,
 } from "./generateData";
 
 const prisma = new PrismaClient();
