@@ -10,6 +10,10 @@ import {
 import { filterStrings } from "../utils/filter";
 import { getId } from "../utils/getId";
 
+interface UserLike extends User {
+  relationshipCreated: Date;
+}
+
 export const postRouter = router({
   createPost: protectedProcedure([Role.AGENCY, Role.OWNER])
     .input(
@@ -292,8 +296,12 @@ export const postRouter = router({
     .query(async ({ ctx, input }) => {
       const post = await ctx.prisma.post.findUniqueOrThrow({
         where: { id: input.postId },
+        // relationships without already matched users or disliked users
         include: {
           relationships: {
+            where: {
+              relationType: RelationType.TENANT
+            },
             include: {
               user: true,
             },
@@ -305,10 +313,6 @@ export const postRouter = router({
 
       if (post.createdById != ctx.auth.userId) {
         throw new TRPCError({ code: "FORBIDDEN" });
-      }
-
-      interface UserLike extends User {
-        relationshipCreated: Date;
       }
 
       const usersLikes: UserLike[] = post.relationships.map((relationship) => {
