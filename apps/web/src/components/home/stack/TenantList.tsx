@@ -25,6 +25,10 @@ export function TenantList() {
     router.push(`/users/${session?.userId}/update`);
   };
 
+  const redirectToCreatePost = () => {
+    router.push(`/users/${session?.userId}/posts/create`);
+  };
+
   const calcAge = (birthdate: Date): number => {
     const ageDifMs = Date.now() - birthdate.getTime();
     const ageDate = new Date(ageDifMs);
@@ -71,12 +75,17 @@ export function TenantList() {
 
   if (isLoading) return <Loader />;
 
-  if (!posts)
+  if (!posts || posts.length === 0)
     return (
-      <div className="flex flex-grow items-center justify-center">
-        <h1 className="text-2xl font-bold">
-          No posts found, please create a post
-        </h1>
+      <div className="flex flex-grow flex-col items-center justify-center">
+        <h1 className="text-2xl font-bold">No posts found :(</h1>
+        <p className="mb-2 text-gray-500">You need to create a post first</p>
+        <button
+          onClick={redirectToCreatePost}
+          className="flex h-12 items-center justify-center rounded-md bg-indigo-500 p-4 font-bold text-white"
+        >
+          Create a post
+        </button>
       </div>
     );
 
@@ -97,10 +106,12 @@ export function TenantList() {
           placeholder="Select a post"
         />
       </div>
-      <h2 className="mt-8 text-2xl font-bold">
-        Here are your potential tenants for{" "}
-        {posts?.find((p) => p.id === postId)?.title}
-      </h2>
+      {postId && (
+        <h2 className="mt-8 text-2xl font-bold">
+          Here are your potential tenants for{" "}
+          {posts?.find((p) => p.id === postId)?.title}
+        </h2>
+      )}
       {users.length > 0 ? (
         <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
           {users.map((user) => (
@@ -164,18 +175,7 @@ export function TenantList() {
 
           <div className="mt-4 flex flex-col items-center justify-center">
             <p className="text-gray-500">
-              It seems that no one matches your current criterias ...
-            </p>
-            <p className="text-gray-500">
-              Try to{" "}
-              <a
-                className="font-bold text-blue-500"
-                onClick={redirectToProfile}
-                href="#"
-              >
-                modify
-              </a>{" "}
-              them or come back later !
+              It seems that no one liked your post yet...
             </p>
           </div>
         </div>
