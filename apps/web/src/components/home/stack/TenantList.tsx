@@ -113,31 +113,29 @@ export function TenantList() {
         </h2>
       )}
       {users.length > 0 ? (
-        <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
           {users.map((user) => (
             <div
               key={user.id}
-              className={`mx-auto cursor-pointer overflow-hidden rounded-xl bg-white shadow-md  ${
+              className={`relative h-56 cursor-pointer flex-col overflow-hidden rounded-xl bg-white shadow-md ${
                 user.isPremium ? "border-4 border-yellow-300" : ""
               }`}
             >
+              {user.isPremium && (
+                <div className="absolute left-0 top-[8%] w-full translate-x-[-40%] rotate-[-45deg] bg-yellow-300 px-2 text-center font-bold text-white">
+                  Premium
+                </div>
+              )}
               <Link href={"/users/" + user.id}>
-                <div className="flex w-max flex-col lg:flex-row">
+                <div className="flex h-2/3 items-center justify-evenly gap-4 p-2">
                   {user.image && (
-                    <div className="relative md:shrink-0">
-                      <img
-                        className="h-48 w-full object-cover md:h-full md:w-48"
-                        src={user.image}
-                        alt="User Image"
-                      />
-                      {user.isPremium && (
-                        <div className="absolute left-0 top-[20%] w-full translate-x-[-25%] rotate-[-45deg] bg-yellow-300 px-2 text-center font-bold text-white">
-                          Premium
-                        </div>
-                      )}
-                    </div>
+                    <img
+                      className="h-full object-cover"
+                      src={user.image}
+                      alt="User Image"
+                    />
                   )}
-                  <div className="p-8">
+                  <div className="p-2">
                     <h3 className="text-2xl font-bold">{user.firstName}</h3>
                     <div className="flex items-center">
                       {user.birthDate && (
@@ -146,9 +144,9 @@ export function TenantList() {
                         </p>
                       )}
                       <span className="mx-2">•</span>
-                      <p className="text-gray-500">{user.country}</p>
-                      <p className="mt-2 text-slate-500">{user.description}</p>
+                      <p className="text-gray-500">{user.job}</p>
                     </div>
+                    <p className="mt-4 text-gray-500">Click to view profile</p>
                   </div>
                 </div>
               </Link>
