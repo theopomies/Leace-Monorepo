@@ -17,21 +17,6 @@ export async function movePostToSeen(userId: string, postId: string) {
   });
 }
 
-export async function moveUserToSeen(userId: string, postId: string) {
-  // move the specified post from postsTobeSeen to postsSeen in the user's profile
-  await prisma.post.update({
-    where: { id: postId },
-    data: {
-      usersToBeSeen: {
-        disconnect: { id: userId },
-      },
-      usersSeen: {
-        connect: { id: userId },
-      },
-    },
-  });
-}
-
 const deg2rad = (deg: number) => deg * (Math.PI / 180);
 const rad2deg = (rad: number) => rad * (180 / Math.PI);
 const earthRadius = 6371;
@@ -114,89 +99,6 @@ export async function getPostsWithAttribute(userId: string) {
   // Shuffle posts with Fisher-Yates algorithm
   shuffle(posts);
   return posts.slice(0, 10);
-}
-
-export async function getUsersWithAttribute(postId: string) {
-  const postAtt = await prisma.attribute.findUniqueOrThrow({
-    where: { postId: postId },
-  });
-
-  // Return error if post has no lat, lng or range
-  if (!postAtt.lat || !postAtt.lng || !postAtt.range) {
-    throw new Error("User has no lat, lng or range");
-  }
-
-  // Calculate max and min lat and lng with the range
-  const maxLat = postAtt.lat + rad2deg(postAtt.range / earthRadius);
-  const minLat = postAtt.lat - rad2deg(postAtt.range / earthRadius);
-  const maxLng =
-    postAtt.lng +
-    rad2deg(postAtt.range / earthRadius / Math.cos(deg2rad(postAtt.lat)));
-  const minLng =
-    (postAtt.lng ?? 0) -
-    rad2deg(
-      (postAtt.range ?? 999999) /
-        earthRadius /
-        Math.cos(deg2rad(postAtt.lat ?? 0)),
-    );
-
-  const users = await prisma.user.findMany({
-    where: {
-      attribute: {
-        AND: [
-          {
-            price: {
-              gte: postAtt.minPrice ?? undefined,
-              lte: postAtt.maxPrice ?? undefined,
-            },
-          },
-          {
-            size: {
-              gte: postAtt.minSize ?? undefined,
-              lte: postAtt.maxSize ?? undefined,
-            },
-          },
-          { furnished: postAtt.furnished ?? undefined },
-          { homeType: postAtt.homeType ?? undefined },
-          { terrace: postAtt.terrace ?? undefined },
-          { pets: postAtt.pets ?? undefined },
-          { smoker: postAtt.smoker ?? undefined },
-          { disability: postAtt.disability ?? undefined },
-          { garden: postAtt.garden ?? undefined },
-          { parking: postAtt.parking ?? undefined },
-          { elevator: postAtt.elevator ?? undefined },
-          { pool: postAtt.pool ?? undefined },
-          {
-            lat: {
-              gte: minLat,
-              lte: maxLat,
-            },
-          },
-          {
-            lng: {
-              gte: minLng,
-              lte: maxLng,
-            },
-          },
-        ],
-      },
-      // Not created, seen or to be seen by the user
-      NOT: {
-        OR: [
-          { posts: { some: { id: postId } } },
-          { seenBy: { some: { id: postId } } },
-          { toBeSeenBy: { some: { id: postId } } },
-        ],
-      },
-    },
-    include: { attribute: true },
-  });
-
-  if (!users) return [];
-
-  // Shuffle users with Fisher-Yates algorithm
-  shuffle(users);
-  return users.slice(0, 10);
 }
 
 export const shuffle = (array: unknown[]) => {

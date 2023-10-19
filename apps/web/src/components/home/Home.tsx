@@ -1,11 +1,11 @@
 import { Role } from "@prisma/client";
+import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
+import { ModerationReportPage } from "../moderation/moderation/ModerationReportPage";
+import { Loader } from "../shared/Loader";
 import { RoleSelector } from "../users/RoleSelector";
 import { PostStack } from "./stack/PostStack";
-import { TenantStack } from "./stack/TenantStack";
-import { Loader } from "../shared/Loader";
-import { useRouter } from "next/router";
-import { ModerationReportPage } from "../moderation/moderation/ModerationReportPage";
+import { TenantList } from "./stack/TenantList";
 
 export const Home = () => {
   const { data: session, isLoading } = trpc.auth.getSession.useQuery();
@@ -26,5 +26,5 @@ export const Home = () => {
 
   if (role == Role.TENANT) return <PostStack />;
 
-  return <TenantStack />;
+  return <TenantList />;
 };
