@@ -96,15 +96,16 @@ export const conversationRouter = router({
             where: { id: relationship.postId },
           });
           if (!post) throw new TRPCError({ code: "NOT_FOUND" });
-          if (post.createdById != ctx.auth.userId)
+          if (post.createdById != ctx.auth.userId) {
             throw new TRPCError({ code: "FORBIDDEN" });
+          }
         }
         if (ctx.role == Role.TENANT) {
-          if (relationship.userId != ctx.auth.userId)
+          if (relationship.userId != ctx.auth.userId) {
             throw new TRPCError({ code: "FORBIDDEN" });
+          }
         }
       }
-
       if (conversation.supportRelationId) {
         const supportRelationship =
           await ctx.prisma.supportRelationship.findUnique({
@@ -120,7 +121,6 @@ export const conversationRouter = router({
             throw new TRPCError({ code: "FORBIDDEN" });
         }
       }
-
       return conversation;
     }),
   countUnreads: protectedProcedure([Role.AGENCY, Role.OWNER, Role.TENANT])

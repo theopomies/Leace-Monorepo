@@ -1,9 +1,9 @@
-import { useEffect } from "react";
 import { trpc } from "../../utils/trpc";
 import { Loader } from "../shared/Loader";
 import { PostBar } from "../shared/post/PostBar";
 import { Post } from "./Post";
-import { setCacheId } from "../../utils/useCache";
+import { Button } from "../shared/button/Button";
+import Link from "next/link";
 
 export interface MyPostsPageProps {
   userId: string;
@@ -14,26 +14,35 @@ export const MyPostsPage = ({ userId, postId }: MyPostsPageProps) => {
   const { data: posts, isLoading: postsLoading } =
     trpc.post.getPostsByUserId.useQuery({ userId });
 
-  useEffect(() => {
-    if (postId) setCacheId("lastSelectedPostId", postId);
-  }, [postId]);
-
   if (postsLoading) {
     return <Loader />;
   }
 
   return (
-    <div className="flex w-full gap-5 p-10">
+    <div className="flex h-screen w-full flex-grow gap-5 overflow-hidden p-10">
       {posts && posts.length > 0 && (
-        <div>
-          {posts.map((post) => (
-            <PostBar
-              key={post.id}
-              post={post}
-              postLink={`/users/${userId}/posts/[postId]`}
-              selected={post.id === postId}
-            />
-          ))}
+        <div className="flex w-1/5 flex-grow flex-col">
+          <Link href={`/users/${userId}/posts/create`}>
+            <div
+              className={
+                "mx-auto mb-5 flex flex-grow cursor-pointer flex-col overflow-hidden rounded-xl bg-indigo-500 shadow-md md:max-w-2xl"
+              }
+            >
+              <div className=" px-2 py-4 text-center font-semibold uppercase tracking-wide text-white">
+                Create a new post
+              </div>
+            </div>
+          </Link>
+          <div className="h-full overflow-auto">
+            {posts.map((post) => (
+              <PostBar
+                key={post.id}
+                post={post}
+                postLink={`/users/${userId}/posts/[postId]`}
+                selected={post.id === postId}
+              />
+            ))}
+          </div>
         </div>
       )}
       {postId ? (
@@ -49,6 +58,12 @@ export const MyPostsPage = ({ userId, postId }: MyPostsPageProps) => {
               ? "You don't have any post yet"
               : "Please, select a post"}
           </h1>
+          {!posts ||
+            (posts.length === 0 && (
+              <Link href={`/users/${userId}/posts/create`}>
+                <Button className="mt-5">Create a new post</Button>
+              </Link>
+            ))}
         </div>
       )}
     </div>

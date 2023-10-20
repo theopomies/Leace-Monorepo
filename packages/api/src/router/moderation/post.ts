@@ -28,4 +28,25 @@ export const postModeration = router({
         include: { attribute: true, reports: true },
       });
     }),
+  getUncertifiedPosts: protectedProcedure([Role.ADMIN, Role.MODERATOR]).query(
+    ({ ctx }) => {
+      return ctx.prisma.post.findFirst({
+        orderBy: { createdAt: "asc" },
+        where: { certified: false },
+      });
+    },
+  ),
+  certifyPost: protectedProcedure([Role.ADMIN, Role.MODERATOR])
+    .input(z.object({ postId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const post = await ctx.prisma.post.findFirst({
+        where: { id: input.postId, certified: false },
+      });
+      if (!post) throw new TRPCError({ code: "NOT_FOUND" });
+
+      await ctx.prisma.post.update({
+        where: { id: post.id },
+        data: { certified: true },
+      });
+    }),
 });

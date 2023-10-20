@@ -29,10 +29,8 @@ export const geocoderRouter = router({
             name: feature.properties.formatted,
           });
         });
-        console.log("success: " + result);
         return result;
       }
-      console.log("error");
       return [];
     }),
 });

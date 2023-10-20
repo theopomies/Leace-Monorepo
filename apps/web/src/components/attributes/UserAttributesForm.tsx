@@ -1,4 +1,4 @@
-import { ChangeEventHandler } from "react";
+import { ChangeEventHandler, Dispatch, SetStateAction } from "react";
 import { Checkbox } from "../shared/forms/Checkbox";
 import { HomeType } from "../../types/homeType";
 import React from "react";
@@ -6,43 +6,43 @@ import { AddressAutocomplete } from "../shared/forms/AddressAutocomplete";
 import { NumberInput } from "../shared/forms/NumberInput";
 
 interface UserAttributesFormProps {
-  location: string;
+  location?: string;
   handleLocationChange: ChangeEventHandler<HTMLInputElement>;
-  maxPrice: number;
+  maxPrice?: number;
   handleMaxPriceChange: ChangeEventHandler<HTMLInputElement>;
-  minPrice: number;
+  minPrice?: number;
   handleMinPriceChange: ChangeEventHandler<HTMLInputElement>;
-  maxSize: number;
+  maxSize?: number;
   handleMaxSizeChange: ChangeEventHandler<HTMLInputElement>;
-  minSize: number;
+  minSize?: number;
   handleMinSizeChange: ChangeEventHandler<HTMLInputElement>;
-  furnished: boolean;
-  handleFurnishedChange: ChangeEventHandler<HTMLInputElement>;
-  homeType: HomeType | undefined;
+  furnished?: boolean;
+  handleFurnishedChange: Dispatch<SetStateAction<boolean | undefined>>;
+  homeType?: HomeType;
   handleHomeTypeChange: ChangeEventHandler<HTMLInputElement>;
-  terrace: boolean;
-  handleTerraceChange: ChangeEventHandler<HTMLInputElement>;
-  pets: boolean;
-  handlePetsChange: ChangeEventHandler<HTMLInputElement>;
-  smoker: boolean;
-  handleSmokerChange: ChangeEventHandler<HTMLInputElement>;
-  disability: boolean;
-  handleDisabilityChange: ChangeEventHandler<HTMLInputElement>;
-  garden: boolean;
-  handleGardenChange: ChangeEventHandler<HTMLInputElement>;
-  parking: boolean;
-  handleParkingChange: ChangeEventHandler<HTMLInputElement>;
-  elevator: boolean;
-  handleElevatorChange: ChangeEventHandler<HTMLInputElement>;
-  pool: boolean;
-  handlePoolChange: ChangeEventHandler<HTMLInputElement>;
+  terrace?: boolean;
+  handleTerraceChange: Dispatch<SetStateAction<boolean | undefined>>;
+  pets?: boolean;
+  handlePetsChange: Dispatch<SetStateAction<boolean | undefined>>;
+  smoker?: boolean;
+  handleSmokerChange: Dispatch<SetStateAction<boolean | undefined>>;
+  disability?: boolean;
+  handleDisabilityChange: Dispatch<SetStateAction<boolean | undefined>>;
+  garden?: boolean;
+  handleGardenChange: Dispatch<SetStateAction<boolean | undefined>>;
+  parking?: boolean;
+  handleParkingChange: Dispatch<SetStateAction<boolean | undefined>>;
+  elevator?: boolean;
+  handleElevatorChange: Dispatch<SetStateAction<boolean | undefined>>;
+  pool?: boolean;
+  handlePoolChange: Dispatch<SetStateAction<boolean | undefined>>;
 }
 
 export function UserAttributesForm({ ...attributes }: UserAttributesFormProps) {
   const attributesList: {
     label: string;
     name: string;
-    handleChange: ChangeEventHandler<HTMLInputElement>;
+    handleChange: Dispatch<SetStateAction<boolean | undefined>>;
   }[] = [
     {
       name: "furnished",
@@ -95,7 +95,7 @@ export function UserAttributesForm({ ...attributes }: UserAttributesFormProps) {
     <div className="flex justify-center">
       <div className="h-auto w-full border-t py-5 text-center">
         <AddressAutocomplete
-          location={attributes.location}
+          location={attributes.location ?? ""}
           handleLocationChange={attributes.handleLocationChange}
         />
         <div className="mt-5 px-16">
@@ -131,16 +131,43 @@ export function UserAttributesForm({ ...attributes }: UserAttributesFormProps) {
           <h2 className="pb-2 pt-4 text-xl font-bold text-gray-700">
             Additionnal filters
           </h2>
-          <div className="flex w-full justify-center gap-1">
+          <div className="flex w-full flex-wrap justify-start gap-4">
             {attributesList.map((att) => (
-              <Checkbox
-                key={att.name}
-                name={att.name}
-                onChange={att.handleChange}
-                checked={!!attributes[att.name as keyof typeof attributes]}
-              >
-                {att.label}
-              </Checkbox>
+              <div key={att.name} className="flex-grow">
+                <h3 className="p-2 text-lg font-semibold">{att.label}</h3>
+                <div className="flex justify-center gap-2">
+                  <Checkbox
+                    name={att.name}
+                    onChange={() => att.handleChange(false)}
+                    checked={
+                      (attributes[
+                        att.name as keyof typeof attributes
+                      ] as boolean) === false
+                    }
+                  >
+                    ❌
+                  </Checkbox>
+                  <Checkbox
+                    name={att.name}
+                    onChange={() => att.handleChange(undefined)}
+                    checked={
+                      attributes[att.name as keyof typeof attributes] ===
+                      undefined
+                    }
+                  >
+                    Whatever
+                  </Checkbox>
+                  <Checkbox
+                    name={att.name}
+                    onChange={() => att.handleChange(true)}
+                    checked={
+                      attributes[att.name as keyof typeof attributes] as boolean
+                    }
+                  >
+                    ✅
+                  </Checkbox>
+                </div>
+              </div>
             ))}
           </div>
         </div>
