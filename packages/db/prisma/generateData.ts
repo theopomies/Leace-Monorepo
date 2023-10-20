@@ -65,7 +65,7 @@ export const makeUsers = () => {
       maritalStatus: [MaritalStatus.MARRIED, MaritalStatus.SINGLE][
         getRandomInt(0, 1)
       ],
-      status: [UserStatus.INACTIVE, UserStatus.ACTIVE][getRandomInt(0, 1)],
+      status: UserStatus.ACTIVE,
       isPremium: [true, false][getRandomInt(0, 1)],
     });
   }
@@ -181,7 +181,7 @@ export const makeRelationships = async (prisma: PrismaClient) => {
 
   for (let j = 0; j < userIds.length; j++) {
     for (let i = 0; i < nbRelationshipsPerUser; i++) {
-      const relationType = getRandomInt(0, 2);
+      const relationType = getRandomInt(0, 1);
       if (relationType == 0) {
         const tenantId = userIds[j];
         if (!tenantId) continue;
@@ -202,19 +202,6 @@ export const makeRelationships = async (prisma: PrismaClient) => {
         if (!postId) continue;
         if (await checkExistingRelationship(prisma, tenantId, postId)) continue;
         const relationType = RelationType.TENANT;
-        if (!relationType) continue;
-        relationships.push({
-          userId: tenantId,
-          postId: postId,
-          relationType: relationType,
-        });
-      } else {
-        const tenantId = userIds[j];
-        if (!tenantId) continue;
-        const postId = postIds[getRandomInt(0, postIds.length)];
-        if (!postId) continue;
-        if (await checkExistingRelationship(prisma, tenantId, postId)) continue;
-        const relationType = RelationType.POST;
         if (!relationType) continue;
         relationships.push({
           userId: tenantId,
