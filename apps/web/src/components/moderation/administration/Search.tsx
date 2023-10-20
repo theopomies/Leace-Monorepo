@@ -6,10 +6,10 @@ export const Search = () => {
 
   return (
     <div className="relative">
-      <div className="sticky flex w-full items-center justify-between rounded-full bg-white p-2 shadow-lg">
+      <div className="sticky flex w-full items-center justify-between rounded-full bg-white p-2 shadow">
         <input
           autoFocus
-          className="focus:shadow-outline ml-2 w-full rounded-full bg-gray-100 py-4 pl-4 text-xs font-bold uppercase leading-tight text-gray-700 focus:outline-none lg:text-sm"
+          className="focus:shadow-outline ml-2 w-full rounded-full bg-gray-100 py-4 pl-4 text-xs font-bold text-gray-700 focus:outline-none lg:text-sm"
           type="text"
           placeholder="Search"
           onChange={(e) => setUUID(e.target.value)}
@@ -56,11 +56,11 @@ export const Search = () => {
       </div>
       {userList && userList.length > 0 && (
         <div className="absolute top-full left-0 z-10 w-full">
-          <div className="m-5 flex flex-col items-center justify-between rounded-lg bg-white p-2 shadow-xl">
+          <div className="mt-2 flex flex-col items-center justify-between rounded-lg bg-white p-2 shadow">
             {userList.map((user) => (
               <Link
                 key={user.id}
-                className="w-full rounded-full p-4 text-sm font-bold uppercase leading-tight text-gray-700 hover:bg-gray-100 focus:outline-none"
+                className="w-full rounded-full p-4 text-sm font-bold text-gray-700 hover:bg-gray-100 focus:outline-none"
                 href={`/administration/users/${user.id}`}
               >
                 {user.firstName} {user.lastName}
