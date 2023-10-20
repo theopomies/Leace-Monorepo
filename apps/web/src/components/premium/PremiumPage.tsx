@@ -9,6 +9,9 @@ import { trpc } from "../../utils/trpc";
 import { Loader } from "../shared/Loader";
 import { FeatureCard } from "./FeatureCard";
 import { StripePricingTable } from "./StripePricingTable";
+import { Role } from "@prisma/client";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { MdSpeed } from "react-icons/md";
 
 export const featureList = [
   {
@@ -92,9 +95,21 @@ export const PremiumPage = ({ userId }: PremiumPageProps) => {
           <div className="animate-curtain relative mb-5 grid w-2/3 grid-cols-2 flex-row items-stretch justify-center">
             {featureList.map((feature, index) => (
               <div key={index}>
-                <FeatureCard {...feature}></FeatureCard>
+                <FeatureCard
+                  {...feature}
+                  icon={<FontAwesomeIcon icon={feature.icon} />}
+                />
               </div>
             ))}
+            {user.role === Role.TENANT && (
+              <div>
+                <FeatureCard
+                  name="See posts before regular users"
+                  icon={<MdSpeed size="24" />}
+                  description="Get a head start on your search by seeing posts right when they are posted, before regular users."
+                />
+              </div>
+            )}
           </div>
           <button
             onClick={scrollToBottom}
