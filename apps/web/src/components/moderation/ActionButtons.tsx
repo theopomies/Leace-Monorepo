@@ -3,23 +3,29 @@ import { Button } from "../shared/button/Button";
 import { ReportButton } from "./report/ReportButton";
 import { RejectReports } from "./report/RejectReports";
 import { Ban } from "./ban";
+import { CertifyPostButtons } from "./certification/CertifyPostButton";
 
 export interface ActionButtons {
   reportId?: string;
   userId: string;
-  conversationLink: string;
+  conversationLink?: string;
+  postId?: string;
 }
 
 export const ActionButtons = ({
   reportId,
   userId,
   conversationLink,
+  postId,
 }: ActionButtons) => {
   return (
     <div className="flex h-full flex-col items-center justify-center gap-4 px-2">
-      <Link href={conversationLink}>
-        <Button theme="primary">View conversations</Button>
-      </Link>
+      {conversationLink && (
+        <Link href={conversationLink}>
+          <Button theme="primary">View conversations</Button>
+        </Link>
+      )}
+      {postId && <CertifyPostButtons postId={postId} />}
       {reportId && (
         <div className="flex w-full flex-col gap-2 border-t border-black pt-4">
           <p className="text-center text-xl">Report</p>

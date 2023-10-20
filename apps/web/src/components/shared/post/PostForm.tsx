@@ -18,6 +18,9 @@ import { PostAttributesForm } from "../../attributes/PostAttributesForm";
 import { TextInput } from "../forms/TextInput";
 import { NumberInput } from "../forms/NumberInput";
 import { FileUploadSection } from "../button/FileUploadSection";
+import { ToastDescription, ToastTitle } from "@radix-ui/react-toast";
+import { useRouter } from "next/router";
+import { useToast } from "../toast/Toast";
 
 export type PostFormData = {
   title: string;
@@ -46,17 +49,20 @@ export type PostFormData = {
 
 export interface PostFormProps {
   post?: (Post & { attribute: Attribute | null }) | undefined;
-  onImgsUpload: (file: File[]) => void;
+  onImgsUpload: (file: File[], postId?: string) => void;
   onImgDelete?: (imageId: string) => Promise<void>;
   images?: (Image & { url: string })[] | null | undefined;
-  onDocsUpload: (files: File[]) => void;
+  onDocsUpload: (files: File[], postId?: string) => void;
   onDocDelete?: (documentId: string) => Promise<void>;
   documents?: (Document & { url: string })[] | null | undefined;
-  onSubmit: (data: PostFormData) => Promise<void>;
+  onSubmit?: (data: PostFormData) => Promise<void>;
+  onSubmitNew?: (data: PostFormData) => Promise<Post>;
   onCancel: MouseEventHandler<HTMLButtonElement>;
 }
 
 export const PostForm = (props: PostFormProps) => {
+  const router = useRouter();
+  const { renderToast } = useToast();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
@@ -184,9 +190,23 @@ export const PostForm = (props: PostFormProps) => {
       securityAlarm,
       internetFiber,
     };
-    props.onSubmit(data);
-    props.onImgsUpload(selectedImages);
-    props.onDocsUpload(selectedDocuments);
+    if (props.onSubmitNew) {
+      props.onSubmitNew(data).then((post) => {
+        props.onImgsUpload(selectedImages, post.id);
+        props.onDocsUpload(selectedDocuments, post.id);
+        router.push(`/users/${post.createdById}/posts/${post.id}`);
+        renderToast(
+          <>
+            <ToastTitle>Success</ToastTitle>
+            <ToastDescription>Your property is now posted ✅</ToastDescription>
+          </>,
+        );
+      });
+    } else if (props.onSubmit) {
+      props.onSubmit(data);
+      props.onImgsUpload(selectedImages);
+      props.onDocsUpload(selectedDocuments);
+    }
   };
 
   const attributesStates = {

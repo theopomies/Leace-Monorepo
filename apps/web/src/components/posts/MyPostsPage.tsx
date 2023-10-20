@@ -1,10 +1,7 @@
-import { useEffect } from "react";
 import { trpc } from "../../utils/trpc";
 import { Loader } from "../shared/Loader";
 import { PostBar } from "../shared/post/PostBar";
 import { Post } from "./Post";
-import { setCacheId } from "../../utils/useCache";
-import { useRouter } from "next/router";
 import { Button } from "../shared/button/Button";
 import Link from "next/link";
 
@@ -16,26 +13,15 @@ export interface MyPostsPageProps {
 export const MyPostsPage = ({ userId, postId }: MyPostsPageProps) => {
   const { data: posts, isLoading: postsLoading } =
     trpc.post.getPostsByUserId.useQuery({ userId });
-  const router = useRouter();
-
-  useEffect(() => {
-    if (postId) setCacheId("lastSelectedPostId", postId);
-  }, [postId]);
-
-  useEffect(() => {
-    if (!postsLoading && posts && posts.length > 0 && !postId) {
-      router.push(`/users/${userId}/posts/${posts[0]?.id}`);
-    }
-  }, [posts, postId, router, postsLoading, userId]);
 
   if (postsLoading) {
     return <Loader />;
   }
 
   return (
-    <div className="flex h-screen w-full gap-5 overflow-hidden p-10">
+    <div className="flex h-screen w-full flex-grow gap-5 overflow-hidden p-10">
       {posts && posts.length > 0 && (
-        <div className="w-1/5">
+        <div className="flex w-1/5 flex-grow flex-col">
           <Link href={`/users/${userId}/posts/create`}>
             <div
               className={
@@ -47,14 +33,16 @@ export const MyPostsPage = ({ userId, postId }: MyPostsPageProps) => {
               </div>
             </div>
           </Link>
-          {posts.map((post) => (
-            <PostBar
-              key={post.id}
-              post={post}
-              postLink={`/users/${userId}/posts/[postId]`}
-              selected={post.id === postId}
-            />
-          ))}
+          <div className="h-full overflow-auto">
+            {posts.map((post) => (
+              <PostBar
+                key={post.id}
+                post={post}
+                postLink={`/users/${userId}/posts/[postId]`}
+                selected={post.id === postId}
+              />
+            ))}
+          </div>
         </div>
       )}
       {postId ? (

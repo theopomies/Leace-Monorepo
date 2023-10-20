@@ -1,10 +1,9 @@
-import { RelationType, PostType, UserStatus } from "@prisma/client";
-import { Role } from "@prisma/client";
+import { PostType, RelationType, Role, UserStatus } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";
+import { movePostToSeen } from "../utils/algorithm";
 import { getId } from "../utils/getId";
-import { movePostToSeen, moveUserToSeen } from "../utils/algorithm";
 
 export const relationshipRouter = router({
   likeTenantForPost: protectedProcedure([Role.OWNER, Role.AGENCY])
@@ -45,8 +44,6 @@ export const relationshipRouter = router({
         ctx.auth.userId != post.createdById
       )
         throw new TRPCError({ code: "FORBIDDEN" });
-
-      await moveUserToSeen(user.id, post.id);
 
       const relationship = await ctx.prisma.relationship.findFirst({
         where: { postId: post.id, userId: user.id },
@@ -128,8 +125,6 @@ export const relationshipRouter = router({
         ctx.auth.userId != post.createdById
       )
         throw new TRPCError({ code: "FORBIDDEN" });
-
-      await moveUserToSeen(user.id, post.id);
 
       const relationship = await ctx.prisma.relationship.findFirst({
         where: { postId: post.id, userId: user.id },
