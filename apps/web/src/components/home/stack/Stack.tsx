@@ -46,12 +46,6 @@ export function Stack({ posts, onLike, onDislike, onRewind }: StackProps) {
     <>
       {posts.length > 0 ? (
         <>
-          {isSelected && (
-            <Overlay
-              isSelected={isSelected}
-              onClose={() => setIsSelected(false)}
-            />
-          )}
           <ReportModal isOpen={reporting} setIsOpen={setReporting} />
           <div className="relative">
             <div className="relative z-10">
@@ -65,6 +59,7 @@ export function Stack({ posts, onLike, onDislike, onRewind }: StackProps) {
                 setIsSelected={setIsSelected}
                 {...(posts[0] as StackElementProps)}
                 onReport={() => setReporting(true)}
+                onClick={() => router.push(`/posts/${posts[0]?.id}`)}
               />
               <motion.div
                 layout
@@ -117,20 +112,19 @@ export function Stack({ posts, onLike, onDislike, onRewind }: StackProps) {
                 </motion.div>
               </motion.div>
             </div>
-            {!isSelected &&
-              posts.slice(1, 4).map((post, index) => (
-                <div
-                  className="absolute"
-                  style={{
-                    top: `${(index + 1) * 15}px`,
-                    zIndex: 5 - index,
-                    transform: `scale(${1 - ((index + 1) * 4) / 100})`,
-                  }}
-                  key={index}
-                >
-                  <StackElement {...post} />
-                </div>
-              ))}
+            {posts.slice(1, 4).map((post, index) => (
+              <div
+                className="absolute"
+                style={{
+                  top: `${(index + 1) * 15}px`,
+                  zIndex: 5 - index,
+                  transform: `scale(${1 - ((index + 1) * 4) / 100})`,
+                }}
+                key={index}
+              >
+                <StackElement {...post} />
+              </div>
+            ))}
           </div>
         </>
       ) : (

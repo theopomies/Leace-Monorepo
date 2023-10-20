@@ -9,6 +9,7 @@ type SwipeCardProps = {
   isSelected: boolean;
   setIsSelected: (b: boolean) => void;
   onReport: () => void;
+  onClick?: () => void;
 } & StackElementProps;
 
 export function SwipeCard({
@@ -18,6 +19,7 @@ export function SwipeCard({
   isSelected,
   setIsSelected,
   onReport,
+  onClick,
   ...cardProps
 }: SwipeCardProps) {
   const x = useMotionValue(0);
@@ -65,7 +67,7 @@ export function SwipeCard({
             return true;
           }
           // Tap Logic
-          setIsSelected(true);
+          onClick?.();
           return true;
         });
       }}
