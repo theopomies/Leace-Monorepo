@@ -12,7 +12,6 @@ import { EditProfile, ShowProfile } from "../../screens/Profile";
 import { OwnerLikes, OffersList, Result, Details } from "../../screens/Premium";
 import { TenantChat } from "../../screens/Chat";
 import { TenantMatches } from "../../screens/Matches";
-// import { ProviderStack } from "../../screens/Stack";
 import { Documents } from "../../screens/Documents";
 
 const Tab = createBottomTabNavigator<TabStackParamList>();
