@@ -10,7 +10,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ShowPost } from "../../screens/Post";
 import {
   Details,
-  OffersList,
+  TenantOffers,
   Result,
   TenantLikes,
 } from "../../screens/Premium";
@@ -84,7 +84,7 @@ const Tenant = ({
           headerShown: false,
         }}
       >
-        {() => (isPremium ? <TenantLikes /> : <OffersList />)}
+        {() => (isPremium ? <TenantLikes /> : <TenantOffers />)}
       </Tab.Screen>
       <Tab.Screen
         name="Likes"

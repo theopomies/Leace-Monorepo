@@ -12,7 +12,6 @@ import React, { useState } from "react";
 import Header from "../../components/Header";
 import { trpc } from "../../utils/trpc";
 import { IDefaulAttributes } from "../../types";
-import Separator from "../../components/Separator";
 import { CreateAttributes } from "../../components/Attribute";
 import { Btn } from "../../components/Btn";
 
@@ -41,6 +40,56 @@ export default function CreatePost() {
     elevator: false,
     pool: false,
   });
+
+  const [titleError, setTitleError] = useState("");
+  const [descriptionError, setDescriptionError] = useState("");
+  const [locationError, setLocationError] = useState("");
+  const [priceError, setPriceError] = useState("");
+  const [sizeError, setSizeError] = useState("");
+
+  const validateAndSetAttrs = () => {
+    let isValid = true;
+
+    if (!postInfo?.title || postInfo?.title.trim() === "") {
+      setTitleError("Please enter a valid title");
+      isValid = false;
+    } else {
+      setTitleError("");
+    }
+
+    if (!postAttrs?.location || postAttrs.location.trim() === "") {
+      setDescriptionError("Please enter a valid description");
+      isValid = false;
+    } else {
+      setDescriptionError("");
+    }
+
+    if (!postAttrs?.location || postAttrs.location.trim() === "") {
+      setLocationError("Please enter a valid location");
+      isValid = false;
+    } else {
+      setLocationError("");
+    }
+
+    if (!postAttrs?.price || postAttrs.price <= 0 || isNaN(postAttrs.price)) {
+      setPriceError("Please enter a valid price");
+      isValid = false;
+    } else {
+      setPriceError("");
+    }
+
+    if (!postAttrs?.size || postAttrs.size <= 0 || isNaN(postAttrs.size)) {
+      setSizeError("Please enter a valid size");
+      isValid = false;
+    } else {
+      setSizeError("");
+    }
+
+    if (isValid) {
+      createPost();
+    }
+  };
+
   const post = trpc.post.createPost.useMutation({});
 
   const attributes = trpc.attribute.updatePostAttributes.useMutation({});
@@ -55,56 +104,74 @@ export default function CreatePost() {
       <View style={styles.view}>
         <Header />
         <ScrollView
+          scrollEnabled={false}
           contentContainerStyle={{ flexGrow: 1 }}
-          style={{ backgroundColor: "white" }} // #F2F7FF
+          style={{ backgroundColor: "white" }}
         >
           <View className="flex-1 space-y-2 p-4">
             <View>
-              <Text className="text-base font-bold text-[#10316B]">Tittle</Text>
+              <Text className="text-sm font-semibold	 text-[#666666]">
+                Title
+              </Text>
               <TextInput
-                className="border-b border-[#D3D3D3] py-1.5 font-light leading-loose focus:border-blue-500"
+                style={{ borderColor: titleError ? "#D84654" : "black" }}
+                className={`rounded-xl border p-${
+                  Platform.OS === "ios" ? 4 : 2
+                } font-light leading-loose focus:border-[#6466f1] `}
                 placeholder="Enter title..."
-                onChangeText={(text) =>
-                  setPostInfo({ ...postInfo, title: text })
-                }
+                onChangeText={(text) => {
+                  setPostInfo({ ...postInfo, title: text });
+                  setTitleError("");
+                }}
               />
+              {titleError ? (
+                <Text className="text-xs text-[#D84654]">{titleError}</Text>
+              ) : null}
             </View>
             <View>
-              <Text className="text-base font-bold text-[#10316B]">
+              <Text className="text-sm	font-semibold	 text-[#666666]">
                 Description
               </Text>
               <TextInput
                 multiline
-                numberOfLines={4}
-                className="border-b border-[#D3D3D3] py-1.5 font-light leading-loose focus:border-blue-500"
+                style={{ borderColor: descriptionError ? "#D84654" : "black" }}
+                className={`rounded-xl border
+                p-${
+                  Platform.OS === "ios" ? 4 : 2
+                } font-light leading-loose focus:border-[#6466f1]`}
                 placeholder="Enter description..."
-                onChangeText={(text) =>
-                  setPostInfo({ ...postInfo, desc: text })
-                }
+                onChangeText={(text) => {
+                  setPostInfo({ ...postInfo, desc: text });
+                  setDescriptionError("");
+                }}
               />
-            </View>
-            <View>
-              <Text className="text-base font-bold text-[#10316B]">
-                Content
-              </Text>
-              <TextInput
-                multiline
-                numberOfLines={4}
-                className="border-b border-[#D3D3D3] py-1.5 font-light leading-loose focus:border-blue-500"
-                placeholder="Enter content..."
-                onChangeText={(text) =>
-                  setPostInfo({ ...postInfo, content: text })
-                }
-              />
+              {descriptionError ? (
+                <Text className="text-xs text-[#D84654]">
+                  {descriptionError}
+                </Text>
+              ) : null}
             </View>
             <View className="flex-1">
-              <CreateAttributes attrs={postAttrs} setAttrs={setPostAttrs} />
+              <CreateAttributes
+                attrs={postAttrs}
+                setAttrs={setPostAttrs}
+                locationError={locationError}
+                priceError={priceError}
+                sizeError={sizeError}
+                setLocationError={setLocationError}
+                setPriceError={setPriceError}
+                setSizeError={setSizeError}
+              />
             </View>
-            <View className="pt-2">
+            <View
+              className={`justify-center p-${
+                Platform.OS === "android" ? 2 : 10
+              }`}
+            >
               <Btn
-                title="Create Post"
-                bgColor="#10316B"
-                onPress={createPost}
+                title="Submit"
+                bgColor="#6466f1"
+                onPress={validateAndSetAttrs}
               ></Btn>
             </View>
           </View>

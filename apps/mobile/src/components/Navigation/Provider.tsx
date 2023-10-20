@@ -10,7 +10,12 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { EditProfile, ShowProfile } from "../../screens/Profile";
 import ProviderStack from "../../screens/Provider/ProviderStack";
-import { OwnerLikes, OffersList, Result, Details } from "../../screens/Premium";
+import {
+  OwnerLikes,
+  BusinessOffers,
+  Result,
+  Details,
+} from "../../screens/Premium";
 
 const Tab = createBottomTabNavigator<TabStackParamList>();
 
@@ -115,7 +120,7 @@ const Provider = ({
           headerShown: false,
         }}
       >
-        {() => (isPremium ? <OwnerLikes /> : <OffersList />)}
+        {() => (isPremium ? <OwnerLikes /> : <BusinessOffers />)}
       </Tab.Screen>
 
       <Tab.Screen

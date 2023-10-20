@@ -1,9 +1,5 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
-
 importers:
 
   .:
@@ -131,6 +127,9 @@ importers:
       react-native-get-random-values:
         specifier: ^1.8.0
         version: 1.8.0(react-native@0.71.0-rc.0)
+      react-native-linear-gradient:
+        specifier: ^2.8.3
+        version: 2.8.3(react-native@0.71.0-rc.0)(react@18.2.0)
       react-native-modal-datetime-picker:
         specifier: ^14.0.1
         version: 14.0.1(@react-native-community/datetimepicker@6.7.5)(react-native@0.71.0-rc.0)
@@ -200,7 +199,7 @@ importers:
         version: 8.4.23
       react-native-svg-transformer:
         specifier: ^1.0.0
-        version: 1.0.0(react-native-svg@13.10.0)(react-native@0.71.0-rc.0)
+        version: 1.0.0(react-native-svg@13.14.0)(react-native@0.71.0-rc.0)
       stack:
         specifier: link:@types/@react-navigation/stack
         version: link:@types/@react-navigation/stack
@@ -11484,6 +11483,16 @@ packages:
   /react-native-gradle-plugin@0.71.19:
     resolution: {integrity: sha512-1dVk9NwhoyKHCSxcrM6vY6cxmojeATsBobDicX0ZKr7DgUF2cBQRTKsimQFvzH8XhOVXyH8p4HyDSZNIFI8OlQ==}
 
+  /react-native-linear-gradient@2.8.3(react-native@0.71.0-rc.0)(react@18.2.0):
+    resolution: {integrity: sha512-KflAXZcEg54PXkLyflaSZQ3PJp4uC4whM7nT/Uot9m0e/qxFV3p6uor1983D1YOBJbJN7rrWdqIjq0T42jOJyA==}
+    peerDependencies:
+      react: '*'
+      react-native: '*'
+    dependencies:
+      react: 18.2.0
+      react-native: 0.71.0-rc.0(@babel/core@7.21.8)(@babel/preset-env@7.21.5)(react@18.2.0)
+    dev: false
+
   /react-native-modal-datetime-picker@14.0.1(@react-native-community/datetimepicker@6.7.5)(react-native@0.71.0-rc.0):
     resolution: {integrity: sha512-wQt4Pjxt2jiTsVhLMG0E7WrRTYBEQx2d/nUrFVCbRqJ7lrXocXaT5UZsyMpV93TnKcyut62OprbO88wYq/vh0g==}
     peerDependencies:
@@ -11575,7 +11584,7 @@ packages:
       react-native: 0.71.0-rc.0(@babel/core@7.21.8)(@babel/preset-env@7.21.5)(react@18.2.0)
     dev: false
 
-  /react-native-svg-transformer@1.0.0(react-native-svg@13.10.0)(react-native@0.71.0-rc.0):
+  /react-native-svg-transformer@1.0.0(react-native-svg@13.14.0)(react-native@0.71.0-rc.0):
     resolution: {integrity: sha512-ALHU5VvLLyKM/BvyEG7VYJmqglvaXtU7mGRCxrEwwpJO/GBf1ZMUzc4AeJAjSodj7yYtlDYRxNSt9ySWpaa6JQ==}
     peerDependencies:
       react-native: '>=0.59.0'
@@ -11585,13 +11594,13 @@ packages:
       '@svgr/plugin-svgo': 6.5.1(@svgr/core@6.5.1)
       path-dirname: 1.0.2
       react-native: 0.71.0-rc.0(@babel/core@7.21.8)(@babel/preset-env@7.21.5)(react@18.2.0)
-      react-native-svg: 13.10.0(react-native@0.71.0-rc.0)(react@18.2.0)
+      react-native-svg: 13.14.0(react-native@0.71.0-rc.0)(react@18.2.0)
     transitivePeerDependencies:
       - supports-color
     dev: true
 
-  /react-native-svg@13.10.0(react-native@0.71.0-rc.0)(react@18.2.0):
-    resolution: {integrity: sha512-D/oYTmUi5nsA/2Nw4WYlF1UUi3vZqhpESpiEhpYCIFB/EMd6vz4A/uq3tIzZFcfa5z2oAdGSxRU1TaYr8IcPlQ==}
+  /react-native-svg@13.14.0(react-native@0.71.0-rc.0)(react@18.2.0):
+    resolution: {integrity: sha512-27ZnxUkHgWICimhuj6MuqBkISN53lVvgWJB7pIypjXysAyM+nqgQBPh4vXg+7MbqLBoYvR4PiBgKfwwGAqVxHg==}
     peerDependencies:
       react: '*'
       react-native: '*'
@@ -13780,3 +13789,7 @@ packages:
   /zod@3.18.0:
     resolution: {integrity: sha512-gwTm8RfUCe8l9rDwN5r2A17DkAa8Ez4Yl4yXqc5VqeGaXaJahzYYXbTwvhroZi0SNBqTwh/bKm2N0mpCzuw4bA==}
     dev: false
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
