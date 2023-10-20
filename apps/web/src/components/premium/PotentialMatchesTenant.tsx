@@ -64,12 +64,17 @@ export const PotentialMatchesTenant = ({ userId }: PostListProps) => {
     );
   }
   return (
-    <div className="mt-8 flex flex-col items-center justify-center">
+    <div className="mt-8 flex flex-grow flex-col items-center justify-center">
       <h1 className="text-2xl font-bold text-gray-700">
-        No client has liked your post yet :(
+        No landlord or agency has liked your profile yet :(
       </h1>
       <div className="mt-4 flex flex-col items-center justify-center">
-        <p className="text-gray-500">Wait, clients are coming to you !</p>
+        <p className="text-center text-gray-500">
+          When this happens, they will show up right here!
+          <br />
+          In the meantime we invite you to make sure your profile is as complete
+          as possible
+        </p>
       </div>
     </div>
   );

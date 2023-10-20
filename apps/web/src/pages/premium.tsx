@@ -52,7 +52,7 @@ const PremiumPage = () => {
   }
 
   return (
-    <div className="w-full">
+    <div className="flex h-screen w-full flex-grow flex-col">
       <PremiumBanner user={me} />
       <Header heading="Potential Matches" />
       {role == Role.TENANT && (
