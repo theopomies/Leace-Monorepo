@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { User } from "@leace/db";
 import { PostType } from "@prisma/client";
 import Link from "next/link";
@@ -6,13 +7,16 @@ import { useEffect, useState } from "react";
 import { trpc } from "../../../utils/trpc";
 import { Loader } from "../../shared/Loader";
 import { Select } from "../../shared/button/Select";
+import { getCacheData, setCacheId } from "../../../utils/useCache";
 
 export function TenantList() {
   const { data: session } = trpc.auth.getSession.useQuery();
   const { data: posts, isLoading } = trpc.post.getPostsByUserId.useQuery({
     userId: session?.userId ?? "",
   });
-  const [postId, setPostId] = useState<string>("");
+  const [postId, setPostId] = useState<string>(
+    getCacheData("homeLastSelectedPost") ?? "",
+  );
   const [users, setUsers] = useState([] as User[]);
   const [lastUser, setLastUser] = useState<User | null>();
   const { data, status } = trpc.post.getUsersToBeSeen.useQuery({ postId });
@@ -102,7 +106,10 @@ export function TenantList() {
               })) ?? []
           }
           value={postId}
-          onChange={(value) => setPostId(value)}
+          onChange={(value) => {
+            setCacheId("homeLastSelectedPost", value);
+            setPostId(value);
+          }}
           placeholder="Select a post"
         />
       </div>
