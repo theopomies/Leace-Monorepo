@@ -7,7 +7,6 @@ type SwipeCardProps = {
   onSwipeRight?: () => void;
   onSwiping?: (direction: "like" | "dislike" | null) => void;
   isSelected: boolean;
-  setIsSelected: (b: boolean) => void;
   onReport: () => void;
   onClick?: () => void;
 } & StackElementProps;
@@ -17,7 +16,6 @@ export function SwipeCard({
   onSwipeRight = () => null,
   onSwiping = () => null,
   isSelected,
-  setIsSelected,
   onReport,
   onClick,
   ...cardProps

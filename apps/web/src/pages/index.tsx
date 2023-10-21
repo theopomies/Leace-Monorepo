@@ -4,22 +4,28 @@ import { trpc } from "../utils/trpc";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import mixpanel from "../utils/mixpanel";
+import { Loader } from "../components/shared/Loader";
 
 const Index = () => {
-  const { data: session } = trpc.auth.getSession.useQuery();
+  const { data: session, isLoading: sessionIsLoading } =
+    trpc.auth.getSession.useQuery();
   const router = useRouter();
 
   useEffect(() => {
-    mixpanel.track("Page View", {
-      path: router.asPath,
-      title: "Home Page",
-      userId: session?.userId,
-    });
-  }, [router.asPath, session?.userId]);
+    if (session && !sessionIsLoading) {
+      mixpanel.track("Page View", {
+        path: router.asPath,
+        title: "Home Page",
+        userId: session.userId,
+      });
+    }
+  }, [router.asPath, session, sessionIsLoading]);
+
+  if (!session || sessionIsLoading) return <Loader />;
 
   return (
     <LoggedLayout title="Home | Leace">
-      <Home />
+      <Home session={session} />
     </LoggedLayout>
   );
 };

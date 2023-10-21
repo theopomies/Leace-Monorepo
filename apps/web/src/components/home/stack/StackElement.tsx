@@ -1,5 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
 import { motion } from "framer-motion";
-import { XOR } from "../../../utils/types";
 import { SlideShow } from "./SlideShow";
 import { Button } from "../../shared/button/Button";
 
@@ -10,14 +10,15 @@ export type StackElementProps = {
   description: string;
   isExpanded?: boolean;
   onReport: () => void;
-} & XOR<{ age: number }, { price: number; region: string }>;
+  price: number;
+  region: string;
+};
 
 export function StackElement({
   img,
   title,
   description,
   price,
-  age,
   region,
   isExpanded = false,
   onReport,
@@ -49,17 +50,13 @@ export function StackElement({
         {isExpanded ? (
           <SlideShow images={[img, img, img]} />
         ) : (
-          // eslint-disable-next-line @next/next/no-img-element
           <img src={img} alt="" className="h-auto w-full select-none" />
         )}
       </motion.div>
       <motion.div layout className="flex w-full p-2">
         <div className="flex h-full w-full flex-col">
           <div className="flex justify-between">
-            <span className="font-medium">
-              {title}
-              {!!age && ", " + age}
-            </span>
+            <span className="font-medium">{title}</span>
             {!!price && <span className="font-bold">{price} €/mois</span>}
           </div>
           {region && <div className="font-light text-gray-500">{region}</div>}
