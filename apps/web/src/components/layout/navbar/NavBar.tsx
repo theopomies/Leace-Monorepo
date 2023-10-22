@@ -62,7 +62,7 @@ export function NavBar({ userId, activePage }: NavBarProps) {
     <div className="flex w-72 flex-shrink-0 flex-col overflow-hidden bg-white">
       <div className="flex items-end gap-5 py-16 pl-10">
         <img
-          src="/logocrop.png"
+          src="/logo.png"
           referrerPolicy="no-referrer"
           alt="logo"
           className="w-[30px]"
