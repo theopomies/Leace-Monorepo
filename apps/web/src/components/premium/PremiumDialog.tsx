@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useRouter } from "next/navigation";
-import { featureList } from "./PremiumPage";
+import { featureList } from "./PremiumFeatures";
 
 export interface PremiumDialogProps {
   open: boolean;
