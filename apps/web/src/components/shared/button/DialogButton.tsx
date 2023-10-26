@@ -1,5 +1,6 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import { Button } from "./Button";
+// import { Button } from "./Button";
 
 export interface DialogButtonProps {
   buttonText: string;
@@ -32,7 +33,7 @@ export function DialogButton({
           </Dialog.Description>
           <div className="flex justify-end gap-4 pt-4">
             <Dialog.Close asChild>
-              <Button theme="white">Cancel</Button>
+              <Button theme="grey">Cancel</Button>
             </Dialog.Close>
             <Dialog.Close asChild>
               <Button theme="danger" onClick={onDelete}>

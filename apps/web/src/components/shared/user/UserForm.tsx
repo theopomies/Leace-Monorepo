@@ -419,7 +419,7 @@ export const UserForm = ({
                     value={maritalStatus ?? ""}
                     className="w-full rounded-lg border-2 border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-600 focus:outline-none"
                   >
-                    <option value="" disabled selected>
+                    <option value="" disabled>
                       Select one
                     </option>
                     <option value={MaritalStatus.SINGLE}>SINGLE</option>
