@@ -6,8 +6,8 @@ import {
   Platform,
 } from "react-native";
 import React, { useState } from "react";
-import { IDefaulAttributes } from "../../types";
 import { Icon } from "react-native-elements";
+import { IDefaulAttributes } from "../../types";
 
 interface ICreateAttributes {
   attrs: IDefaulAttributes | undefined;
@@ -75,13 +75,11 @@ export default function CreateAttributes({
 
   if (!attrs) return null;
 
-  const handleSelect = (itemValue: "HOUSE" | "APARTMENT") => {
+  function handlePicker(itemValue: "HOUSE" | "APARTMENT") {
     if (!attrs) return;
     setReason(itemValue);
-    if (itemValue === "HOUSE") {
-      setAttrs({ ...attrs, house: true, appartment: false });
-    } else setAttrs({ ...attrs, house: false, appartment: true });
-  };
+    setAttrs({ ...attrs, homeType: itemValue });
+  }
 
   return (
     <View className={`flex space-y-${Platform.OS === "android" ? 20 : 10}`}>
@@ -129,7 +127,7 @@ export default function CreateAttributes({
               borderRadius: 5,
             }}
             onPress={() => {
-              handleSelect("HOUSE");
+              handlePicker("HOUSE");
             }}
           >
             <Text
@@ -149,7 +147,7 @@ export default function CreateAttributes({
               borderRadius: 5,
             }}
             onPress={() => {
-              handleSelect("APARTMENT");
+              handlePicker("APARTMENT");
             }}
           >
             <Text
@@ -174,6 +172,68 @@ export default function CreateAttributes({
         >
           <Text className="text-base font-bold text-[#10316B]">Criterias</Text>
         </View>
+      <View className="flex flex-row justify-around">
+        <View className="min-w-[80px]">
+          <Text className="text-center text-base font-bold text-[#10316B]">
+            Price
+          </Text>
+          <TextInput
+            className="border-b border-[#D3D3D3] py-1.5 text-center font-light leading-loose focus:border-blue-500"
+            // @ts-ignore
+            inputMode="numeric"
+            placeholder="0 €"
+            defaultValue={attrs.price?.toString() ?? ""}
+            onChangeText={(text) =>
+              setAttrs({ ...attrs, price: parseInt(text) })
+            }
+          />
+        </View>
+        <View className="min-w-[80px]">
+          <Text className="text-center text-base font-bold text-[#10316B]">
+            Size
+          </Text>
+          <TextInput
+            className="border-b border-[#D3D3D3] py-1.5 text-center font-light leading-loose focus:border-blue-500"
+            // @ts-ignore
+            inputMode="numeric"
+            placeholder="0 m²"
+            defaultValue={attrs.size?.toString() ?? ""}
+            onChangeText={(text) =>
+              setAttrs({ ...attrs, size: parseInt(text) })
+            }
+          />
+        </View>
+      </View>
+      <Text className="text-base font-bold text-[#10316B]">Attributes</Text>
+      <View className="flex flex-row flex-wrap items-center justify-center">
+        <TouchableOpacity
+          onPress={() => setAttrs({ ...attrs, furnished: !attrs.furnished })}
+        >
+          <AttributeBtn
+            name="Furnished"
+            status={attrs.furnished}
+            iconName="king-bed"
+          />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => setAttrs({ ...attrs, terrace: !attrs.terrace })}
+        >
+          <AttributeBtn name="Terrace" status={attrs.terrace} iconName="deck" />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => setAttrs({ ...attrs, pets: !attrs.pets })}
+        >
+          <AttributeBtn name="Pets" status={attrs.pets} iconName="pets" />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => setAttrs({ ...attrs, smoker: !attrs.smoker })}
+        >
+          <AttributeBtn
+            name="Smoker"
+            status={attrs.smoker}
+            iconName="smoking-rooms"
+          />
+        </TouchableOpacity>
 
         <View
           style={{
@@ -337,5 +397,6 @@ export default function CreateAttributes({
         </View>
       </View>
     </View>
+    </View>
   );
-}
+  }

@@ -6,134 +6,177 @@ import {
   MouseEventHandler,
   SetStateAction,
   useEffect,
+  useRef,
   useState,
 } from "react";
-import { Button } from "../button/Button";
-import { TextArea } from "../forms/TextArea";
-import { FileInput } from "../forms/FileInput";
+import { User, Attribute, Document, Role, MaritalStatus } from "@prisma/client";
 import { HomeType } from "../../../types/homeType";
-import { DocumentList } from "../document/DocumentList";
 import { UserAttributesForm } from "../../attributes/UserAttributesForm";
+import { DocumentList } from "../document/DocumentList";
 import { DateInput } from "../forms/DateInput";
+import { TextArea } from "../forms/TextArea";
 import { TextInput } from "../forms/TextInput";
-import { User, Attribute, Image, Document, Role } from "@prisma/client";
-import { CrossSvg } from "../icons/CrossSvg";
+import { NumberInput } from "../forms/NumberInput";
+import { FileUploadSection } from "../button/FileUploadSection";
+import { FileInput } from "../forms/FileInput";
+import { UserLayout } from "./UserLayout";
+import { Button } from "../button/Button";
 
 export type UserFormData = {
   birthDate: string;
   firstName: string;
   lastName: string;
+  country?: string;
   description: string;
-  location: string;
-  maxPrice: number;
-  minPrice: number;
-  maxSize: number;
-  minSize: number;
-  furnished: boolean;
-  homeType: HomeType | undefined;
-  terrace: boolean;
-  pets: boolean;
-  smoker: boolean;
-  disability: boolean;
-  garden: boolean;
-  parking: boolean;
-  elevator: boolean;
-  pool: boolean;
+  location?: string;
+  maxPrice?: number;
+  minPrice?: number;
+  maxSize?: number;
+  minSize?: number;
+  furnished?: boolean;
+  homeType?: HomeType;
+  terrace?: boolean;
+  pets?: boolean;
+  smoker?: boolean;
+  disability?: boolean;
+  garden?: boolean;
+  parking?: boolean;
+  elevator?: boolean;
+  pool?: boolean;
+
+  job?: string;
+  employmentContract?: string;
+  income?: number;
+  creditScore?: number;
+  maritalStatus?: MaritalStatus;
 };
 
 export interface UserFormProps {
-  user: (User & { attribute: Attribute | null }) | undefined;
-  onImgUpload?: (event: ChangeEvent<HTMLInputElement>) => Promise<void>;
-  onImgDelete?: () => Promise<void>;
-  imageGet: (Image & { url: string }) | null | undefined;
-  onDocsUpload: (event: ChangeEvent<HTMLInputElement>) => void;
+  user: User & { attribute: Attribute | null };
+  onImgUpload: (file: File | undefined) => void;
+  onDocsUpload: (files: File[]) => void;
   onDocDelete: (documentId: string) => Promise<void>;
-  documentsGet: (Document & { url: string })[] | null | undefined;
+  documents?: (Document & { url: string })[] | null;
   onSubmit: (data: UserFormData) => Promise<void>;
   onCancel: MouseEventHandler<HTMLButtonElement>;
 }
 
-export const UserForm = (props: UserFormProps) => {
+export const UserForm = ({
+  user,
+  onImgUpload,
+  onDocsUpload,
+  onDocDelete,
+  documents,
+  onSubmit,
+  onCancel,
+}: UserFormProps) => {
   const [birthDate, setBirthDate] = useState<string>("");
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
+  const [country, setCountry] = useState<string>("");
   const [description, setDescription] = useState<string>("");
 
-  const [location, setLocation] = useState("");
-  const [maxPrice, setMaxPrice] = useState(0);
-  const [minPrice, setMinPrice] = useState(0);
-  const [maxSize, setMaxSize] = useState(0);
-  const [minSize, setMinSize] = useState(0);
-  const [furnished, setFurnished] = useState(false);
+  const [location, setLocation] = useState<string | undefined>();
+  const [maxPrice, setMaxPrice] = useState<number | undefined>();
+  const [minPrice, setMinPrice] = useState<number | undefined>();
+  const [maxSize, setMaxSize] = useState<number | undefined>();
+  const [minSize, setMinSize] = useState<number | undefined>();
+  const [furnished, setFurnished] = useState<boolean | undefined>();
   const [homeType, setHomeType] = useState<HomeType | undefined>();
-  const [terrace, setTerrace] = useState(false);
-  const [pets, setPets] = useState(false);
-  const [smoker, setSmoker] = useState(false);
-  const [disability, setDisability] = useState(false);
-  const [garden, setGarden] = useState(false);
-  const [parking, setParking] = useState(false);
-  const [elevator, setElevator] = useState(false);
-  const [pool, setPool] = useState(false);
+  const [terrace, setTerrace] = useState<boolean | undefined>();
+  const [pets, setPets] = useState<boolean | undefined>();
+  const [smoker, setSmoker] = useState<boolean | undefined>();
+  const [disability, setDisability] = useState<boolean | undefined>();
+  const [garden, setGarden] = useState<boolean | undefined>();
+  const [parking, setParking] = useState<boolean | undefined>();
+  const [elevator, setElevator] = useState<boolean | undefined>();
+  const [pool, setPool] = useState<boolean | undefined>();
+
+  const [job, setJob] = useState<string>("");
+  const [employmentContract, setEmploymentContract] = useState<string>("");
+  const [income, setIncome] = useState<number | undefined>();
+  const [creditScore, setCreditScore] = useState<number | undefined>();
+  const [maritalStatus, setMaritalStatus] = useState<MaritalStatus | undefined>(
+    undefined,
+  );
+
+  const [selectedDocuments, setSelectedDocuments] = useState<File[]>([]);
+  const [selectedImage, setSelectedImage] = useState<File>();
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   useEffect(() => {
-    if (props.user) {
-      const date = props.user.birthDate
-        ? `${props.user.birthDate.getUTCFullYear()}-${
-            props.user.birthDate.getUTCMonth() + 1 > 9
-              ? props.user.birthDate.getUTCMonth() + 1
-              : "0" + (props.user.birthDate.getUTCMonth() + 1)
-          }-${
-            props.user.birthDate.getUTCDate() > 9
-              ? props.user.birthDate.getUTCDate()
-              : "0" + props.user.birthDate.getUTCDate()
-          }`
-        : "";
-      setBirthDate(date);
-      setFirstName(props.user.firstName ?? "");
-      setLastName(props.user.lastName ?? "");
-      setDescription(props.user.description ?? "");
-      if (props.user.role === Role.TENANT) {
-        setLocation(props.user.attribute?.location ?? "");
-        setHomeType(props.user.attribute?.homeType ?? undefined);
-        setMaxPrice(props.user.attribute?.maxPrice ?? 0);
-        setMinPrice(props.user.attribute?.minPrice ?? 0);
-        setMaxSize(props.user.attribute?.maxSize ?? 0);
-        setMinSize(props.user.attribute?.minSize ?? 0);
-        setFurnished(props.user.attribute?.furnished ?? false);
-        setTerrace(props.user.attribute?.terrace ?? false);
-        setPets(props.user.attribute?.pets ?? false);
-        setSmoker(props.user.attribute?.smoker ?? false);
-        setDisability(props.user.attribute?.disability ?? false);
-        setGarden(props.user.attribute?.garden ?? false);
-        setParking(props.user.attribute?.parking ?? false);
-        setElevator(props.user.attribute?.elevator ?? false);
-        setPool(props.user.attribute?.pool ?? false);
-      }
+    const date = user.birthDate
+      ? `${user.birthDate.getUTCFullYear()}-${
+          user.birthDate.getUTCMonth() + 1 > 9
+            ? user.birthDate.getUTCMonth() + 1
+            : "0" + (user.birthDate.getUTCMonth() + 1)
+        }-${
+          user.birthDate.getUTCDate() > 9
+            ? user.birthDate.getUTCDate()
+            : "0" + user.birthDate.getUTCDate()
+        }`
+      : "";
+    setBirthDate(date);
+    setFirstName(user.firstName ?? "");
+    setLastName(user.lastName ?? "");
+    setDescription(user.description ?? "");
+    setCountry(user.country ?? "");
+
+    if (user.role === Role.TENANT) {
+      setLocation(user.attribute?.location ?? undefined);
+      setHomeType(user.attribute?.homeType ?? undefined);
+      setMaxPrice(user.attribute?.maxPrice ?? undefined);
+      setMinPrice(user.attribute?.minPrice ?? undefined);
+      setMaxSize(user.attribute?.maxSize ?? undefined);
+      setMinSize(user.attribute?.minSize ?? undefined);
+      setFurnished(user.attribute?.furnished ?? undefined);
+      setTerrace(user.attribute?.terrace ?? undefined);
+      setPets(user.attribute?.pets ?? undefined);
+      setSmoker(user.attribute?.smoker ?? undefined);
+      setDisability(user.attribute?.disability ?? undefined);
+      setGarden(user.attribute?.garden ?? undefined);
+      setParking(user.attribute?.parking ?? undefined);
+      setElevator(user.attribute?.elevator ?? undefined);
+      setPool(user.attribute?.pool ?? undefined);
+
+      setJob(user.job ?? "");
+      setEmploymentContract(user.employmentContract ?? "");
+      setIncome(user.income ?? undefined);
+      setCreditScore(user.creditScore ?? undefined);
+      setMaritalStatus(user.maritalStatus ?? undefined);
     }
-  }, [props.user]);
+  }, [user]);
 
   const handleChange =
-    (setter: Dispatch<SetStateAction<string>>) =>
+    (
+      setter:
+        | Dispatch<SetStateAction<string | undefined>>
+        | Dispatch<SetStateAction<string>>,
+    ) =>
     (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       setter(event.target.value);
     };
 
-  const handleBooleanChange =
-    (setter: Dispatch<SetStateAction<boolean>>) =>
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      setter(event.target.checked);
-    };
-
   const handleNumberChange =
-    (setter: Dispatch<SetStateAction<number>>) =>
+    (setter: Dispatch<SetStateAction<number | undefined>>) =>
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      setter(event.target.valueAsNumber);
+      setter(
+        isNaN(event.target.valueAsNumber)
+          ? undefined
+          : event.target.valueAsNumber,
+      );
     };
 
   const handleHomeTypeChange =
     (setter: Dispatch<SetStateAction<HomeType | undefined>>) =>
     (event: React.ChangeEvent<HTMLInputElement>) => {
       setter(event.target.value as HomeType);
+    };
+
+  const handleMaritalStatusChange =
+    (setter: Dispatch<SetStateAction<MaritalStatus | undefined>>) =>
+    (event: React.ChangeEvent<HTMLSelectElement>) => {
+      setter(event.target.value as MaritalStatus);
     };
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
@@ -159,9 +202,17 @@ export const UserForm = (props: UserFormProps) => {
       parking,
       elevator,
       pool,
+      country,
+      job,
+      employmentContract,
+      income,
+      creditScore,
+      maritalStatus,
     };
 
-    props.onSubmit(data);
+    onImgUpload(selectedImage);
+    onDocsUpload(selectedDocuments);
+    onSubmit(data);
   };
 
   const attributesStates = {
@@ -176,109 +227,224 @@ export const UserForm = (props: UserFormProps) => {
     minSize,
     handleMinSizeChange: handleNumberChange(setMinSize),
     furnished,
-    handleFurnishedChange: handleBooleanChange(setFurnished),
+    handleFurnishedChange: setFurnished,
     homeType,
     handleHomeTypeChange: handleHomeTypeChange(setHomeType),
     terrace,
-    handleTerraceChange: handleBooleanChange(setTerrace),
+    handleTerraceChange: setTerrace,
     pets,
-    handlePetsChange: handleBooleanChange(setPets),
+    handlePetsChange: setPets,
     smoker,
-    handleSmokerChange: handleBooleanChange(setSmoker),
+    handleSmokerChange: setSmoker,
     disability,
-    handleDisabilityChange: handleBooleanChange(setDisability),
+    handleDisabilityChange: setDisability,
     garden,
-    handleGardenChange: handleBooleanChange(setGarden),
+    handleGardenChange: setGarden,
     parking,
-    handleParkingChange: handleBooleanChange(setParking),
+    handleParkingChange: setParking,
     elevator,
-    handleElevatorChange: handleBooleanChange(setElevator),
+    handleElevatorChange: setElevator,
     pool,
-    handlePoolChange: handleBooleanChange(setPool),
+    handlePoolChange: setPool,
   };
 
+  const handleFile = (event: ChangeEvent<HTMLInputElement>): void => {
+    if (event.target.files) {
+      const file = event.target.files[0] as File;
+      setSelectedImage(file);
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        if (e.target && e.target.result) {
+          const preview = e.target.result as string;
+          setImagePreview(preview);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const formRef = useRef<HTMLFormElement | null>(null);
+
   return (
-    <form
-      className="m-auto my-5 flex w-fit flex-col justify-center rounded-lg bg-white p-12 shadow"
-      onSubmit={handleSubmit}
-    >
-      <div className="mx-auto flex">
-        <div className="relative">
-          <img
-            src={
-              (props.user && props.user.image) ||
-              (props.imageGet && props.imageGet.url) ||
-              "/defaultImage.png"
-            }
-            referrerPolicy="no-referrer"
-            alt="image"
-            className="mx-auto h-32 rounded-full shadow-xl"
-          />
-          {props.imageGet && props.imageGet.url && props.onImgDelete && (
-            <Button
-              theme="danger"
-              onClick={(e) => {
-                e.preventDefault();
-                props.onImgDelete && props.onImgDelete();
-              }}
-              overrideStyles
-              className="absolute right-0 top-0 inline-flex h-7 w-7 items-center justify-center rounded-md bg-red-500 stroke-white p-1.5 hover:bg-red-700"
-            >
-              <CrossSvg />
-            </Button>
-          )}
-        </div>
-        {props.onImgUpload && (
-          <div className="ml-2 flex items-center">
-            <FileInput onChange={props.onImgUpload}>Choose file</FileInput>
+    <UserLayout
+      className="m-20"
+      sidePanel={
+        <>
+          <div className="relative h-40 w-40">
+            <div className="relative h-full w-full overflow-hidden rounded-full shadow-xl">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={imagePreview || user.image || "/defaultImage.png"}
+                referrerPolicy="no-referrer"
+                alt="image"
+                className="mx-auto h-full w-full overflow-hidden rounded-full"
+              />
+            </div>
+            <button className="absolute left-0 top-0 flex h-full w-full items-end justify-center rounded-full opacity-0 transition-all hover:opacity-100">
+              <span className="translate-y-[50%]">
+                <FileInput onChange={handleFile}>Edit</FileInput>
+              </span>
+            </button>
           </div>
-        )}
-      </div>
-      <div className="flex h-full flex-col gap-5 py-5">
-        <div className="flex justify-center gap-5">
-          <TextInput
-            required
-            placeholder="First Name"
-            onChange={handleChange(setFirstName)}
-            value={firstName}
+          <div className="flex gap-4">
+            <Button theme="danger" onClick={onCancel}>
+              Cancel
+            </Button>
+            <Button onClick={() => formRef.current?.requestSubmit()}>
+              Submit
+            </Button>
+          </div>
+        </>
+      }
+      mainPanel={
+        <form
+          ref={formRef}
+          onSubmit={handleSubmit}
+          className="flex flex-grow flex-col gap-5"
+        >
+          <h2 className="justify-end text-right font-medium">
+            Member since: <i>{user.createdAt.toDateString()}</i>
+          </h2>
+          <h1 className="text-4xl font-semibold">Update Your Profile</h1>
+
+          <section>
+            <p className="text-sm text-slate-500">
+              These informations will be shared across Leace to help build trust
+              and find you suitable prospects.
+            </p>
+          </section>
+          <section>
+            <h2 className="py-4 text-3xl font-medium">About You</h2>
+            <ul className="flex flex-wrap gap-4">
+              <li className="flex-grow pr-8">
+                <h3 className="pb-2 text-xl font-medium">First Name</h3>
+                <TextInput
+                  required
+                  placeholder="Satoshi"
+                  onChange={handleChange(setFirstName)}
+                  value={firstName}
+                  className="w-full"
+                />
+              </li>
+              <li className="flex-grow">
+                <h3 className="pb-2 text-xl font-medium">Last Name</h3>
+                <TextInput
+                  required
+                  placeholder="Nakamoto"
+                  onChange={handleChange(setLastName)}
+                  value={lastName}
+                  className="w-full"
+                />
+              </li>
+            </ul>
+            <TextArea
+              placeholder="Fashionista and tech enthusiast. I'm the perfect tenant for your apartment! 💁🏻‍♀️"
+              onChange={handleChange(setDescription)}
+              value={description}
+              className="mt-4 w-full"
+            />
+            <ul className="flex flex-wrap gap-4 pt-4">
+              <li className="flex-grow pr-8">
+                <h3 className="text-xl font-medium">Country</h3>
+                <TextInput
+                  required
+                  placeholder="France"
+                  onChange={handleChange(setCountry)}
+                  value={country}
+                  className="w-full"
+                />
+              </li>
+              <li className="flex-grow">
+                <h3 className="text-xl font-medium">Birthdate</h3>
+                <DateInput
+                  required
+                  onChange={handleChange(setBirthDate)}
+                  value={birthDate}
+                  className="w-full"
+                />
+              </li>
+            </ul>
+          </section>
+
+          {user.role === Role.TENANT && (
+            <section>
+              <h2 className="py-4 text-3xl font-medium">Preferences</h2>
+              <UserAttributesForm {...attributesStates} />
+              <ul className="flex flex-wrap gap-4 pt-4">
+                <li className="flex-grow pr-8">
+                  <h3 className="text-xl font-medium">Job</h3>
+                  <TextInput
+                    placeholder="Developer"
+                    onChange={handleChange(setJob)}
+                    value={job}
+                    className="w-full"
+                  />
+                </li>
+                <li className="flex-grow">
+                  <h3 className="text-xl font-medium">Type of contract</h3>
+                  <TextInput
+                    placeholder="CDI"
+                    onChange={handleChange(setEmploymentContract)}
+                    value={employmentContract}
+                    className="w-full"
+                  />
+                </li>
+              </ul>
+              <ul className="flex flex-wrap gap-4 pt-4">
+                <li className="flex-grow pr-8">
+                  <h3 className="text-xl font-medium">Annual salary</h3>
+                  <NumberInput
+                    placeholder="60000"
+                    onChange={handleNumberChange(setIncome)}
+                    value={income?.toString() ?? ""}
+                    className="w-full"
+                    unit="$"
+                  />
+                </li>
+                <li className="flex-grow">
+                  <h3 className="text-xl font-medium">Credit score</h3>
+                  <NumberInput
+                    placeholder="800"
+                    onChange={handleNumberChange(setCreditScore)}
+                    value={creditScore ?? ""}
+                    className="w-full"
+                  />
+                </li>
+                <li className="flex-grow">
+                  <h3 className="text-xl font-medium">Marital status</h3>
+                  <select
+                    id="maritalStatus"
+                    onChange={handleMaritalStatusChange(setMaritalStatus)}
+                    value={maritalStatus ?? ""}
+                    className="w-full rounded-lg border-2 border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-600 focus:outline-none"
+                  >
+                    <option value="" disabled selected>
+                      Select one
+                    </option>
+                    <option value={MaritalStatus.SINGLE}>SINGLE</option>
+                    <option value={MaritalStatus.MARRIED}>MARRIED</option>
+                    <option value={MaritalStatus.ONE_CHILD}>ONE_CHILD</option>
+                    <option value={MaritalStatus.TWO_CHILD}>TWO_CHILD</option>
+                    <option value={MaritalStatus.OTHER}>OTHER</option>
+                  </select>
+                </li>
+              </ul>
+            </section>
+          )}
+          <DocumentList
+            documents={documents}
+            onDelete={onDocDelete}
+            isLoggedInOrAdmin
           />
-          <TextInput
-            required
-            placeholder="Last Name"
-            onChange={handleChange(setLastName)}
-            value={lastName}
+          <p className="bold pt-4 text-xl">Upload Documents</p>
+          <FileUploadSection
+            selectedFiles={selectedDocuments}
+            setSelectedFiles={setSelectedDocuments}
+            accept=".pdf"
           />
-          <DateInput
-            required
-            onChange={handleChange(setBirthDate)}
-            value={birthDate}
-          />
-        </div>
-        <TextArea
-          placeholder="Description"
-          onChange={handleChange(setDescription)}
-          value={description}
-        />
-      </div>
-      {props.user?.role === Role.TENANT && (
-        <UserAttributesForm {...attributesStates} />
-      )}
-      <DocumentList
-        documents={props.documentsGet}
-        onDelete={props.onDocDelete}
-        isLoggedInOrAdmin
-      />
-      <div className="mx-auto">
-        <FileInput multiple onChange={props.onDocsUpload} accept=".pdf">
-          Upload Document
-        </FileInput>
-      </div>
-      <div className="mt-10 flex justify-center gap-8">
-        <Button theme="danger" onClick={props.onCancel}>
-          Cancel
-        </Button>
-        <Button theme="primary">Update</Button>
-      </div>
-    </form>
+        </form>
+      }
+    />
   );
 };

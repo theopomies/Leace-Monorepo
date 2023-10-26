@@ -3,6 +3,8 @@ import { Loader } from "../shared/Loader";
 import { useMemo } from "react";
 import { PostCard } from "../shared/post/PostCard";
 import { useRouter } from "next/router";
+import { deleteCacheId } from "../../utils/useCache";
+import { PostType } from "@prisma/client";
 
 export interface PostProps {
   postId: string;
@@ -12,6 +14,7 @@ export interface PostProps {
 
 export const Post = ({ postId, authorId, updateLink }: PostProps) => {
   const router = useRouter();
+
   const { data: post, isLoading: postLoading } = trpc.post.getPostById.useQuery(
     { postId },
   );
@@ -19,8 +22,20 @@ export const Post = ({ postId, authorId, updateLink }: PostProps) => {
     trpc.image.getSignedPostUrl.useQuery({ postId });
   const { data: documents, isLoading: documentLoading } =
     trpc.document.getSignedUrl.useQuery({ postId });
+  const utils = trpc.useContext();
 
-  const deletePost = trpc.post.deletePostById.useMutation();
+  const deletePost = trpc.post.deletePostById.useMutation({
+    onSuccess: () => {
+      utils.post.invalidate();
+      router.push(`/users/${authorId}/posts`);
+    },
+  });
+  const updatePost = trpc.post.updatePostById.useMutation({
+    async onSuccess() {
+      await utils.post.getPostById.invalidate({ postId });
+      await utils.post.getPostsByUserId.invalidate();
+    },
+  });
 
   const isLoading = useMemo(() => {
     return postLoading || imagesLoading || documentLoading;
@@ -33,10 +48,17 @@ export const Post = ({ postId, authorId, updateLink }: PostProps) => {
   if (!post) return <p>Something went wrong</p>;
 
   const handleDeletePost = async () => {
-    if (!authorId) {
-      await deletePost.mutateAsync({ postId });
-      router.push(`/users/${authorId}/posts`);
-    }
+    deleteCacheId("lastSelectedPostId");
+    await deletePost.mutateAsync({ postId });
+    router.push(`/users/${authorId}/posts`);
+  };
+
+  const handlePause = async () => {
+    await updatePost.mutateAsync({ postId, type: PostType.HIDE });
+  };
+
+  const handleUnpause = async () => {
+    await updatePost.mutateAsync({ postId, type: PostType.TO_BE_RENTED });
   };
 
   return (
@@ -47,6 +69,8 @@ export const Post = ({ postId, authorId, updateLink }: PostProps) => {
       documents={documents}
       updateLink={updateLink}
       isLoggedIn={post.createdById === authorId}
+      onPause={handlePause}
+      onUnpause={handleUnpause}
     />
   );
 };

@@ -20,7 +20,7 @@ import Header from "../../components/Header";
 import Separator from "../../components/Separator";
 import { Btn } from "../../components/Btn";
 import { EditAttributes } from "../../components/Attribute";
-import { IUserAttrs } from "../../types";
+// import { IUserAttrs } from "../../types";
 import { EditInfo } from "../../components/UserProfile";
 
 export default function Role() {
@@ -44,7 +44,7 @@ export default function Role() {
       }
     | undefined
   >({ userId });
-  const [attrs, setAttrs] = useState<IUserAttrs | undefined>({ userId });
+  const [attrs, setAttrs] = useState<any | undefined>({ userId });
 
   const userRole = trpc.user.updateUserRoleById.useMutation({
     onSuccess() {
@@ -54,12 +54,12 @@ export default function Role() {
 
   const userProfile = trpc.user.updateUserById.useMutation({
     onSuccess() {
-      if (role !== "TENANT") navigation.navigate("Stack", { userId });
+      if (role !== "TENANT") navigation.navigate("Profile", { userId });
     },
   });
   const userAttrs = trpc.attribute.updateUserAttributes.useMutation({
     onSuccess() {
-      navigation.navigate("Stack", { userId });
+      navigation.navigate("Profile", { userId });
     },
   });
 
@@ -259,7 +259,7 @@ const styles = StyleSheet.create({
   },
   view: {
     flex: 1,
-    marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+    // marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
     backgroundColor: "#F2F7FF",
   },
   shadow: {

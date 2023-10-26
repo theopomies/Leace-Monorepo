@@ -10,7 +10,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { TabStackParamList } from "../../navigation/TabNavigator";
 import { Report } from "../../components/Report";
 import { trpc } from "../../utils/trpc";
-import Loading from "../../components/Loading";
+import { Loading } from "../../components/Loading";
 import Carousel from "react-native-snap-carousel";
 import Separator from "../../components/Separator";
 import { ShowAttributes } from "../../components/Attribute";
@@ -41,6 +41,7 @@ export default function ShowPost() {
 
   const deletePost = trpc.post.deletePostById.useMutation({
     onSuccess() {
+      LocalStorage.setItem("refreshPosts", true);
       navigation.navigate("MyPosts", { userId });
     },
   });
@@ -75,7 +76,6 @@ export default function ShowPost() {
 
   function handleDelete() {
     if (!post) return;
-    LocalStorage.setItem("refreshPosts", true);
     deletePost.mutate({ postId: post.id });
   }
 
@@ -99,7 +99,7 @@ export default function ShowPost() {
                 itemWidth={352}
                 renderItem={_renderItem}
                 onSnapToItem={(index) => setIdx(index)}
-              />
+              ></Carousel>
             ) : (
               <Image
                 className="rounded-md"
@@ -160,7 +160,7 @@ export default function ShowPost() {
               <View className="flex flex-row">
                 <Text className="min-w-[68px] font-bold text-white">Type:</Text>
                 <Text className="font-light text-white">
-                  {post.attribute?.appartment ? "Appartment" : "House"}
+                  {post.attribute?.homeType}
                 </Text>
               </View>
               <View className="flex flex-row">

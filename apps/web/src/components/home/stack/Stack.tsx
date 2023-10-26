@@ -1,13 +1,15 @@
+import { useSession } from "@clerk/nextjs";
+import { motion } from "framer-motion";
+import { useRouter } from "next/router";
 import { useState } from "react";
+import { CrossSvg } from "../../shared/icons/CrossSvg";
+import { LikeSvg } from "../../shared/icons/LikeSvg";
+import { RewindSvg } from "../../shared/icons/RewindSvg";
+import Overlay from "./Overlay";
+import { ReportModal } from "./ReportModal";
 import { StackButton } from "./StackButton";
 import { StackElement, StackElementProps } from "./StackElement";
 import { SwipeCard } from "./SwipeCard";
-import { CrossSvg } from "../../shared/icons/CrossSvg";
-import { motion } from "framer-motion";
-import Overlay from "./Overlay";
-import { ReportModal } from "./ReportModal";
-import { LikeSvg } from "../../shared/icons/LikeSvg";
-import { RewindSvg } from "../../shared/icons/RewindSvg";
 
 export type StackProps = {
   posts: StackElementProps[];
@@ -20,6 +22,14 @@ export function Stack({ posts, onLike, onDislike, onRewind }: StackProps) {
   const [likeState, setLikeState] = useState<"dislike" | "like" | null>(null);
   const [isSelected, setIsSelected] = useState(false);
   const [reporting, setReporting] = useState(false);
+  const { session } = useSession();
+  const userId = session?.user?.id;
+
+  const router = useRouter();
+
+  const redirectToProfile = () => {
+    router.push(`/users/${userId}/update`);
+  };
 
   const dislikeHander = () => {
     onDislike(posts[0] as StackElementProps);
@@ -132,7 +142,15 @@ export function Stack({ posts, onLike, onDislike, onRewind }: StackProps) {
               It seems that no one matches your current criterias ...
             </p>
             <p className="text-gray-500">
-              Try to modify them or come back later !
+              Try to{" "}
+              <a
+                className="font-bold text-blue-500"
+                onClick={redirectToProfile}
+                href="#"
+              >
+                modify
+              </a>{" "}
+              them or come back later !
             </p>
           </div>
         </div>

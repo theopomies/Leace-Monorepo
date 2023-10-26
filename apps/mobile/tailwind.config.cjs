@@ -18,6 +18,7 @@ module.exports = {
       colors: {
         custom: "#002642",
         test: "bg-gradient-to-r from-red-300 to-green-300",
+        navy: "#10316B",
       },
     },
   },

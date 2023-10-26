@@ -1,31 +1,32 @@
-import { StatusBar } from "expo-status-bar";
-import { LogBox } from "react-native";
 import React from "react";
-import { SafeAreaProvider } from "react-native-safe-area-context";
-import { TRPCProvider } from "./utils/trpc";
-import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-expo";
-import RootNavigator from "./navigation/RootNavigator";
+import { Logs } from "expo";
+import { Auth } from "./screens/Auth";
+import { StatusBar } from "react-native";
 import { tokenCache } from "./utils/cache";
-import AuthScreen from "./screens/auth";
+import { TRPCProvider } from "./utils/trpc";
+import { RootNavigator } from "./navigation";
+import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-expo";
 
-LogBox.ignoreAllLogs(); //Ignore all log notifications
+import { SafeAreaProvider } from "react-native-safe-area-context";
+
+Logs.disableExpoCliLogging();
 
 export const App = () => {
   return (
     <ClerkProvider
-      publishableKey="pk_test_Y2VydGFpbi1jcmFiLTU0LmNsZXJrLmFjY291bnRzLmRldiQ"
+      publishableKey={process.env.EXPO_PUBLIC_CLERK_PUBLIC_KEY || ""}
       tokenCache={tokenCache}
     >
       <SignedIn>
         <TRPCProvider>
           <SafeAreaProvider>
+            <StatusBar backgroundColor={"white"} barStyle={"dark-content"} />
             <RootNavigator />
-            <StatusBar />
           </SafeAreaProvider>
         </TRPCProvider>
       </SignedIn>
       <SignedOut>
-        <AuthScreen />
+        <Auth />
       </SignedOut>
     </ClerkProvider>
   );

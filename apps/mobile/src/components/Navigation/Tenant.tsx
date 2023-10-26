@@ -3,7 +3,8 @@ import { TouchableOpacity } from "react-native";
 import { Icon } from "react-native-elements";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { TabStackParamList } from "../../navigation/TabNavigator";
-import { TenantStack, TenantMatches, TenantChat } from "../../screens/Tenant";
+import { TenantStack } from "../../screens/Stack";
+import { TenantMatches } from "../../screens/Matches";
 import { EditProfile, ShowProfile } from "../../screens/Profile";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -14,6 +15,8 @@ import {
   Result,
   TenantLikes,
 } from "../../screens/Premium";
+import { TenantChat } from "../../screens/Chat";
+import { Documents } from "../../screens/Documents";
 
 const Tab = createBottomTabNavigator<TabStackParamList>();
 const Tenant = ({
@@ -27,7 +30,7 @@ const Tenant = ({
     useNavigation<NativeStackNavigationProp<TabStackParamList>>();
 
   return (
-    <Tab.Navigator>
+    <Tab.Navigator initialRouteName="Profile">
       <Tab.Screen
         name="Stack"
         component={TenantStack}
@@ -44,8 +47,9 @@ const Tenant = ({
         }}
       />
       <Tab.Screen
-        name="Match"
+        name="MatchTenant"
         component={TenantMatches}
+        initialParams={{ userId, role: "TENANT" }}
         options={{
           tabBarIcon: ({ focused }) => (
             <Icon
@@ -58,17 +62,28 @@ const Tenant = ({
         }}
       />
       <Tab.Screen
-        name="MatchChat"
+        name="ChatTenant"
         component={TenantChat}
         options={{
-          tabBarIcon: ({ focused }) => (
-            <Icon
-              name={focused ? "chat" : "chat-bubble-outline"}
-              type="material"
-            />
+          tabBarStyle: { display: "none" },
+          headerShown: true,
+          title: "Chat",
+          tabBarButton: () => null,
+          headerLeft: () => (
+            <TouchableOpacity
+              className="ml-4"
+              onPress={() =>
+                navigation.navigate("MatchTenant", { userId, role: "TENANT" })
+              }
+            >
+              <Icon
+                name="arrow-back"
+                color="#10316B"
+                size={30}
+                type="material-icons"
+              ></Icon>
+            </TouchableOpacity>
           ),
-          tabBarLabel: "",
-          headerShown: false,
         }}
       />
       <Tab.Screen
@@ -181,6 +196,18 @@ const Tenant = ({
               ></Icon>
             </TouchableOpacity>
           ),
+        }}
+      />
+      <Tab.Screen
+        name="Documents"
+        component={Documents}
+        initialParams={{ userId }}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <Icon name="description" type="material" />
+          ),
+          tabBarLabel: "",
+          headerShown: false,
         }}
       />
     </Tab.Navigator>

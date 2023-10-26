@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import RNPickerSelect from "react-native-picker-select";
 import { Icon } from "react-native-elements";
-import { IUserAttrs } from "../../types";
+//import { IUserAttrs } from "../../types";
 
 interface IAttributeBtn {
   name: string;
@@ -13,8 +13,8 @@ interface IAttributeBtn {
 
 interface ICreateUserAttrs {
   userId: string;
-  attrs: IUserAttrs | undefined;
-  setAttrs: React.Dispatch<React.SetStateAction<IUserAttrs | undefined>>;
+  attrs: any | undefined;
+  setAttrs: React.Dispatch<React.SetStateAction<any | undefined>>;
 }
 
 function AttributeBtn({ name, status, iconName }: IAttributeBtn) {

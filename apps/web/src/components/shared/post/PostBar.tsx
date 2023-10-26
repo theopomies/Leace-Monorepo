@@ -1,9 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
-import Link from "next/link";
 import { trpc } from "../../../utils/trpc";
 import { Post, PostType, RelationType, User } from "@prisma/client";
 import { PostBarActions } from "./PostBarActions";
 import { PostBarUser } from "./PostBarUser";
+import { setCacheId } from "../../../utils/useCache";
+import { useRouter } from "next/router";
 
 export interface PostBarProps {
   post: Post;
@@ -30,9 +31,15 @@ export const PostBar = ({
   onDeleteMatch,
   onLikeMatch,
 }: PostBarProps) => {
+  const router = useRouter();
   const { data: img } = trpc.image.getSignedPostUrl.useQuery({
     postId: post.id,
   });
+
+  const handleClick = () => {
+    setCacheId("lastSelectedPostId", post.id);
+    router.push(postLink.replace("[postId]", post.id));
+  };
 
   return (
     <div
@@ -41,28 +48,29 @@ export const PostBar = ({
       } mx-auto mb-5 flex flex-grow cursor-pointer flex-col overflow-hidden rounded-xl bg-white shadow-md md:max-w-2xl`}
     >
       <div className="flex items-center">
-        <Link
-          href={postLink.replace("[postId]", post.id)}
-          className="flex w-full"
-        >
+        <a onClick={handleClick} className="flex w-full flex-col">
           {img && img[0] && (
-            <div className="h-full w-2/5">
-              <img src={img[0].url} alt="Post image" className="object-cover" />
+            <div className="w-full">
+              <img
+                src={img[0].url}
+                alt="Post image"
+                className="w-full object-cover"
+              />
             </div>
           )}
-          <div
-            className={`my-auto mx-5 w-3/5 min-w-max ${
-              (!img || !img[0]) && "py-6"
-            }`}
-          >
-            <div className=" font-semibold uppercase tracking-wide text-indigo-500">
+          <div className={`my-3 mx-4 w-3/5 ${(!img || !img[0]) && "py-5"}`}>
+            <div className="text-sm font-semibold text-indigo-500">
               {post.title}
             </div>
-            <p className="mt-2 text-slate-500">
-              {post.type == PostType.RENTED ? "Rented ✅" : "Available"}
+            <p className="mt-1 text-xs text-slate-500">
+              {post.type === PostType.RENTED
+                ? "Rented ✅"
+                : post.type === PostType.HIDE
+                ? "On pause"
+                : "Available"}
             </p>
           </div>
-        </Link>
+        </a>
         {user && userLink && <PostBarUser user={user} userLink={userLink} />}
       </div>
       {relationshipId && onDeleteMatch && (

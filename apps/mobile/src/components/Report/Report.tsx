@@ -12,9 +12,16 @@ interface IReport {
   userId?: string;
   postId?: string;
   className?: string;
+  iconOnly?: boolean;
 }
 
-export default function Report({ type, userId, postId, className }: IReport) {
+export default function Report({
+  type,
+  userId,
+  postId,
+  className,
+  iconOnly = false,
+}: IReport) {
   const [open, setOpen] = useState(false);
   const [reason, setReason] = useState<ReportReason>(Reason.SPAM);
   const [message, setMessage] = useState("");
@@ -48,9 +55,7 @@ export default function Report({ type, userId, postId, className }: IReport) {
         animationType="slide"
         transparent={true}
         visible={open}
-        onRequestClose={() => {
-          setOpen(false);
-        }}
+        onRequestClose={() => setOpen(false)}
       >
         <View className="flex-1 items-center justify-center">
           <View
@@ -116,7 +121,7 @@ export default function Report({ type, userId, postId, className }: IReport) {
           type="material-icons"
           color={"white"}
         ></Icon>
-        <Text className="text-white">Report</Text>
+        {iconOnly && <Text className="text-white">Report</Text>}
       </TouchableOpacity>
     </>
   );

@@ -12,7 +12,7 @@ import Header from "../../components/Header";
 import { trpc } from "../../utils/trpc";
 import { RouteProp, useRoute, useFocusEffect } from "@react-navigation/native";
 import { TabStackParamList } from "../../navigation/TabNavigator";
-import Loading from "../../components/Loading";
+import { Loading } from "../../components/Loading";
 import { PostCard } from "../../components/Post";
 import { LocalStorage } from "../../utils/cache";
 import { Post, Attribute, Image } from "@leace/db";
@@ -39,12 +39,12 @@ export default function PostStack() {
       const check = LocalStorage.getItem("refreshPosts");
       if (!check) return;
       LocalStorage.setItem("refreshPosts", false);
+      setPosts(undefined);
       refetch();
     }, [userId]),
   );
   useEffect(() => {
     if (posts) return;
-    console.log("in useEffect");
     setPosts(data);
   }, [data]);
 
@@ -100,17 +100,18 @@ export default function PostStack() {
             ]}
           />
         </View>
-        {posts && (
-          <ScrollView
-            contentContainerStyle={{ flexGrow: 1 }}
-            style={{ backgroundColor: "#F2F7FF" }}
-            className="px-2"
-          >
-            {posts.map((post, idx) => (
-              <PostCard data={post} key={idx} userId={userId} />
-            ))}
-          </ScrollView>
-        )}
+        <View className="flex-1 bg-[#F2F7FF]">
+          {posts && (
+            <ScrollView
+              contentContainerStyle={{ flexGrow: 1 }}
+              className="px-2"
+            >
+              {posts.map((post, idx) => (
+                <PostCard data={post} key={idx} userId={userId} />
+              ))}
+            </ScrollView>
+          )}
+        </View>
       </View>
     </SafeAreaView>
   );

@@ -1,15 +1,9 @@
 import React from "react";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-
+import { Auth } from "../screens/Auth";
 import TabNavigator from "./TabNavigator";
-import { NavigationContainer } from "@react-navigation/native";
-import AuthScreen from "../screens/auth";
 import { ClerkLoaded, useUser } from "@clerk/clerk-expo";
-
-export type RootStackParamList = {
-  Main: undefined;
-  Model: undefined;
-};
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 const RootStack = createNativeStackNavigator();
 
@@ -22,7 +16,7 @@ const StackNav = () => {
         <RootStack.Screen name="App" component={TabNavigator} />
       ) : (
         <>
-          <RootStack.Screen name="Welcome" component={AuthScreen} />
+          <RootStack.Screen name="Welcome" component={Auth} />
         </>
       )}
     </RootStack.Navigator>

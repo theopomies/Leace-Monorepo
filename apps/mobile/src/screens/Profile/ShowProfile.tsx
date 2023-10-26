@@ -11,7 +11,7 @@ import { RouteProp, useFocusEffect, useRoute } from "@react-navigation/native";
 import { TabStackParamList } from "../../navigation/TabNavigator";
 import Header from "../../components/Header";
 import { trpc } from "../../utils/trpc";
-import Loading from "../../components/Loading";
+import { Loading } from "../../components/Loading";
 import { UserProfile } from "../../components/UserProfile";
 import { LocalStorage } from "../../utils/cache";
 
@@ -58,29 +58,12 @@ export default function ShowProfile() {
           data={data}
           editable={true}
           showAttrs={data.role === "TENANT" ? true : false}
+          showLogout={true}
         />
       </View>
-      <SignOut />
     </SafeAreaView>
   );
 }
-
-import { useAuth } from "@clerk/clerk-expo";
-import { Button } from "react-native-elements";
-
-const SignOut = () => {
-  const { signOut } = useAuth();
-  return (
-    <View>
-      <Button
-        title="Sign Out"
-        onPress={() => {
-          signOut();
-        }}
-      />
-    </View>
-  );
-};
 
 const styles = StyleSheet.create({
   container: {
@@ -89,7 +72,7 @@ const styles = StyleSheet.create({
   },
   view: {
     flex: 1,
-    marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+    // marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
     backgroundColor: "white", // #F2F7FF
   },
 });

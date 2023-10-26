@@ -34,8 +34,8 @@ export function DialogButton({
             <Dialog.Close asChild>
               <Button theme="white">Cancel</Button>
             </Dialog.Close>
-            <Dialog.Close>
-              <Button theme="danger" onClick={() => onDelete()}>
+            <Dialog.Close asChild>
+              <Button theme="danger" onClick={onDelete}>
                 {confirmButtonText}
               </Button>
             </Dialog.Close>

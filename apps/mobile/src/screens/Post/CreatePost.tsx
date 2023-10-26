@@ -14,8 +14,16 @@ import { trpc } from "../../utils/trpc";
 import { IDefaulAttributes } from "../../types";
 import { CreateAttributes } from "../../components/Attribute";
 import { Btn } from "../../components/Btn";
+import { LocalStorage } from "../../utils/cache";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { TabStackParamList } from "../../navigation/TabNavigator";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 
 export default function CreatePost() {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<TabStackParamList>>();
+  const route = useRoute<RouteProp<TabStackParamList, "Stack">>();
+  const { userId } = route.params;
   const [postInfo, setPostInfo] = useState({
     title: "",
     desc: "",
@@ -29,8 +37,7 @@ export default function CreatePost() {
     rentStartDate: new Date(),
     rentEndDate: new Date(),
     furnished: false,
-    house: false,
-    appartment: false,
+    homeType: "HOUSE",
     terrace: false,
     pets: false,
     smoker: false,
@@ -92,7 +99,12 @@ export default function CreatePost() {
 
   const post = trpc.post.createPost.useMutation({});
 
-  const attributes = trpc.attribute.updatePostAttributes.useMutation({});
+  const attributes = trpc.attribute.updatePostAttributes.useMutation({
+    onSuccess() {
+      LocalStorage.setItem("refreshPosts", true);
+      navigation.navigate("MyPosts", { userId });
+    },
+  });
 
   async function createPost() {
     const response = await post.mutateAsync(postInfo);
