@@ -2,6 +2,7 @@ import { trpc } from "../../utils/trpc";
 import { PostBar } from "../shared/post/PostBar";
 import { useMemo } from "react";
 import { Loader } from "../shared/Loader";
+import { Header } from "../shared/Header";
 
 export interface PostListProps {
   userId: string;
@@ -48,6 +49,7 @@ export const PotentialMatchesTenant = ({ userId }: PostListProps) => {
   ) {
     return (
       <div>
+        <Header heading="Potential Matches" />
         {relationships.relationship.map(({ post, id, relationType }) => (
           <PostBar
             key={post.id}
@@ -65,6 +67,7 @@ export const PotentialMatchesTenant = ({ userId }: PostListProps) => {
   }
   return (
     <div className="mt-8 flex flex-grow flex-col items-center justify-center">
+      <Header heading="Potential Matches" />
       <h1 className="text-2xl font-bold text-gray-700">
         No landlord or agency has liked your profile yet :(
       </h1>

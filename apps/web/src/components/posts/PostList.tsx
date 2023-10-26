@@ -41,14 +41,13 @@ export const PostList = ({ userId }: PostListProps) => {
   if (status == "success" && relationships.length) {
     return (
       <div>
-        {relationships.map(({ post, id, relationType, conversation }) => (
+        {relationships.map(({ post, id, relationType }) => (
           <PostBar
             key={post.id}
             post={post}
             postLink="/posts/[postId]"
             relationType={relationType}
             relationshipId={id}
-            conversationId={conversation?.id}
             user={user}
             onDeleteMatch={onDeleteMatch}
           />

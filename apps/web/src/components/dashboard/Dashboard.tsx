@@ -1,106 +1,276 @@
-import { Post, PostType, User } from "@prisma/client";
-import React, { useState, useEffect, useCallback } from "react";
-import { trpc } from "../../utils/trpc";
-import { Header } from "../shared/Header";
-import { PostBar } from "../shared/post/PostBar";
+import {
+  Bar,
+  BarChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+import { RentedTable, ForRentTable } from "./PostTable";
 
-interface DashboardProps {
-  userId: string;
-}
+const data = [
+  {
+    name: "Jan",
+    total: Math.floor(Math.random() * 5000) + 1000,
+  },
+  {
+    name: "Feb",
+    total: Math.floor(Math.random() * 5000) + 1000,
+  },
+  {
+    name: "Mar",
+    total: Math.floor(Math.random() * 5000) + 1000,
+  },
+  {
+    name: "Apr",
+    total: Math.floor(Math.random() * 5000) + 1000,
+  },
+  {
+    name: "May",
+    total: Math.floor(Math.random() * 5000) + 1000,
+  },
+  {
+    name: "Jun",
+    total: Math.floor(Math.random() * 5000) + 1000,
+  },
+  {
+    name: "Jul",
+    total: Math.floor(Math.random() * 5000) + 1000,
+  },
+  {
+    name: "Aug",
+    total: Math.floor(Math.random() * 5000) + 1000,
+  },
+  {
+    name: "Sep",
+    total: Math.floor(Math.random() * 5000) + 1000,
+  },
+  {
+    name: "Oct",
+    total: Math.floor(Math.random() * 5000) + 1000,
+  },
+  {
+    name: "Nov",
+    total: Math.floor(Math.random() * 5000) + 1000,
+  },
+  {
+    name: "Dec",
+    total: Math.floor(Math.random() * 5000) + 1000,
+  },
+];
 
-export const Dashboard = ({ userId }: DashboardProps) => {
-  const [posts, setPosts] = useState<{ post: Post; user: User | undefined }[]>(
-    [],
-  );
-  const [filter, setFilter] = useState<PostType | "" | null>("");
-  const [filteredCount, setFilteredCount] = useState<number>(0);
-
-  const { data: relationshipData } =
-    trpc.relationship.getClientsByUserId.useQuery({ userId });
-
-  useEffect(() => {
-    if (relationshipData) {
-      setPosts(
-        relationshipData.map((data) => {
-          return { post: data.post, user: data?.user };
-        }),
-      );
-    }
-  }, [relationshipData]);
-
-  const sortPosts = useCallback(
-    (data: { post: Post; user: User | undefined }[]) => {
-      if (filter === null || filter === "") {
-        return data;
-      } else {
-        return posts.filter((d) => d.post.type === filter);
-      }
-    },
-    [filter, posts],
-  );
-
-  useEffect(() => {
-    const filteredPosts = sortPosts(posts);
-    setFilteredCount(filteredPosts.length);
-  }, [filter, posts, sortPosts]);
-
-  const handleFilterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedFilter = event.target.value as PostType | "";
-    setFilter(selectedFilter);
-  };
-
-  const sortedPosts = sortPosts(posts);
-  const { data: stats } = trpc.post.RentDataAgencyByUserId.useQuery({
-    userId: userId,
-  });
-
+export function Dashboard(/*{ user }: DashboardProps*/) {
   return (
-    <div className="container m-4 mx-auto flex flex-col">
-      <Header heading="Dashboard" />
-
-      <div className="container mx-auto mt-28 flex flex-col p-4">
-        <div className="m-5 flex items-center justify-center">
-          <div className="m-1 flex h-32 w-32 items-center justify-center rounded-full bg-indigo-600 p-2 text-xl font-bold text-indigo-100">
-            <div className="text-center">
-              <p>Expense</p>
-              <p className="mt-1">{stats?.expense + " $" ?? " 0 $"}</p>
+    <div className="flex w-full flex-col justify-center py-8 px-12">
+      <h1 className="text-4xl font-semibold">Welcome, Theo!</h1>
+      <div className="w-full pt-8">
+        <div className="grid w-full grid-cols-4 gap-4">
+          <div className="flex flex-grow flex-col gap-2 rounded-xl bg-white p-4 pl-1 pb-1 shadow-sm">
+            <div className="p-3">
+              <h3 className="text-xl font-medium">Revenue</h3>
             </div>
+            <ResponsiveContainer width="100%" height={200}>
+              <BarChart data={data}>
+                <XAxis
+                  dataKey="name"
+                  stroke="#888888"
+                  fontSize={12}
+                  tickLine={false}
+                  axisLine={false}
+                />
+                <YAxis
+                  stroke="#888888"
+                  fontSize={12}
+                  tickLine={false}
+                  axisLine={false}
+                  tickFormatter={(value) => `$${value}`}
+                />
+                <Tooltip />
+                <Bar dataKey="total" fill="#10b981" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
           </div>
-
-          <div className="m-1 flex h-32 w-32 items-center justify-center rounded-full bg-green-600 p-2 text-xl font-bold text-indigo-100">
-            <div className="text-center">
-              <p>Income</p>
-              <p className="mt-1">{stats?.income + " $" ?? "0 $"}</p>
+          <div className="flex flex-grow flex-col gap-2 rounded-xl bg-white p-4 pl-1 pb-1 shadow-sm">
+            <div className="p-3">
+              <h3 className="text-xl font-medium">Expenses</h3>
             </div>
+            <ResponsiveContainer width="100%" height={200}>
+              <BarChart data={data}>
+                <XAxis
+                  dataKey="name"
+                  stroke="#888888"
+                  fontSize={12}
+                  tickLine={false}
+                  axisLine={false}
+                />
+                <YAxis
+                  stroke="#888888"
+                  fontSize={12}
+                  tickLine={false}
+                  axisLine={false}
+                  tickFormatter={(value) => `$${value}`}
+                />
+                <Tooltip />
+                <Bar dataKey="total" fill="#ef4444" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+          <div className="flex flex-grow flex-col gap-2 rounded-xl bg-white p-4 pl-1 pb-1  shadow-sm">
+            <div className="p-3">
+              <h3 className="text-xl font-medium">Likes</h3>
+            </div>
+            <ResponsiveContainer width="100%" height={200}>
+              <BarChart data={data}>
+                <XAxis
+                  dataKey="name"
+                  stroke="#888888"
+                  fontSize={12}
+                  tickLine={false}
+                  axisLine={false}
+                />
+                <YAxis
+                  stroke="#888888"
+                  fontSize={12}
+                  tickLine={false}
+                  axisLine={false}
+                  tickFormatter={(value) => `${value / 100}`}
+                />
+                <Tooltip />
+                <Bar dataKey="total" fill="#6366f1" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+          <div className="flex flex-grow flex-col gap-2 rounded-xl bg-white p-4 pl-1 pb-1  shadow-sm">
+            <div className="p-3">
+              <h3 className="text-xl font-medium">Lease signed</h3>
+            </div>
+            <ResponsiveContainer width="100%" height={200}>
+              <BarChart data={data}>
+                <XAxis
+                  dataKey="name"
+                  stroke="#888888"
+                  fontSize={12}
+                  tickLine={false}
+                  axisLine={false}
+                />
+                <YAxis
+                  stroke="#888888"
+                  fontSize={12}
+                  tickLine={false}
+                  axisLine={false}
+                  tickFormatter={(value) => `${Math.floor(value / 1_000)}`}
+                />
+                <Tooltip />
+                <Bar dataKey="total" fill="#6366f1" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         </div>
-        <div className="flex justify-center gap-40">
-          <div className="mr-2">Total Count: {posts.length}</div>
-          <div className="mr-2">Filtered Count: {filteredCount}</div>
-          <div className="">
-            <select
-              id="filter"
-              value={filter || ""}
-              onChange={handleFilterChange}
-            >
-              <option value={PostType.RENTED}>Rented</option>
-              <option value={PostType.TO_BE_RENTED}>To be rented</option>
-              <option value="">all</option>
-            </select>
-          </div>
-        </div>
-        <ul>
-          {sortedPosts.map((d) => (
-            <PostBar
-              key={d.post.id}
-              post={d.post}
-              postLink="/posts/[postId]"
-              user={d.user}
-              userLink="/users/[userId]"
+        <div className="grid grid-cols-2 gap-4 py-4">
+          <div className="rounded-xl bg-white p-4 shadow-sm ">
+            <div className="p-3">
+              <h3 className="text-xl font-medium">For Rent</h3>
+            </div>
+            <ForRentTable
+              data={[
+                {
+                  id: "1",
+                  title: "Super nice apartment T2 in Bordeaux",
+                  owner: "Jules F.",
+                  ownerId: "1",
+                  rent: 1200,
+                  likes: 12,
+                  matches: 6,
+                  createdAt: "2021-09-01",
+                },
+                {
+                  id: "1",
+                  title: "Apartment T2 in Paris",
+                  owner: "John D.",
+                  ownerId: "1",
+                  rent: 1300,
+                  likes: 15,
+                  matches: 7,
+                  createdAt: "2022-01-01",
+                },
+                {
+                  id: "1",
+                  title: "Studio in Lyon",
+                  owner: "Jane S.",
+                  ownerId: "1",
+                  rent: 1150,
+                  likes: 20,
+                  matches: 10,
+                  createdAt: "2022-01-02",
+                },
+                {
+                  id: "1",
+                  title: "Loft in Marseille",
+                  owner: "Robert B.",
+                  ownerId: "1",
+                  rent: 700,
+                  likes: 30,
+                  matches: 15,
+                  createdAt: "2022-01-03",
+                },
+              ]}
             />
-          ))}
-        </ul>
+          </div>
+          <div className="rounded-xl bg-white p-4 shadow-sm">
+            <div className="p-3">
+              <h3 className="text-xl font-medium">Rented / Managed</h3>
+            </div>
+            <RentedTable
+              data={[
+                {
+                  id: "1",
+                  title: "Super nice apartment T2 in Bordeaux",
+                  owner: "Jules F.",
+                  ownerId: "1",
+                  rent: 1200,
+                  tenant: "John D.",
+                  tenantId: "1",
+                  leaseBegin: "2021-09-01",
+                  leaseEnd: "2022-09-01",
+                },
+                {
+                  id: "1",
+                  title: "Apartment T2 in Paris",
+                  owner: "John D.",
+                  ownerId: "1",
+                  rent: 1300,
+                  tenant: "Jane S.",
+                  tenantId: "1",
+                  leaseBegin: "2021-09-01",
+                  leaseEnd: "2022-09-01",
+                },
+                {
+                  id: "1",
+                  title: "Studio in Lyon",
+                  owner: "Jane S.",
+                  ownerId: "1",
+                  rent: 1150,
+                  tenant: "Robert B.",
+                  tenantId: "1",
+                  leaseBegin: "2021-09-01",
+                  leaseEnd: "2022-09-01",
+                },
+                {
+                  id: "1",
+                  title: "Loft in Marseille",
+                  owner: "Robert B.",
+                  ownerId: "1",
+                  rent: 700,
+                  tenant: "Jules F.",
+                  tenantId: "1",
+                  leaseBegin: "2021-09-01",
+                  leaseEnd: "2022-09-01",
+                },
+              ]}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );
-};
+}

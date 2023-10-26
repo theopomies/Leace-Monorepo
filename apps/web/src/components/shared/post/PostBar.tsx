@@ -2,7 +2,6 @@
 import { trpc } from "../../../utils/trpc";
 import { Post, PostType, RelationType, User } from "@prisma/client";
 import { PostBarActions } from "./PostBarActions";
-import { PostBarUser } from "./PostBarUser";
 import { setCacheId } from "../../../utils/useCache";
 import { useRouter } from "next/router";
 
@@ -14,7 +13,6 @@ export interface PostBarProps {
   relationshipId?: string;
   conversationId?: string;
   user?: User;
-  userLink?: string;
   onDeleteMatch?: (relationshipId: string) => void;
   onLikeMatch?: (postId: string) => void;
 }
@@ -25,9 +23,7 @@ export const PostBar = ({
   selected,
   relationType,
   relationshipId,
-  conversationId,
   user,
-  userLink,
   onDeleteMatch,
   onLikeMatch,
 }: PostBarProps) => {
@@ -71,14 +67,12 @@ export const PostBar = ({
             </p>
           </div>
         </a>
-        {user && userLink && <PostBarUser user={user} userLink={userLink} />}
       </div>
       {relationshipId && onDeleteMatch && (
         <PostBarActions
           postId={post.id}
           relationType={relationType}
           relationshipId={relationshipId}
-          conversationId={conversationId}
           user={user}
           onDeleteMatch={onDeleteMatch}
           onLikeMatch={onLikeMatch}
