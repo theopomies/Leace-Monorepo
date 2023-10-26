@@ -5,18 +5,26 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { trpc } from "../../../../utils/trpc";
 import mixpanel from "../../../../utils/mixpanel";
+import { Loader } from "../../../../components/shared/Loader";
 
 const CreatePostView = () => {
-  const { data: session } = trpc.auth.getSession.useQuery();
   const router = useRouter();
+  const { data: session, isLoading: sessionIsLoading } =
+    trpc.auth.getSession.useQuery();
 
   useEffect(() => {
-    mixpanel.track("Page View", {
-      path: router.asPath,
-      title: "Create Post Page",
-      userId: session?.userId,
-    });
-  }, [router.asPath, session?.userId]);
+    if (session && !sessionIsLoading) {
+      mixpanel.track("Page View", {
+        path: router.asPath,
+        title: "Create Post Page",
+        userId: session?.userId,
+      });
+    }
+  }, [router.asPath, session, sessionIsLoading]);
+
+  if (sessionIsLoading) return <Loader />;
+
+  if (!session) return <div>Not logged in</div>;
 
   const { userId } = router.query;
 
