@@ -67,7 +67,6 @@ export const PotentialMatchesTenant = ({ userId }: PostListProps) => {
   }
   return (
     <div className="mt-8 flex flex-grow flex-col items-center justify-center">
-      <Header heading="Potential Matches" />
       <h1 className="text-2xl font-bold text-gray-700">
         No landlord or agency has liked your profile yet :(
       </h1>

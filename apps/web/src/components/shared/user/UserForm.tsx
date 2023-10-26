@@ -268,7 +268,7 @@ export const UserForm = ({
 
   return (
     <UserLayout
-      className="m-20"
+      className="m-10"
       sidePanel={
         <>
           <div className="relative h-40 w-40">

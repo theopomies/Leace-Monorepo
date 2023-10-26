@@ -52,6 +52,7 @@ export function UserCard({
 }: UserCardProps) {
   return (
     <UserLayout
+      className={onDocValidation ? "" : "m-10"}
       sidePanel={
         <>
           <div className="relative h-40 w-40">
@@ -72,11 +73,6 @@ export function UserCard({
                 alt="image"
                 className="mx-auto h-full w-full overflow-hidden rounded-full"
               />
-              {user.isPremium && !isBanned && (
-                <div className="absolute right-0 top-[20%] w-full translate-x-[25%] rotate-45 bg-yellow-300 px-2 text-center font-bold text-white">
-                  Premium
-                </div>
-              )}
               {isBanned && (
                 <div className="absolute right-0 top-[20%] w-full translate-x-[25%] rotate-45 bg-red-600 px-2 text-center font-bold text-white">
                   Banned
@@ -110,9 +106,16 @@ export function UserCard({
                 ? "Your Profile"
                 : `${user.firstName} ${user.lastName}`}
             </h1>
-            <h2 className="text-sm font-medium text-slate-500">
-              Member since: <i>{user.createdAt.toDateString()}</i>
-            </h2>
+            <div className="flex gap-2">
+              {user.isPremium && (
+                <p className="m-auto rounded-full border border-yellow-500 p-0.5 px-1 text-xs text-yellow-500">
+                  Premium
+                </p>
+              )}
+              <h2 className="text-sm font-medium text-slate-500">
+                Member since: <i>{user.createdAt.toDateString()}</i>
+              </h2>
+            </div>
           </div>
           {isLoggedUser && (
             <p className="text-sm text-slate-500">

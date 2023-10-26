@@ -39,15 +39,13 @@ export const UserPage = ({ sessionUserId, userId }: UserPageProps) => {
   };
 
   return (
-    <div className="flex w-full flex-grow flex-col overflow-hidden p-10">
-      <UserCard
-        user={user}
-        isBanned={isBanned}
-        onUserDelete={handleDeleteUser}
-        documents={documents}
-        updateLink={`/users/[userId]/update`}
-        isLoggedUser={userId === sessionUserId}
-      />
-    </div>
+    <UserCard
+      user={user}
+      isBanned={isBanned}
+      onUserDelete={handleDeleteUser}
+      documents={documents}
+      updateLink={`/users/[userId]/update`}
+      isLoggedUser={userId === sessionUserId}
+    />
   );
 };

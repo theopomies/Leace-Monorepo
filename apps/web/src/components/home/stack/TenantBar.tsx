@@ -35,26 +35,28 @@ export function TenantBar({ postId, tenant }: TenantBarProps) {
 
   return (
     <div
-      className={`relative h-56 cursor-pointer flex-col overflow-hidden rounded-xl bg-white shadow-md ${
-        tenant.isPremium ? "border-4 border-yellow-300" : ""
+      className={`h-56 cursor-pointer flex-col overflow-hidden rounded-xl bg-white shadow ${
+        tenant.isPremium ? "border-2 border-yellow-300" : ""
       }`}
     >
-      {tenant.isPremium && (
-        <div className="absolute left-0 top-[8%] w-full translate-x-[-40%] rotate-[-45deg] bg-yellow-300 px-2 text-center font-bold text-white">
-          Premium
-        </div>
-      )}
       <Link href={"/users/" + tenant.id}>
-        <div className="flex h-2/3 items-center justify-evenly gap-4 p-2">
-          {tenant.image && (
-            <img
-              className="h-full object-cover"
-              src={tenant.image}
-              alt="User Image"
-            />
-          )}
+        <div className="flex h-2/3 flex-grow items-center gap-4 p-4">
+          <img
+            src={tenant.image || "/defaultImage.png"}
+            referrerPolicy="no-referrer"
+            alt="image"
+            className="h-full w-auto flex-shrink-0 overflow-hidden rounded-full"
+          />
           <div className="p-2">
-            <h3 className="text-2xl font-bold">{tenant.firstName}</h3>
+            <div className="flex gap-2">
+              <h3 className="text-2xl">{tenant.firstName}</h3>
+              <h3 className="text-2xl">{tenant.lastName}</h3>
+              {tenant.isPremium && (
+                <p className="m-auto rounded-full border border-yellow-500 p-0.5 px-1 text-xs text-yellow-500">
+                  Premium
+                </p>
+              )}
+            </div>
             <div className="flex items-center">
               {tenant.birthDate && (
                 <p className="text-gray-500">{calcAge(tenant.birthDate)} ans</p>
