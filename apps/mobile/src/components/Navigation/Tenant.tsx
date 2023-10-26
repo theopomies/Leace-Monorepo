@@ -1,5 +1,5 @@
 import React from "react";
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, Image } from "react-native";
 import { Icon } from "react-native-elements";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { TabStackParamList } from "../../navigation/TabNavigator";
@@ -37,9 +37,13 @@ const Tenant = ({
         initialParams={{ userId }}
         options={{
           tabBarIcon: ({ focused }) => (
-            <Icon
-              name={focused ? "favorite" : "favorite-border"}
-              color="#002642"
+            <Image
+              source={
+                focused
+                  ? require("../../../assets/navbar/home-hover.png")
+                  : require("../../../assets/navbar/home.png")
+              }
+              className="mt-5 h-6 w-6"
             />
           ),
           tabBarLabel: "",
@@ -52,9 +56,13 @@ const Tenant = ({
         initialParams={{ userId, role: "TENANT" }}
         options={{
           tabBarIcon: ({ focused }) => (
-            <Icon
-              name={focused ? "account-heart" : "account-heart-outline"}
-              type="material-community"
+            <Image
+              source={
+                focused
+                  ? require("../../../assets/navbar/chat-hover.png")
+                  : require("../../../assets/navbar/chat.png")
+              }
+              className="mt-5 h-6 w-6"
             />
           ),
           tabBarLabel: "",
@@ -87,12 +95,61 @@ const Tenant = ({
         }}
       />
       <Tab.Screen
+        name="Profile"
+        component={ShowProfile}
+        initialParams={{ userId }}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <Image
+              source={
+                focused
+                  ? require("../../../assets/navbar/avatar-hover.png")
+                  : require("../../../assets/navbar/avatar.png")
+              }
+              className="mt-5 h-6 w-6"
+            />
+          ),
+          tabBarLabel: "",
+          headerShown: false,
+        }}
+      />
+      <Tab.Screen
+        name="EditProfile"
+        initialParams={{ userId }}
+        component={EditProfile}
+        options={{
+          tabBarStyle: { display: "none" },
+          tabBarButton: () => null,
+          headerShown: true,
+          headerTitleStyle: { color: "#10316B" },
+          title: "Edit Profile",
+          headerLeft: () => (
+            <TouchableOpacity
+              className="ml-4"
+              onPress={() => navigation.navigate("Profile", { userId })}
+            >
+              <Icon
+                name="arrow-back"
+                color="#10316B"
+                size={30}
+                type="material-icons"
+              ></Icon>
+            </TouchableOpacity>
+          ),
+        }}
+      />
+
+      <Tab.Screen
         name="Premium"
         options={{
           tabBarIcon: ({ focused }) => (
-            <Icon
-              name={focused ? "star-four-points" : "star-four-points-outline"}
-              type="material-community"
+            <Image
+              source={
+                focused
+                  ? require("../../../assets/navbar/crown-hover.png")
+                  : require("../../../assets/navbar/crown.png")
+              }
+              className="mt-5 h-6 w-6"
             />
           ),
           tabBarLabel: "",
@@ -133,47 +190,6 @@ const Tenant = ({
       />
 
       <Tab.Screen
-        name="Profile"
-        component={ShowProfile}
-        initialParams={{ userId }}
-        options={{
-          tabBarIcon: ({ focused }) => (
-            <Icon
-              name={focused ? "person" : "person-outline"}
-              color="#002642"
-              type="material-icons"
-            />
-          ),
-          tabBarLabel: "",
-          headerShown: false,
-        }}
-      />
-      <Tab.Screen
-        name="EditProfile"
-        initialParams={{ userId }}
-        component={EditProfile}
-        options={{
-          tabBarStyle: { display: "none" },
-          tabBarButton: () => null,
-          headerShown: true,
-          headerTitleStyle: { color: "#10316B" },
-          title: "Edit Profile",
-          headerLeft: () => (
-            <TouchableOpacity
-              className="ml-4"
-              onPress={() => navigation.navigate("Profile", { userId })}
-            >
-              <Icon
-                name="arrow-back"
-                color="#10316B"
-                size={30}
-                type="material-icons"
-              ></Icon>
-            </TouchableOpacity>
-          ),
-        }}
-      />
-      <Tab.Screen
         name="PostInfo"
         initialParams={{ userId, editable: false }}
         component={ShowPost}
@@ -203,9 +219,7 @@ const Tenant = ({
         component={Documents}
         initialParams={{ userId }}
         options={{
-          tabBarIcon: ({ focused }) => (
-            <Icon name="description" type="material" />
-          ),
+          tabBarButton: () => null,
           tabBarLabel: "",
           headerShown: false,
         }}

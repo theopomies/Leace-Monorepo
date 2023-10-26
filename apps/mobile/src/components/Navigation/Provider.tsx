@@ -1,5 +1,5 @@
 import React from "react";
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, Image } from "react-native";
 import { Icon } from "react-native-elements";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -55,7 +55,14 @@ const Provider = ({
         initialParams={{ userId }}
         options={{
           tabBarIcon: ({ focused }) => (
-            <Icon name={"list-alt"} type="font-awesome" />
+            <Image
+              source={
+                focused
+                  ? require("../../../assets/navbar/home-hover.png")
+                  : require("../../../assets/navbar/home.png")
+              }
+              className="mt-5 h-6 w-6"
+            />
           ),
           tabBarLabel: "",
           headerShown: false,
@@ -67,9 +74,13 @@ const Provider = ({
         initialParams={{ userId }}
         options={{
           tabBarIcon: ({ focused }) => (
-            <Icon
-              name={focused ? "plus-square" : "plus-square-o"}
-              type="font-awesome"
+            <Image
+              source={
+                focused
+                  ? require("../../../assets/navbar/write-hover.png")
+                  : require("../../../assets/navbar/write.png")
+              }
+              className="mt-5 h-6 w-6"
             />
           ),
           tabBarLabel: "",
@@ -115,9 +126,13 @@ const Provider = ({
         name="Premium"
         options={{
           tabBarIcon: ({ focused }) => (
-            <Icon
-              name={focused ? "star-four-points" : "star-four-points-outline"}
-              type="material-community"
+            <Image
+              source={
+                focused
+                  ? require("../../../assets/navbar/crown-hover.png")
+                  : require("../../../assets/navbar/crown.png")
+              }
+              className="mt-5 h-6 w-6"
             />
           ),
           tabBarLabel: "",
@@ -162,9 +177,13 @@ const Provider = ({
         initialParams={{ userId, role: "OWNER" }}
         options={{
           tabBarIcon: ({ focused }) => (
-            <Icon
-              name={focused ? "account-multiple" : "account-multiple-outline"}
-              type="material-community"
+            <Image
+              source={
+                focused
+                  ? require("../../../assets/navbar/chat-hover.png")
+                  : require("../../../assets/navbar/chat.png")
+              }
+              className="mt-5 h-6 w-6"
             />
           ),
           tabBarLabel: "",
@@ -201,9 +220,7 @@ const Provider = ({
         component={Documents}
         initialParams={{ userId }}
         options={{
-          tabBarIcon: ({ focused }) => (
-            <Icon name="description" type="material" />
-          ),
+          tabBarButton: () => null,
           tabBarLabel: "",
           headerShown: false,
         }}
@@ -214,10 +231,13 @@ const Provider = ({
         initialParams={{ userId }}
         options={{
           tabBarIcon: ({ focused }) => (
-            <Icon
-              name={focused ? "person" : "person-outline"}
-              color="#002642"
-              type="material-icons"
+            <Image
+              source={
+                focused
+                  ? require("../../../assets/navbar/avatar-hover.png")
+                  : require("../../../assets/navbar/avatar.png")
+              }
+              className="mt-5 h-6 w-6"
             />
           ),
           tabBarLabel: "",
