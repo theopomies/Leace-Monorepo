@@ -32,10 +32,7 @@ export function LoggedLayout({
         </AuthorizedLayout>
       </SignedIn>
       <SignedOut>
-        <RedirectToSignIn
-          afterSignInUrl={`/users/create?from=${from}`}
-          afterSignUpUrl={"/users/create"}
-        />
+        <RedirectToSignIn afterSignInUrl={from} afterSignUpUrl={from} />
       </SignedOut>
     </>
   );
