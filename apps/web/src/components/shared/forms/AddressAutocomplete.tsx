@@ -23,7 +23,7 @@ export const AddressAutocomplete = (props: AddressAutocompleteProps) => {
       text: props.location,
     },
     {
-      enabled: false,
+      enabled: !!props.location,
     },
   );
 
@@ -56,11 +56,11 @@ export const AddressAutocomplete = (props: AddressAutocompleteProps) => {
   }, []);
 
   useEffect(() => {
-    if (status === "success") {
+    if (status === "success" && data) {
       setSearchResults(data);
     }
     const timeout = setTimeout(() => {
-      if (status === "loading") {
+      if (status === "loading" && props.location) {
         refetch();
       }
     }, 1000);
