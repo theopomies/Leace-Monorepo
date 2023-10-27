@@ -8,6 +8,7 @@ export interface DialogButtonProps {
   description: string;
   confirmButtonText: string;
   onDelete: () => Promise<void>;
+  noButtonStyle?: boolean;
 }
 
 export function DialogButton({
@@ -16,11 +17,16 @@ export function DialogButton({
   description,
   confirmButtonText,
   onDelete,
+  noButtonStyle = false,
 }: DialogButtonProps) {
   return (
     <Dialog.Root>
       <Dialog.Trigger asChild>
-        <Button theme="danger">{buttonText}</Button>
+        {noButtonStyle ? (
+          <p>{buttonText}</p>
+        ) : (
+          <Button theme="danger">{buttonText}</Button>
+        )}
       </Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className=" fixed inset-0 bg-gray-500 opacity-70" />

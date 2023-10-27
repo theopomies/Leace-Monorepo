@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { trpc } from "../../../utils/trpc";
-import { Post, PostType, RelationType, User } from "@prisma/client";
-import { PostBarActions } from "./PostBarActions";
+import { Post, PostType } from "@prisma/client";
 import { setCacheId } from "../../../utils/useCache";
 import { useRouter } from "next/router";
 
@@ -9,24 +8,9 @@ export interface PostBarProps {
   post: Post;
   postLink: string;
   selected?: boolean;
-  relationType?: RelationType;
-  relationshipId?: string;
-  conversationId?: string;
-  user?: User;
-  onDeleteMatch?: (relationshipId: string) => void;
-  onLikeMatch?: (postId: string) => void;
 }
 
-export const PostBar = ({
-  post,
-  postLink,
-  selected,
-  relationType,
-  relationshipId,
-  user,
-  onDeleteMatch,
-  onLikeMatch,
-}: PostBarProps) => {
+export const PostBar = ({ post, postLink, selected }: PostBarProps) => {
   const router = useRouter();
   const { data: img } = trpc.image.getSignedPostUrl.useQuery({
     postId: post.id,
@@ -68,16 +52,6 @@ export const PostBar = ({
           </div>
         </a>
       </div>
-      {relationshipId && onDeleteMatch && (
-        <PostBarActions
-          postId={post.id}
-          relationType={relationType}
-          relationshipId={relationshipId}
-          user={user}
-          onDeleteMatch={onDeleteMatch}
-          onLikeMatch={onLikeMatch}
-        />
-      )}
     </div>
   );
 };
