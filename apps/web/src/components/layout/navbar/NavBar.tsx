@@ -12,7 +12,6 @@ export interface NavBarProps {
 
 export function NavBar({ userId, activePage }: NavBarProps) {
   const links = getLinks(userId);
-  const { auth } = trpc.useContext();
   const { data: me } = trpc.user.getUserById.useQuery({ userId });
   const { signOut } = useClerk();
   const handleLink = ({
@@ -100,7 +99,6 @@ export function NavBar({ userId, activePage }: NavBarProps) {
           href="#"
           onClick={async () => {
             await signOut();
-            await auth.getSession.invalidate();
           }}
           className="flex items-center justify-center rounded-md bg-indigo-500 py-4 px-2"
         >
