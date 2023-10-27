@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { ReportReason } from "@prisma/client";
 import { DotsSvg } from "../icons/DotsSvg";
 import { DialogButton } from "../button/DialogButton";
-import { ReportDialog } from "./ReportDialog";
+import { ReportDialog } from "../forms/ReportDialog";
 
 export interface MatchActionsProps {
   fullName: string;
@@ -59,8 +59,8 @@ export function MatchActions({
           <div className="py-2">
             <div className="cursor-pointer py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 hover:text-red-500">
               <DialogButton
-                buttonText="Delete Match"
-                title={`Delete your with ${fullName}`}
+                buttonText="Delete match"
+                title={`Delete your match with ${fullName}`}
                 description={`Are you sure you want to delete your match with ${fullName} ?`}
                 confirmButtonText="Yes, delete my match"
                 onDelete={onDelete}

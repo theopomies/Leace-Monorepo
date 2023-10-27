@@ -2,13 +2,13 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { Button } from "../button/Button";
 import { Select } from "../button/Select";
 import { Dispatch, SetStateAction, useState } from "react";
-import { TextArea } from "../forms/TextArea";
+import { TextArea } from "./TextArea";
 import { ReportReason } from "@prisma/client";
 
 export interface ReportDialogProps {
   fullName: string;
   onReport: (data: { reason: ReportReason; description: string }) => void;
-  setOpen: Dispatch<SetStateAction<boolean | undefined>>;
+  setOpen?: Dispatch<SetStateAction<boolean | undefined>>;
 }
 
 export function ReportDialog({
