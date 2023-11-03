@@ -21,7 +21,7 @@ export const Post = ({ postId, authorId, updateLink }: PostProps) => {
   const { data: images, isLoading: imagesLoading } =
     trpc.image.getSignedPostUrl.useQuery({ postId });
   const { data: documents, isLoading: documentLoading } =
-    trpc.document.getSignedUrl.useQuery({ postId });
+    trpc.document.getSignedUrl.useQuery({ postId }, { retry: false });
   const utils = trpc.useContext();
 
   const deletePost = trpc.post.deletePostById.useMutation({

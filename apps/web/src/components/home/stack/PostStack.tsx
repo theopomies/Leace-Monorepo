@@ -1,49 +1,62 @@
 import { useRouter } from "next/router";
 import { Stack } from "./Stack";
 import { trpc } from "../../../utils/trpc";
+import { useEffect, useState } from "react";
+import { Post, Attribute, Image } from "@prisma/client";
 
+export type PostType = Post & { attribute: Attribute | null; images: Image[] };
 export interface PostStackProps {
   userId: string;
 }
 
 export function PostStack({ userId }: PostStackProps) {
   const router = useRouter();
-  const utils = trpc.useContext();
-
-  const { data: posts } = trpc.post.getPostsToBeSeen.useQuery({ userId });
+  const [posts, setPosts] = useState([] as PostType[]);
+  const [lastPost, setLastPost] = useState<PostType | null>();
+  const { data, status } = trpc.post.getPostsToBeSeen.useQuery(
+    { userId },
+    { enabled: posts.length <= 3 },
+  );
 
   const { mutateAsync: likeHandler } =
-    trpc.relationship.likePostForTenant.useMutation({
-      async onSuccess() {
-        if (posts && posts.length <= 3)
-          await utils.post.getPostsToBeSeen.invalidate();
-      },
-    });
+    trpc.relationship.likePostForTenant.useMutation();
   const { mutateAsync: dislikeHandler } =
-    trpc.relationship.dislikePostForTenant.useMutation({
-      async onSuccess() {
-        if (posts && posts.length <= 3)
-          await utils.post.getPostsToBeSeen.invalidate();
-      },
-    });
+    trpc.relationship.dislikePostForTenant.useMutation();
   const { mutateAsync: rewindHandler } =
-    trpc.relationship.rewindPostForTenant.useMutation({
-      async onSuccess() {
-        await utils.post.getPostsToBeSeen.invalidate();
-      },
-    });
+    trpc.relationship.rewindPostForTenant.useMutation();
 
-  const onLike = async (postId: string) => {
-    await likeHandler({ postId, userId });
+  const removePost = (post: PostType) => {
+    setPosts((posts) => {
+      const newPosts = posts.filter((p) => p.id !== post.id);
+      return newPosts;
+    });
   };
 
-  const onDislike = async (postId: string) => {
-    await dislikeHandler({ postId, userId });
+  const onLike = async (post: PostType) => {
+    removePost(post);
+    await likeHandler({ postId: post.id, userId });
+    setLastPost(post);
+  };
+
+  const onDislike = async (post: PostType) => {
+    removePost(post);
+    await dislikeHandler({ postId: post.id, userId });
+    setLastPost(post);
   };
 
   const onRewind = async () => {
-    await rewindHandler({ userId });
+    if (lastPost) {
+      setPosts((posts) => [lastPost, ...posts]);
+      await rewindHandler({ userId });
+      setLastPost(null);
+    }
   };
+
+  useEffect(() => {
+    if (status === "success") {
+      setPosts(data);
+    }
+  }, [data, status]);
 
   if (posts && posts.length > 0) {
     return (

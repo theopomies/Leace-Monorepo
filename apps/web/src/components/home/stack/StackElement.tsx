@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { motion } from "framer-motion";
 import { SlideShow } from "./SlideShow";
-import { Button } from "../../shared/button/Button";
 
 export type StackElementProps = {
   id: string;
@@ -9,7 +8,6 @@ export type StackElementProps = {
   title: string;
   description: string;
   isExpanded?: boolean;
-  onReport: () => void;
   price: number;
   region: string;
 };
@@ -21,7 +19,6 @@ export function StackElement({
   price,
   region,
   isExpanded = false,
-  onReport,
 }: StackElementProps) {
   const splitDesc = description.split(" ");
   const splitDescLength = splitDesc.length;
@@ -36,13 +33,6 @@ export function StackElement({
       data-isexpanded={isExpanded}
       className="relative flex w-96 flex-col items-center gap-4 rounded-md bg-white p-2 shadow-lg [&[data-isexpanded=true]]:min-h-[90vh] [&[data-isexpanded=true]]:w-[90%]"
     >
-      {isExpanded && (
-        <span className="absolute bottom-3 right-4">
-          <Button theme={"danger"} onClick={onReport}>
-            Report
-          </Button>
-        </span>
-      )}
       <motion.div
         layout
         className="relative flex items-center justify-center overflow-hidden rounded-md bg-gray-100"

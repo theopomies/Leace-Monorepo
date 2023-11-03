@@ -17,7 +17,7 @@ export const UserPage = ({ sessionUserId, userId }: UserPageProps) => {
     { userId },
   );
   const { data: documents, isLoading: documentsLoading } =
-    trpc.document.getSignedUrl.useQuery({ userId });
+    trpc.document.getSignedUrl.useQuery({ userId }, { retry: false });
 
   const deleteUser = trpc.user.deleteUserById.useMutation();
 
