@@ -4,6 +4,7 @@ import { useClerk } from "@clerk/clerk-react";
 import Link from "next/link";
 import { trpc } from "../../../utils/trpc";
 import { getLinks } from "./links";
+import { UserImage } from "../../shared/user/UserImage";
 
 export interface NavBarProps {
   userId: string;
@@ -76,32 +77,32 @@ export function NavBar({ userId, activePage }: NavBarProps) {
       <ul className="flex flex-col gap-8 py-4">
         {links.map((link) => handleLink(link))}
       </ul>
-      <div className="mt-auto flex w-full items-center justify-between p-5">
-        <div className="flex items-center justify-center">
-          <img
-            src={me?.image || "/defaultImage.png"}
-            referrerPolicy="no-referrer"
-            alt="image"
-            className="w-14 rounded-full"
-          />
-          <div className="ml-4">
-            <p>
-              {me?.firstName} {me?.lastName}
-            </p>
-            <p className="text-sm">
-              {me?.role &&
-                me.role.charAt(0).toUpperCase() +
-                  me.role.slice(1).toLowerCase()}
-            </p>
+      <div className="mt-auto flex h-24 w-full items-center justify-between p-5">
+        {me && (
+          <div className="flex h-full flex-grow">
+            <UserImage user={me} />
+            <div className="m-auto ml-4 w-full">
+              <p>
+                {me?.firstName} {me?.lastName}
+              </p>
+              <p className="text-sm">
+                {me?.role &&
+                  me.role.charAt(0).toUpperCase() +
+                    me.role.slice(1).toLowerCase()}
+              </p>
+            </div>
           </div>
-        </div>
+        )}
         <Link
           href="#"
           onClick={async () => {
             await signOut();
           }}
-          className="flex items-center justify-center rounded-md bg-indigo-500 py-4 px-2"
+          className={`flex items-center justify-center rounded-md bg-indigo-500 py-4 px-2 ${
+            !me && "w-full"
+          }`}
         >
+          {!me && <p className="mr-2 text-white">Logout</p>}
           <img
             src={`/navbar/logout.png`}
             referrerPolicy="no-referrer"

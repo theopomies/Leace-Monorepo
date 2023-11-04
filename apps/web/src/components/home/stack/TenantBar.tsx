@@ -1,9 +1,9 @@
-/* eslint-disable @next/next/no-img-element */
 import { Button } from "../../shared/button/Button";
 import { calcAge } from "../../../utils/calcAge";
 import { trpc } from "../../../utils/trpc";
 import { User } from "@prisma/client";
 import Link from "next/link";
+import { UserImage } from "../../shared/user/UserImage";
 
 export interface TenantBarProps {
   postId: string;
@@ -35,19 +35,14 @@ export function TenantBar({ postId, tenant }: TenantBarProps) {
 
   return (
     <div
-      className={`h-56 cursor-pointer flex-col overflow-hidden rounded-xl bg-white shadow ${
+      className={`h-56 flex-grow cursor-pointer flex-col overflow-hidden rounded-xl bg-white shadow ${
         tenant.isPremium ? "border-2 border-yellow-300" : ""
       }`}
     >
-      <Link href={"/users/" + tenant.id}>
-        <div className="flex h-2/3 flex-grow items-center gap-4 p-4">
-          <img
-            src={tenant.image || "/defaultImage.png"}
-            referrerPolicy="no-referrer"
-            alt="image"
-            className="h-full w-auto flex-shrink-0 overflow-hidden rounded-full"
-          />
-          <div className="p-2">
+      <Link href={"/users/" + tenant.id} className="flex-grow">
+        <div className="flex h-2/3 flex-grow gap-4 overflow-hidden p-4">
+          <UserImage user={tenant} />
+          <div className="flex-shrink-0 p-2">
             <div className="flex gap-2">
               <h3 className="text-2xl">{tenant.firstName}</h3>
               <h3 className="text-2xl">{tenant.lastName}</h3>

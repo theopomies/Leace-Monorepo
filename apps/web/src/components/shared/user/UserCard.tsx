@@ -6,6 +6,7 @@ import { DocumentList } from "../document/DocumentList";
 import { displayDate } from "../../../utils/displayDate";
 import { UserLayout } from "./UserLayout";
 import { DisplayReports } from "../../moderation/report/DisplayReports";
+import { UserImage } from "./UserImage";
 
 export interface UserCardProps {
   user: User & {
@@ -66,13 +67,7 @@ export function UserCard({
                   : "")
               }
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={user.image || "/defaultImage.png"}
-                referrerPolicy="no-referrer"
-                alt="image"
-                className="mx-auto h-full w-full overflow-hidden rounded-full"
-              />
+              <UserImage user={user} />
               {isBanned && (
                 <div className="absolute right-0 top-[20%] w-full translate-x-[25%] rotate-45 bg-red-600 px-2 text-center font-bold text-white">
                   Banned

@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import {
   ChangeEvent,
   Dispatch,
@@ -21,6 +20,7 @@ import { FileUploadSection } from "../button/FileUploadSection";
 import { FileInput } from "../forms/FileInput";
 import { UserLayout } from "./UserLayout";
 import { Button } from "../button/Button";
+import { UserImage } from "./UserImage";
 
 export type UserFormData = {
   birthDate: string;
@@ -102,7 +102,7 @@ export const UserForm = ({
 
   const [selectedDocuments, setSelectedDocuments] = useState<File[]>([]);
   const [selectedImage, setSelectedImage] = useState<File>();
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | undefined>();
 
   useEffect(() => {
     const date = user.birthDate
@@ -273,13 +273,7 @@ export const UserForm = ({
         <>
           <div className="relative h-40 w-40">
             <div className="relative h-full w-full overflow-hidden rounded-full shadow-xl">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={imagePreview || user.image || "/defaultImage.png"}
-                referrerPolicy="no-referrer"
-                alt="image"
-                className="mx-auto h-full w-full overflow-hidden rounded-full"
-              />
+              <UserImage user={user} imagePreview={imagePreview} />
             </div>
             <button className="absolute left-0 top-0 flex h-full w-full items-end justify-center rounded-full opacity-0 transition-all hover:opacity-100">
               <span className="translate-y-[50%]">
