@@ -21,9 +21,7 @@ const Index = () => {
     }
   }, [router.asPath, session, sessionIsLoading]);
 
-  if (sessionIsLoading) return <Loader />;
-
-  if (!session) return <div>Not logged in</div>;
+  if (sessionIsLoading || !session) return <Loader />;
 
   return (
     <LoggedLayout title="Home | Leace">
