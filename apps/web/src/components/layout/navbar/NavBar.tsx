@@ -13,7 +13,10 @@ export interface NavBarProps {
 
 export function NavBar({ userId, activePage }: NavBarProps) {
   const links = getLinks(userId);
-  const { data: me } = trpc.user.getUserById.useQuery({ userId });
+  const { data: me } = trpc.user.getUserById.useQuery(
+    { userId },
+    { retry: false },
+  );
   const { signOut } = useClerk();
   const handleLink = ({
     href,

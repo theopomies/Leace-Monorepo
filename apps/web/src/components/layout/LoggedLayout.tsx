@@ -4,7 +4,7 @@ import { Role } from "@prisma/client";
 import { trpc } from "../../utils/trpc";
 import { Loader } from "../shared/Loader";
 import { RedirectToSignIn, SignedIn, SignedOut } from "@clerk/nextjs";
-import { ReactNode, useEffect } from "react";
+import { ReactNode } from "react";
 import { useRouter } from "next/router";
 import { BanMessage } from "../moderation/ban/BanMessage";
 
@@ -49,10 +49,6 @@ const AuthorizedLayout = ({
 }) => {
   const { data: session, isLoading } = trpc.auth.getSession.useQuery();
   const router = useRouter();
-
-  useEffect(() => {
-    if (session && !session.role) router.push("/");
-  }, [session, router]);
 
   if (isLoading || !session) {
     return <Loader />;
