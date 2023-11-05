@@ -8,10 +8,7 @@ import { getAuth, createClerkClient, clerkClient } from "@clerk/nextjs/server";
 //   SignedOutAuthObject,
 // } from "@clerk/nextjs/api";
 import mixpanel, { Mixpanel } from "mixpanel";
-import {
-  SignedInAuthObject,
-  SignedOutAuthObject,
-} from "@clerk/nextjs/dist/api";
+import { SignedInAuthObject, SignedOutAuthObject } from "@clerk/nextjs/api";
 
 /**
  * Replace this with an object if you want to pass things to createContextInner
