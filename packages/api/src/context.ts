@@ -3,11 +3,11 @@ import { type inferAsyncReturnType } from "@trpc/server";
 import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
 import { S3Client } from "@aws-sdk/client-s3";
 import { getAuth, createClerkClient, clerkClient } from "@clerk/nextjs/server";
-import type {
+import mixpanel, { Mixpanel } from "mixpanel";
+import {
   SignedInAuthObject,
   SignedOutAuthObject,
-} from "@clerk/nextjs/api";
-import mixpanel, { Mixpanel } from "mixpanel";
+} from "@clerk/nextjs/dist/api";
 
 /**
  * Replace this with an object if you want to pass things to createContextInner
