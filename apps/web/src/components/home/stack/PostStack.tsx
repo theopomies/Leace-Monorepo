@@ -15,7 +15,7 @@ export function PostStack({ userId }: PostStackProps) {
   const [lastPost, setLastPost] = useState<PostType | null>();
   const { data, status } = trpc.post.getPostsToBeSeen.useQuery(
     { userId },
-    { enabled: posts.length <= 3 },
+    { enabled: posts.length <= 3, retry: false },
   );
 
   const { mutateAsync: likeHandler } =
