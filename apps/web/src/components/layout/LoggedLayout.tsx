@@ -32,7 +32,10 @@ export function LoggedLayout({
         </AuthorizedLayout>
       </SignedIn>
       <SignedOut>
-        <RedirectToSignIn afterSignInUrl={from} afterSignUpUrl={from} />
+        <RedirectToSignIn
+          afterSignInUrl={"/users/create?from=" + from}
+          afterSignUpUrl={"/users/create"}
+        />
       </SignedOut>
     </>
   );
@@ -90,7 +93,7 @@ const AuthorizedLayout = ({
         <title>{title ?? "Leace"}</title>
       </Head>
       <div className="flex h-screen bg-gray-100">
-        <NavBar userId={session.userId} activePage={activePage} />
+        <NavBar session={session} activePage={activePage} />
         {session && session.ban ? <BanMessage ban={session.ban} /> : children}
       </div>
     </>

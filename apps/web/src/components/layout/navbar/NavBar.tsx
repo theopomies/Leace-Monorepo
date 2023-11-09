@@ -2,20 +2,20 @@
 import { Role } from "@prisma/client";
 import { useClerk } from "@clerk/clerk-react";
 import Link from "next/link";
-import { trpc } from "../../../utils/trpc";
+import { RouterOutputs, trpc } from "../../../utils/trpc";
 import { getLinks } from "./links";
 import { UserImage } from "../../shared/user/UserImage";
 
 export interface NavBarProps {
-  userId: string;
+  session: RouterOutputs["auth"]["getSession"];
   activePage: string;
 }
 
-export function NavBar({ userId, activePage }: NavBarProps) {
-  const links = getLinks(userId);
+export function NavBar({ session, activePage }: NavBarProps) {
+  const links = getLinks(session.userId);
   const { data: me } = trpc.user.getUserById.useQuery(
-    { userId },
-    { enabled: !!userId, retry: false },
+    { userId: session.userId },
+    { enabled: !!session.role, retry: false },
   );
   const { signOut } = useClerk();
   const handleLink = ({
