@@ -33,7 +33,7 @@ export function LoggedLayout({
       </SignedIn>
       <SignedOut>
         <RedirectToSignIn
-          afterSignInUrl={"/users/create?from=" + from}
+          afterSignInUrl={`/users/create?from=${from}`}
           afterSignUpUrl={"/users/create"}
         />
       </SignedOut>
