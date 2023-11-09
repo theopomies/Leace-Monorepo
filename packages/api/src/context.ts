@@ -8,10 +8,10 @@ import type {
   SignedOutAuthObject,
 } from "@clerk/nextjs/api";
 import mixpanel, { Mixpanel } from "mixpanel";
+
 /**
  * Replace this with an object if you want to pass things to createContextInner
  */
-
 type AuthContextProps = {
   clerkClient: typeof clerkClient;
   s3Client: S3Client;
@@ -64,7 +64,7 @@ export const createContext = async (opts: CreateNextContextOptions) => {
     },
   });
 
-  const auth = getAuth(opts.req);
+  const auth = getAuth(opts.req) as SignedInAuthObject | SignedOutAuthObject;
 
   let role: Role | undefined;
   if (auth.userId) {
