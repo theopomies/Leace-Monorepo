@@ -22,7 +22,7 @@ export function TenantList({ userId }: TenantListProps) {
       userId,
     });
   const { data: tenants, isLoading: tenantsIsLoading } =
-    trpc.post.getUsersToBeSeen.useQuery({ postId });
+    trpc.post.getUsersToBeSeen.useQuery({ postId }, { retry: false });
 
   const isLoading = useMemo(() => {
     return postsIsLoading || tenantsIsLoading;
