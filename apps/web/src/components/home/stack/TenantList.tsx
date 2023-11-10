@@ -79,6 +79,12 @@ export function TenantList({ userId }: TenantListProps) {
             <TenantBar key={tenant.id} postId={postId} tenant={tenant} />
           ))}
         </div>
+      ) : !postId ? (
+        <div className="flex flex-grow flex-col items-center justify-center">
+          <h1 className="text-2xl font-bold text-gray-700">
+            Please select a post
+          </h1>
+        </div>
       ) : (
         <div className="flex flex-grow flex-col items-center justify-center">
           <h1 className="text-2xl font-bold text-gray-700">No results :(</h1>
