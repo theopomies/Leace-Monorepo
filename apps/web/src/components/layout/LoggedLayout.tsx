@@ -63,6 +63,7 @@ const AuthorizedLayout = ({
     (!session.role || (roles && !roles.includes(session.role)))
   ) {
     children = <div>Not authorized</div>;
+    router.push("/");
   }
 
   let activePage = "Home";
