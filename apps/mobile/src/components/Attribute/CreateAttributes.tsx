@@ -15,9 +15,13 @@ interface ICreateAttributes {
   locationError: string;
   priceError: string;
   sizeError: string;
+  securityAlarm: boolean;
+  internetFiber: boolean;
   setLocationError: (error: string) => void;
   setPriceError: (error: string) => void;
   setSizeError: (error: string) => void;
+  setSecurityAlarm: (error: string) => void;
+  setInternetFiber: (error: string) => void;
 }
 interface IAttributeBtn {
   name: string;
@@ -65,9 +69,13 @@ export default function CreateAttributes({
   locationError,
   priceError,
   sizeError,
+  securityAlarm,
+  internetFiber,
   setLocationError,
   setPriceError,
   setSizeError,
+  setSecurityAlarm,
+  setInternetFiber,
 }: ICreateAttributes) {
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(false);
@@ -84,12 +92,12 @@ export default function CreateAttributes({
   return (
     <View className={`flex space-y-${Platform.OS === "android" ? 20 : 10}`}>
       <View>
-        <Text className="text-sm font-semibold	 text-[#666666]">Location</Text>
+        <Text className="text-sm font-semibold	 text-slate-500">Location</Text>
         <TextInput
           style={{ borderColor: locationError ? "#D84654" : "black" }}
           className={`rounded-xl border p-${
             Platform.OS === "ios" ? 4 : 2
-          } font-light leading-loose focus:border-[#6466f1]`}
+          } font-light leading-loose focus:border-indigo-500`}
           placeholder="Paris"
           defaultValue={attrs.location}
           onChangeText={(text) => {
@@ -110,7 +118,7 @@ export default function CreateAttributes({
             justifyContent: "center",
           }}
         >
-          <Text className="text-base font-bold text-[#10316B]">Home Type</Text>
+          <Text className="text-base font-bold text-slate-500">Home Type</Text>
         </View>
         <View
           style={{
@@ -166,49 +174,14 @@ export default function CreateAttributes({
         <View
           style={{
             alignItems: "center",
-            marginBottom: 10,
             justifyContent: "center",
           }}
         >
-          <Text className="text-base font-bold text-[#10316B]">Criterias</Text>
+          <Text className="text-base font-bold text-slate-500">Criteria</Text>
         </View>
         <View className="flex flex-row flex-wrap items-center justify-center">
-          <TouchableOpacity
-            onPress={() => setAttrs({ ...attrs, furnished: !attrs.furnished })}
-          >
-            <AttributeBtn
-              name="Furnished"
-              status={attrs.furnished}
-              iconName="king-bed"
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => setAttrs({ ...attrs, terrace: !attrs.terrace })}
-          >
-            <AttributeBtn
-              name="Terrace"
-              status={attrs.terrace}
-              iconName="deck"
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => setAttrs({ ...attrs, pets: !attrs.pets })}
-          >
-            <AttributeBtn name="Pets" status={attrs.pets} iconName="pets" />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => setAttrs({ ...attrs, smoker: !attrs.smoker })}
-          >
-            <AttributeBtn
-              name="Smoker"
-              status={attrs.smoker}
-              iconName="smoking-rooms"
-            />
-          </TouchableOpacity>
-
           <View
             style={{
-              marginTop: 10,
               marginBottom: Platform.OS === "android" ? 5 : 30,
             }}
           >
@@ -299,30 +272,23 @@ export default function CreateAttributes({
               >
                 <AttributeBtn name="Pool" status={attrs.pool} iconName="poll" />
               </TouchableOpacity>
+              <TouchableOpacity onPress={() => {}}>
+                <AttributeBtn
+                  name="Security alarm"
+                  status={attrs.elevator}
+                  iconName="security"
+                />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => {}}>
+                <AttributeBtn
+                  name="Internet fiber"
+                  status={attrs.elevator}
+                  iconName="wifi"
+                />
+              </TouchableOpacity>
             </View>
           </View>
-          {/* <View className="flex flex-row justify-around">
-          <View className="min-w-[80px]">
-            <Text className="text-center text-base font-bold text-[#10316B]">
-              Rent start
-            </Text>
-            <TouchableOpacity onPress={() => setOpen(true)}>
-              <Text className="py-1.5 text-center font-light leading-loose focus:border-blue-500">
-                {attrs.rentStartDate?.toLocaleDateString()}
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <View className="min-w-[80px]">
-            <Text className="text-center text-base font-bold text-[#10316B]">
-              Rent end
-            </Text>
-            <TouchableOpacity onPress={() => setOpen1(true)}>
-              <Text className="py-1.5 text-center font-light leading-loose focus:border-blue-500">
-                {attrs.rentEndDate?.toLocaleDateString()}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View> */}
+
           <View className="flex flex-row justify-around">
             <View className="w-36">
               <Text className="text-sm font-semibold text-[#666666]">

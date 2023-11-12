@@ -28,7 +28,15 @@ export default function CreatePost() {
     title: "",
     desc: "",
     content: "",
+    energyClass: "A",
+    ges: "A",
+    constructionDate: "",
+    estimatedCost: "",
+    nearestShops: "",
+    securityAlarm: false,
+    internetFiber: false,
   });
+
   const [postAttrs, setPostAttrs] = useState<IDefaulAttributes | undefined>({
     postId: "",
     location: "",
@@ -116,7 +124,6 @@ export default function CreatePost() {
       <View style={styles.view}>
         <Header />
         <ScrollView
-          scrollEnabled={false}
           contentContainerStyle={{ flexGrow: 1 }}
           style={{ backgroundColor: "white" }}
         >
@@ -129,7 +136,7 @@ export default function CreatePost() {
                 style={{ borderColor: titleError ? "#D84654" : "black" }}
                 className={`rounded-xl border p-${
                   Platform.OS === "ios" ? 4 : 2
-                } font-light leading-loose focus:border-[#6466f1] `}
+                } focus:border-border-indigo-500 font-light leading-loose `}
                 placeholder="Enter title..."
                 onChangeText={(text) => {
                   setPostInfo({ ...postInfo, title: text });
@@ -150,7 +157,7 @@ export default function CreatePost() {
                 className={`rounded-xl border
                 p-${
                   Platform.OS === "ios" ? 4 : 2
-                } font-light leading-loose focus:border-[#6466f1]`}
+                } font-light leading-loose focus:border-indigo-500`}
                 placeholder="Enter description..."
                 onChangeText={(text) => {
                   setPostInfo({ ...postInfo, desc: text });

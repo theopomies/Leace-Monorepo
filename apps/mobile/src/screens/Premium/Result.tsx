@@ -1,10 +1,9 @@
 import { View } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { PaymentResult } from "../../components/Premium";
 import { trpc } from "../../../../web/src/utils/trpc";
 import { useRoute, RouteProp } from "@react-navigation/native";
 import { TabStackParamList } from "../../navigation/TabNavigator";
-import { Loading } from "../../components/Loading";
 
 const Result = () => {
   const { data: session } = trpc.auth.getSession.useQuery();
@@ -17,6 +16,16 @@ const Result = () => {
 
   const route = useRoute<RouteProp<TabStackParamList, "PaymentResults">>();
 
+  const isValidPayment = route.params?.isValidPayment;
+
+  useEffect(() => {
+    console.log(isValidPayment);
+  }, [isValidPayment]);
+
+  useEffect(() => {
+    console.log(isValidPayment);
+  }, [isValidPayment]);
+
   const updateStatus = async () => {
     updateUser.mutateAsync({
       isPremium: true,
@@ -24,16 +33,15 @@ const Result = () => {
     });
   };
 
-  if (route.params.loading) {
-    return <Loading />;
-  }
+  console.log(route.params.isValidPayment);
 
   return (
     <View className="mt-20">
       <PaymentResult
-        isValidPayment={route.params.paymentStatus}
+        isValidPayment={isValidPayment}
         email={user?.email}
-        amount={route.params.selectedProduct?.amount}
+        amount={route.params.amount}
+        product={route.params.product}
         firstName={user?.firstName}
         lastName={user?.lastName}
         updateStatus={updateStatus}

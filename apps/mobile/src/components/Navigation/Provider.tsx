@@ -122,7 +122,7 @@ const Provider = ({
           headerShown: false,
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Premium"
         options={{
           tabBarIcon: ({ focused }) => (
@@ -170,7 +170,8 @@ const Provider = ({
           tabBarLabel: "",
           headerShown: false,
         }}
-      />
+      /> */}
+
       <Tab.Screen
         name="MatchTenant"
         component={TenantMatches}

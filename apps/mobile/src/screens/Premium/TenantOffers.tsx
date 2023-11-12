@@ -3,13 +3,13 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
+  ImageBackground,
   Platform,
 } from "react-native";
 import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { TabStackParamList } from "../../navigation/TabNavigator";
-import { LinearGradient } from "react-native-linear-gradient";
 
 interface Item {
   id: number;
@@ -33,8 +33,6 @@ const TenantOffers = () => {
       period: "Yearly",
     },
   ];
-
-  const [makePayment, setMakePayment] = useState(false);
 
   const navigation =
     useNavigation<NativeStackNavigationProp<TabStackParamList>>();
@@ -97,11 +95,7 @@ const TenantOffers = () => {
         {selectedProduct && (
           <View className="bg-church items-center justify-center ">
             <View className="bg-landing mt-10 h-5/6 w-5/6 items-center justify-center rounded-xl">
-              <LinearGradient
-                // Button Linear Gradient
-                colors={["#4c669f", "#3b5998", "#192f6a"]}
-              >
-                {/* <ImageBackground
+              <ImageBackground
                 imageStyle={{ borderRadius: 10 }}
                 style={styles.gradient}
                 className="rounded-xl border"
@@ -110,7 +104,7 @@ const TenantOffers = () => {
                     ? require("../../../assets/red.png")
                     : require("../../../assets/blue.png")
                 }
-              > */}
+              >
                 <Text
                   style={{
                     fontSize: 18,
@@ -165,10 +159,8 @@ const TenantOffers = () => {
                   }}
                   className="border"
                   onPress={() => {
-                    setMakePayment(true);
                     navigation.navigate("PaymentDetails", {
                       selectedProduct,
-                      makePayment,
                     });
                   }}
                 >
@@ -189,7 +181,7 @@ const TenantOffers = () => {
                     Upgrade
                   </Text>
                 </TouchableOpacity>
-              </LinearGradient>
+              </ImageBackground>
             </View>
           </View>
         )}

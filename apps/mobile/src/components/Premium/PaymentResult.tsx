@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import React from "react";
+import React, { useEffect } from "react";
 import { Animated, View, TouchableOpacity, Image, Text } from "react-native";
 import { Icon } from "react-native-elements";
 import { TabStackParamList } from "../../navigation/TabNavigator";
@@ -9,6 +9,7 @@ const PaymentResult = ({
   isValidPayment,
   email,
   amount,
+  product,
   firstName,
   lastName,
   updateStatus,
@@ -16,6 +17,7 @@ const PaymentResult = ({
   isValidPayment: boolean;
   email: string | null | undefined;
   amount: number | null | undefined;
+  product: string | null | undefined;
   firstName: string | null | undefined;
   lastName: string | null | undefined;
   updateStatus: () => void;
@@ -31,6 +33,16 @@ const PaymentResult = ({
 
   const navigation =
     useNavigation<NativeStackNavigationProp<TabStackParamList>>();
+
+  useEffect(() => {
+    if (isValidPayment) {
+      const delay = setTimeout(() => {
+        updateStatus();
+      }, 10000);
+
+      return () => clearTimeout(delay);
+    }
+  }, [isValidPayment]);
 
   return (
     <View>
@@ -72,6 +84,10 @@ const PaymentResult = ({
                 <View className="mx-8 flex-row justify-between">
                   <Text className={"text-base font-bold"}>Email</Text>
                   <Text className={"text-base"}>{email}</Text>
+                </View>
+                <View className="mx-8 flex-row justify-between">
+                  <Text className={"text-base font-bold"}>Product</Text>
+                  <Text className={"text-base"}>{product}€</Text>
                 </View>
                 <View className="mx-8 flex-row justify-between">
                   <Text className={"text-base font-bold"}>Amount paid</Text>
@@ -127,18 +143,6 @@ const PaymentResult = ({
                 </Text>
               </View>
               <View className="mt-4 flex-row space-x-20">
-                <TouchableOpacity
-                  className={"w-24 rounded bg-blue-400 p-2"}
-                  onPress={() => {
-                    navigation.navigate("Premium");
-                  }}
-                >
-                  <Text
-                    className={"text-center text-base font-bold text-white"}
-                  >
-                    Retry
-                  </Text>
-                </TouchableOpacity>
                 <TouchableOpacity
                   className={"w-24 rounded bg-blue-400 p-2"}
                   onPress={() => {

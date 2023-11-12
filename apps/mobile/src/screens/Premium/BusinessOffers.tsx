@@ -28,8 +28,6 @@ const BusinessOffers = () => {
     },
   ];
 
-  const [makePayment, setMakePayment] = useState(false);
-
   const navigation =
     useNavigation<NativeStackNavigationProp<TabStackParamList>>();
 
@@ -128,10 +126,8 @@ const BusinessOffers = () => {
                   }}
                   className="border"
                   onPress={() => {
-                    setMakePayment(true);
                     navigation.navigate("PaymentDetails", {
                       selectedProduct,
-                      makePayment,
                     });
                   }}
                 >

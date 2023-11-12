@@ -14,13 +14,23 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.daaak.leace"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [["expo-document-picker"]]
+    "plugins": [
+      [
+        "expo-document-picker"
+      ]
+    ],
+    "android": {
+      "package": "com.daaak.leace"
+    }
   }
 }

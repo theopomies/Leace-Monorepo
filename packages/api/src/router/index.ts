@@ -13,6 +13,7 @@ import { leaseRouter } from "./lease";
 import { supportRouter } from "./support";
 import { geocoderRouter } from "./geocoder";
 import { cronRouter } from "./cron";
+import { stripeRouter } from "./stripe";
 
 export const appRouter = router({
   auth: authRouter,
@@ -29,6 +30,7 @@ export const appRouter = router({
   moderation: moderationRouter,
   geocoder: geocoderRouter,
   cron: cronRouter,
+  stripe: stripeRouter,
 });
 
 // export type definition of API
