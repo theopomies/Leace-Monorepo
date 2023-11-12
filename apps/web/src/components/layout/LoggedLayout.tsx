@@ -12,12 +12,14 @@ export interface LoggedLayoutProps {
   children: React.ReactNode;
   title: string;
   roles?: Role[];
+  navbar?: boolean;
 }
 
 export function LoggedLayout({
   children,
   title,
   roles = [],
+  navbar = true,
 }: LoggedLayoutProps) {
   const router = useRouter();
 
@@ -27,7 +29,7 @@ export function LoggedLayout({
   return (
     <>
       <SignedIn>
-        <AuthorizedLayout title={title} roles={roles}>
+        <AuthorizedLayout title={title} roles={roles} navbar={navbar}>
           {children}
         </AuthorizedLayout>
       </SignedIn>
@@ -45,10 +47,12 @@ const AuthorizedLayout = ({
   title,
   children,
   roles,
+  navbar,
 }: {
   title: string;
   children: ReactNode;
   roles?: Role[];
+  navbar: boolean;
 }) => {
   const { data: session, isLoading } = trpc.auth.getSession.useQuery();
   const router = useRouter();
@@ -94,7 +98,7 @@ const AuthorizedLayout = ({
         <title>{title ?? "Leace"}</title>
       </Head>
       <div className="flex h-screen bg-gray-100">
-        <NavBar session={session} activePage={activePage} />
+        {navbar && <NavBar session={session} activePage={activePage} />}
         {session && session.ban ? <BanMessage ban={session.ban} /> : children}
       </div>
     </>
