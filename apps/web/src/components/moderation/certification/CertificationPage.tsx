@@ -19,7 +19,7 @@ export const CertificationPage = () => {
   if (!uncertifiedPostIsLoading && !uncertifiedPost) {
     return (
       <div className="flex w-full items-center justify-center">
-        <p>No post need to be certified</p>
+        <p>No post needs to be certified</p>
       </div>
     );
   }

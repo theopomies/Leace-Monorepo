@@ -56,14 +56,14 @@ export const AddressAutocomplete = (props: AddressAutocompleteProps) => {
   }, []);
 
   useEffect(() => {
-    if (status === "success") {
+    if (status === "success" && data) {
       setSearchResults(data);
     }
     const timeout = setTimeout(() => {
-      if (status === "loading") {
+      if (status === "loading" && props.location) {
         refetch();
       }
-    }, 1000);
+    }, 500);
     return () => clearTimeout(timeout);
   }, [data, refetch, status, props.location]);
 
@@ -100,9 +100,9 @@ export const AddressAutocomplete = (props: AddressAutocompleteProps) => {
       {searchResults.length > 0 && showList && (
         <div className="absolute z-10 mt-3 flex w-full items-center justify-between rounded-lg bg-white p-2 text-left shadow">
           <ul className="w-full" ref={listRef}>
-            {searchResults.map((result) => (
+            {searchResults.map((result, index) => (
               <li
-                key={result.id}
+                key={`${result.id}_${index}`}
                 className="w-full cursor-pointer px-2 py-1 hover:rounded-lg hover:bg-gray-100"
                 onClick={onSelectHandler}
               >

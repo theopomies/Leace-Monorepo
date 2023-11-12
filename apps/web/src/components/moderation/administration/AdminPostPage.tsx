@@ -14,12 +14,9 @@ export function AdminPostPage({ postId }: { postId: string }) {
   if (post && post.data && !post.error) {
     return (
       <div className="flex w-full flex-grow pl-10">
-        <div className="flex w-5/6 flex-grow flex-col py-10">
+        <div className="flex w-5/6 flex-grow flex-col gap-5 py-5">
           <Search />
-          <Link
-            href={`/administration/users/${post.data.createdById}`}
-            className="pt-10 pb-5"
-          >
+          <Link href={`/administration/users/${post.data.createdById}`}>
             <Button className="w-full">View profile</Button>
           </Link>
           <div className="flex flex-grow gap-5 overflow-hidden">

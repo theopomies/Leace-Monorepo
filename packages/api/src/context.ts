@@ -64,7 +64,7 @@ export const createContext = async (opts: CreateNextContextOptions) => {
     },
   });
 
-  const auth = getAuth(opts.req);
+  const auth = getAuth(opts.req) as SignedInAuthObject | SignedOutAuthObject;
 
   let role: Role | undefined;
   if (auth.userId) {

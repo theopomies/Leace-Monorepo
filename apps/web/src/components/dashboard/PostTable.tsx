@@ -1,6 +1,5 @@
 import {
   ColumnDef,
-  Table,
   createColumnHelper,
   flexRender,
   getCoreRowModel,

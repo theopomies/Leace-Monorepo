@@ -1,27 +1,30 @@
 import { motion, useMotionValue, useTransform } from "framer-motion";
 import { useState } from "react";
-import { StackElement, StackElementProps } from "./StackElement";
+import { PostCard } from "../../shared/post/PostCard";
+import { PostType } from "./PostStack";
+import { trpc } from "../../../utils/trpc";
 
 type SwipeCardProps = {
   onSwipeLeft?: () => void;
   onSwipeRight?: () => void;
   onSwiping?: (direction: "like" | "dislike" | null) => void;
   isSelected: boolean;
-  setIsSelected: (b: boolean) => void;
-  onReport: () => void;
   onClick?: () => void;
-} & StackElementProps;
+  post: PostType;
+};
 
 export function SwipeCard({
   onSwipeLeft = () => null,
   onSwipeRight = () => null,
   onSwiping = () => null,
   isSelected,
-  setIsSelected,
-  onReport,
   onClick,
-  ...cardProps
+  post,
 }: SwipeCardProps) {
+  const { data: images } = trpc.image.getSignedPostUrl.useQuery({
+    postId: post.id,
+  });
+
   const x = useMotionValue(0);
   const opacity = useTransform(x, [-200, 0, 200], [0.5, 1, 0.5]);
   const scale = useTransform(x, [-200, 0, 200], [0.8, 1, 0.8]);
@@ -31,6 +34,7 @@ export function SwipeCard({
 
   return (
     <motion.div
+      className="h-full w-full overflow-hidden"
       style={{ x, opacity, scale, rotate }}
       drag={isSelected ? false : "x"}
       dragConstraints={{ left: -200, right: 200 }}
@@ -72,11 +76,7 @@ export function SwipeCard({
         });
       }}
     >
-      <StackElement
-        {...cardProps}
-        isExpanded={isSelected}
-        onReport={onReport}
-      />
+      <PostCard post={post} images={images} />
       {!!likeValue && !isSelected && (
         <div
           className={`absolute top-8 left-8 border-2 px-1 font-bold ${

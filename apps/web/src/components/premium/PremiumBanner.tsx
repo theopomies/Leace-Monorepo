@@ -14,7 +14,7 @@ export const PremiumBanner = ({ user }: PremiumBannerProps) => {
           user
         </h1>
         <p className="text-white">
-          You can now discover all your potentials matches here !
+          You can now see posts one full day before free users​
         </p>
         <a
           href={`https://billing.stripe.com/p/login/test_4gw5of526bSw6WI288?prefilled_email=${user.email}`}

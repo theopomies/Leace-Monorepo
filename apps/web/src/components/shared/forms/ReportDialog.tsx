@@ -1,29 +1,34 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import { Button } from "../button/Button";
 import { Select } from "../button/Select";
-import { useState } from "react";
-import { TextArea } from "../forms/TextArea";
+import { Dispatch, SetStateAction, useState } from "react";
+import { TextArea } from "./TextArea";
 import { ReportReason } from "@prisma/client";
 
 export interface ReportDialogProps {
-  title: string;
+  fullName: string;
   onReport: (data: { reason: ReportReason; description: string }) => void;
+  setOpen?: Dispatch<SetStateAction<boolean | undefined>>;
 }
 
-export function ReportDialog({ title, onReport }: ReportDialogProps) {
+export function ReportDialog({
+  fullName,
+  onReport,
+  setOpen,
+}: ReportDialogProps) {
   const [reason, setReason] = useState<ReportReason>(ReportReason.SPAM);
   const [description, setDescription] = useState("");
 
   return (
-    <Dialog.Root>
+    <Dialog.Root onOpenChange={setOpen}>
       <Dialog.Trigger asChild>
-        <Button theme="danger">Report</Button>
+        <p>Report Match</p>
       </Dialog.Trigger>
       <Dialog.Portal>
-        <Dialog.Overlay className=" fixed inset-0 bg-gray-500 opacity-70" />
+        <Dialog.Overlay className="fixed inset-0 bg-gray-500 opacity-70" />
         <Dialog.Content className="fixed top-[50%] left-[50%] w-[70vh] -translate-x-[50%] -translate-y-[50%] rounded-xl bg-white p-8">
           <Dialog.Title asChild>
-            <h1 className="p-4 text-xl">Report {title}</h1>
+            <h1 className="p-4 text-xl">Report {fullName}</h1>
           </Dialog.Title>
           <div className="p-4">
             <Select
@@ -52,7 +57,7 @@ export function ReportDialog({ title, onReport }: ReportDialogProps) {
             <Dialog.Close asChild>
               <Button theme="white">Cancel</Button>
             </Dialog.Close>
-            <Dialog.Close>
+            <Dialog.Close asChild>
               <Button
                 theme="danger"
                 onClick={() => onReport({ reason, description })}

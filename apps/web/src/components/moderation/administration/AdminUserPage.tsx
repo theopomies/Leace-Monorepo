@@ -13,13 +13,10 @@ export function AdminUserPage({ userId }: { userId: string }) {
   if (user && user.data && !user.error) {
     return (
       <div className="flex w-full flex-grow overflow-auto pl-10">
-        <div className="flex w-5/6 flex-grow flex-col py-10">
+        <div className="flex w-5/6 flex-grow flex-col gap-5 py-5">
           <Search />
           {user.data.posts[0] && (
-            <Link
-              href={`/administration/posts/${user.data.posts[0].id}`}
-              className="pt-10 pb-5"
-            >
+            <Link href={`/administration/posts/${user.data.posts[0].id}`}>
               <Button className="w-full">View posts</Button>
             </Link>
           )}

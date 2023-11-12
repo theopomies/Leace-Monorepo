@@ -1,4 +1,4 @@
-import { Dashboard } from "./NewDashboard";
+import { Dashboard } from "./Dashboard";
 
 export interface DashboardPageProps {
   userId: string;

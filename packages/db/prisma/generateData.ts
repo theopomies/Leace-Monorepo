@@ -51,7 +51,6 @@ export const makeUsers = () => {
     users.push({
       role: [Role.AGENCY, Role.TENANT][getRandomInt(0, 1)],
       email: Math.random().toString(36).substring(2, 7) + "@prisma.io",
-      image: "https://cdn-icons-png.flaticon.com/512/3177/3177440.png",
       firstName: generateRandomFirstName(),
       lastName: generateRandomLastName(),
       phoneNumber: "+336" + Math.floor(10000000 + Math.random() * 90000000),
