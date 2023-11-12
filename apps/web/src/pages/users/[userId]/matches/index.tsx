@@ -4,19 +4,26 @@ import { ChatPage } from "../../../../components/shared/chat/ChatPage";
 import { trpc } from "../../../../utils/trpc";
 import { useEffect } from "react";
 import mixpanel from "../../../../utils/mixpanel";
+import { Loader } from "../../../../components/shared/Loader";
 
 const Matches = () => {
   const router = useRouter();
-
-  const { data: session } = trpc.auth.getSession.useQuery();
+  const { data: session, isLoading: sessionIsLoading } =
+    trpc.auth.getSession.useQuery();
 
   useEffect(() => {
-    mixpanel.track("Page View", {
-      path: router.asPath,
-      title: "Matches Page",
-      userId: session?.userId,
-    });
-  }, [router.asPath, session?.userId]);
+    if (session && !sessionIsLoading) {
+      mixpanel.track("Page View", {
+        path: router.asPath,
+        title: "Matches Page",
+        userId: session?.userId,
+      });
+    }
+  }, [router.asPath, session, sessionIsLoading]);
+
+  if (sessionIsLoading) return <Loader />;
+
+  if (!session || !session.role) return <div>Not logged in</div>;
 
   const { userId } = router.query;
 
@@ -29,7 +36,7 @@ const Matches = () => {
   return (
     <LoggedLayout title="Chat | Leace">
       <div className="flex h-screen w-full justify-center p-4">
-        <ChatPage userId={userId} postId={postId} />
+        <ChatPage role={session.role} userId={userId} postId={postId} />
       </div>
     </LoggedLayout>
   );

@@ -179,7 +179,7 @@ export function UserAttributesForm({ ...attributes }: UserAttributesFormProps) {
               aria-describedby="amount-prefix"
               name="size"
               onChange={attributes.handleMinPriceChange}
-              value={attributes.minPrice}
+              value={attributes.minPrice || ""}
               unit="$"
             />
           </label>
@@ -190,7 +190,7 @@ export function UserAttributesForm({ ...attributes }: UserAttributesFormProps) {
               aria-describedby="amount-prefix"
               name="size"
               onChange={attributes.handleMaxPriceChange}
-              value={attributes.maxPrice}
+              value={attributes.maxPrice || ""}
               unit="$"
             />
           </label>
@@ -203,7 +203,7 @@ export function UserAttributesForm({ ...attributes }: UserAttributesFormProps) {
               aria-describedby="amount-prefix"
               name="size"
               onChange={attributes.handleMinSizeChange}
-              value={attributes.minSize}
+              value={attributes.minSize || ""}
               unit="m²"
             />
           </label>
@@ -214,7 +214,7 @@ export function UserAttributesForm({ ...attributes }: UserAttributesFormProps) {
               aria-describedby="amount-prefix"
               name="size"
               onChange={attributes.handleMaxSizeChange}
-              value={attributes.maxSize}
+              value={attributes.maxSize || ""}
               unit="m²"
             />
           </label>

@@ -3,7 +3,7 @@ import { PostType, PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 const PREMIUM_DAYS_ADVANTAGE = 1;
 
-export async function movePostToSeen(userId: string, postId: string) {
+export async function moveToPostsSeen(userId: string, postId: string) {
   // move the specified post from postsTobeSeen to postsSeen in the user's profile
   await prisma.user.update({
     where: { id: userId },
@@ -13,6 +13,21 @@ export async function movePostToSeen(userId: string, postId: string) {
       },
       postsSeen: {
         connect: { id: postId },
+      },
+    },
+  });
+}
+
+export async function moveToPostsToBeSeen(userId: string, postId: string) {
+  // move the specified post from postsSeen to postsTobeSeen in the user's profile
+  await prisma.user.update({
+    where: { id: userId },
+    data: {
+      postsToBeSeen: {
+        connect: { id: postId },
+      },
+      postsSeen: {
+        disconnect: { id: postId },
       },
     },
   });

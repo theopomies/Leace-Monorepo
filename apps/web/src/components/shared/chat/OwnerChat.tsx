@@ -4,7 +4,8 @@ import { Loader } from "../Loader";
 import { Chat } from "./Chat";
 import { Role } from "@prisma/client";
 import { OwnerContractPopover } from "./contracts/OwnerContractPopover";
-import { ReportDialog } from "./ReportDialog";
+import { MatchActions } from "./MatchActions";
+import { useRouter } from "next/router";
 
 export function OwnerChat({
   userId,
@@ -17,6 +18,7 @@ export function OwnerChat({
   role: Role;
   postId?: string;
 }) {
+  const router = useRouter();
   const utils = trpc.useContext();
   const { data: conversation, isLoading: conversationIsLoadingOrNotEnabled } =
     trpc.conversation.getConversation.useQuery(
@@ -61,6 +63,8 @@ export function OwnerChat({
   }, [relationships, conversation?.relationId, postId]);
 
   const report = trpc.report.reportUserById.useMutation();
+  const deleteRelationship =
+    trpc.relationship.deleteRelationForOwner.useMutation();
 
   const isLoading = useMemo(
     () =>
@@ -95,6 +99,11 @@ export function OwnerChat({
       }
     : undefined;
 
+  const onDeleteMatch = async (relationshipId: string) => {
+    await deleteRelationship.mutateAsync({ userId, relationshipId });
+    router.push(`/users/${userId}/matches`);
+  };
+
   return (
     <Chat
       userId={userId}
@@ -110,8 +119,11 @@ export function OwnerChat({
       additionnalBarComponent={
         <div className="flex items-center gap-8">
           {relationship && (
-            <ReportDialog
-              title={relationship.user.firstName ?? "User"}
+            <MatchActions
+              fullName={
+                `${relationship.user.firstName} ${relationship.user.lastName}` ??
+                "User"
+              }
               onReport={({ reason, description }) =>
                 report.mutate({
                   userId: relationship.user.id,
@@ -119,6 +131,7 @@ export function OwnerChat({
                   desc: description,
                 })
               }
+              onDelete={() => onDeleteMatch(relationship.id)}
             />
           )}
           <OwnerContractPopover relationship={relationship} />

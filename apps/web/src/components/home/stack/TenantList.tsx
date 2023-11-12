@@ -1,91 +1,52 @@
-import { User } from "@leace/db";
+/* eslint-disable @next/next/no-img-element */
 import { PostType } from "@prisma/client";
-import Link from "next/link";
 import router from "next/router";
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { trpc } from "../../../utils/trpc";
 import { Loader } from "../../shared/Loader";
 import { Select } from "../../shared/button/Select";
+import { getCacheData, setCacheId } from "../../../utils/useCache";
+import { TenantBar } from "./TenantBar";
+import { Button } from "../../shared/button/Button";
 
-export function TenantList() {
-  const { data: session } = trpc.auth.getSession.useQuery();
-  const { data: posts, isLoading } = trpc.post.getPostsByUserId.useQuery({
-    userId: session?.userId ?? "",
-  });
-  const [postId, setPostId] = useState<string>("");
-  const [users, setUsers] = useState([] as User[]);
-  const [lastUser, setLastUser] = useState<User | null>();
-  const { data, status } = trpc.post.getUsersToBeSeen.useQuery({ postId });
-  const { mutateAsync: dislikeHandler } =
-    trpc.relationship.dislikeTenantForPost.useMutation();
-  const { mutateAsync: likeHandler } =
-    trpc.relationship.likeTenantForPost.useMutation();
+export interface TenantListProps {
+  userId: string;
+}
 
-  const redirectToProfile = () => {
-    router.push(`/users/${session?.userId}/update`);
-  };
+export function TenantList({ userId }: TenantListProps) {
+  const [postId, setPostId] = useState<string>(
+    getCacheData("homeLastSelectedPostId") ?? "",
+  );
+  const { data: posts, isLoading: postsIsLoading } =
+    trpc.post.getPostsByUserId.useQuery({
+      userId,
+    });
+  const { data: tenants, isLoading: tenantsIsLoading } =
+    trpc.post.getUsersToBeSeen.useQuery({ postId }, { retry: false });
+
+  const isLoading = useMemo(() => {
+    return postsIsLoading || tenantsIsLoading;
+  }, [postsIsLoading, tenantsIsLoading]);
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   const redirectToCreatePost = () => {
-    router.push(`/users/${session?.userId}/posts/create`);
+    router.push(`/users/${userId}/posts/create`);
   };
 
-  const calcAge = (birthdate: Date): number => {
-    const ageDifMs = Date.now() - birthdate.getTime();
-    const ageDate = new Date(ageDifMs);
-    return Math.abs(ageDate.getUTCFullYear() - 1970);
+  const handleSelect = (id: string) => {
+    setCacheId("homeLastSelectedPostId", id);
+    setPostId(id);
   };
-
-  useEffect(() => {
-    if (status === "success") {
-      setUsers(data);
-    }
-  }, [data, status]);
-
-  const removeUser = (user: User) => {
-    setUsers((users) => {
-      const newUsers = users.filter((u) => u.id !== user.id);
-      return newUsers;
-    });
-  };
-
-  const onLike = async (user: User) => {
-    await likeHandler({
-      postId,
-      userId: user.id,
-    });
-    removeUser(user);
-    setLastUser(user);
-  };
-
-  const onDislike = async (user: User) => {
-    await dislikeHandler({
-      postId,
-      userId: user.id,
-    });
-    removeUser(user);
-    setLastUser(user);
-  };
-
-  const onRewind = () => {
-    if (lastUser) {
-      setUsers((users) => [lastUser, ...users]);
-      setLastUser(null);
-    }
-  };
-
-  if (isLoading) return <Loader />;
 
   if (!posts || posts.length === 0)
     return (
       <div className="flex flex-grow flex-col items-center justify-center">
         <h1 className="text-2xl font-bold">No posts found :(</h1>
         <p className="mb-2 text-gray-500">You need to create a post first</p>
-        <button
-          onClick={redirectToCreatePost}
-          className="flex h-12 items-center justify-center rounded-md bg-indigo-500 p-4 font-bold text-white"
-        >
-          Create a post
-        </button>
+        <Button onClick={redirectToCreatePost}>Create a post</Button>
       </div>
     );
 
@@ -95,77 +56,34 @@ export function TenantList() {
         <Select
           options={
             posts
-              ?.filter((post) => post.type === PostType.TO_BE_RENTED)
+              .filter((post) => post.type === PostType.TO_BE_RENTED)
               .map((post) => ({
                 label: post.title ?? "title",
                 value: post.id,
               })) ?? []
           }
           value={postId}
-          onChange={(value) => setPostId(value)}
+          onChange={handleSelect}
           placeholder="Select a post"
         />
       </div>
       {postId && (
         <h2 className="mt-8 text-2xl font-bold">
           Here are your potential tenants for{" "}
-          {posts?.find((p) => p.id === postId)?.title}
+          {posts.find((p) => p.id === postId)?.title}
         </h2>
       )}
-      {users.length > 0 ? (
+      {tenants && tenants.length > 0 ? (
         <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {users.map((user) => (
-            <div
-              key={user.id}
-              className={`relative h-56 cursor-pointer flex-col overflow-hidden rounded-xl bg-white shadow-md ${
-                user.isPremium ? "border-4 border-yellow-300" : ""
-              }`}
-            >
-              {user.isPremium && (
-                <div className="absolute left-0 top-[8%] w-full translate-x-[-40%] rotate-[-45deg] bg-yellow-300 px-2 text-center font-bold text-white">
-                  Premium
-                </div>
-              )}
-              <Link href={"/users/" + user.id}>
-                <div className="flex h-2/3 items-center justify-evenly gap-4 p-2">
-                  {user.image && (
-                    <img
-                      className="h-full object-cover"
-                      src={user.image}
-                      alt="User Image"
-                    />
-                  )}
-                  <div className="p-2">
-                    <h3 className="text-2xl font-bold">{user.firstName}</h3>
-                    <div className="flex items-center">
-                      {user.birthDate && (
-                        <p className="text-gray-500">
-                          {calcAge(user.birthDate)} ans
-                        </p>
-                      )}
-                      <span className="mx-2">•</span>
-                      <p className="text-gray-500">{user.job}</p>
-                    </div>
-                    <p className="mt-4 text-gray-500">Click to view profile</p>
-                  </div>
-                </div>
-              </Link>
-              <div className="flex cursor-auto gap-4 bg-gray-100 p-4">
-                <button
-                  onClick={() => onLike(user)}
-                  className="flex h-12 w-1/2 items-center justify-center rounded-md bg-indigo-500 font-bold text-white"
-                >
-                  Accept
-                </button>
-                <button
-                  onClick={() => onDislike(user)}
-                  className="flex h-12 w-1/2 items-center justify-center rounded-md bg-gray-300 font-bold text-black"
-                >
-                  Decline
-                </button>
-              </div>
-            </div>
+          {tenants.map((tenant) => (
+            <TenantBar key={tenant.id} postId={postId} tenant={tenant} />
           ))}
+        </div>
+      ) : !postId ? (
+        <div className="flex flex-grow flex-col items-center justify-center">
+          <h1 className="text-2xl font-bold text-gray-700">
+            Please select a post
+          </h1>
         </div>
       ) : (
         <div className="flex flex-grow flex-col items-center justify-center">

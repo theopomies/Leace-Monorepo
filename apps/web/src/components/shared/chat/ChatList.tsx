@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import {
   Post,
   Relationship,
@@ -11,6 +10,7 @@ import Link from "next/link";
 import { SupportButton } from "./SupportButton";
 import { Select } from "../button/Select";
 import { useRouter } from "next/router";
+import { UserImage } from "../user/UserImage";
 
 export type Relationships =
   | (Relationship & {
@@ -128,25 +128,17 @@ export const ChatList = ({
               key={supportRelationship.id}
             >
               <button
-                key={supportRelationship.id}
-                className={`flex w-full flex-row items-center rounded-xl p-2 hover:bg-gray-100 ${
+                className={`flex h-14 w-full flex-grow rounded-xl p-2 text-left hover:bg-gray-100 ${
                   conversationId === supportRelationship.conversation?.id &&
                   "bg-gray-100"
                 } focus:outline-none`}
               >
-                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full uppercase">
-                  <img
-                    src={
-                      supportRelationship.user.id === userId
-                        ? supportRelationship.support.image || "/logo.png"
-                        : supportRelationship.user.image || "/defaultImage.png"
-                    }
-                    referrerPolicy="no-referrer"
-                    alt="image"
-                    className="mx-auto h-full rounded-full"
-                  />
-                </div>
-                <div className="ml-2 text-sm font-semibold">
+                {supportRelationship.user.id === userId ? (
+                  <UserImage user={supportRelationship.support} />
+                ) : (
+                  <UserImage user={supportRelationship.user} />
+                )}
+                <p className="ml-3 flex h-full w-full items-center">
                   {supportRelationship.user.id === userId ? (
                     <span className=" text-indigo-500">
                       {supportRelationship.support.firstName} Support Leace
@@ -154,7 +146,7 @@ export const ChatList = ({
                   ) : (
                     `${supportRelationship.user.firstName} ${supportRelationship.user.lastName}`
                   )}
-                </div>
+                </p>
               </button>
             </Link>
           ))}
@@ -169,31 +161,33 @@ export const ChatList = ({
               key={relationship.id}
             >
               <button
-                className={`flex w-full flex-row items-center rounded-xl p-2 hover:bg-gray-100 ${
+                className={`flex h-14 w-full flex-grow rounded-xl p-2 text-left hover:bg-gray-100 ${
                   conversationId === relationship.conversation?.id &&
                   "bg-gray-100"
                 } focus:outline-none`}
               >
-                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full uppercase">
-                  <img
-                    src={
-                      relationship.user.id === userId
-                        ? relationship.post.createdBy.image ||
-                          "/defaultImage.png"
-                        : relationship.user.image || "/defaultImage.png"
-                    }
-                    referrerPolicy="no-referrer"
-                    alt="image"
-                    className="mx-auto h-full rounded-full"
-                  />
-                </div>
-                <div className="ml-2 text-sm font-semibold">
+                <UserImage
+                  user={
+                    relationship.user.id === userId
+                      ? relationship.post.createdBy
+                      : relationship.user
+                  }
+                />
+                <p
+                  className={`${
+                    relationship.post.title &&
+                    relationship.post.title.length > 30 &&
+                    "line-clamp-2"
+                  } 
+                    ${relationship.user.id === userId && "text-[0.8em]"}
+                    ml-3 flex h-full w-full items-center`}
+                >
                   {relationship.user.id === userId
                     ? `${relationship.post.title || "Untitled Post"} - ${
                         relationship.post.createdBy.firstName
                       }`
                     : `${relationship.user.firstName} ${relationship.user.lastName}`}
-                </div>
+                </p>
               </button>
             </Link>
           ))}

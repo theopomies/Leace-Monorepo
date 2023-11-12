@@ -3,16 +3,21 @@ import { trpc } from "../../utils/trpc";
 import { Role } from "@prisma/client";
 import { Button } from "../shared/button/Button";
 import { Header } from "../shared/Header";
+import { useClerk } from "@clerk/nextjs";
 
 export interface RoleSelectorProps {
   userId: string;
 }
 
 export const RoleSelector = ({ userId }: RoleSelectorProps) => {
+  const { signOut } = useClerk();
   const utils = trpc.useContext();
   const userRole = trpc.user.updateUserRoleById.useMutation({
     onSuccess() {
       utils.auth.getSession.invalidate();
+    },
+    onError() {
+      signOut();
     },
   });
 
