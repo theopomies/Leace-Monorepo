@@ -21,11 +21,11 @@ const Index = () => {
     }
   }, [router.asPath, session, sessionIsLoading]);
 
-  if (sessionIsLoading || !session) return <Loader />;
+  if (sessionIsLoading) return <Loader />;
 
   return (
     <LoggedLayout title="Home | Leace">
-      <Home session={session} />
+      {session && <Home session={session} />}
     </LoggedLayout>
   );
 };
