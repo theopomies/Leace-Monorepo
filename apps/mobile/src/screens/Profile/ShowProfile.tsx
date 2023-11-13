@@ -1,11 +1,4 @@
-import {
-  View,
-  SafeAreaView,
-  Platform,
-  StatusBar,
-  StyleSheet,
-  Text,
-} from "react-native";
+import { View, SafeAreaView, StyleSheet, Text } from "react-native";
 import React, { useCallback } from "react";
 import { RouteProp, useFocusEffect, useRoute } from "@react-navigation/native";
 import { TabStackParamList } from "../../navigation/TabNavigator";

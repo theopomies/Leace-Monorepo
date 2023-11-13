@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity, TextInput } from "react-native";
 import React, { useState } from "react";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import RNPickerSelect from "react-native-picker-select";
+// import RNPickerSelect from "react-native-picker-select";
 import { Icon } from "react-native-elements";
 //import { IUserAttrs } from "../../types";
 
@@ -81,7 +81,7 @@ export default function EditAttributes({
       </View>
       <View>
         <Text className="text-base font-bold text-[#394867]">Type:</Text>
-        <RNPickerSelect
+        {/*<RNPickerSelect
           placeholder={{}}
           onValueChange={(itemValue) =>
             setAttrs({ ...attrs, homeType: itemValue })
@@ -90,7 +90,7 @@ export default function EditAttributes({
             { label: "HOUSE", value: "HOUSE" },
             { label: "APARTMENT", value: "APARTMENT" },
           ]}
-        />
+        />*/}
       </View>
       <View className="flex flex-row justify-around">
         <View className="min-w-[80px]">

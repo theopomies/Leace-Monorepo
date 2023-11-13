@@ -1,6 +1,7 @@
 import React from "react";
 import { Logs } from "expo";
 import { Auth } from "./screens/Auth";
+import Constants from "expo-constants";
 import { StatusBar } from "react-native";
 import { tokenCache } from "./utils/cache";
 import { TRPCProvider } from "./utils/trpc";
@@ -14,7 +15,7 @@ Logs.disableExpoCliLogging();
 export const App = () => {
   return (
     <ClerkProvider
-      publishableKey={process.env.EXPO_PUBLIC_CLERK_PUBLIC_KEY || ""}
+      publishableKey={Constants.expoConfig?.extra?.CLERK_PUBLISHABLE_KEY}
       tokenCache={tokenCache}
     >
       <SignedIn>

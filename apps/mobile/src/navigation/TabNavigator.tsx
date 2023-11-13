@@ -60,6 +60,7 @@ export type TabStackParamList = {
   };
 
   Documents: { userId: string };
+  Settings: undefined;
 };
 
 const TabNavigator = () => {
@@ -67,7 +68,7 @@ const TabNavigator = () => {
   const { signOut } = useAuth();
   const [role, setRole] = useState<keyof typeof UserRoles | null>(null);
   const { data: session, isLoading } = trpc.auth.getSession.useQuery();
-  const { data: user } = trpc.user.getUserById.useQuery(
+  const { data: user, isLoading: userLoading } = trpc.user.getUserById.useQuery(
     {
       userId: session?.userId as string,
     },
@@ -87,7 +88,7 @@ const TabNavigator = () => {
     getSession();
   }, [session, isPremium]);
 
-  if (isLoading) return <Loading />;
+  if (isLoading || userLoading) return <Loading />;
 
   if (!session) {
     return (

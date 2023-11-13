@@ -21,6 +21,16 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [["expo-document-picker"]]
+    "plugins": [["expo-document-picker"]],
+    "scheme": "com.azerty123456789.leace",
+    "extra": {
+      "eas": {
+        "projectId": "2ea9ed7c-f661-48c0-a195-f8c050dc2cc9"
+      },
+      "CLERK_PUBLISHABLE_KEY": "pk_test_Y2VydGFpbi1jcmFiLTU0LmNsZXJrLmFjY291bnRzLmRldiQ"
+    },
+    "android": {
+      "package": "com.azerty123456789.leace"
+    }
   }
 }

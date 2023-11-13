@@ -2,7 +2,7 @@ import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { Icon } from "react-native-elements";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import RNPickerSelect from "react-native-picker-select";
+// import RNPickerSelect from "react-native-picker-select";
 import { IDefaulAttributes } from "../../types";
 
 interface ICreateAttributes {
@@ -72,14 +72,14 @@ export default function CreateAttributes({
       />
       <View>
         <Text className="text-base font-bold text-[#10316B]">Type</Text>
-        <RNPickerSelect
+        {/*<RNPickerSelect
           placeholder={{}}
           onValueChange={handlePicker}
           items={[
             { label: "HOUSE", value: "HOUSE" },
             { label: "APARTMENT", value: "APARTMENT" },
           ]}
-        />
+        />*/}
       </View>
       <View>
         <Text className="text-base font-bold text-[#10316B]">Location</Text>

@@ -4,11 +4,9 @@ import {
   TouchableOpacity,
   Image,
   SafeAreaView,
-  StatusBar,
   StyleSheet,
   ScrollView,
   TextInput,
-  Platform,
 } from "react-native";
 import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -23,7 +21,7 @@ import { EditAttributes } from "../../components/Attribute";
 // import { IUserAttrs } from "../../types";
 import { EditInfo } from "../../components/UserProfile";
 
-export default function Role() {
+export default function ChooseRole() {
   const navigation =
     useNavigation<NativeStackNavigationProp<TabStackParamList>>();
   const [role, setRole] = useState<"TENANT" | "OWNER" | "AGENCY">("TENANT");

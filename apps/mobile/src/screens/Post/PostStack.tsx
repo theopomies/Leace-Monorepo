@@ -17,20 +17,28 @@ import { PostCard } from "../../components/Post";
 import { LocalStorage } from "../../utils/cache";
 import { Post, Attribute, Image } from "@leace/db";
 
-import RNPickerSelect from "react-native-picker-select";
+// import RNPickerSelect from "react-native-picker-select";
 
 export default function PostStack() {
   const route = useRoute<RouteProp<TabStackParamList, "MyPosts">>();
   const { userId } = route.params;
-  const { data, isLoading, refetch } = trpc.post.getPostsByUserId.useQuery({
-    userId,
-  });
   const [posts, setPosts] = useState<
     (Post & {
       attribute: Attribute | null;
       images: Image[];
     })[]
-  >();
+  >([]);
+  const { isLoading, refetch } = trpc.post.getPostsByUserId.useQuery(
+    {
+      userId,
+    },
+    {
+      onSuccess(data) {
+        if (!data) return;
+        setPosts([...data]);
+      },
+    },
+  );
   const [reason, setReason] = useState<"ALL" | "RENTED" | "TO_BE_RENTED">(
     "ALL",
   );
@@ -39,14 +47,14 @@ export default function PostStack() {
       const check = LocalStorage.getItem("refreshPosts");
       if (!check) return;
       LocalStorage.setItem("refreshPosts", false);
-      setPosts(undefined);
+      setPosts([]);
       refetch();
     }, [userId]),
   );
-  useEffect(() => {
-    if (posts) return;
-    setPosts(data);
-  }, [data]);
+  /*useEffect(() => {
+    if (posts.length > 0) return;
+    setPosts([...data]);
+  }, [data]);*/
 
   if (isLoading)
     return (
@@ -57,7 +65,7 @@ export default function PostStack() {
       </View>
     );
 
-  if (!data)
+  /*if (posts.length === 0)
     return (
       <View style={styles.container}>
         <View style={styles.view}>
@@ -65,18 +73,18 @@ export default function PostStack() {
           <Text>Data not found</Text>
         </View>
       </View>
-    );
+    );*/
 
   function handlePicker(itemValue: "ALL" | "RENTED" | "TO_BE_RENTED") {
-    if (!data) return;
+    if (posts.length === 0) return;
     if (itemValue === reason) return;
     if (itemValue === "RENTED") {
-      const tmp = data.filter((posts) => posts.type === "RENTED");
+      const tmp = posts.filter((posts) => posts.type === "RENTED");
       setPosts([...tmp]);
     } else if (itemValue === "TO_BE_RENTED") {
-      const tmp = data.filter((posts) => posts.type === "TO_BE_RENTED");
+      const tmp = posts.filter((posts) => posts.type === "TO_BE_RENTED");
       setPosts([...tmp]);
-    } else setPosts([...data]);
+    } else setPosts([...posts]);
     setReason(itemValue);
   }
 
@@ -90,15 +98,15 @@ export default function PostStack() {
             borderBottomWidth: 1,
           }}
         >
-          <RNPickerSelect
-            placeholder={{}}
+          {/*<RNPickerSelect
+            placeholder={{ label: "ALL", value: "ALL" }}
             onValueChange={handlePicker}
             items={[
               { label: "ALL", value: "ALL" },
               { label: "RENTED", value: "RENTED" },
               { label: "TO_BE_RENTED", value: "TO_BE_RENTED" },
             ]}
-          />
+          />*/}
         </View>
         <View className="flex-1 bg-[#F2F7FF]">
           {posts && (

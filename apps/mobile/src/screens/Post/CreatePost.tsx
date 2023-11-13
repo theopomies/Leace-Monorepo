@@ -12,7 +12,7 @@ import React, { useState } from "react";
 import Header from "../../components/Header";
 import { trpc } from "../../utils/trpc";
 import { IDefaulAttributes } from "../../types";
-import Separator from "../../components/Separator";
+// import Separator from "../../components/Separator";
 import { CreateAttributes } from "../../components/Attribute";
 import { Btn } from "../../components/Btn";
 import { LocalStorage } from "../../utils/cache";
