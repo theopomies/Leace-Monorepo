@@ -1,15 +1,15 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
-import { TabStackParamList } from "./TabNavigator";
 import { ClerkLoaded, useAuth } from "@clerk/clerk-expo";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { View, Button, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import { trpc } from "../utils/trpc";
 import { Icon } from "react-native-elements";
 import { ShowProfile, EditProfile } from "../screens/Profile";
 import ChooseRole from "../screens/Role";
-import { Role } from "@leace/db";
+import { Role, Lease } from "@leace/db";
 import { PostStack, CreatePost, ShowPost, EditPost } from "../screens/Post";
 import {
   OwnerLikes,
@@ -22,8 +22,63 @@ import { Documents } from "../screens/Documents";
 import { TenantChat } from "../screens/Chat";
 import { TenantMatches } from "../screens/Matches";
 import { TenantStack } from "../screens/Stack";
+import { Loading } from "../components/Loading";
+import { Btn } from "../components/Btn";
 
 const Tab = createBottomTabNavigator();
+
+export type TabStackParamList = {
+  Profile: { userId: string };
+  Stack: { userId: string };
+  MatchTenant: { userId: string; role: "TENANT" | "OWNER" | "AGENCY" };
+
+  CreatePost: { userId: string };
+
+  Premium: undefined;
+  Likes: undefined;
+  PaymentDetails: { selectedProduct: any; makePayment: boolean };
+
+  PaymentResults: {
+    loading: boolean;
+    paymentStatus: boolean;
+    response: any;
+    selectedProduct: any;
+  };
+
+  EditProfile: {
+    userId: string;
+    data: string;
+    showAttrs: boolean;
+  };
+
+  PostInfo: {
+    userId: string;
+    postId: string;
+    editable: boolean;
+  };
+
+  MyPosts: {
+    userId: string;
+  };
+
+  EditPost: {
+    userId: string;
+    data: string;
+  };
+
+  ChatTenant: {
+    role: "TENANT" | "OWNER" | "AGENCY";
+    tenantId: string;
+    ownerId: string;
+    conversationId: string;
+    userId: string;
+    lease: Lease | null;
+    relationshipId: string;
+  };
+
+  Documents: { userId: string };
+  Settings: undefined;
+};
 
 function Test({ userId, role }: { userId: string; role: Role | null }) {
   const navigation =
@@ -84,9 +139,7 @@ function Test({ userId, role }: { userId: string; role: Role | null }) {
             component={PostStack}
             initialParams={{ userId }}
             options={{
-              tabBarIcon: ({ focused }) => (
-                <Icon name={"list-alt"} type="font-awesome" />
-              ),
+              tabBarIcon: () => <Icon name={"list-alt"} type="font-awesome" />,
               tabBarLabel: "",
               headerShown: false,
             }}
@@ -238,9 +291,7 @@ function Test({ userId, role }: { userId: string; role: Role | null }) {
         component={Documents}
         initialParams={{ userId }}
         options={{
-          tabBarIcon: ({ focused }) => (
-            <Icon name="description" type="material" />
-          ),
+          tabBarIcon: () => <Icon name="description" type="material" />,
           tabBarLabel: "",
           headerShown: false,
         }}
@@ -280,28 +331,17 @@ const RootNavigator = () => {
     { userId: session?.userId as string },
     { enabled: !!session?.userId },
   );
-  if (isLoading || userLoading)
+
+  if (isLoading || userLoading) return <Loading />;
+  if (!session || !user) {
     return (
       <View className="flex-1 items-center justify-center bg-white">
-        <Button
-          title="Loading... if (isLoading || userLoading)"
+        <Btn
+          iconName="logout"
+          iconType="material-icons"
+          title="Sign Out"
           onPress={() => signOut()}
         />
-      </View>
-    );
-
-  if (!session) {
-    return (
-      <View className="flex-1 items-center justify-center bg-white">
-        <Button title="Sign Out" onPress={() => signOut()} />
-      </View>
-    );
-  }
-
-  if (!user) {
-    return (
-      <View className="flex-1 items-center justify-center bg-white">
-        <Button title="Loading... if (!user)" onPress={() => signOut()} />
       </View>
     );
   }

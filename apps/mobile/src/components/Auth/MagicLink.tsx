@@ -38,6 +38,7 @@ const MagicLink = () => {
       if (!signIn) return null;
       const si = await signIn.create({ identifier: emailAddress });
 
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       const { emailAddressId } = si.supportedFirstFactors.find(
         (id) => id.strategy === "email_link",

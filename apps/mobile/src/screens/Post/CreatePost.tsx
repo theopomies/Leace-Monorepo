@@ -1,8 +1,6 @@
 import {
   View,
   Text,
-  Platform,
-  StatusBar,
   SafeAreaView,
   StyleSheet,
   TextInput,
@@ -12,12 +10,11 @@ import React, { useState } from "react";
 import Header from "../../components/Header";
 import { trpc } from "../../utils/trpc";
 import { IDefaulAttributes } from "../../types";
-// import Separator from "../../components/Separator";
 import { CreateAttributes } from "../../components/Attribute";
 import { Btn } from "../../components/Btn";
 import { LocalStorage } from "../../utils/cache";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { TabStackParamList } from "../../navigation/TabNavigator";
+import { TabStackParamList } from "../../navigation/RootNavigator";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 
 export default function CreatePost() {
@@ -133,7 +130,6 @@ const styles = StyleSheet.create({
   },
   view: {
     flex: 1,
-    marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
     backgroundColor: "#F2F7FF",
   },
 });

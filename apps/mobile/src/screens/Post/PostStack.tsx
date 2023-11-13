@@ -1,17 +1,9 @@
-import {
-  View,
-  Text,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Platform,
-  StatusBar,
-} from "react-native";
-import React, { useCallback, useState, useEffect } from "react";
+import { View, SafeAreaView, ScrollView, StyleSheet } from "react-native";
+import React, { useCallback, useState } from "react";
 import Header from "../../components/Header";
 import { trpc } from "../../utils/trpc";
 import { RouteProp, useRoute, useFocusEffect } from "@react-navigation/native";
-import { TabStackParamList } from "../../navigation/TabNavigator";
+import { TabStackParamList } from "../../navigation/RootNavigator";
 import { Loading } from "../../components/Loading";
 import { PostCard } from "../../components/Post";
 import { LocalStorage } from "../../utils/cache";
@@ -39,9 +31,9 @@ export default function PostStack() {
       },
     },
   );
-  const [reason, setReason] = useState<"ALL" | "RENTED" | "TO_BE_RENTED">(
+  /*const [reason, setReason] = useState<"ALL" | "RENTED" | "TO_BE_RENTED">(
     "ALL",
-  );
+  );*/
   useFocusEffect(
     useCallback(() => {
       const check = LocalStorage.getItem("refreshPosts");
@@ -75,7 +67,7 @@ export default function PostStack() {
       </View>
     );*/
 
-  function handlePicker(itemValue: "ALL" | "RENTED" | "TO_BE_RENTED") {
+  /*function handlePicker(itemValue: "ALL" | "RENTED" | "TO_BE_RENTED") {
     if (posts.length === 0) return;
     if (itemValue === reason) return;
     if (itemValue === "RENTED") {
@@ -86,19 +78,20 @@ export default function PostStack() {
       setPosts([...tmp]);
     } else setPosts([...posts]);
     setReason(itemValue);
-  }
+  }*/
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.view}>
         <Header />
+        {/*
         <View
           style={{
             borderBottomColor: "#d3d3d3",
             borderBottomWidth: 1,
           }}
         >
-          {/*<RNPickerSelect
+          <RNPickerSelect
             placeholder={{ label: "ALL", value: "ALL" }}
             onValueChange={handlePicker}
             items={[
@@ -106,9 +99,10 @@ export default function PostStack() {
               { label: "RENTED", value: "RENTED" },
               { label: "TO_BE_RENTED", value: "TO_BE_RENTED" },
             ]}
-          />*/}
+          />
         </View>
-        <View className="flex-1 bg-[#F2F7FF]">
+          */}
+        <View className="flex-1">
           {posts && (
             <ScrollView
               contentContainerStyle={{ flexGrow: 1 }}
@@ -126,12 +120,6 @@ export default function PostStack() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "white",
-  },
-  view: {
-    flex: 1,
-    marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-  },
+  container: { flex: 1, backgroundColor: "white" },
+  view: { flex: 1, backgroundColor: "white" },
 });

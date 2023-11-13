@@ -3,9 +3,7 @@ import {
   Image,
   View,
   Text,
-  Platform,
   SafeAreaView,
-  StatusBar,
   StyleSheet,
   ScrollView,
 } from "react-native";
@@ -16,7 +14,7 @@ import { Btn } from "../../components/Btn";
 import * as FileSystem from "expo-file-system";
 import * as DocumentPicker from "expo-document-picker";
 import { useRoute, RouteProp } from "@react-navigation/native";
-import { TabStackParamList } from "../../navigation/TabNavigator";
+import { TabStackParamList } from "../../navigation/RootNavigator";
 import { Loading } from "../../components/Loading";
 import Header from "../../components/Header";
 
@@ -42,6 +40,7 @@ export default function Documents() {
       const documents: {
         assets: DocumentPicker.DocumentPickerAsset[];
         canceled: boolean;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } = (await DocumentPicker.getDocumentAsync({ type: "*/*" })) as any;
       if (documents.canceled) throw new Error("Document picker canceled");
       const [document] = documents.assets;
@@ -136,7 +135,6 @@ const styles = StyleSheet.create({
   },
   view: {
     flex: 1,
-    // marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
     backgroundColor: "white",
   },
 });

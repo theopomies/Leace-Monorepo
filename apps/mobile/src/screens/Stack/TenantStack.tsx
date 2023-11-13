@@ -3,8 +3,6 @@ import {
   Text,
   Image as RCImage,
   SafeAreaView,
-  Platform,
-  StatusBar,
   StyleSheet,
   TouchableOpacity,
   GestureResponderEvent,
@@ -20,7 +18,7 @@ import Separator from "../../components/Separator";
 import { Report } from "../../components/Report";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { TabStackParamList } from "../../navigation/TabNavigator";
+import { TabStackParamList } from "../../navigation/RootNavigator";
 import { Post, Attribute, Image } from "@leace/db";
 
 interface IActionButton {
@@ -53,7 +51,7 @@ export default function TenantStack() {
   const route = useRoute<RouteProp<TabStackParamList, "Stack">>();
   const { userId } = route.params;
   const [idx, setIdx] = useState(0);
-  const { data, isLoading, refetch } = trpc.post.getPosts.useQuery();
+  const { data, isLoading } = trpc.post.getPosts.useQuery();
   const [post, setPost] = useState<
     | Post & {
         attribute: Attribute | null;
@@ -247,7 +245,6 @@ const styles = StyleSheet.create({
   },
   view: {
     flex: 1,
-    marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
   box: {
     flex: 1,

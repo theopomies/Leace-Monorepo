@@ -14,14 +14,14 @@ import {
   useFocusEffect,
   useNavigation,
 } from "@react-navigation/native";
-import { TabStackParamList } from "../../navigation/TabNavigator";
+import { TabStackParamList } from "../../navigation/RootNavigator";
 import { Icon } from "react-native-elements";
 import { EditAttributes } from "../../components/Attribute";
 import Separator from "../../components/Separator";
 import { trpc } from "../../utils/trpc";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { LocalStorage } from "../../utils/cache";
-// import { IUserAttrs } from "../../types";
+import { IUserAttrs } from "../../types";
 import { EditInfo } from "../../components/UserProfile";
 import { Btn } from "../../components/Btn";
 import { useAuth } from "@clerk/clerk-expo";
@@ -48,7 +48,7 @@ export default function EditProfile() {
     role: string;
     email: string;
   }>();
-  const [attrs, setAttrs] = useState<any>();
+  const [attrs, setAttrs] = useState<IUserAttrs>();
 
   const userMutation = trpc.user.updateUserById.useMutation({
     onSuccess() {
@@ -75,20 +75,20 @@ export default function EditProfile() {
   useFocusEffect(
     useCallback(() => {
       const parsed = JSON.parse(data);
-      let {
+      const {
         id,
         firstName,
         lastName,
         phoneNumber,
         description,
         birthDate,
-        attribute,
         image,
         role,
         isPremium,
         emailVerified,
         email,
       } = parsed;
+      let { attribute } = parsed;
       if (!attribute) {
         attribute = {
           ...attribute,

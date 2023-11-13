@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 // import RNPickerSelect from "react-native-picker-select";
 import { Icon } from "react-native-elements";
-//import { IUserAttrs } from "../../types";
+import { IUserAttrs } from "../../types";
 
 interface IAttributeBtn {
   name: string;
@@ -13,8 +13,8 @@ interface IAttributeBtn {
 
 interface ICreateUserAttrs {
   userId: string;
-  attrs: any | undefined;
-  setAttrs: React.Dispatch<React.SetStateAction<any | undefined>>;
+  attrs: IUserAttrs | undefined;
+  setAttrs: React.Dispatch<React.SetStateAction<IUserAttrs | undefined>>;
 }
 
 function AttributeBtn({ name, status, iconName }: IAttributeBtn) {
@@ -39,6 +39,7 @@ function AttributeBtn({ name, status, iconName }: IAttributeBtn) {
 }
 
 export default function EditAttributes({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   userId,
   attrs,
   setAttrs,
@@ -122,7 +123,6 @@ export default function EditAttributes({
           <View className="flex min-w-[100px] flex-row items-center justify-center rounded-full bg-[#10316B] px-2 py-0.5">
             <Text className="font-light text-white">Min: </Text>
             <TextInput
-              // @ts-ignore
               inputMode="numeric"
               placeholder="0"
               className="font-light text-white"
@@ -137,7 +137,6 @@ export default function EditAttributes({
           <View className="flex min-w-[100px] flex-row items-center justify-center rounded-full bg-[#10316B] px-2 py-0.5">
             <Text className="font-light text-white">Max: </Text>
             <TextInput
-              // @ts-ignore
               inputMode="numeric"
               placeholder="0"
               className="font-light text-white"
@@ -157,7 +156,6 @@ export default function EditAttributes({
           <View className="flex min-w-[100px] flex-row items-center justify-center rounded-full bg-[#10316B] px-2 py-0.5">
             <Text className="font-light text-white">Min: </Text>
             <TextInput
-              // @ts-ignore
               inputMode="numeric"
               placeholder="0"
               className="font-light text-white"
@@ -172,7 +170,6 @@ export default function EditAttributes({
           <View className="flex min-w-[100px] flex-row items-center justify-center rounded-full bg-[#10316B] px-2 py-0.5">
             <Text className="font-light text-white">Max: </Text>
             <TextInput
-              // @ts-ignore
               inputMode="numeric"
               placeholder="0"
               className="font-light text-white"

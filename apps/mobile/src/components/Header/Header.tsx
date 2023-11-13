@@ -20,7 +20,6 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     height: 54,
     borderBottomColor: "#d3d3d3",
-    borderBottomWidth: 1,
     zIndex: 10,
   },
 });

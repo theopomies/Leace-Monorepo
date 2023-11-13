@@ -2,26 +2,19 @@ import {
   View,
   Text,
   StyleSheet,
-  Platform,
-  StatusBar,
   SafeAreaView,
   ScrollView,
   TouchableOpacity,
   Image,
 } from "react-native";
 import React from "react";
-import {
-  RouteProp,
-  useRoute,
-  useNavigation,
-  useFocusEffect,
-} from "@react-navigation/native";
+import { RouteProp, useRoute, useNavigation } from "@react-navigation/native";
 import Header from "../../components/Header";
 import { trpc } from "../../utils/trpc";
 import { Loading } from "../../components/Loading";
 import { Relationship, User, Post, Lease, Conversation } from "@prisma/client";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { TabStackParamList } from "../../navigation/TabNavigator";
+import { TabStackParamList } from "../../navigation/RootNavigator";
 import { Btn } from "../../components/Btn";
 
 interface IMatchCard {
@@ -196,7 +189,6 @@ const styles = StyleSheet.create({
   },
   view: {
     flex: 1,
-    // marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
     backgroundColor: "white", // #F2F7FF
   },
 });

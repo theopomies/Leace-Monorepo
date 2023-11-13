@@ -7,7 +7,7 @@ import Separator from "../Separator";
 import { Icon } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { TabStackParamList } from "../../navigation/TabNavigator";
+import { TabStackParamList } from "../../navigation/RootNavigator";
 import { Btn } from "../Btn";
 import { useAuth } from "@clerk/clerk-expo";
 
@@ -135,7 +135,13 @@ export default function UserProfile({
       )}
       {showLogout && (
         <View className="px-3 pb-2">
-          <Btn title="Log out" bgColor="#EF4444" onPress={() => signOut()} />
+          <Btn
+            title="Log out"
+            bgColor="#EF4444"
+            iconName="logout"
+            iconType="material-icons"
+            onPress={() => signOut()}
+          />
         </View>
       )}
     </View>

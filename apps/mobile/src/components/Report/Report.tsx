@@ -4,7 +4,7 @@ import { Icon } from "react-native-elements";
 import { Btn } from "../Btn";
 import { Reason } from "../../utils/enum";
 import { trpc } from "../../utils/trpc";
-import { ReportReason } from "@leace/db";
+//import { ReportReason } from "@leace/db";
 // import RNPickerSelect from "react-native-picker-select";
 
 interface IReport {
@@ -23,7 +23,8 @@ export default function Report({
   iconOnly = false,
 }: IReport) {
   const [open, setOpen] = useState(false);
-  const [reason, setReason] = useState<ReportReason>(Reason.SPAM);
+  // const [reason, setReason] = useState<ReportReason>(Reason.SPAM);
+  const reason = Reason.SPAM;
   const [message, setMessage] = useState("");
 
   const reportUser = trpc.report.reportUserById.useMutation({

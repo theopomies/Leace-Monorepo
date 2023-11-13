@@ -4,7 +4,7 @@ import axios from "axios";
 import { PaymentView } from "./View";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { TabStackParamList } from "../../navigation/TabNavigator";
+import { TabStackParamList } from "../../navigation/RootNavigator";
 
 const Details = () => {
   const navigation =

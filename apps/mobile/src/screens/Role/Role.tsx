@@ -11,14 +11,14 @@ import {
 import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { TabStackParamList } from "../../navigation/TabNavigator";
+import { TabStackParamList } from "../../navigation/RootNavigator";
 import { trpc } from "../../utils/trpc";
 import Swiper from "react-native-swiper";
 import Header from "../../components/Header";
 import Separator from "../../components/Separator";
 import { Btn } from "../../components/Btn";
 import { EditAttributes } from "../../components/Attribute";
-// import { IUserAttrs } from "../../types";
+import { IUserAttrs } from "../../types";
 import { EditInfo } from "../../components/UserProfile";
 
 export default function ChooseRole() {
@@ -42,7 +42,7 @@ export default function ChooseRole() {
       }
     | undefined
   >({ userId });
-  const [attrs, setAttrs] = useState<any | undefined>({ userId });
+  const [attrs, setAttrs] = useState<IUserAttrs | undefined>({ userId });
 
   const userRole = trpc.user.updateUserRoleById.useMutation({
     onSuccess() {
@@ -91,7 +91,7 @@ export default function ChooseRole() {
             </View>
           </View>
           <View
-            className="flex h-1/2 items-center justify-center rounded-md border bg-[#F2F7FF]"
+            className="flex h-1/2 items-center justify-center rounded-md border"
             style={styles.shadow}
           >
             <Swiper
@@ -257,7 +257,6 @@ const styles = StyleSheet.create({
   },
   view: {
     flex: 1,
-    // marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
     backgroundColor: "#F2F7FF",
   },
   shadow: {

@@ -1,10 +1,10 @@
 import { View, Text, TouchableOpacity, Image as RNIMage } from "react-native";
 import React from "react";
 import { Attribute, Post, Image } from "@prisma/client";
-import { useRoute, RouteProp, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { TabStackParamList } from "../../navigation/TabNavigator";
+import { TabStackParamList } from "../../navigation/RootNavigator";
 
 interface IPostCard {
   data: Post & {

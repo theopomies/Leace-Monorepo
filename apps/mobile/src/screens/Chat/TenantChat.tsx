@@ -3,8 +3,6 @@ import {
   Text,
   ScrollView,
   StyleSheet,
-  Platform,
-  StatusBar,
   TextInput,
   SafeAreaView,
   Modal,
@@ -12,7 +10,7 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useRoute, RouteProp } from "@react-navigation/native";
-import { TabStackParamList } from "../../navigation/TabNavigator";
+import { TabStackParamList } from "../../navigation/RootNavigator";
 import { trpc } from "../../utils/trpc";
 import { Loading } from "../../components/Loading";
 import { Message, User, Lease } from "@prisma/client";
@@ -229,7 +227,7 @@ export default function TenantChat() {
                 </Text>
                 <TextInput
                   editable={role !== "TENANT"}
-                  className="font-light text-black" // @ts-ignore
+                  className="font-light text-black"
                   inputMode="decimal"
                   placeholder="0123456789"
                   defaultValue={lease.rentCost.toString()}
@@ -245,7 +243,6 @@ export default function TenantChat() {
                 <TextInput
                   editable={role !== "TENANT"}
                   className="font-light text-black"
-                  // @ts-ignore
                   inputMode="decimal"
                   placeholder="0123456789"
                   defaultValue={lease.utilitiesCost.toString()}
@@ -359,7 +356,6 @@ const styles = StyleSheet.create({
   },
   view: {
     flex: 1,
-    marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
     backgroundColor: "white", // #F2F7FF
   },
   input: {

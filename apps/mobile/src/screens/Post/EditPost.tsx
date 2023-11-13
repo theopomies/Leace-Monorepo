@@ -17,7 +17,7 @@ import {
   useRoute,
 } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { TabStackParamList } from "../../navigation/TabNavigator";
+import { TabStackParamList } from "../../navigation/RootNavigator";
 import { trpc } from "../../utils/trpc";
 import { Icon } from "react-native-elements";
 import { IDefaulAttributes } from "../../types";
@@ -168,6 +168,5 @@ const styles = StyleSheet.create({
   },
   view: {
     flex: 1,
-    marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
 });
