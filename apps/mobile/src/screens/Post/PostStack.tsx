@@ -1,17 +1,26 @@
-import { View, SafeAreaView, ScrollView, StyleSheet } from "react-native";
+import { View, SafeAreaView, ScrollView, StyleSheet, Text } from "react-native";
 import React, { useCallback, useState } from "react";
 import Header from "../../components/Header";
 import { trpc } from "../../utils/trpc";
-import { RouteProp, useRoute, useFocusEffect } from "@react-navigation/native";
+import {
+  RouteProp,
+  useRoute,
+  useFocusEffect,
+  useNavigation,
+} from "@react-navigation/native";
 import { TabStackParamList } from "../../navigation/RootNavigator";
 import { Loading } from "../../components/Loading";
 import { PostCard } from "../../components/Post";
 import { LocalStorage } from "../../utils/cache";
 import { Post, Attribute, Image } from "@leace/db";
+import { Btn } from "../../components/Btn";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 // import RNPickerSelect from "react-native-picker-select";
 
 export default function PostStack() {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<TabStackParamList>>();
   const route = useRoute<RouteProp<TabStackParamList, "MyPosts">>();
   const { userId } = route.params;
   const [posts, setPosts] = useState<
@@ -50,23 +59,22 @@ export default function PostStack() {
 
   if (isLoading)
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <View style={styles.view}>
           <Loading />
         </View>
-      </View>
+      </SafeAreaView>
     );
 
-  /*if (posts.length === 0)
+  if (!posts)
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <View style={styles.view}>
           <Header />
           <Text>Data not found</Text>
         </View>
-      </View>
-    );*/
-
+      </SafeAreaView>
+    );
   /*function handlePicker(itemValue: "ALL" | "RENTED" | "TO_BE_RENTED") {
     if (posts.length === 0) return;
     if (itemValue === reason) return;
@@ -102,8 +110,8 @@ export default function PostStack() {
           />
         </View>
           */}
-        <View className="flex-1">
-          {posts && (
+        {posts.length > 0 ? (
+          <View className={`flex-1`}>
             <ScrollView
               contentContainerStyle={{ flexGrow: 1 }}
               className="px-2"
@@ -112,8 +120,20 @@ export default function PostStack() {
                 <PostCard data={post} key={idx} userId={userId} />
               ))}
             </ScrollView>
-          )}
-        </View>
+          </View>
+        ) : (
+          <View className={`flex-1 items-center justify-center px-3`}>
+            <View className="flex flex-col items-center gap-2">
+              <Text className="font-bold">You currently have no posts.</Text>
+              <View>
+                <Btn
+                  title="Ready to make your first post ?"
+                  onPress={() => navigation.navigate("CreatePost", { userId })}
+                ></Btn>
+              </View>
+            </View>
+          </View>
+        )}
       </View>
     </SafeAreaView>
   );

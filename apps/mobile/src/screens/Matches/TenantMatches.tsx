@@ -140,11 +140,12 @@ export default function TenantMatches() {
 
   if (!data)
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <View style={styles.view}>
+          <Header />
           <Text>Data not found</Text>
         </View>
-      </View>
+      </SafeAreaView>
     );
 
   /*useFocusEffect(
@@ -158,7 +159,7 @@ export default function TenantMatches() {
       <View style={styles.view}>
         <Header />
         <View className="flex-1 bg-white">
-          {data && (
+          {data.length > 0 ? (
             <ScrollView
               contentContainerStyle={{ flexGrow: 1 }}
               className="px-2"
@@ -175,6 +176,12 @@ export default function TenantMatches() {
                 />
               ))}
             </ScrollView>
+          ) : (
+            <View className={`flex-1 items-center justify-center px-3`}>
+              <Text className="text-center font-bold">
+                No one has matched with your apartment lease listing, yet.
+              </Text>
+            </View>
           )}
         </View>
       </View>

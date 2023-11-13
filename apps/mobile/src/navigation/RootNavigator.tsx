@@ -97,22 +97,6 @@ function Test({ userId, role }: { userId: string; role: Role | null }) {
           }}
         />
       )}
-      <Tab.Screen
-        name="Profile"
-        component={ShowProfile}
-        initialParams={{ userId }}
-        options={{
-          tabBarIcon: ({ focused }) => (
-            <Icon
-              name={focused ? "person" : "person-outline"}
-              color="#002642"
-              type="material-icons"
-            />
-          ),
-          tabBarLabel: "",
-          headerShown: false,
-        }}
-      />
       {role === "TENANT" && (
         <>
           <Tab.Screen
@@ -123,7 +107,7 @@ function Test({ userId, role }: { userId: string; role: Role | null }) {
               tabBarIcon: ({ focused }) => (
                 <Icon
                   name={focused ? "favorite" : "favorite-border"}
-                  color="#002642"
+                  color={focused ? "#10316B" : "black"}
                 />
               ),
               tabBarLabel: "",
@@ -139,20 +123,11 @@ function Test({ userId, role }: { userId: string; role: Role | null }) {
             component={PostStack}
             initialParams={{ userId }}
             options={{
-              tabBarIcon: () => <Icon name={"list-alt"} type="font-awesome" />,
-              tabBarLabel: "",
-              headerShown: false,
-            }}
-          />
-          <Tab.Screen
-            name="CreatePost"
-            component={CreatePost}
-            initialParams={{ userId }}
-            options={{
               tabBarIcon: ({ focused }) => (
                 <Icon
-                  name={focused ? "plus-square" : "plus-square-o"}
-                  type="font-awesome"
+                  name={focused ? "view-dashboard" : "view-dashboard-outline"}
+                  type="material-community"
+                  color={focused ? "#10316B" : "black"}
                 />
               ),
               tabBarLabel: "",
@@ -172,6 +147,40 @@ function Test({ userId, role }: { userId: string; role: Role | null }) {
         </>
       )}
       <Tab.Screen
+        name="MatchTenant"
+        component={TenantMatches}
+        initialParams={{ userId, role: role === "TENANT" ? "TENANT" : "OWNER" }}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <Icon
+              name={focused ? "cards-heart" : "cards-heart-outline"}
+              type="material-community"
+              color={focused ? "#10316B" : "black"}
+            />
+          ),
+          tabBarLabel: "",
+          headerShown: false,
+        }}
+      />
+      {role !== "TENANT" && (
+        <Tab.Screen
+          name="CreatePost"
+          component={CreatePost}
+          initialParams={{ userId }}
+          options={{
+            tabBarIcon: ({ focused }) => (
+              <Icon
+                name={focused ? "plus-square" : "plus-square-o"}
+                type="font-awesome"
+                color={focused ? "#10316B" : "black"}
+              />
+            ),
+            tabBarLabel: "",
+            headerShown: false,
+          }}
+        />
+      )}
+      <Tab.Screen
         name="Premium"
         component={
           isPremium
@@ -185,6 +194,7 @@ function Test({ userId, role }: { userId: string; role: Role | null }) {
             <Icon
               name={focused ? "star-four-points" : "star-four-points-outline"}
               type="material-community"
+              color={focused ? "#10316B" : "black"}
             />
           ),
           tabBarLabel: "",
@@ -214,21 +224,6 @@ function Test({ userId, role }: { userId: string; role: Role | null }) {
         component={Result}
         options={{
           tabBarButton: () => null,
-          tabBarLabel: "",
-          headerShown: false,
-        }}
-      />
-      <Tab.Screen
-        name="MatchTenant"
-        component={TenantMatches}
-        initialParams={{ userId, role: role === "TENANT" ? "TENANT" : "OWNER" }}
-        options={{
-          tabBarIcon: ({ focused }) => (
-            <Icon
-              name={focused ? "account-multiple" : "account-multiple-outline"}
-              type="material-community"
-            />
-          ),
           tabBarLabel: "",
           headerShown: false,
         }}
@@ -291,7 +286,38 @@ function Test({ userId, role }: { userId: string; role: Role | null }) {
         component={Documents}
         initialParams={{ userId }}
         options={{
-          tabBarIcon: () => <Icon name="description" type="material" />,
+          tabBarStyle: { display: "none" },
+          tabBarButton: () => null,
+          headerShown: true,
+          headerTitleStyle: { color: "#10316B" },
+          title: "Documents",
+          headerLeft: () => (
+            <TouchableOpacity
+              className="ml-4"
+              onPress={() => navigation.navigate("Profile", { userId })}
+            >
+              <Icon
+                name="arrow-back"
+                color="#10316B"
+                size={30}
+                type="material-icons"
+              ></Icon>
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={ShowProfile}
+        initialParams={{ userId }}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <Icon
+              name={focused ? "person" : "person-outline"}
+              type="material-icons"
+              color={focused ? "#10316B" : "black"}
+            />
+          ),
           tabBarLabel: "",
           headerShown: false,
         }}

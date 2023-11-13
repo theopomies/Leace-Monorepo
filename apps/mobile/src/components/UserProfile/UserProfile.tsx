@@ -46,28 +46,42 @@ export default function UserProfile({
           <Text className="text-white ">{data.lastName}</Text>
         </View>
         {editable && (
-          <TouchableOpacity
-            className="absolute bottom-1.5 right-2 flex flex-row items-center justify-center space-x-1 rounded-full px-2 py-0.5"
-            style={{ borderWidth: 1, borderColor: "white" }}
-            onPress={() => {
-              navigation.navigate("EditProfile", {
-                userId: userId,
-                data: JSON.stringify({
-                  ...data,
-                  birthDate: data.birthDate?.toISOString(),
-                }),
-                showAttrs: showAttrs,
-              });
-            }}
-          >
-            <Icon
-              name="settings"
-              color="white"
-              size={20}
-              type="material-icons"
-            ></Icon>
-            <Text className="font-bold text-white">Settings</Text>
-          </TouchableOpacity>
+          <View className="absolute bottom-1.5 right-2 flex flex-row gap-1">
+            <TouchableOpacity
+              className="flex flex-row items-center justify-center space-x-1 rounded-full px-2 py-0.5"
+              style={{ borderWidth: 1, borderColor: "white" }}
+              onPress={() => navigation.navigate("Documents", { userId })}
+            >
+              <Icon
+                color="white"
+                size={20}
+                name="description"
+                type="material-icons"
+              ></Icon>
+              <Text className="font-bold text-white">Documents</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              className="flex flex-row items-center justify-center rounded-full px-0.5 py-0.5"
+              style={{ borderWidth: 1, borderColor: "white" }}
+              onPress={() => {
+                navigation.navigate("EditProfile", {
+                  userId: userId,
+                  data: JSON.stringify({
+                    ...data,
+                    birthDate: data.birthDate?.toISOString(),
+                  }),
+                  showAttrs: showAttrs,
+                });
+              }}
+            >
+              <Icon
+                name="settings"
+                color="white"
+                size={20}
+                type="material-icons"
+              ></Icon>
+            </TouchableOpacity>
+          </View>
         )}
       </View>
       <View className="pt-2">

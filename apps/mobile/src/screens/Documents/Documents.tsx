@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Image,
   View,
@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   StyleSheet,
   ScrollView,
+  Modal,
 } from "react-native";
 import axios from "axios";
 import { Buffer } from "buffer";
@@ -16,9 +17,72 @@ import * as DocumentPicker from "expo-document-picker";
 import { useRoute, RouteProp } from "@react-navigation/native";
 import { TabStackParamList } from "../../navigation/RootNavigator";
 import { Loading } from "../../components/Loading";
-import Header from "../../components/Header";
+
+type DocumentModalType = {
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  callback: () => void;
+};
+
+function DocumentModal({ open, setOpen, callback }: DocumentModalType) {
+  return (
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={open}
+      onRequestClose={() => setOpen(false)}
+    >
+      <View className="flex-1 items-center justify-center">
+        <View
+          className="w-3/4 rounded-md bg-white p-4"
+          style={{
+            shadowColor: "#000",
+            shadowOffset: {
+              width: 0,
+              height: 2,
+            },
+            shadowOpacity: 0.25,
+            shadowRadius: 4,
+            elevation: 5,
+          }}
+        >
+          <View className="flex flex-col gap-2">
+            <Text className="font-base text-sm">
+              Are you certain you want to proceed with the permanent deletion of
+              this document ?
+            </Text>
+            <Text className="text-xs font-light">
+              Please note that this action is irreversible, and the document
+              cannot be recovered.
+            </Text>
+          </View>
+          <View className="flex flex-row gap-1 pt-2">
+            <View className="flex-1">
+              <Btn
+                title="Delete"
+                bgColor="#ef4444"
+                textColor="#FFFFFF"
+                onPress={callback}
+              ></Btn>
+            </View>
+            <View className="flex-1">
+              <Btn
+                title="Close"
+                bgColor="#F2F7FF"
+                textColor="#10316B"
+                onPress={() => setOpen(false)}
+              ></Btn>
+            </View>
+          </View>
+        </View>
+      </View>
+    </Modal>
+  );
+}
 
 export default function Documents() {
+  const [open, setOpen] = useState(false);
+  const [selected, setSelected] = useState("");
   const route = useRoute<RouteProp<TabStackParamList, "Profile">>();
   const { userId } = route.params;
   const {
@@ -29,9 +93,10 @@ export default function Documents() {
     userId,
   });
   const uploadDocument = trpc.document.putSignedUrl.useMutation();
-  const deleteDocument = trpc.document.deleteSignedUrl.useMutation({
+  const { mutate: deleteDocument } = trpc.document.deleteSignedUrl.useMutation({
     onSuccess() {
       refetch();
+      setOpen(false);
     },
   });
 
@@ -82,38 +147,51 @@ export default function Documents() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <DocumentModal
+        open={open}
+        setOpen={setOpen}
+        callback={() => deleteDocument({ userId, documentId: selected })}
+      />
       <View style={styles.view}>
-        <Header />
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-          {documents &&
-            documents.map((doc, key) => (
+          {documents.map((doc, key) => (
+            <View
+              key={key}
+              className={`relative mx-3 mt-2 max-h-60 rounded-md bg-[#f1f1f1] p-2`}
+            >
               <View
-                key={key}
-                className="bg-navy relative mx-3 mt-2 h-36 rounded-md p-2"
+                className={`flex max-h-40 ${
+                  doc.ext === "pdf" ? "h-20" : "h-40"
+                } items-center justify-center`}
               >
-                <View className="flex h-32 w-32 items-center justify-center">
-                  <Image
-                    className={`${
-                      doc.ext === "pdf" ? " h-20 w-20" : "h-32 w-32"
-                    } rounded-md`}
-                    source={
-                      doc.ext === "pdf"
-                        ? require("../../../assets/pdf-logo.png")
-                        : { uri: doc.url }
-                    }
-                  ></Image>
+                <Image
+                  className={`${
+                    doc.ext === "pdf" ? "h-20 w-20" : "h-40 w-full"
+                  } block rounded-md object-contain`}
+                  source={
+                    doc.ext === "pdf"
+                      ? require("../../../assets/pdf-logo.png")
+                      : { uri: doc.url }
+                  }
+                ></Image>
+              </View>
+              <View className="flex flex-row items-center pt-2">
+                <View className="flex-1">
+                  <Text>File name: PLACE HOLDER</Text>
                 </View>
                 <Btn
-                  className="absolute right-0 top-0 rounded-md rounded-br-none rounded-tl-none"
+                  className="rounded-md"
                   bgColor="#ef4444"
                   iconName="delete"
                   iconType="material"
-                  onPress={() =>
-                    deleteDocument.mutate({ userId, documentId: doc.id })
-                  }
+                  onPress={() => {
+                    setSelected(doc.id);
+                    setOpen(true);
+                  }}
                 />
               </View>
-            ))}
+            </View>
+          ))}
         </ScrollView>
         <View>
           <Btn
