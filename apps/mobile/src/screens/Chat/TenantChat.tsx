@@ -356,7 +356,7 @@ const styles = StyleSheet.create({
   },
   view: {
     flex: 1,
-    backgroundColor: "white", // #F2F7FF
+    backgroundColor: "white",
   },
   input: {
     zIndex: 10,

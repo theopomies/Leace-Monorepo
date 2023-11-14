@@ -81,7 +81,7 @@ export default function ChooseRole() {
         <View className="flex-1 items-center justify-center bg-white px-8">
           <View className="flex w-full flex-row items-center">
             <Image
-              source={require("../../../assets/logo.png")}
+              source={require("../../../assets/logo_1024.png")}
               className="h-20 w-20 rounded-full"
             />
             <View className="flex-1">
@@ -257,7 +257,7 @@ const styles = StyleSheet.create({
   },
   view: {
     flex: 1,
-    backgroundColor: "#F2F7FF",
+    backgroundColor: "white",
   },
   shadow: {
     shadowColor: "#000",

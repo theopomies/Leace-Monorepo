@@ -367,15 +367,15 @@ function NavigationRoutes({
 }
 const RootNavigator = () => {
   const { data: session, isLoading } = trpc.auth.getSession.useQuery();
-  const { data: user } = trpc.user.getUserById.useQuery(
+  const { data: user, isLoading: userLoading } = trpc.user.getUserById.useQuery(
     { userId: session?.userId as string },
     { enabled: !!session?.userId },
   );
 
   if (isLoading) return <Loading />;
-  if (!session || !user) {
-    return <Loading signOut={true} />;
-  }
+  if (!session) return <Loading signOut={true} />;
+  if (userLoading) return <Loading />;
+  if (!user) return <Loading signOut={true} />;
 
   return (
     <>

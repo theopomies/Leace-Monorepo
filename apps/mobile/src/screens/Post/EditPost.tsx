@@ -97,7 +97,7 @@ export default function EditPost() {
         <View className="flex-1">
           <ScrollView
             contentContainerStyle={{ flexGrow: 1 }}
-            style={{ backgroundColor: "white" }} // #F2F7FF
+            style={{ backgroundColor: "white" }}
           >
             <View className="flex-1 space-y-2 p-4">
               <View>

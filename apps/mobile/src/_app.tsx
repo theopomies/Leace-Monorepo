@@ -19,10 +19,10 @@ export const App = () => {
       publishableKey={Constants.expoConfig?.extra?.CLERK_PUBLISHABLE_KEY}
       tokenCache={tokenCache}
     >
+      <StatusBar backgroundColor={"white"} barStyle={"dark-content"} />
       <SignedIn>
         <TRPCProvider>
           <SafeAreaProvider>
-            <StatusBar backgroundColor={"white"} barStyle={"dark-content"} />
             <RootNavigator />
           </SafeAreaProvider>
         </TRPCProvider>

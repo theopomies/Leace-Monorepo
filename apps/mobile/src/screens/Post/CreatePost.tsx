@@ -65,7 +65,7 @@ export default function CreatePost() {
         <Header />
         <ScrollView
           contentContainerStyle={{ flexGrow: 1 }}
-          style={{ backgroundColor: "white" }} // #F2F7FF
+          style={{ backgroundColor: "white" }}
         >
           <View className="flex-1 space-y-2 p-4">
             <View>
@@ -130,6 +130,6 @@ const styles = StyleSheet.create({
   },
   view: {
     flex: 1,
-    backgroundColor: "#F2F7FF",
+    backgroundColor: "white",
   },
 });

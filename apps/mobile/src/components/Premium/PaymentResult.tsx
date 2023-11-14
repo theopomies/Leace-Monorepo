@@ -36,7 +36,7 @@ const PaymentResult = ({
     <View>
       <View className="items-center justify-center">
         <Image
-          source={require("../../../assets/logo.png")}
+          source={require("../../../assets/logo_1024.png")}
           className="h-40 w-40"
         />
       </View>

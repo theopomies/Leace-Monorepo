@@ -253,6 +253,6 @@ const styles = StyleSheet.create({
   },
   view: {
     flex: 1,
-    backgroundColor: "#F2F7FF",
+    backgroundColor: "white",
   },
 });

@@ -8,7 +8,11 @@ export default function Loading({ signOut }: { signOut?: boolean }) {
 
   return (
     <View className="flex-1 items-center justify-center bg-white">
-      <Image source={require("../../../assets/logo.png")} alt="leace-logo" />
+      <Image
+        source={require("../../../assets/logo_1024.png")}
+        alt="leace-logo"
+        className="h-52 w-52"
+      />
       {signOut && (
         <Btn
           title="Sign Out"

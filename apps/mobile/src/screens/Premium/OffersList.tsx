@@ -147,7 +147,7 @@ const OffersList = ({}) => {
                   </View>
                 </View>
                 <Image
-                  source={require("../../../assets/logo.png")}
+                  source={require("../../../assets/logo_1024.png")}
                   style={{
                     width: 120,
                     height: 120,
