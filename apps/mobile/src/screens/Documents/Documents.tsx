@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   StyleSheet,
   ScrollView,
+  TouchableOpacity,
 } from "react-native";
 import axios from "axios";
 import { Buffer } from "buffer";
@@ -21,11 +22,12 @@ import * as MediaLibrary from "expo-media-library";
 import Toast from "react-native-toast-message";
 
 import * as Sharing from "expo-sharing";
-import { DocumentModal } from "../../components/Modal";
+import { DocumentModal, ZoomImageModal } from "../../components/Modal";
 
 export default function Documents() {
   const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState("");
+  const [open1, setOpen1] = useState(false);
+  const [selected, setSelected] = useState({ id: "", url: "" });
   const route = useRoute<RouteProp<TabStackParamList, "Profile">>();
   const { userId } = route.params;
   const {
@@ -139,8 +141,11 @@ export default function Documents() {
       <DocumentModal
         open={open}
         setOpen={setOpen}
-        callback={() => deleteDocument({ userId, documentId: selected })}
+        callback={() => deleteDocument({ userId, documentId: selected.id })}
       />
+      {open1 && (
+        <ZoomImageModal image={selected} callback={() => setOpen1(false)} />
+      )}
       <View style={styles.view}>
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
           {documents.map((doc, key) => (
@@ -148,7 +153,12 @@ export default function Documents() {
               key={key}
               className={`relative mx-3 mt-2 max-h-60 rounded-md bg-[#f1f1f1] p-2`}
             >
-              <View
+              <TouchableOpacity
+                disabled={doc.ext === "pdf"}
+                onPress={() => {
+                  setSelected({ id: doc.id, url: doc.url });
+                  setOpen1(true);
+                }}
                 className={`flex max-h-40 ${
                   doc.ext === "pdf" ? "h-20" : "h-40"
                 } items-center justify-center`}
@@ -163,7 +173,7 @@ export default function Documents() {
                       : { uri: doc.url }
                   }
                 ></Image>
-              </View>
+              </TouchableOpacity>
               <View className="flex flex-row items-center gap-1 pt-2">
                 <View className="flex-1">
                   <Text>
@@ -187,7 +197,7 @@ export default function Documents() {
                       iconName="delete"
                       iconType="material"
                       onPress={() => {
-                        setSelected(doc.id);
+                        setSelected({ id: doc.id, url: doc.url });
                         setOpen(true);
                       }}
                     />

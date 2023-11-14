@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
-import { ClerkLoaded, useAuth } from "@clerk/clerk-expo";
+import { ClerkLoaded } from "@clerk/clerk-expo";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { View, TouchableOpacity } from "react-native";
+import { TouchableOpacity } from "react-native";
 import { trpc } from "../utils/trpc";
 import { Icon } from "react-native-elements";
 import { ShowProfile, EditProfile } from "../screens/Profile";
@@ -23,7 +23,6 @@ import { TenantChat } from "../screens/Chat";
 import { TenantMatches } from "../screens/Matches";
 import { TenantStack } from "../screens/Stack";
 import { Loading } from "../components/Loading";
-import { Btn } from "../components/Btn";
 import Toast from "react-native-toast-message";
 
 const Tab = createBottomTabNavigator();
@@ -81,7 +80,13 @@ export type TabStackParamList = {
   Settings: undefined;
 };
 
-function Test({ userId, role }: { userId: string; role: Role | null }) {
+function NavigationRoutes({
+  userId,
+  role,
+}: {
+  userId: string;
+  role: Role | null;
+}) {
   const navigation =
     useNavigation<NativeStackNavigationProp<TabStackParamList>>();
   const isPremium = false;
@@ -287,7 +292,7 @@ function Test({ userId, role }: { userId: string; role: Role | null }) {
         component={Documents}
         initialParams={{ userId }}
         options={{
-          /*tabBarStyle: { display: "none" },
+          tabBarStyle: { display: "none" },
           tabBarButton: () => null,
           headerShown: true,
           headerTitleStyle: { color: "#10316B" },
@@ -304,8 +309,8 @@ function Test({ userId, role }: { userId: string; role: Role | null }) {
                 type="material-icons"
               ></Icon>
             </TouchableOpacity>
-          ),*/
-          tabBarIcon: ({ focused }) => (
+          ),
+          /*tabBarIcon: ({ focused }) => (
             <Icon
               name={"description"}
               type="material-icons"
@@ -313,7 +318,7 @@ function Test({ userId, role }: { userId: string; role: Role | null }) {
             />
           ),
           tabBarLabel: "",
-          headerShown: false,
+          headerShown: false,*/
         }}
       />
       <Tab.Screen
@@ -361,32 +366,22 @@ function Test({ userId, role }: { userId: string; role: Role | null }) {
   );
 }
 const RootNavigator = () => {
-  const { signOut } = useAuth();
   const { data: session, isLoading } = trpc.auth.getSession.useQuery();
-  const { data: user, isLoading: userLoading } = trpc.user.getUserById.useQuery(
+  const { data: user } = trpc.user.getUserById.useQuery(
     { userId: session?.userId as string },
     { enabled: !!session?.userId },
   );
 
-  if (isLoading || userLoading) return <Loading />;
+  if (isLoading) return <Loading />;
   if (!session || !user) {
-    return (
-      <View className="flex-1 items-center justify-center bg-white">
-        <Btn
-          iconName="logout"
-          iconType="material-icons"
-          title="Sign Out"
-          onPress={() => signOut()}
-        />
-      </View>
-    );
+    return <Loading signOut={true} />;
   }
 
   return (
     <>
       <NavigationContainer>
         <ClerkLoaded>
-          <Test userId={user.id} role={user.role} />
+          <NavigationRoutes userId={user.id} role={user.role} />
         </ClerkLoaded>
       </NavigationContainer>
       <Toast />
