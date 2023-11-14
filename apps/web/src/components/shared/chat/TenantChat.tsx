@@ -1,11 +1,11 @@
+import { Role } from "@prisma/client";
+import { useRouter } from "next/router";
 import { useMemo } from "react";
 import { trpc } from "../../../utils/trpc";
 import { Loader } from "../Loader";
 import { Chat } from "./Chat";
-import { Role } from "@prisma/client";
-import { TenantContractPopover } from "./contracts/TenantContractPopover";
 import { MatchActions } from "./MatchActions";
-import { useRouter } from "next/router";
+import { TenantContractPopover } from "./contracts/TenantContractPopover";
 
 export function TenantChat({
   userId,
@@ -18,14 +18,9 @@ export function TenantChat({
 }) {
   const router = useRouter();
   const utils = trpc.useContext();
-  const { data: conversation, isLoading: conversationIsLoadingOrNotEnabled } =
-    trpc.conversation.getConversation.useQuery(
-      { conversationId: conversationId ?? "" },
-      { enabled: !!conversationId, refetchOnWindowFocus: true },
-    );
-  const conversationIsLoading = useMemo(
-    () => conversationIsLoadingOrNotEnabled && !!conversationId,
-    [conversationIsLoadingOrNotEnabled, conversationId],
+  const { data: conversation } = trpc.conversation.getConversation.useQuery(
+    { conversationId: conversationId ?? "" },
+    { enabled: !!conversationId, refetchInterval: 1000 },
   );
   const sendMutation = trpc.conversation.sendMessage.useMutation({
     onSuccess() {
@@ -49,11 +44,8 @@ export function TenantChat({
     trpc.relationship.deleteRelationForTenant.useMutation();
 
   const isLoading = useMemo(
-    () =>
-      conversationIsLoading ||
-      relationshipsLoading ||
-      supportRelationshipsLoading,
-    [conversationIsLoading, relationshipsLoading, supportRelationshipsLoading],
+    () => relationshipsLoading || supportRelationshipsLoading,
+    [relationshipsLoading, supportRelationshipsLoading],
   );
 
   const relationship = useMemo(() => {
