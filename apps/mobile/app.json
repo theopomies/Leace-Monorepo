@@ -21,7 +21,17 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [["expo-document-picker"]],
+    "plugins": [
+      ["expo-document-picker"],
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Allow $(PRODUCT_NAME) to access your photos.",
+          "savePhotosPermission": "Allow $(PRODUCT_NAME) to save photos.",
+          "isAccessMediaLocationEnabled": true
+        }
+      ]
+    ],
     "scheme": "com.azerty123456789.leace",
     "extra": {
       "eas": {
@@ -30,7 +40,8 @@
       "CLERK_PUBLISHABLE_KEY": "pk_test_Y2VydGFpbi1jcmFiLTU0LmNsZXJrLmFjY291bnRzLmRldiQ"
     },
     "android": {
-      "package": "com.azerty123456789.leace"
+      "package": "com.azerty123456789.leace",
+      "permissions": ["READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE"]
     }
   }
 }

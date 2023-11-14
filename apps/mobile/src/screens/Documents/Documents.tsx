@@ -6,79 +6,22 @@ import {
   SafeAreaView,
   StyleSheet,
   ScrollView,
-  Modal,
 } from "react-native";
 import axios from "axios";
 import { Buffer } from "buffer";
 import { trpc } from "../../utils/trpc";
 import { Btn } from "../../components/Btn";
-import * as FileSystem from "expo-file-system";
 import * as DocumentPicker from "expo-document-picker";
 import { useRoute, RouteProp } from "@react-navigation/native";
 import { TabStackParamList } from "../../navigation/RootNavigator";
 import { Loading } from "../../components/Loading";
 
-type DocumentModalType = {
-  open: boolean;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  callback: () => void;
-};
+import * as FileSystem from "expo-file-system";
+import * as MediaLibrary from "expo-media-library";
+import Toast from "react-native-toast-message";
 
-function DocumentModal({ open, setOpen, callback }: DocumentModalType) {
-  return (
-    <Modal
-      animationType="slide"
-      transparent={true}
-      visible={open}
-      onRequestClose={() => setOpen(false)}
-    >
-      <View className="flex-1 items-center justify-center">
-        <View
-          className="w-3/4 rounded-md bg-white p-4"
-          style={{
-            shadowColor: "#000",
-            shadowOffset: {
-              width: 0,
-              height: 2,
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 4,
-            elevation: 5,
-          }}
-        >
-          <View className="flex flex-col gap-2">
-            <Text className="font-base text-sm">
-              Are you certain you want to proceed with the permanent deletion of
-              this document ?
-            </Text>
-            <Text className="text-xs font-light">
-              Please note that this action is irreversible, and the document
-              cannot be recovered.
-            </Text>
-          </View>
-          <View className="flex flex-row gap-1 pt-2">
-            <View className="flex-1">
-              <Btn
-                title="Delete"
-                bgColor="#ef4444"
-                textColor="#FFFFFF"
-                onPress={callback}
-              ></Btn>
-            </View>
-            <View className="flex-1">
-              <Btn
-                title="Close"
-                bgColor="#F2F7FF"
-                textColor="#10316B"
-                onPress={() => setOpen(false)}
-              ></Btn>
-            </View>
-          </View>
-        </View>
-      </View>
-    </Modal>
-  );
-}
+import * as Sharing from "expo-sharing";
+import { DocumentModal } from "../../components/Modal";
 
 export default function Documents() {
   const [open, setOpen] = useState(false);
@@ -89,9 +32,7 @@ export default function Documents() {
     data: documents,
     refetch,
     isLoading,
-  } = trpc.document.getSignedUrl.useQuery({
-    userId,
-  });
+  } = trpc.document.getSignedUrl.useQuery({ userId });
   const uploadDocument = trpc.document.putSignedUrl.useMutation();
   const { mutate: deleteDocument } = trpc.document.deleteSignedUrl.useMutation({
     onSuccess() {
@@ -134,6 +75,54 @@ export default function Documents() {
     }
   };
 
+  async function getFileUri(url: string, fileName: string) {
+    const fileUri = FileSystem.documentDirectory + fileName;
+    const downloadedFile = await FileSystem.downloadAsync(url, fileUri);
+    if (downloadedFile.status === 200) return downloadedFile.uri;
+    return null;
+  }
+
+  async function saveFile(fileName: string, fileUri: string, ext: string) {
+    const saveAs = `${fileName}.${ext}`;
+    try {
+      const downloadedFile = await getFileUri(fileUri, saveAs);
+      if (!downloadedFile) throw new Error("DOWNLOAD FAILED");
+      if (ext === "pdf")
+        await Sharing.shareAsync(downloadedFile, {
+          mimeType: "application/pdf",
+          dialogTitle: "Download or share a PDF",
+          UTI: "com.adobe.pdf",
+        });
+      else {
+        await MediaLibrary.createAssetAsync(downloadedFile);
+        Toast.show({ type: "success", text1: "File downloaded." });
+      }
+    } catch (e) {
+      console.error(e);
+      Toast.show({
+        type: "error",
+        text1: "The file download was not successful.",
+        text2: "Try again later.",
+      });
+    }
+  }
+
+  async function downloadFile(fileName: string, fileUri: string, ext: string) {
+    const declined = {
+      type: "error",
+      text1: "Access to the library was declined.",
+      text2: "Download canceled.",
+    };
+    const result = await MediaLibrary.getPermissionsAsync();
+    if (result.status === "granted") {
+      await saveFile(fileName, fileUri, ext);
+    } else if (result.status === "undetermined") {
+      const ask = await MediaLibrary.requestPermissionsAsync();
+      if (ask.status === "granted") await saveFile(fileName, fileUri, ext);
+      else Toast.show(declined);
+    } else Toast.show(declined);
+  }
+
   if (isLoading) return <Loading />;
 
   if (!documents)
@@ -175,20 +164,35 @@ export default function Documents() {
                   }
                 ></Image>
               </View>
-              <View className="flex flex-row items-center pt-2">
+              <View className="flex flex-row items-center gap-1 pt-2">
                 <View className="flex-1">
-                  <Text>File name: PLACE HOLDER</Text>
+                  <Text>
+                    {doc.id}.{doc.ext}
+                  </Text>
                 </View>
-                <Btn
-                  className="rounded-md"
-                  bgColor="#ef4444"
-                  iconName="delete"
-                  iconType="material"
-                  onPress={() => {
-                    setSelected(doc.id);
-                    setOpen(true);
-                  }}
-                />
+                <View className="flex flex-row space-x-1">
+                  <View>
+                    <Btn
+                      className="rounded-md"
+                      bgColor="#10316B"
+                      iconName="download"
+                      iconType="material-community"
+                      onPress={() => downloadFile(doc.id, doc.url, doc.ext)}
+                    />
+                  </View>
+                  <View>
+                    <Btn
+                      className="rounded-md"
+                      bgColor="#ef4444"
+                      iconName="delete"
+                      iconType="material"
+                      onPress={() => {
+                        setSelected(doc.id);
+                        setOpen(true);
+                      }}
+                    />
+                  </View>
+                </View>
               </View>
             </View>
           ))}

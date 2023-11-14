@@ -29,7 +29,11 @@
     "expo-constants": "^14.4.2",
     "expo-crypto": "~12.4.1",
     "expo-document-picker": "~11.5.4",
+    "expo-file-system": "~15.4.4",
+    "expo-media-library": "~15.4.1",
+    "expo-permissions": "~14.2.1",
     "expo-secure-store": "~12.3.1",
+    "expo-sharing": "~11.5.0",
     "expo-splash-screen": "~0.20.5",
     "expo-status-bar": "~1.6.0",
     "expo-web-browser": "~12.3.2",
@@ -46,6 +50,7 @@
     "react-native-snap-carousel": "^3.9.1",
     "react-native-swipe-gestures": "^1.0.5",
     "react-native-swiper": "^1.6.0",
+    "react-native-toast-message": "^2.1.7",
     "react-native-webview": "^13.6.0"
   },
   "devDependencies": {

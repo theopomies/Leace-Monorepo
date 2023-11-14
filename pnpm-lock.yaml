@@ -89,9 +89,21 @@ importers:
       expo-document-picker:
         specifier: ~11.5.4
         version: 11.5.4(expo@49.0.13)
+      expo-file-system:
+        specifier: ~15.4.4
+        version: 15.4.4(expo@49.0.13)
+      expo-media-library:
+        specifier: ~15.4.1
+        version: 15.4.1(expo@49.0.13)
+      expo-permissions:
+        specifier: ~14.2.1
+        version: 14.2.1(expo@49.0.13)
       expo-secure-store:
         specifier: ~12.3.1
         version: 12.3.1(expo@49.0.13)
+      expo-sharing:
+        specifier: ~11.5.0
+        version: 11.5.0(expo@49.0.13)
       expo-splash-screen:
         specifier: ~0.20.5
         version: 0.20.5(expo-modules-autolinking@1.5.1)(expo@49.0.13)
@@ -140,6 +152,9 @@ importers:
       react-native-swiper:
         specifier: ^1.6.0
         version: 1.6.0
+      react-native-toast-message:
+        specifier: ^2.1.7
+        version: 2.1.7(react-native@0.72.5)(react@18.2.0)
       react-native-webview:
         specifier: ^13.6.0
         version: 13.6.0(react-native@0.72.5)(react@18.2.0)
@@ -8160,6 +8175,14 @@ packages:
       - supports-color
     dev: false
 
+  /expo-media-library@15.4.1(expo@49.0.13):
+    resolution: {integrity: sha512-lpWcT4pynWcE7TyNMUkLFH4YcueCTnq7UOJYRR0vewPEJeQXwRscka7zBtrhA+RSsJda013Q0615K+5lRLt14Q==}
+    peerDependencies:
+      expo: '*'
+    dependencies:
+      expo: 49.0.13(@babel/core@7.21.8)
+    dev: false
+
   /expo-modules-autolinking@1.5.1:
     resolution: {integrity: sha512-yt5a1VCp2BF9CrsO689PCD5oXKP14MMhnOanQMvDn4BDpURYfzAlDVGC5fZrNQKtwn/eq3bcrxIwZ7D9QjVVRg==}
     hasBin: true
@@ -8181,8 +8204,24 @@ packages:
       invariant: 2.2.4
     dev: false
 
+  /expo-permissions@14.2.1(expo@49.0.13):
+    resolution: {integrity: sha512-jXGnOODtDMFvK7cwo7wIRPcnA7m1bie80gJ5BdL6Vs5kgCU7+RCLOCp3sBw7TKRPIlVMmQDhZA62bGzoBV0hkA==}
+    peerDependencies:
+      expo: '*'
+    dependencies:
+      expo: 49.0.13(@babel/core@7.21.8)
+    dev: false
+
   /expo-secure-store@12.3.1(expo@49.0.13):
     resolution: {integrity: sha512-XLIgWDiIuiR0c+AA4NCWWibAMHCZUyRcy+lQBU49U6rvG+xmd3YrBJfQjfqAPyLroEqnLPGTWUX57GyRsfDOQw==}
+    peerDependencies:
+      expo: '*'
+    dependencies:
+      expo: 49.0.13(@babel/core@7.21.8)
+    dev: false
+
+  /expo-sharing@11.5.0(expo@49.0.13):
+    resolution: {integrity: sha512-uerM5YH1FKDZXfkP9ORebvlMVOPP/AfoYgYBez6a8G9fztNYHnRCA6mgK+3aQmpnb3ltmjnAZC39kH18bTNcVw==}
     peerDependencies:
       expo: '*'
     dependencies:
@@ -11618,6 +11657,16 @@ packages:
     resolution: {integrity: sha512-OnkTTZi+9uZUgy0uz1I9oYDhCU3z36lZn+LFsk9FXPRelxb/KeABzvPs3r3SrHWy1aA67KGtSFj0xNK2QD0NJQ==}
     dependencies:
       prop-types: 15.8.1
+    dev: false
+
+  /react-native-toast-message@2.1.7(react-native@0.72.5)(react@18.2.0):
+    resolution: {integrity: sha512-5zX3T5buVpg4bn9KZYVZ2VUQiLQZ1FHSM2AFQHVpgeKMYb+Gq+jt7wjhfPqhuMkJElQr7XNrnRw/rBCdD+7Q9w==}
+    peerDependencies:
+      react: '*'
+      react-native: '*'
+    dependencies:
+      react: 18.2.0
+      react-native: 0.72.5(@babel/core@7.21.8)(@babel/preset-env@7.21.5)(react@18.2.0)
     dev: false
 
   /react-native-url-polyfill@2.0.0(react-native@0.72.5):

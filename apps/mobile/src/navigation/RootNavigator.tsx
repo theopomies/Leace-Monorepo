@@ -24,6 +24,7 @@ import { TenantMatches } from "../screens/Matches";
 import { TenantStack } from "../screens/Stack";
 import { Loading } from "../components/Loading";
 import { Btn } from "../components/Btn";
+import Toast from "react-native-toast-message";
 
 const Tab = createBottomTabNavigator();
 
@@ -286,7 +287,7 @@ function Test({ userId, role }: { userId: string; role: Role | null }) {
         component={Documents}
         initialParams={{ userId }}
         options={{
-          tabBarStyle: { display: "none" },
+          /*tabBarStyle: { display: "none" },
           tabBarButton: () => null,
           headerShown: true,
           headerTitleStyle: { color: "#10316B" },
@@ -303,7 +304,16 @@ function Test({ userId, role }: { userId: string; role: Role | null }) {
                 type="material-icons"
               ></Icon>
             </TouchableOpacity>
+          ),*/
+          tabBarIcon: ({ focused }) => (
+            <Icon
+              name={"description"}
+              type="material-icons"
+              color={focused ? "#10316B" : "black"}
+            />
           ),
+          tabBarLabel: "",
+          headerShown: false,
         }}
       />
       <Tab.Screen
@@ -373,11 +383,14 @@ const RootNavigator = () => {
   }
 
   return (
-    <NavigationContainer>
-      <ClerkLoaded>
-        <Test userId={user.id} role={user.role} />
-      </ClerkLoaded>
-    </NavigationContainer>
+    <>
+      <NavigationContainer>
+        <ClerkLoaded>
+          <Test userId={user.id} role={user.role} />
+        </ClerkLoaded>
+      </NavigationContainer>
+      <Toast />
+    </>
   );
 };
 
