@@ -5,6 +5,7 @@ import Link from "next/link";
 import { RouterOutputs, trpc } from "../../../utils/trpc";
 import { getLinks } from "./links";
 import { UserImage } from "../../shared/user/UserImage";
+import { useRouter } from "next/router";
 
 export interface NavBarProps {
   session: RouterOutputs["auth"]["getSession"];
@@ -12,6 +13,7 @@ export interface NavBarProps {
 }
 
 export function NavBar({ session, activePage }: NavBarProps) {
+  const router = useRouter();
   const links = getLinks(session.userId);
   const { data: me } = trpc.user.getUserById.useQuery(
     { userId: session.userId },
@@ -99,6 +101,7 @@ export function NavBar({ session, activePage }: NavBarProps) {
         <Link
           href="#"
           onClick={async () => {
+            router.push("/");
             await signOut();
           }}
           className={`flex items-center justify-center rounded-md bg-indigo-500 py-4 px-2 ${
