@@ -2,13 +2,7 @@ import { z } from "zod";
 import { AuthenticatedProcedure, router } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { Role } from "@prisma/client";
-
-export type OnboardingStatus =
-  | "ROLE_SELECTION"
-  | "IDENTITY_COMPLETION"
-  | "PROFILE_PICTURE"
-  | "PREFERENCES_COMPLETION"
-  | "COMPLETE";
+import { OnboardingStatus } from "../utils/types";
 
 export const onboardingRouter = router({
   getUserOnboardingStatus: AuthenticatedProcedure.input(
@@ -37,6 +31,10 @@ export const onboardingRouter = router({
 
     if (!user) throw new TRPCError({ code: "NOT_FOUND" });
 
-    return "ROLE_SELECTION" as OnboardingStatus;
+    if (!user.role) {
+      return OnboardingStatus.ROLE_SELECTION as OnboardingStatus;
+    }
+
+    return OnboardingStatus.IDENTITY_COMPLETION as OnboardingStatus;
   }),
 });

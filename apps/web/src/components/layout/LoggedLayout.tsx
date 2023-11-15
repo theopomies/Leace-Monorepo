@@ -4,10 +4,11 @@ import { Role } from "@prisma/client";
 import { trpc } from "../../utils/trpc";
 import { Loader } from "../shared/Loader";
 import { RedirectToSignIn, SignedIn, SignedOut } from "@clerk/nextjs";
-import { ReactNode, useEffect } from "react";
+import { ReactNode } from "react";
 import { useRouter } from "next/router";
 import { BanMessage } from "../moderation/ban/BanMessage";
 import { ToastDescription, ToastTitle, useToast } from "../shared/toast/Toast";
+import { OnboardingStatus } from "@leace/api/src/utils/types";
 
 export interface LoggedLayoutProps {
   children: React.ReactNode;
@@ -75,7 +76,8 @@ const AuthorizedLayout = ({
   if (!router.pathname.startsWith("/onboarding")) {
     if (
       !session.role ||
-      (onboardingStatus !== undefined && onboardingStatus !== "COMPLETE")
+      (onboardingStatus !== undefined &&
+        onboardingStatus !== OnboardingStatus.COMPLETE)
     ) {
       router.push("/onboarding");
       return <Loader />;
