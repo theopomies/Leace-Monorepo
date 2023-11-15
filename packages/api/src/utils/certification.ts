@@ -52,10 +52,10 @@ export const checkCertificationLevel = async ({
   if (!user) return;
 
   if (!(await hasRequiredDocuments(ctx, user.id))) return;
-  if (!user.email && !user.emailVerified) return; // VERIFY YOUR EMAIL
+  if (!user.email) return; //&& !user.emailVerified) return; // VERIFY YOUR EMAIL (implement mail verification in front)
   if (!user.image) return; // VERIFY YOUR FACE
   if (!user.firstName && !user.lastName && !user.birthDate) return; // UPDATE YOUR PERSONNAL INFORMATIONS
-  if (!user.phoneNumber) return; // VERIFY YOUR PHONE NUMBER
+  //if (!user.phoneNumber) return; // VERIFY YOUR PHONE NUMBER (implement phonenumber in front)
   if (!user.country) return; // VERIFY YOUR LOCATION
 
   // IF ALL CONDITIONS ARE OK THEN CERTIFY THE USER

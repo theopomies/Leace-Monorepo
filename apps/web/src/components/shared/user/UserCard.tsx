@@ -107,6 +107,11 @@ export function UserCard({
                   Premium
                 </p>
               )}
+              {user.certified && (
+                <p className="m-auto rounded-full border border-indigo-500 p-0.5 px-1 text-xs text-indigo-500">
+                  Certified
+                </p>
+              )}
               <h2 className="text-sm font-medium text-slate-500">
                 Member since: <i>{user.createdAt.toDateString()}</i>
               </h2>

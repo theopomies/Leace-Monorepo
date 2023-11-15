@@ -51,6 +51,11 @@ export function TenantBar({ postId, tenant }: TenantBarProps) {
                   Premium
                 </p>
               )}
+              {tenant.certified && (
+                <p className="m-auto rounded-full border border-indigo-500 p-0.5 px-1 text-xs text-indigo-500">
+                  Certified
+                </p>
+              )}
             </div>
             <div className="flex items-center">
               {tenant.birthDate && (
