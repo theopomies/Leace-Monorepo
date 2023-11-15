@@ -35,6 +35,16 @@ export const onboardingRouter = router({
       return OnboardingStatus.ROLE_SELECTION as OnboardingStatus;
     }
 
-    return OnboardingStatus.IDENTITY_COMPLETION as OnboardingStatus;
+    if (
+      !user.image ||
+      !user.firstName ||
+      !user.lastName ||
+      !user.birthDate ||
+      !user.description
+    ) {
+      return OnboardingStatus.IDENTITY_COMPLETION as OnboardingStatus;
+    }
+
+    return OnboardingStatus.PREFERENCES_COMPLETION as OnboardingStatus;
   }),
 });

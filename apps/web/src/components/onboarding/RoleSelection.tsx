@@ -5,9 +5,8 @@ import { Role } from "@prisma/client";
 
 export function RoleSelection({ userId }: { userId: string }) {
   const [step, setStep] = useState<"greetings" | "roleSelection">("greetings");
-  const { mutate: updateUser } = trpc.user.updateUserRoleById.useMutation();
   const utils = trpc.useContext();
-  const userRole = trpc.user.updateUserRoleById.useMutation({
+  const { mutate: updateUserRole } = trpc.user.updateUserRoleById.useMutation({
     onSuccess() {
       utils.auth.getSession.invalidate();
       utils.onboarding.getUserOnboardingStatus.invalidate();
@@ -19,7 +18,7 @@ export function RoleSelection({ userId }: { userId: string }) {
   ) => MouseEventHandler<HTMLButtonElement> = (role) => (e) => {
     e.preventDefault();
     if (!(role in Role)) return;
-    userRole.mutate({ role, userId });
+    updateUserRole({ role, userId });
   };
 
   if (step === "greetings") {
