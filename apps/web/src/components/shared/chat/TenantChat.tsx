@@ -4,7 +4,8 @@ import { Loader } from "../Loader";
 import { Chat } from "./Chat";
 import { Role } from "@prisma/client";
 import { TenantContractPopover } from "./contracts/TenantContractPopover";
-import { ReportDialog } from "./ReportDialog";
+import { MatchActions } from "./MatchActions";
+import { useRouter } from "next/router";
 
 export function TenantChat({
   userId,
@@ -15,13 +16,12 @@ export function TenantChat({
   conversationId?: string;
   role: Role;
 }) {
+  const router = useRouter();
   const utils = trpc.useContext();
   const { data: conversation, isLoading: conversationIsLoadingOrNotEnabled } =
     trpc.conversation.getConversation.useQuery(
-      {
-        conversationId: conversationId ?? "",
-      },
-      { enabled: !!conversationId },
+      { conversationId: conversationId ?? "" },
+      { enabled: !!conversationId, refetchOnWindowFocus: true },
     );
   const conversationIsLoading = useMemo(
     () => conversationIsLoadingOrNotEnabled && !!conversationId,
@@ -33,7 +33,10 @@ export function TenantChat({
     },
   });
   const { data: relationships, isLoading: relationshipsLoading } =
-    trpc.relationship.getMatchesForTenant.useQuery({ userId });
+    trpc.relationship.getMatchesForTenant.useQuery(
+      { userId },
+      { refetchOnWindowFocus: true },
+    );
 
   const { data: supportRelationships, isLoading: supportRelationshipsLoading } =
     trpc.support.getRelationshipsForTenant.useQuery({ userId });
@@ -42,6 +45,8 @@ export function TenantChat({
   };
 
   const report = trpc.report.reportPostById.useMutation();
+  const deleteRelationship =
+    trpc.relationship.deleteRelationForTenant.useMutation();
 
   const isLoading = useMemo(
     () =>
@@ -74,6 +79,11 @@ export function TenantChat({
       }
     : undefined;
 
+  const onDelete = async (relationshipId: string) => {
+    await deleteRelationship.mutateAsync({ userId, relationshipId });
+    router.push(`/users/${userId}/matches`);
+  };
+
   return (
     <Chat
       userId={userId}
@@ -87,8 +97,11 @@ export function TenantChat({
       additionnalBarComponent={
         <div className="flex items-center gap-8">
           {relationship && (
-            <ReportDialog
-              title={relationship.post.title ?? "title"}
+            <MatchActions
+              fullName={
+                `${relationship.post.createdBy.firstName} ${relationship.post.createdBy.lastName}` ??
+                "User"
+              }
               onReport={({ reason, description }) =>
                 report.mutate({
                   postId: relationship.post.id,
@@ -96,6 +109,7 @@ export function TenantChat({
                   desc: description,
                 })
               }
+              onDelete={() => onDelete(relationship.id)}
             />
           )}
           <TenantContractPopover relationship={relationship} />

@@ -1,14 +1,15 @@
-import { RelationType, PostType, Role, EnergyClass } from "@prisma/client";
+import { User } from "@leace/db";
+import { EnergyClass, PostType, RelationType, Role } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";
-import {
-  getPostsWithAttribute,
-  getUsersWithAttribute,
-  shuffle,
-} from "../utils/algorithm";
+import { getPostsWithAttribute, shuffle } from "../utils/algorithm";
 import { filterStrings } from "../utils/filter";
 import { getId } from "../utils/getId";
+
+interface UserLike extends User {
+  relationshipCreated: Date;
+}
 
 export const postRouter = router({
   createPost: protectedProcedure([Role.AGENCY, Role.OWNER])
@@ -23,7 +24,7 @@ export const postRouter = router({
         ges: z
           .enum([EnergyClass.A, EnergyClass.B, EnergyClass.C, EnergyClass.D])
           .optional(),
-        constructionDate: z.date().optional(),
+        constructionDate: z.date().optional().nullable(),
         estimatedCosts: z.number().optional(),
         nearedShops: z.number().optional(),
         securityAlarm: z.boolean().optional(),
@@ -103,7 +104,7 @@ export const postRouter = router({
         ges: z
           .enum([EnergyClass.A, EnergyClass.B, EnergyClass.C, EnergyClass.D])
           .optional(),
-        constructionDate: z.date().optional(),
+        constructionDate: z.date().optional().nullable(),
         estimatedCosts: z.number().optional(),
         nearedShops: z.number().optional(),
         securityAlarm: z.boolean().optional(),
@@ -320,7 +321,10 @@ export const postRouter = router({
 
       // If less or equal than 3 posts, add more
       if (user.postsToBeSeen.length <= 3) {
-        const newPosts = await getPostsWithAttribute(user.id);
+        const newPosts = await getPostsWithAttribute(
+          user.id,
+          user.isPremium ?? false,
+        );
         if (newPosts.length === 0) return user.postsToBeSeen;
         const updatedUser = await ctx.prisma.user.update({
           where: { id: user.id },
@@ -345,28 +349,41 @@ export const postRouter = router({
     .query(async ({ ctx, input }) => {
       const post = await ctx.prisma.post.findUniqueOrThrow({
         where: { id: input.postId },
-        include: { usersToBeSeen: true },
-      });
-
-      // If less or equal than 3 posts, add more
-      if (post.usersToBeSeen.length <= 3) {
-        const newUsers = await getUsersWithAttribute(post.id);
-        if (newUsers.length === 0) return post.usersToBeSeen;
-        const updatedPost = await ctx.prisma.post.update({
-          where: { id: post.id },
-          data: {
-            usersToBeSeen: {
-              connect: newUsers.map((user) => ({ id: user.id })),
+        // relationships without already matched users or disliked users
+        include: {
+          relationships: {
+            where: {
+              relationType: RelationType.TENANT,
+            },
+            include: {
+              user: true,
             },
           },
-          include: { usersToBeSeen: true },
-        });
-        shuffle(updatedPost.usersToBeSeen);
-        return updatedPost.usersToBeSeen;
+        },
+      });
+
+      if (!post) throw new TRPCError({ code: "NOT_FOUND" });
+
+      if (post.createdById != ctx.auth.userId) {
+        throw new TRPCError({ code: "FORBIDDEN" });
       }
-      // If more than 3 posts, return the list
-      shuffle(post.usersToBeSeen);
-      return post.usersToBeSeen;
+
+      const usersLikes: UserLike[] = post.relationships.map((relationship) => {
+        return {
+          ...relationship.user,
+          relationshipCreated: relationship.createdAt,
+        };
+      });
+
+      usersLikes.sort((a, b) => {
+        if (a.isPremium && !b.isPremium) return -1;
+        if (!a.isPremium && b.isPremium) return 1;
+        if (a.relationshipCreated < b.relationshipCreated) return -1;
+        if (a.relationshipCreated > b.relationshipCreated) return 1;
+        return 0;
+      });
+
+      return usersLikes;
     }),
   getRentExpenseByUserId: protectedProcedure([Role.TENANT])
     .input(z.object({ userId: z.string() }))

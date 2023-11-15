@@ -1,10 +1,9 @@
-import { RelationType, PostType, UserStatus } from "@prisma/client";
-import { Role } from "@prisma/client";
+import { PostType, RelationType, Role, UserStatus } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";
+import { moveToPostsSeen, moveToPostsToBeSeen } from "../utils/algorithm";
 import { getId } from "../utils/getId";
-import { movePostToSeen, moveUserToSeen } from "../utils/algorithm";
 
 export const relationshipRouter = router({
   likeTenantForPost: protectedProcedure([Role.OWNER, Role.AGENCY])
@@ -46,8 +45,6 @@ export const relationshipRouter = router({
         ctx.auth.userId != post.managedById
       )
         throw new TRPCError({ code: "FORBIDDEN" });
-
-      await moveUserToSeen(user.id, post.id);
 
       const relationship = await ctx.prisma.relationship.findFirst({
         where: { postId: post.id, userId: user.id },
@@ -131,8 +128,6 @@ export const relationshipRouter = router({
       )
         throw new TRPCError({ code: "FORBIDDEN" });
 
-      await moveUserToSeen(user.id, post.id);
-
       const relationship = await ctx.prisma.relationship.findFirst({
         where: { postId: post.id, userId: user.id },
       });
@@ -190,7 +185,7 @@ export const relationshipRouter = router({
 
       if (post.type == PostType.RENTED)
         throw new TRPCError({ code: "FORBIDDEN" });
-      await movePostToSeen(ctx.auth.userId, post.id);
+      await moveToPostsSeen(ctx.auth.userId, post.id);
 
       const relationship = await ctx.prisma.relationship.findFirst({
         where: { postId: post.id, userId: user.id },
@@ -256,7 +251,7 @@ export const relationshipRouter = router({
 
       if (post.type == PostType.RENTED)
         throw new TRPCError({ code: "FORBIDDEN" });
-      await movePostToSeen(ctx.auth.userId, post.id);
+      await moveToPostsSeen(ctx.auth.userId, post.id);
 
       const relationship = await ctx.prisma.relationship.findFirst({
         where: { postId: post.id, userId: user.id },
@@ -281,6 +276,46 @@ export const relationshipRouter = router({
       });
 
       return { missed: true, message: "You missed a match!" };
+    }),
+  rewindPostForTenant: protectedProcedure([Role.TENANT])
+    .input(z.object({ userId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const userId = getId({ ctx, userId: input.userId });
+
+      const user = await ctx.prisma.user.findUnique({
+        where: { id: userId },
+      });
+
+      if (!user) throw new TRPCError({ code: "NOT_FOUND" });
+
+      if (user.role != Role.TENANT) throw new TRPCError({ code: "FORBIDDEN" });
+
+      const lastPostSeen = await ctx.prisma.post.findFirst({
+        where: { seenBy: { some: { id: userId } } },
+        orderBy: { createdAt: "desc" },
+      });
+
+      if (!lastPostSeen) throw new TRPCError({ code: "NOT_FOUND" });
+
+      if (lastPostSeen.type == PostType.RENTED)
+        throw new TRPCError({ code: "FORBIDDEN" });
+
+      await moveToPostsToBeSeen(ctx.auth.userId, lastPostSeen.id);
+
+      const relationship = await ctx.prisma.relationship.findFirst({
+        where: { postId: lastPostSeen.id, userId: user.id },
+      });
+
+      if (relationship) {
+        const deleted = await ctx.prisma.relationship.delete({
+          where: { id: relationship.id },
+        });
+
+        if (!deleted) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+      }
+      ctx.mixPanel.track("Rewind Post", {
+        distinct_id: ctx.auth.userId,
+      });
     }),
   getMatchesForTenant: protectedProcedure([Role.TENANT])
     .input(z.object({ userId: z.string() }))

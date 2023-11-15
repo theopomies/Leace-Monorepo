@@ -1,38 +1,25 @@
 /* eslint-disable @next/next/no-img-element */
-import Link from "next/link";
 import { trpc } from "../../../utils/trpc";
-import { Post, PostType, RelationType, User } from "@prisma/client";
-import { PostBarActions } from "./PostBarActions";
-import { PostBarUser } from "./PostBarUser";
+import { Post, PostType } from "@prisma/client";
+import { setCacheId } from "../../../utils/useCache";
+import { useRouter } from "next/router";
 
 export interface PostBarProps {
   post: Post;
   postLink: string;
   selected?: boolean;
-  relationType?: RelationType;
-  relationshipId?: string;
-  conversationId?: string;
-  user?: User;
-  userLink?: string;
-  onDeleteMatch?: (relationshipId: string) => void;
-  onLikeMatch?: (postId: string) => void;
 }
 
-export const PostBar = ({
-  post,
-  postLink,
-  selected,
-  relationType,
-  relationshipId,
-  conversationId,
-  user,
-  userLink,
-  onDeleteMatch,
-  onLikeMatch,
-}: PostBarProps) => {
+export const PostBar = ({ post, postLink, selected }: PostBarProps) => {
+  const router = useRouter();
   const { data: img } = trpc.image.getSignedPostUrl.useQuery({
     postId: post.id,
   });
+
+  const handleClick = () => {
+    setCacheId("lastSelectedPostId", post.id);
+    router.push(postLink.replace("[postId]", post.id));
+  };
 
   return (
     <div
@@ -41,10 +28,7 @@ export const PostBar = ({
       } mx-auto mb-5 flex flex-grow cursor-pointer flex-col overflow-hidden rounded-xl bg-white shadow-md md:max-w-2xl`}
     >
       <div className="flex items-center">
-        <Link
-          href={postLink.replace("[postId]", post.id)}
-          className="flex w-full flex-col"
-        >
+        <a onClick={handleClick} className="flex w-full flex-col">
           {img && img[0] && (
             <div className="w-full">
               <img
@@ -66,20 +50,8 @@ export const PostBar = ({
                 : "Available"}
             </p>
           </div>
-        </Link>
-        {user && userLink && <PostBarUser user={user} userLink={userLink} />}
+        </a>
       </div>
-      {relationshipId && onDeleteMatch && (
-        <PostBarActions
-          postId={post.id}
-          relationType={relationType}
-          relationshipId={relationshipId}
-          conversationId={conversationId}
-          user={user}
-          onDeleteMatch={onDeleteMatch}
-          onLikeMatch={onLikeMatch}
-        />
-      )}
     </div>
   );
 };

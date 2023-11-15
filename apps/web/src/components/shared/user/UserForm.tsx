@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import {
   ChangeEvent,
   Dispatch,
@@ -21,6 +20,7 @@ import { FileUploadSection } from "../button/FileUploadSection";
 import { FileInput } from "../forms/FileInput";
 import { UserLayout } from "./UserLayout";
 import { Button } from "../button/Button";
+import { UserImage } from "./UserImage";
 
 export type UserFormData = {
   birthDate: string;
@@ -102,7 +102,7 @@ export const UserForm = ({
 
   const [selectedDocuments, setSelectedDocuments] = useState<File[]>([]);
   const [selectedImage, setSelectedImage] = useState<File>();
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | undefined>();
 
   useEffect(() => {
     const date = user.birthDate
@@ -160,7 +160,11 @@ export const UserForm = ({
   const handleNumberChange =
     (setter: Dispatch<SetStateAction<number | undefined>>) =>
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      setter(event.target.valueAsNumber);
+      setter(
+        isNaN(event.target.valueAsNumber)
+          ? undefined
+          : event.target.valueAsNumber,
+      );
     };
 
   const handleHomeTypeChange =
@@ -264,18 +268,12 @@ export const UserForm = ({
 
   return (
     <UserLayout
-      className="m-20"
+      className="m-10"
       sidePanel={
         <>
           <div className="relative h-40 w-40">
             <div className="relative h-full w-full overflow-hidden rounded-full shadow-xl">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={imagePreview || user.image || "/defaultImage.png"}
-                referrerPolicy="no-referrer"
-                alt="image"
-                className="mx-auto h-full w-full overflow-hidden rounded-full"
-              />
+              <UserImage user={user} imagePreview={imagePreview} />
             </div>
             <button className="absolute left-0 top-0 flex h-full w-full items-end justify-center rounded-full opacity-0 transition-all hover:opacity-100">
               <span className="translate-y-[50%]">
@@ -415,7 +413,7 @@ export const UserForm = ({
                     value={maritalStatus ?? ""}
                     className="w-full rounded-lg border-2 border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-600 focus:outline-none"
                   >
-                    <option value="" disabled selected>
+                    <option value="" disabled>
                       Select one
                     </option>
                     <option value={MaritalStatus.SINGLE}>SINGLE</option>

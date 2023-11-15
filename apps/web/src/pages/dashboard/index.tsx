@@ -8,22 +8,27 @@ import mixpanel from "../../utils/mixpanel";
 import { DashboardPage } from "../../components/dashboard/DashboardPage";
 
 export default function DashboardIndex() {
-  const { data: session, isLoading } = trpc.auth.getSession.useQuery();
   const router = useRouter();
+  const { data: session, isLoading: sessionIsLoading } =
+    trpc.auth.getSession.useQuery();
 
   useEffect(() => {
-    mixpanel.track("Page View", {
-      path: router.asPath,
-      title: "Dashboard Page",
-      userId: session?.userId,
-    });
-  }, [router.asPath, session?.userId]);
+    if (session && !sessionIsLoading) {
+      mixpanel.track("Page View", {
+        path: router.asPath,
+        title: "Dashboard Page",
+        userId: session?.userId,
+      });
+    }
+  }, [router.asPath, session, sessionIsLoading]);
 
-  if (isLoading) return <Loader />;
+  if (sessionIsLoading) return <Loader />;
+
+  if (!session) return <div>Not logged in</div>;
 
   return (
     <LoggedLayout title="Dashboard | Leace" roles={[Role.AGENCY, Role.OWNER]}>
-      {!!session && <DashboardPage userId={session.userId} />}
+      <DashboardPage userId={session.userId} />
     </LoggedLayout>
   );
 }

@@ -1,8 +1,9 @@
 import { PostType, PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
+const PREMIUM_DAYS_ADVANTAGE = 1;
 
-export async function movePostToSeen(userId: string, postId: string) {
+export async function moveToPostsSeen(userId: string, postId: string) {
   // move the specified post from postsTobeSeen to postsSeen in the user's profile
   await prisma.user.update({
     where: { id: userId },
@@ -17,16 +18,16 @@ export async function movePostToSeen(userId: string, postId: string) {
   });
 }
 
-export async function moveUserToSeen(userId: string, postId: string) {
-  // move the specified post from postsTobeSeen to postsSeen in the user's profile
-  await prisma.post.update({
-    where: { id: postId },
+export async function moveToPostsToBeSeen(userId: string, postId: string) {
+  // move the specified post from postsSeen to postsTobeSeen in the user's profile
+  await prisma.user.update({
+    where: { id: userId },
     data: {
-      usersToBeSeen: {
-        disconnect: { id: userId },
+      postsToBeSeen: {
+        connect: { id: postId },
       },
-      usersSeen: {
-        connect: { id: userId },
+      postsSeen: {
+        disconnect: { id: postId },
       },
     },
   });
@@ -36,7 +37,10 @@ const deg2rad = (deg: number) => deg * (Math.PI / 180);
 const rad2deg = (rad: number) => rad * (180 / Math.PI);
 const earthRadius = 6371;
 
-export async function getPostsWithAttribute(userId: string) {
+export async function getPostsWithAttribute(
+  userId: string,
+  isPremium: boolean,
+) {
   const userAtt = await prisma.attribute.findUniqueOrThrow({
     where: { userId: userId },
   });
@@ -56,8 +60,19 @@ export async function getPostsWithAttribute(userId: string) {
     userAtt.lng -
     rad2deg(userAtt.range / earthRadius / Math.cos(deg2rad(userAtt.lat)));
 
+  let maxDate = new Date(); // Today
+  if (!isPremium) {
+    // 1 less day if not premium
+    maxDate = new Date(
+      maxDate.getTime() - 1000 * 60 * 60 * 24 * PREMIUM_DAYS_ADVANTAGE,
+    );
+  }
+
   const posts = await prisma.post.findMany({
     where: {
+      createdAt: {
+        lte: maxDate,
+      },
       type: PostType.TO_BE_RENTED,
       attribute: {
         AND: [
@@ -114,89 +129,6 @@ export async function getPostsWithAttribute(userId: string) {
   // Shuffle posts with Fisher-Yates algorithm
   shuffle(posts);
   return posts.slice(0, 10);
-}
-
-export async function getUsersWithAttribute(postId: string) {
-  const postAtt = await prisma.attribute.findUniqueOrThrow({
-    where: { postId: postId },
-  });
-
-  // Return error if post has no lat, lng or range
-  if (!postAtt.lat || !postAtt.lng || !postAtt.range) {
-    throw new Error("User has no lat, lng or range");
-  }
-
-  // Calculate max and min lat and lng with the range
-  const maxLat = postAtt.lat + rad2deg(postAtt.range / earthRadius);
-  const minLat = postAtt.lat - rad2deg(postAtt.range / earthRadius);
-  const maxLng =
-    postAtt.lng +
-    rad2deg(postAtt.range / earthRadius / Math.cos(deg2rad(postAtt.lat)));
-  const minLng =
-    (postAtt.lng ?? 0) -
-    rad2deg(
-      (postAtt.range ?? 999999) /
-        earthRadius /
-        Math.cos(deg2rad(postAtt.lat ?? 0)),
-    );
-
-  const users = await prisma.user.findMany({
-    where: {
-      attribute: {
-        AND: [
-          {
-            price: {
-              gte: postAtt.minPrice ?? undefined,
-              lte: postAtt.maxPrice ?? undefined,
-            },
-          },
-          {
-            size: {
-              gte: postAtt.minSize ?? undefined,
-              lte: postAtt.maxSize ?? undefined,
-            },
-          },
-          { furnished: postAtt.furnished ?? undefined },
-          { homeType: postAtt.homeType ?? undefined },
-          { terrace: postAtt.terrace ?? undefined },
-          { pets: postAtt.pets ?? undefined },
-          { smoker: postAtt.smoker ?? undefined },
-          { disability: postAtt.disability ?? undefined },
-          { garden: postAtt.garden ?? undefined },
-          { parking: postAtt.parking ?? undefined },
-          { elevator: postAtt.elevator ?? undefined },
-          { pool: postAtt.pool ?? undefined },
-          {
-            lat: {
-              gte: minLat,
-              lte: maxLat,
-            },
-          },
-          {
-            lng: {
-              gte: minLng,
-              lte: maxLng,
-            },
-          },
-        ],
-      },
-      // Not created, seen or to be seen by the user
-      NOT: {
-        OR: [
-          { posts: { some: { id: postId } } },
-          { seenBy: { some: { id: postId } } },
-          { toBeSeenBy: { some: { id: postId } } },
-        ],
-      },
-    },
-    include: { attribute: true },
-  });
-
-  if (!users) return [];
-
-  // Shuffle users with Fisher-Yates algorithm
-  shuffle(users);
-  return users.slice(0, 10);
 }
 
 export const shuffle = (array: unknown[]) => {

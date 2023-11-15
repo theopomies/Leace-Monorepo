@@ -13,7 +13,7 @@ const Index = () => {
 
   return (
     <LoggedLayout title="Post | Leace">
-      <div className="m-auto py-5">
+      <div className="flex flex-grow overflow-hidden p-10">
         <Post postId={postId} />
       </div>
     </LoggedLayout>

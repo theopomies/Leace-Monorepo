@@ -58,7 +58,7 @@ export function getLinks(userId: string): {
     {
       href: "/premium",
       label: "Premium",
-      roles: [Role.OWNER, Role.AGENCY, Role.TENANT],
+      roles: [Role.TENANT],
       icon: "/crown",
     },
   ];

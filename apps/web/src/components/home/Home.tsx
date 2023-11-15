@@ -1,17 +1,18 @@
 import { Role } from "@prisma/client";
-import { trpc } from "../../utils/trpc";
+import { useRouter } from "next/router";
+import { RouterOutputs } from "../../utils/trpc";
+import { ModerationReportPage } from "../moderation/moderation/ModerationReportPage";
+import { Loader } from "../shared/Loader";
 import { RoleSelector } from "../users/RoleSelector";
 import { PostStack } from "./stack/PostStack";
-import { TenantStack } from "./stack/TenantStack";
-import { Loader } from "../shared/Loader";
-import { useRouter } from "next/router";
-import { ModerationReportPage } from "../moderation/moderation/ModerationReportPage";
+import { TenantList } from "./stack/TenantList";
 
-export const Home = () => {
-  const { data: session, isLoading } = trpc.auth.getSession.useQuery();
+export interface HomeProps {
+  session: RouterOutputs["auth"]["getSession"];
+}
+
+export const Home = ({ session }: HomeProps) => {
   const router = useRouter();
-
-  if (!session || isLoading) return <Loader />;
 
   const role = session.role;
 
@@ -24,7 +25,7 @@ export const Home = () => {
 
   if (role == Role.MODERATOR) return <ModerationReportPage />;
 
-  if (role == Role.TENANT) return <PostStack />;
+  if (role == Role.TENANT) return <PostStack userId={session.userId} />;
 
-  return <TenantStack />;
+  return <TenantList userId={session.userId} />;
 };

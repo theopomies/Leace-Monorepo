@@ -193,7 +193,7 @@ export const PostForm = (props: PostFormProps) => {
     if (props.onSubmitNew) {
       props.onSubmitNew(data).then((post) => {
         props.onImgsUpload(selectedImages, post.id);
-        props.onDocsUpload(selectedDocuments);
+        props.onDocsUpload(selectedDocuments, post.id);
         router.push(`/users/${post.createdById}/posts/${post.id}`);
         renderToast(
           <>
