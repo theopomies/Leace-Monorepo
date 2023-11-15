@@ -42,7 +42,8 @@ export const relationshipRouter = router({
       if (
         ctx.role != Role.MODERATOR &&
         ctx.role != Role.ADMIN &&
-        ctx.auth.userId != post.createdById
+        ctx.auth.userId != post.createdById &&
+        ctx.auth.userId != post.managedById
       )
         throw new TRPCError({ code: "FORBIDDEN" });
 
@@ -125,7 +126,8 @@ export const relationshipRouter = router({
       if (
         ctx.role != Role.MODERATOR &&
         ctx.role != Role.ADMIN &&
-        ctx.auth.userId != post.createdById
+        ctx.auth.userId != post.createdById &&
+        ctx.auth.userId != post.managedById
       )
         throw new TRPCError({ code: "FORBIDDEN" });
 
@@ -401,7 +403,10 @@ export const relationshipRouter = router({
 
       if (!relationship) throw new TRPCError({ code: "NOT_FOUND" });
 
-      if (relationship.post.createdById != userId)
+      if (
+        relationship.post.createdById != userId &&
+        ctx.auth.userId != relationship.post.managedById
+      )
         throw new TRPCError({
           code: "FORBIDDEN",
           message: "This user does not correspond to this relationship",

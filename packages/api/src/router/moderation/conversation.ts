@@ -39,7 +39,10 @@ export const conversationModeration = router({
           where: { id: relationship.postId },
         });
         if (!post) throw new TRPCError({ code: "NOT_FOUND" });
-        if (post.createdById != ctx.auth.userId)
+        if (
+          post.createdById != ctx.auth.userId &&
+          ctx.auth.userId != post.managedById
+        )
           throw new TRPCError({ code: "FORBIDDEN" });
       }
       if (ctx.role == Role.TENANT) {

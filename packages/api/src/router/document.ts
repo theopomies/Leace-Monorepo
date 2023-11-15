@@ -142,7 +142,10 @@ export const documentRouter = router({
         });
         if (!getPost) throw new TRPCError({ code: "NOT_FOUND" });
 
-        if (getPost.createdById !== ctx.auth.userId) {
+        if (
+          getPost.createdById !== ctx.auth.userId &&
+          ctx.auth.userId != getPost.managedById
+        ) {
           const relationShip = await ctx.prisma.relationship.findFirst({
             where: { userId: ctx.auth.userId, postId: getPost.id },
           });

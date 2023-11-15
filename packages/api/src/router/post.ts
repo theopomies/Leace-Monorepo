@@ -28,6 +28,7 @@ export const postRouter = router({
         nearedShops: z.number().optional(),
         securityAlarm: z.boolean().optional(),
         internetFiber: z.boolean().optional(),
+        managedBy: z.string().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -43,6 +44,26 @@ export const postRouter = router({
           message: "User provided is cannot create post",
         });
 
+      if (input.managedBy) {
+        const managedBy = await ctx.prisma.user.findUnique({
+          where: { id: input.managedBy },
+        });
+
+        if (!managedBy) throw new TRPCError({ code: "NOT_FOUND" });
+
+        if (managedBy.role != Role.AGENCY)
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "User provided is can't manage a post",
+          });
+
+        if (userId == managedBy.id)
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Same manager and creator",
+          });
+      }
+
       const post = await ctx.prisma.post.create({
         data: {
           createdById: userId,
@@ -55,6 +76,7 @@ export const postRouter = router({
           nearestShops: input.nearedShops,
           securityAlarm: input.securityAlarm,
           internetFiber: input.internetFiber,
+          managedById: input.managedBy,
         },
       });
 
@@ -89,9 +111,12 @@ export const postRouter = router({
         type: z
           .enum([PostType.RENTED, PostType.TO_BE_RENTED, PostType.HIDE])
           .optional(),
+        managedBy: z.string().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      const userId = ctx.auth.userId;
+
       const post = await ctx.prisma.post.findUnique({
         where: { id: input.postId },
       });
@@ -99,14 +124,36 @@ export const postRouter = router({
       if (!post) throw new TRPCError({ code: "NOT_FOUND" });
 
       if (
-        post.createdById != ctx.auth.userId &&
+        post.createdById != userId &&
+        userId != post.managedById &&
         ctx.role != Role.ADMIN &&
         ctx.role != Role.MODERATOR
-      )
+      ) {
         throw new TRPCError({
           code: "FORBIDDEN",
-          message: "This is not a post from this user",
+          message: "This is not a post from or managed by this user",
         });
+      }
+
+      if (input.managedBy) {
+        const managedBy = await ctx.prisma.user.findUnique({
+          where: { id: input.managedBy },
+        });
+
+        if (!managedBy) throw new TRPCError({ code: "NOT_FOUND" });
+
+        if (managedBy.role != Role.AGENCY)
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "User provided is can't manage a post",
+          });
+
+        if (userId == managedBy.id)
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Same manager and creator",
+          });
+      }
 
       const updated = await ctx.prisma.post.update({
         where: { id: input.postId },
@@ -122,6 +169,7 @@ export const postRouter = router({
           internetFiber: input.internetFiber,
           ges: input.ges,
           energyClass: input.energyClass,
+          managedById: input.managedBy,
         },
       });
 
@@ -136,20 +184,25 @@ export const postRouter = router({
   deletePostById: protectedProcedure([Role.AGENCY, Role.OWNER, Role.ADMIN])
     .input(z.object({ postId: z.string() }))
     .mutation(async ({ input, ctx }) => {
+      const userId = ctx.auth.userId;
+
       const post = await ctx.prisma.post.findUnique({
         where: { id: input.postId },
       });
 
       if (!post) throw new TRPCError({ code: "NOT_FOUND" });
+
       if (
-        post.createdById != ctx.auth.userId &&
+        post.createdById != userId &&
+        userId != post.managedById &&
         ctx.role != Role.ADMIN &&
         ctx.role != Role.MODERATOR
-      )
+      ) {
         throw new TRPCError({
           code: "FORBIDDEN",
-          message: "This is not a post from this user",
+          message: "This is not a post from or managed by this user",
         });
+      }
 
       const deleted = await ctx.prisma.post.delete({
         where: { id: input.postId },
