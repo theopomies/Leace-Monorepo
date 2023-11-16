@@ -1,10 +1,10 @@
-import { LoggedLayout } from "../components/layout/LoggedLayout";
-import { Home } from "../components/home/Home";
-import { trpc } from "../utils/trpc";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import mixpanel from "../utils/mixpanel";
+import { Home } from "../components/home/Home";
+import { LoggedLayout } from "../components/layout/LoggedLayout";
 import { Loader } from "../components/shared/Loader";
+import mixpanel from "../utils/mixpanel";
+import { trpc } from "../utils/trpc";
 
 const Index = () => {
   const { data: session, isLoading: sessionIsLoading } =

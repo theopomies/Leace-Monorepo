@@ -3,7 +3,9 @@ import { EnergyClass, PostType, RelationType, Role } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";
-import { getPostsWithAttribute, shuffle } from "../utils/algorithm";
+import {
+  getPostsWithAttribute
+} from "../utils/algorithm";
 import { filterStrings } from "../utils/filter";
 import { getId } from "../utils/getId";
 
@@ -284,11 +286,9 @@ export const postRouter = router({
             postsToBeSeen: { include: { images: true, attribute: true } },
           },
         });
-        shuffle(updatedUser.postsToBeSeen);
         return updatedUser.postsToBeSeen;
       }
       // If more than 3 posts, return the list
-      shuffle(user.postsToBeSeen);
       return user.postsToBeSeen;
     }),
   getUsersToBeSeen: protectedProcedure([Role.AGENCY, Role.OWNER])
