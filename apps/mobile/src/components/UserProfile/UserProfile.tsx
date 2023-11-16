@@ -7,7 +7,7 @@ import Separator from "../Separator";
 import { Icon } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { TabStackParamList } from "../../navigation/TabNavigator";
+import { TabStackParamList } from "../../navigation/RootNavigator";
 import { Btn } from "../Btn";
 import { useAuth } from "@clerk/clerk-expo";
 
@@ -33,7 +33,7 @@ export default function UserProfile({
 
   return (
     <View className="flex-1">
-      <View className="flex flex-row bg-[#10316B] px-3 py-2">
+      <View className="flex flex-row bg-[#0A2472] px-3 py-2">
         <Image
           source={{
             uri: data.image ?? "https://www.gravatar.com/avatar/?d=mp",
@@ -46,37 +46,51 @@ export default function UserProfile({
           <Text className="text-white ">{data.lastName}</Text>
         </View>
         {editable && (
-          <TouchableOpacity
-            className="absolute bottom-1.5 right-2 flex flex-row items-center justify-center space-x-1 rounded-full px-2 py-0.5"
-            style={{ borderWidth: 1, borderColor: "white" }}
-            onPress={() => {
-              navigation.navigate("EditProfile", {
-                userId: userId,
-                data: JSON.stringify({
-                  ...data,
-                  birthDate: data.birthDate?.toISOString(),
-                }),
-                showAttrs: showAttrs,
-              });
-            }}
-          >
-            <Icon
-              name="settings"
-              color="white"
-              size={20}
-              type="material-icons"
-            ></Icon>
-            <Text className="font-bold text-white">Settings</Text>
-          </TouchableOpacity>
+          <View className="absolute bottom-1.5 right-2 flex flex-row gap-1">
+            <TouchableOpacity
+              className="flex flex-row items-center justify-center space-x-1 rounded-full px-2 py-0.5"
+              style={{ borderWidth: 1, borderColor: "white" }}
+              onPress={() => navigation.navigate("Documents", { userId })}
+            >
+              <Icon
+                color="white"
+                size={20}
+                name="description"
+                type="material-icons"
+              ></Icon>
+              <Text className="font-bold text-white">Documents</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              className="flex flex-row items-center justify-center rounded-full px-0.5 py-0.5"
+              style={{ borderWidth: 1, borderColor: "white" }}
+              onPress={() => {
+                navigation.navigate("EditProfile", {
+                  userId: userId,
+                  data: JSON.stringify({
+                    ...data,
+                    birthDate: data.birthDate?.toISOString(),
+                  }),
+                  showAttrs: showAttrs,
+                });
+              }}
+            >
+              <Icon
+                name="settings"
+                color="white"
+                size={20}
+                type="material-icons"
+              ></Icon>
+            </TouchableOpacity>
+          </View>
         )}
       </View>
       <View className="pt-2">
         <View className="flex flex-row items-center justify-between px-2">
-          <Text className="text-base font-bold text-[#10316B]">Kind:</Text>
+          <Text className="text-base font-bold text-[#0A2472]">Kind:</Text>
           <Text className="font-light">{data.role}</Text>
         </View>
         <View className="flex flex-row items-center justify-between px-2">
-          <Text className="text-base font-bold text-[#10316B]">Premium:</Text>
+          <Text className="text-base font-bold text-[#0A2472]">Premium:</Text>
           <Icon
             name={data.isPremium ? "star" : "close"}
             color={data.isPremium ? "#FFE867" : "red"}
@@ -85,7 +99,7 @@ export default function UserProfile({
           ></Icon>
         </View>
         <View className="flex flex-row items-center justify-between px-2">
-          <Text className="text-base font-bold text-[#10316B]">Verified:</Text>
+          <Text className="text-base font-bold text-[#0A2472]">Verified:</Text>
           <Icon
             name={data.emailVerified ? "done" : "close"}
             color={data.emailVerified ? "green" : "red"}
@@ -95,7 +109,7 @@ export default function UserProfile({
         </View>
       </View>
       <View className="px-3">
-        <Separator color="#10316B" />
+        <Separator color="#0A2472" />
       </View>
       <View style={{ flex: 1 }}>
         <View className="flex flex-row items-center justify-between px-2">
@@ -117,7 +131,7 @@ export default function UserProfile({
           <Text className="font-light">{data.email}</Text>
         </View>
         <View className="flex px-2">
-          <Text className="text-base font-bold text-[#10316B]">
+          <Text className="text-base font-bold text-[#0A2472]">
             Description:
           </Text>
           <Text className="font-light">{data.description}</Text>
@@ -127,7 +141,7 @@ export default function UserProfile({
         <>
           {data.attribute && (
             <View className="mb-3 px-3">
-              <Separator color="#10316B" />
+              <Separator color="#0A2472" />
               <ShowAttributes attribute={data.attribute} />
             </View>
           )}
@@ -135,7 +149,13 @@ export default function UserProfile({
       )}
       {showLogout && (
         <View className="px-3 pb-2">
-          <Btn title="Log out" bgColor="#EF4444" onPress={() => signOut()} />
+          <Btn
+            title="Log out"
+            bgColor="#EF4444"
+            iconName="logout"
+            iconType="material-icons"
+            onPress={() => signOut()}
+          />
         </View>
       )}
     </View>

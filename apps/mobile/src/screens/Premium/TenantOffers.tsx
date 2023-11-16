@@ -9,7 +9,7 @@ import {
 import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { TabStackParamList } from "../../navigation/TabNavigator";
+import { TabStackParamList } from "../../navigation/RootNavigator";
 import { StripeProvider, usePaymentSheet } from "@stripe/stripe-react-native";
 import { trpc } from "../../utils/trpc";
 import { Icon } from "react-native-elements";
@@ -98,11 +98,11 @@ const TenantOffers = () => {
       merchantIdentifier="merchant.identifier"
     >
       <SafeAreaView>
-        <View className={`h-full rounded-xl `}>
+        <View className={`h-full rounded-xl bg-white`}>
           <View className="h-2/6 items-center rounded-xl ">
             <Image
-              source={require("../../../assets/logo.png")}
-              resizeMode="cover"
+              source={require("../../../assets/logo_1024.png")}
+              className="h-52 w-52"
             />
           </View>
           <View className="h-full items-center rounded">

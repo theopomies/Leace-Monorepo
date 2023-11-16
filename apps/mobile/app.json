@@ -1,13 +1,13 @@
 {
   "expo": {
-    "name": "leace",
+    "name": "Leace",
     "slug": "leace",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/logo_1024.png",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/splash_rounded.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -22,15 +22,21 @@
       "bundleIdentifier": "com.daaak.leace"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/logo_1024.png"
     },
     "plugins": [
+      ["expo-document-picker"],
       [
-        "expo-document-picker"
+        "expo-media-library",
+        {
+          "photosPermission": "Allow $(PRODUCT_NAME) to access your photos.",
+          "savePhotosPermission": "Allow $(PRODUCT_NAME) to save photos.",
+          "isAccessMediaLocationEnabled": true
+        }
       ]
     ],
-    "android": {
-      "package": "com.daaak.leace"
+    "extra": {
+      "CLERK_PUBLISHABLE_KEY": "pk_test_Y2VydGFpbi1jcmFiLTU0LmNsZXJrLmFjY291bnRzLmRldiQ"
     }
   }
 }

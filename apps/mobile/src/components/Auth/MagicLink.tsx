@@ -38,6 +38,7 @@ const MagicLink = () => {
       if (!signIn) return null;
       const si = await signIn.create({ identifier: emailAddress });
 
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       const { emailAddressId } = si.supportedFirstFactors.find(
         (id) => id.strategy === "email_link",
@@ -65,7 +66,7 @@ const MagicLink = () => {
         onChangeText={(emailAddress) => setEmail(emailAddress)}
       />
       <Pressable
-        className="h-12 w-full items-center justify-center rounded-md bg-[#10316B] px-4 py-2"
+        className="h-12 w-full items-center justify-center rounded-md bg-[#0A2472] px-4 py-2"
         onPress={handleSignUp}
       >
         <Text className="text-white">Send me a link</Text>

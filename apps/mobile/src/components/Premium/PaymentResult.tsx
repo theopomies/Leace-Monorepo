@@ -3,7 +3,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React, { useEffect } from "react";
 import { Animated, View, TouchableOpacity, Image, Text } from "react-native";
 import { Icon } from "react-native-elements";
-import { TabStackParamList } from "../../navigation/TabNavigator";
+import { TabStackParamList } from "../../navigation/RootNavigator";
 
 const PaymentResult = ({
   isValidPayment,
@@ -46,10 +46,10 @@ const PaymentResult = ({
 
   return (
     <View>
-      <View className="items-center justify-center">
+      <View className="h items-center justify-center">
         <Image
-          source={require("../../../assets/logo.png")}
-          className="h-40 w-40"
+          source={require("../../../assets/logo_1024.png")}
+          className="h-52 w-52"
         />
       </View>
       <View className={"items-center justify-center"}>

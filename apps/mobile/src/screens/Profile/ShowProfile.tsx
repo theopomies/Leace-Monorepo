@@ -1,14 +1,7 @@
-import {
-  View,
-  SafeAreaView,
-  Platform,
-  StatusBar,
-  StyleSheet,
-  Text,
-} from "react-native";
+import { View, SafeAreaView, StyleSheet, Text } from "react-native";
 import React, { useCallback } from "react";
 import { RouteProp, useFocusEffect, useRoute } from "@react-navigation/native";
-import { TabStackParamList } from "../../navigation/TabNavigator";
+import { TabStackParamList } from "../../navigation/RootNavigator";
 import Header from "../../components/Header";
 import { trpc } from "../../utils/trpc";
 import { Loading } from "../../components/Loading";
@@ -66,13 +59,6 @@ export default function ShowProfile() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "white",
-  },
-  view: {
-    flex: 1,
-    // marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-    backgroundColor: "white", // #F2F7FF
-  },
+  container: { flex: 1, backgroundColor: "white" },
+  view: { flex: 1, backgroundColor: "white" },
 });
