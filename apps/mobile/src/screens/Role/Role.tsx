@@ -100,7 +100,7 @@ export default function ChooseRole() {
               loadMinimalSize={3}
               autoplay
               autoplayTimeout={5}
-              className="text-[#10316B]"
+              className="text-[#0A2472]"
             >
               <TouchableOpacity
                 onPress={() => submitRole("TENANT")}
@@ -172,7 +172,7 @@ export default function ChooseRole() {
                 contentContainerStyle={{ flexGrow: 1 }}
                 style={{ backgroundColor: "white" }}
               >
-                <View className="flex flex-row bg-[#10316B] px-3 py-2">
+                <View className="flex flex-row bg-[#0A2472] px-3 py-2">
                   <Image
                     source={{
                       uri: "https://www.gravatar.com/avatar/?d=mp",
@@ -203,14 +203,14 @@ export default function ChooseRole() {
                 </View>
                 <View className="pt-2">
                   <View className="flex flex-row items-center justify-between px-2">
-                    <Text className="text-base font-bold text-[#10316B]">
+                    <Text className="text-base font-bold text-[#0A2472]">
                       Kind:
                     </Text>
                     <Text className="font-light">{role}</Text>
                   </View>
                 </View>
                 <View className="px-3">
-                  <Separator color="#10316B" />
+                  <Separator color="#0A2472" />
                 </View>
                 <View style={{ flex: 1 }}>
                   <EditInfo user={user} setUser={setUser} />
@@ -229,14 +229,14 @@ export default function ChooseRole() {
                     <Btn
                       title="Change role"
                       bgColor="#F2F7FF"
-                      textColor="#10316B"
+                      textColor="#0A2472"
                       onPress={() => setPage("CHOOSE")}
                     />
                   </View>
                   <View>
                     <Btn
                       title="Create profile"
-                      bgColor="#10316B"
+                      bgColor="#0A2472"
                       onPress={submitUser}
                     />
                   </View>

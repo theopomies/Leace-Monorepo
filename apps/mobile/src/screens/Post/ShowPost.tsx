@@ -90,7 +90,7 @@ export default function ShowPost() {
           justifyContent: "space-between",
           flexDirection: "column",
         }}
-        style={{ backgroundColor: "#10316B", paddingBottom: 5 }}
+        style={{ backgroundColor: "#0A2472", paddingBottom: 5 }}
       >
         <View>
           <View className="mt-4 h-48 px-4">
@@ -154,7 +154,7 @@ export default function ShowPost() {
                     <Btn
                       title="More"
                       bgColor="#F2F7FF"
-                      textColor="#10316B"
+                      textColor="#0A2472"
                     ></Btn>
                   </View>
                 </View>
@@ -201,7 +201,7 @@ export default function ShowPost() {
                 <ShowAttributes
                   attribute={post.attribute}
                   iconBGColor="#F2F7FF"
-                  iconTextColor="#10316B"
+                  iconTextColor="#0A2472"
                   titleColor="#FFFFFF"
                   show={false}
                 ></ShowAttributes>
@@ -217,7 +217,7 @@ export default function ShowPost() {
                 <Btn
                   title="Edit"
                   bgColor="#F2F7FF"
-                  textColor="#10316B"
+                  textColor="#0A2472"
                   onPress={() =>
                     navigation.navigate("EditPost", {
                       userId,

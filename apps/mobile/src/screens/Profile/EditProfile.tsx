@@ -174,7 +174,7 @@ export default function EditProfile() {
                 <Btn
                   title="Close"
                   bgColor="#F2F7FF"
-                  textColor="#10316B"
+                  textColor="#0A2472"
                   onPress={() => setOpen(false)}
                 ></Btn>
               </View>
@@ -187,7 +187,7 @@ export default function EditProfile() {
           contentContainerStyle={{ flexGrow: 1 }}
           style={{ backgroundColor: "white" }}
         >
-          <View className="flex flex-row bg-[#10316B] px-3 py-2">
+          <View className="flex flex-row bg-[#0A2472] px-3 py-2">
             <Image
               source={{
                 uri: user1.image ?? "https://www.gravatar.com/avatar/?d=mp",
@@ -227,11 +227,11 @@ export default function EditProfile() {
           </View>
           <View className="pt-2">
             <View className="flex flex-row items-center justify-between px-2">
-              <Text className="text-base font-bold text-[#10316B]">Kind:</Text>
+              <Text className="text-base font-bold text-[#0A2472]">Kind:</Text>
               <Text className="font-light">{user1.role}</Text>
             </View>
             <View className="flex flex-row items-center justify-between px-2">
-              <Text className="text-base font-bold text-[#10316B]">
+              <Text className="text-base font-bold text-[#0A2472]">
                 Premium:
               </Text>
               <Icon
@@ -242,7 +242,7 @@ export default function EditProfile() {
               ></Icon>
             </View>
             <View className="flex flex-row items-center justify-between px-2">
-              <Text className="text-base font-bold text-[#10316B]">
+              <Text className="text-base font-bold text-[#0A2472]">
                 Verified:
               </Text>
               <Icon
@@ -254,7 +254,7 @@ export default function EditProfile() {
             </View>
           </View>
           <View className="px-3">
-            <Separator color="#10316B" />
+            <Separator color="#0A2472" />
           </View>
           <View style={{ flex: 1 }}>
             <View className="flex flex-row items-center justify-between px-2">
@@ -267,7 +267,7 @@ export default function EditProfile() {
                 className="px-3"
                 style={{ justifyContent: "flex-end", flex: 1 }}
               >
-                <Separator color="#10316B" />
+                <Separator color="#0A2472" />
                 <EditAttributes
                   userId={userId}
                   attrs={attrs}

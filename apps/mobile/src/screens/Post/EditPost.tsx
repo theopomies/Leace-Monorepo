@@ -87,7 +87,7 @@ export default function EditPost() {
           >
             <Icon
               name="arrow-back"
-              color="#10316B"
+              color="#0A2472"
               size={30}
               type="material-icons"
             ></Icon>
@@ -101,7 +101,7 @@ export default function EditPost() {
           >
             <View className="flex-1 space-y-2 p-4">
               <View>
-                <Text className="text-base font-bold text-[#10316B]">
+                <Text className="text-base font-bold text-[#0A2472]">
                   Tittle
                 </Text>
                 <TextInput
@@ -114,7 +114,7 @@ export default function EditPost() {
                 />
               </View>
               <View>
-                <Text className="text-base font-bold text-[#10316B]">
+                <Text className="text-base font-bold text-[#0A2472]">
                   Description
                 </Text>
                 <TextInput
@@ -129,7 +129,7 @@ export default function EditPost() {
                 />
               </View>
               <View>
-                <Text className="text-base font-bold text-[#10316B]">
+                <Text className="text-base font-bold text-[#0A2472]">
                   Content
                 </Text>
                 <TextInput
@@ -149,7 +149,7 @@ export default function EditPost() {
               <View className="pt-2">
                 <Btn
                   title="Update"
-                  bgColor="#10316B"
+                  bgColor="#0A2472"
                   onPress={handlePost}
                 ></Btn>
               </View>

@@ -124,7 +124,7 @@ export default function TenantStack() {
           {post && (
             <>
               <GestureRecognizer
-                className="flex flex-1 rounded-md bg-[#10316B]"
+                className="flex flex-1 rounded-md bg-[#0A2472]"
                 onSwipeLeft={() => swipeHandler("LEFT")}
                 onSwipeRight={() => swipeHandler("RIGHT")}
               >
@@ -192,7 +192,7 @@ export default function TenantStack() {
                   <Btn
                     title="More"
                     bgColor="#F2F7FF"
-                    textColor="#10316B"
+                    textColor="#0A2472"
                     onPress={() =>
                       navigation.navigate("PostInfo", {
                         userId,

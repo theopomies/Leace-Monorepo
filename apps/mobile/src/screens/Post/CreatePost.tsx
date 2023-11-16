@@ -69,7 +69,7 @@ export default function CreatePost() {
         >
           <View className="flex-1 space-y-2 p-4">
             <View>
-              <Text className="text-base font-bold text-[#10316B]">Tittle</Text>
+              <Text className="text-base font-bold text-[#0A2472]">Tittle</Text>
               <TextInput
                 className="border-b border-[#D3D3D3] py-1.5 font-light leading-loose focus:border-blue-500"
                 placeholder="Enter title..."
@@ -79,7 +79,7 @@ export default function CreatePost() {
               />
             </View>
             <View>
-              <Text className="text-base font-bold text-[#10316B]">
+              <Text className="text-base font-bold text-[#0A2472]">
                 Description
               </Text>
               <TextInput
@@ -93,7 +93,7 @@ export default function CreatePost() {
               />
             </View>
             <View>
-              <Text className="text-base font-bold text-[#10316B]">
+              <Text className="text-base font-bold text-[#0A2472]">
                 Content
               </Text>
               <TextInput
@@ -112,7 +112,7 @@ export default function CreatePost() {
             <View className="pt-2">
               <Btn
                 title="Create Post"
-                bgColor="#10316B"
+                bgColor="#0A2472"
                 onPress={createPost}
               ></Btn>
             </View>

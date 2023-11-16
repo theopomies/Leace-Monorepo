@@ -23,7 +23,7 @@ function AttributeBtn({ name, status, iconName }: IAttributeBtn) {
       className="flex min-w-[100px] flex-row items-center justify-center space-x-1 rounded-full px-2 py-1"
       style={{
         margin: 2,
-        backgroundColor: "#10316B",
+        backgroundColor: "#0A2472",
         opacity: status ? 1 : 0.5,
       }}
     >
@@ -95,7 +95,7 @@ export default function EditAttributes({
       </View>
       <View className="flex flex-row justify-around">
         <View className="min-w-[80px]">
-          <Text className="text-center text-base font-bold text-[#10316B]">
+          <Text className="text-center text-base font-bold text-[#0A2472]">
             Rent start
           </Text>
           <TouchableOpacity onPress={() => setOpen(true)}>
@@ -106,7 +106,7 @@ export default function EditAttributes({
           </TouchableOpacity>
         </View>
         <View className="min-w-[80px]">
-          <Text className="text-center text-base font-bold text-[#10316B]">
+          <Text className="text-center text-base font-bold text-[#0A2472]">
             Rent end
           </Text>
           <TouchableOpacity onPress={() => setOpen1(true)}>
@@ -118,9 +118,9 @@ export default function EditAttributes({
         </View>
       </View>
       <View className="">
-        <Text className="text-base font-bold text-[#10316B]">Budget:</Text>
+        <Text className="text-base font-bold text-[#0A2472]">Budget:</Text>
         <View className="flex flex-row justify-evenly">
-          <View className="flex min-w-[100px] flex-row items-center justify-center rounded-full bg-[#10316B] px-2 py-0.5">
+          <View className="flex min-w-[100px] flex-row items-center justify-center rounded-full bg-[#0A2472] px-2 py-0.5">
             <Text className="font-light text-white">Min: </Text>
             <TextInput
               inputMode="numeric"
@@ -134,7 +134,7 @@ export default function EditAttributes({
             />
             <Text className="font-light text-white"> €</Text>
           </View>
-          <View className="flex min-w-[100px] flex-row items-center justify-center rounded-full bg-[#10316B] px-2 py-0.5">
+          <View className="flex min-w-[100px] flex-row items-center justify-center rounded-full bg-[#0A2472] px-2 py-0.5">
             <Text className="font-light text-white">Max: </Text>
             <TextInput
               inputMode="numeric"
@@ -151,9 +151,9 @@ export default function EditAttributes({
         </View>
       </View>
       <View className="">
-        <Text className="text-base font-bold text-[#10316B]">Size:</Text>
+        <Text className="text-base font-bold text-[#0A2472]">Size:</Text>
         <View className="flex flex-row justify-evenly">
-          <View className="flex min-w-[100px] flex-row items-center justify-center rounded-full bg-[#10316B] px-2 py-0.5">
+          <View className="flex min-w-[100px] flex-row items-center justify-center rounded-full bg-[#0A2472] px-2 py-0.5">
             <Text className="font-light text-white">Min: </Text>
             <TextInput
               inputMode="numeric"
@@ -167,7 +167,7 @@ export default function EditAttributes({
             />
             <Text className="font-light text-white"> m²</Text>
           </View>
-          <View className="flex min-w-[100px] flex-row items-center justify-center rounded-full bg-[#10316B] px-2 py-0.5">
+          <View className="flex min-w-[100px] flex-row items-center justify-center rounded-full bg-[#0A2472] px-2 py-0.5">
             <Text className="font-light text-white">Max: </Text>
             <TextInput
               inputMode="numeric"
@@ -184,7 +184,7 @@ export default function EditAttributes({
         </View>
       </View>
       <View>
-        <Text className="text-base font-bold text-[#10316B]">Attributes:</Text>
+        <Text className="text-base font-bold text-[#0A2472]">Attributes:</Text>
         <View className="flex flex-row flex-wrap items-center justify-center">
           <TouchableOpacity
             onPress={() => {

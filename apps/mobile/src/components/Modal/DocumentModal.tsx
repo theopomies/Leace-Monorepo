@@ -56,7 +56,7 @@ export default function DocumentModal({
               <Btn
                 title="Close"
                 bgColor="#F2F7FF"
-                textColor="#10316B"
+                textColor="#0A2472"
                 onPress={() => setOpen(false)}
               ></Btn>
             </View>

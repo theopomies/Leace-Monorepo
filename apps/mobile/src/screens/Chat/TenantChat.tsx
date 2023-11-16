@@ -36,7 +36,7 @@ function MessageCard({ data, userId }: IMessageCard) {
         className={`flex ${
           userId !== data.senderId
             ? "items-start bg-[#ececec]"
-            : "items-end bg-[#10316B]"
+            : "items-end bg-[#0A2472]"
         } rounded-2xl`}
       >
         <Text
@@ -300,7 +300,7 @@ export default function TenantChat() {
                   <Btn
                     title="Close"
                     bgColor="#F2F7FF"
-                    textColor="#10316B"
+                    textColor="#0A2472"
                     onPress={() => setShow(false)}
                   ></Btn>
                 </View>
@@ -339,7 +339,7 @@ export default function TenantChat() {
           <Btn
             iconName="description"
             iconType="material"
-            bgColor="#10316B"
+            bgColor="#0A2472"
             className="rounded-full"
             onPress={() => setShow(true)}
           ></Btn>

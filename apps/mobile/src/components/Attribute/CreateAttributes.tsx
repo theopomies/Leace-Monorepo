@@ -71,7 +71,7 @@ export default function CreateAttributes({
         onCancel={() => setOpen1(false)}
       />
       <View>
-        <Text className="text-base font-bold text-[#10316B]">Type</Text>
+        <Text className="text-base font-bold text-[#0A2472]">Type</Text>
         {/*<RNPickerSelect
           placeholder={{}}
           onValueChange={handlePicker}
@@ -82,7 +82,7 @@ export default function CreateAttributes({
         />*/}
       </View>
       <View>
-        <Text className="text-base font-bold text-[#10316B]">Location</Text>
+        <Text className="text-base font-bold text-[#0A2472]">Location</Text>
         <TextInput
           className="border-b border-[#D3D3D3] py-1.5 font-light leading-loose focus:border-blue-500"
           placeholder="Paris"
@@ -92,7 +92,7 @@ export default function CreateAttributes({
       </View>
       <View className="flex flex-row justify-around">
         <View className="min-w-[80px]">
-          <Text className="text-center text-base font-bold text-[#10316B]">
+          <Text className="text-center text-base font-bold text-[#0A2472]">
             Rent start
           </Text>
           <TouchableOpacity onPress={() => setOpen(true)}>
@@ -102,7 +102,7 @@ export default function CreateAttributes({
           </TouchableOpacity>
         </View>
         <View className="min-w-[80px]">
-          <Text className="text-center text-base font-bold text-[#10316B]">
+          <Text className="text-center text-base font-bold text-[#0A2472]">
             Rent end
           </Text>
           <TouchableOpacity onPress={() => setOpen1(true)}>
@@ -114,7 +114,7 @@ export default function CreateAttributes({
       </View>
       <View className="flex flex-row justify-around">
         <View className="min-w-[80px]">
-          <Text className="text-center text-base font-bold text-[#10316B]">
+          <Text className="text-center text-base font-bold text-[#0A2472]">
             Price
           </Text>
           <TextInput
@@ -129,7 +129,7 @@ export default function CreateAttributes({
           />
         </View>
         <View className="min-w-[80px]">
-          <Text className="text-center text-base font-bold text-[#10316B]">
+          <Text className="text-center text-base font-bold text-[#0A2472]">
             Size
           </Text>
           <TextInput
@@ -144,7 +144,7 @@ export default function CreateAttributes({
           />
         </View>
       </View>
-      <Text className="text-base font-bold text-[#10316B]">Attributes</Text>
+      <Text className="text-base font-bold text-[#0A2472]">Attributes</Text>
       <View className="flex flex-row flex-wrap items-center justify-center">
         <TouchableOpacity
           onPress={() => setAttrs({ ...attrs, furnished: !attrs.furnished })}

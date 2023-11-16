@@ -113,7 +113,7 @@ function NavigationRoutes({
               tabBarIcon: ({ focused }) => (
                 <Icon
                   name={focused ? "favorite" : "favorite-border"}
-                  color={focused ? "#10316B" : "black"}
+                  color={focused ? "#0A2472" : "black"}
                 />
               ),
               tabBarLabel: "",
@@ -133,7 +133,7 @@ function NavigationRoutes({
                 <Icon
                   name={focused ? "view-dashboard" : "view-dashboard-outline"}
                   type="material-community"
-                  color={focused ? "#10316B" : "black"}
+                  color={focused ? "#0A2472" : "black"}
                 />
               ),
               tabBarLabel: "",
@@ -161,7 +161,7 @@ function NavigationRoutes({
             <Icon
               name={focused ? "cards-heart" : "cards-heart-outline"}
               type="material-community"
-              color={focused ? "#10316B" : "black"}
+              color={focused ? "#0A2472" : "black"}
             />
           ),
           tabBarLabel: "",
@@ -178,7 +178,7 @@ function NavigationRoutes({
               <Icon
                 name={focused ? "plus-square" : "plus-square-o"}
                 type="font-awesome"
-                color={focused ? "#10316B" : "black"}
+                color={focused ? "#0A2472" : "black"}
               />
             ),
             tabBarLabel: "",
@@ -200,7 +200,7 @@ function NavigationRoutes({
             <Icon
               name={focused ? "star-four-points" : "star-four-points-outline"}
               type="material-community"
-              color={focused ? "#10316B" : "black"}
+              color={focused ? "#0A2472" : "black"}
             />
           ),
           tabBarLabel: "",
@@ -254,7 +254,7 @@ function NavigationRoutes({
             >
               <Icon
                 name="arrow-back"
-                color="#10316B"
+                color="#0A2472"
                 size={30}
                 type="material-icons"
               ></Icon>
@@ -270,7 +270,7 @@ function NavigationRoutes({
           tabBarStyle: { display: "none" },
           tabBarButton: () => null,
           headerShown: true,
-          headerTitleStyle: { color: "#10316B" },
+          headerTitleStyle: { color: "#0A2472" },
           title: "Post",
           headerLeft: () => (
             <TouchableOpacity
@@ -279,7 +279,7 @@ function NavigationRoutes({
             >
               <Icon
                 name="arrow-back"
-                color="#10316B"
+                color="#0A2472"
                 size={30}
                 type="material-icons"
               ></Icon>
@@ -295,7 +295,7 @@ function NavigationRoutes({
           tabBarStyle: { display: "none" },
           tabBarButton: () => null,
           headerShown: true,
-          headerTitleStyle: { color: "#10316B" },
+          headerTitleStyle: { color: "#0A2472" },
           title: "Documents",
           headerLeft: () => (
             <TouchableOpacity
@@ -304,7 +304,7 @@ function NavigationRoutes({
             >
               <Icon
                 name="arrow-back"
-                color="#10316B"
+                color="#0A2472"
                 size={30}
                 type="material-icons"
               ></Icon>
@@ -314,7 +314,7 @@ function NavigationRoutes({
             <Icon
               name={"description"}
               type="material-icons"
-              color={focused ? "#10316B" : "black"}
+              color={focused ? "#0A2472" : "black"}
             />
           ),
           tabBarLabel: "",
@@ -330,7 +330,7 @@ function NavigationRoutes({
             <Icon
               name={focused ? "person" : "person-outline"}
               type="material-icons"
-              color={focused ? "#10316B" : "black"}
+              color={focused ? "#0A2472" : "black"}
             />
           ),
           tabBarLabel: "",
@@ -345,7 +345,7 @@ function NavigationRoutes({
           tabBarStyle: { display: "none" },
           tabBarButton: () => null,
           headerShown: true,
-          headerTitleStyle: { color: "#10316B" },
+          headerTitleStyle: { color: "#0A2472" },
           title: "Edit Profile",
           headerLeft: () => (
             <TouchableOpacity
@@ -354,7 +354,7 @@ function NavigationRoutes({
             >
               <Icon
                 name="arrow-back"
-                color="#10316B"
+                color="#0A2472"
                 size={30}
                 type="material-icons"
               ></Icon>

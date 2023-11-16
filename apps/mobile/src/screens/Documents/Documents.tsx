@@ -184,7 +184,7 @@ export default function Documents() {
                   <View>
                     <Btn
                       className="rounded-md"
-                      bgColor="#10316B"
+                      bgColor="#0A2472"
                       iconName="download"
                       iconType="material-community"
                       onPress={() => downloadFile(doc.id, doc.url, doc.ext)}

@@ -20,7 +20,7 @@ export default function PostCard({ data, userId }: IPostCard) {
 
   return (
     <TouchableOpacity
-      className="mt-3 flex min-h-[100px] flex-row rounded-md bg-[#10316B] p-2"
+      className="mt-3 flex min-h-[100px] flex-row rounded-md bg-[#0A2472] p-2"
       onPress={() =>
         navigation.navigate("PostInfo", {
           userId,

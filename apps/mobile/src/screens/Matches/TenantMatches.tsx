@@ -46,7 +46,7 @@ function MatchCard({
 
   return (
     <TouchableOpacity
-      className="relative mt-3 flex min-h-[100px] flex-row rounded-md bg-[#10316B] p-2"
+      className="relative mt-3 flex min-h-[100px] flex-row rounded-md bg-[#0A2472] p-2"
       onPress={() =>
         navigation.navigate("ChatTenant", {
           relationshipId: data.id,
