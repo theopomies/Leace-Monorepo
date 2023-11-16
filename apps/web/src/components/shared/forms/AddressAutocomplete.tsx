@@ -74,7 +74,7 @@ export const AddressAutocomplete = (props: AddressAutocompleteProps) => {
       <TextInput
         className="w-full"
         required={props.required}
-        ref={inputRef}
+        inputRef={inputRef}
         placeholder="Search an address and select in the options"
         name="location"
         autoComplete="off"
@@ -83,7 +83,6 @@ export const AddressAutocomplete = (props: AddressAutocompleteProps) => {
           setShowList(true);
         }}
         value={props.location}
-        onBlur={() => setShowList(false)}
       />
       {searchResults.length > 0 && showList && (
         <div className="absolute z-10 mt-3 flex w-full items-center justify-between rounded-lg bg-white p-2 text-left shadow">

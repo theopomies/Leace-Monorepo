@@ -10,6 +10,8 @@ import axios from "axios";
 import { UserImage } from "../shared/user/UserImage";
 import { FileInput } from "../shared/forms/FileInput";
 
+// TODO: Make the picture required
+
 export function IdentityForm({ userId }: { userId: string }) {
   const utils = trpc.useContext();
   const {

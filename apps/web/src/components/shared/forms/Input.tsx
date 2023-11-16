@@ -1,17 +1,19 @@
-import { DetailedHTMLProps, InputHTMLAttributes } from "react";
+import { DetailedHTMLProps, InputHTMLAttributes, Ref } from "react";
 
-export type InputProps = { overrideStyles?: boolean } & DetailedHTMLProps<
-  InputHTMLAttributes<HTMLInputElement>,
-  HTMLInputElement
->;
+export type InputProps = {
+  overrideStyles?: boolean;
+  inputRef?: Ref<HTMLInputElement>;
+} & DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>;
 
 export function Input({
   overrideStyles = false,
+  inputRef,
   className,
   ...props
 }: InputProps) {
   return (
     <input
+      ref={inputRef}
       className={
         overrideStyles
           ? className
