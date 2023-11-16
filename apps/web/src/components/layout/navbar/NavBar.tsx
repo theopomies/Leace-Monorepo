@@ -64,7 +64,7 @@ export function NavBar({ session, activePage }: NavBarProps) {
   };
 
   return (
-    <div className="w-72 flex-shrink-0 flex-grow">
+    <div className="w-72 flex-shrink-0">
       <div className="fixed flex min-h-screen w-72 flex-shrink-0 flex-col overflow-hidden bg-white">
         <div className="flex items-end gap-5 py-16 pl-10">
           <img
