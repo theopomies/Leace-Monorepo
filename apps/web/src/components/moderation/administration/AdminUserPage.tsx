@@ -22,11 +22,13 @@ export function AdminUserPage({ userId }: { userId: string }) {
           )}
           <User userId={userId} />
         </div>
-        <div className="h-full w-1/6">
-          <ActionButtons
-            userId={userId}
-            conversationLink={`/administration/users/${userId}/conversations`}
-          />
+        <div className="flex w-1/6 flex-grow justify-center">
+          <div className="fixed flex h-screen items-center">
+            <ActionButtons
+              userId={userId}
+              conversationLink={`/administration/users/${userId}/conversations`}
+            />
+          </div>
         </div>
       </div>
     );

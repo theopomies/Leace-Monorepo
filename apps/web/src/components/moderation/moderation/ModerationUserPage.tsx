@@ -29,12 +29,14 @@ export function ModerationUserPage({
           )}
           <User userId={userId} />
         </div>
-        <div className="h-full w-1/6">
-          <ActionButtons
-            reportId={reportId}
-            userId={userId}
-            conversationLink={`/moderation/reports/${reportId}/users/${userId}/conversations`}
-          />
+        <div className="flex w-1/6 flex-grow justify-center">
+          <div className="fixed flex h-screen items-center">
+            <ActionButtons
+              reportId={reportId}
+              userId={userId}
+              conversationLink={`/moderation/reports/${reportId}/users/${userId}/conversations`}
+            />
+          </div>
         </div>
       </div>
     );

@@ -30,11 +30,13 @@ export function AdminPostPage({ postId }: { postId: string }) {
             <Post postId={postId} />
           </div>
         </div>
-        <div className="h-full w-1/6">
-          <ActionButtons
-            userId={post.data.createdById}
-            conversationLink={`/administration/users/${post.data.createdById}/conversations`}
-          />
+        <div className="flex w-1/6 flex-grow justify-center">
+          <div className="fixed flex h-screen items-center">
+            <ActionButtons
+              userId={post.data.createdById}
+              conversationLink={`/administration/users/${post.data.createdById}/conversations`}
+            />
+          </div>
         </div>
       </div>
     );

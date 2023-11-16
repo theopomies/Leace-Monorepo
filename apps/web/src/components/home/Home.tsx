@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 import { RouterOutputs } from "../../utils/trpc";
 import { ModerationReportPage } from "../moderation/moderation/ModerationReportPage";
 import { Loader } from "../shared/Loader";
-import { RoleSelector } from "../users/RoleSelector";
 import { PostStack } from "./stack/PostStack";
 import { TenantList } from "./stack/TenantList";
 
@@ -16,7 +15,10 @@ export const Home = ({ session }: HomeProps) => {
 
   const role = session.role;
 
-  if (role == undefined) return <RoleSelector userId={session.userId} />;
+  if (role == undefined) {
+    router.push("/onboarding");
+    return <Loader />;
+  }
 
   if (role == Role.ADMIN) {
     router.push("/administration");
