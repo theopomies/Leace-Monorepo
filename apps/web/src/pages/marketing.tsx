@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { use, useEffect } from "react";
 import { MarketingPage } from "../components/marketing/MarketingPage";
 import { trpc } from "../utils/trpc";
 import { useRouter } from "next/router";
@@ -16,6 +16,12 @@ const MarketingIndex = () => {
       userId: session?.userId,
     });
   }, [router.asPath, session?.userId]);
+
+  useEffect(() => {
+    if (session) {
+      router.push("/");
+    }
+  }, [router, session]);
 
   return <MarketingPage />;
 };
