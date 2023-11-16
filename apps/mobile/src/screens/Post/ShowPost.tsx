@@ -7,7 +7,7 @@ import {
 } from "@react-navigation/native";
 import React, { useCallback, useState } from "react";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { TabStackParamList } from "../../navigation/TabNavigator";
+import { TabStackParamList } from "../../navigation/RootNavigator";
 import { Report } from "../../components/Report";
 import { trpc } from "../../utils/trpc";
 import { Loading } from "../../components/Loading";
@@ -16,6 +16,7 @@ import Separator from "../../components/Separator";
 import { ShowAttributes } from "../../components/Attribute";
 import { Btn } from "../../components/Btn";
 import { LocalStorage } from "../../utils/cache";
+import { Image as ImageDb } from "@leace/db";
 
 export default function ShowPost() {
   const navigation =
@@ -28,6 +29,7 @@ export default function ShowPost() {
     isLoading,
     refetch,
   } = trpc.post.getPostById.useQuery({ postId });
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [idx, setIdx] = useState(0);
 
   useFocusEffect(
@@ -64,9 +66,10 @@ export default function ShowPost() {
       </View>
     );
 
-  function _renderItem({ item, index }: { item: any; index: number }) {
+  function _renderItem({ item, index }: { item: ImageDb; index: number }) {
     return (
       <Image
+        key={index}
         className="rounded-xl"
         source={{ uri: item.ext }}
         style={{ flex: 1, resizeMode: "contain" }}
@@ -87,11 +90,13 @@ export default function ShowPost() {
           justifyContent: "space-between",
           flexDirection: "column",
         }}
-        style={{ backgroundColor: "#10316B", paddingBottom: 5 }}
+        style={{ backgroundColor: "#0A2472", paddingBottom: 5 }}
       >
         <View>
           <View className="mt-4 h-48 px-4">
             {post.images.length > 0 ? (
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore
               <Carousel
                 layout={"default"}
                 data={post.images}
@@ -149,7 +154,7 @@ export default function ShowPost() {
                     <Btn
                       title="More"
                       bgColor="#F2F7FF"
-                      textColor="#10316B"
+                      textColor="#0A2472"
                     ></Btn>
                   </View>
                 </View>
@@ -196,7 +201,7 @@ export default function ShowPost() {
                 <ShowAttributes
                   attribute={post.attribute}
                   iconBGColor="#F2F7FF"
-                  iconTextColor="#10316B"
+                  iconTextColor="#0A2472"
                   titleColor="#FFFFFF"
                   show={false}
                 ></ShowAttributes>
@@ -212,7 +217,7 @@ export default function ShowPost() {
                 <Btn
                   title="Edit"
                   bgColor="#F2F7FF"
-                  textColor="#10316B"
+                  textColor="#0A2472"
                   onPress={() =>
                     navigation.navigate("EditPost", {
                       userId,
@@ -248,6 +253,6 @@ const styles = StyleSheet.create({
   },
   view: {
     flex: 1,
-    backgroundColor: "#F2F7FF",
+    backgroundColor: "white",
   },
 });

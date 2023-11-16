@@ -1,8 +1,6 @@
 import {
   View,
   Text,
-  Platform,
-  StatusBar,
   SafeAreaView,
   StyleSheet,
   TextInput,
@@ -12,12 +10,11 @@ import React, { useState } from "react";
 import Header from "../../components/Header";
 import { trpc } from "../../utils/trpc";
 import { IDefaulAttributes } from "../../types";
-import Separator from "../../components/Separator";
 import { CreateAttributes } from "../../components/Attribute";
 import { Btn } from "../../components/Btn";
 import { LocalStorage } from "../../utils/cache";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { TabStackParamList } from "../../navigation/TabNavigator";
+import { TabStackParamList } from "../../navigation/RootNavigator";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 
 export default function CreatePost() {
@@ -68,11 +65,11 @@ export default function CreatePost() {
         <Header />
         <ScrollView
           contentContainerStyle={{ flexGrow: 1 }}
-          style={{ backgroundColor: "white" }} // #F2F7FF
+          style={{ backgroundColor: "white" }}
         >
           <View className="flex-1 space-y-2 p-4">
             <View>
-              <Text className="text-base font-bold text-[#10316B]">Tittle</Text>
+              <Text className="text-base font-bold text-[#0A2472]">Tittle</Text>
               <TextInput
                 className="border-b border-[#D3D3D3] py-1.5 font-light leading-loose focus:border-blue-500"
                 placeholder="Enter title..."
@@ -82,7 +79,7 @@ export default function CreatePost() {
               />
             </View>
             <View>
-              <Text className="text-base font-bold text-[#10316B]">
+              <Text className="text-base font-bold text-[#0A2472]">
                 Description
               </Text>
               <TextInput
@@ -96,7 +93,7 @@ export default function CreatePost() {
               />
             </View>
             <View>
-              <Text className="text-base font-bold text-[#10316B]">
+              <Text className="text-base font-bold text-[#0A2472]">
                 Content
               </Text>
               <TextInput
@@ -115,7 +112,7 @@ export default function CreatePost() {
             <View className="pt-2">
               <Btn
                 title="Create Post"
-                bgColor="#10316B"
+                bgColor="#0A2472"
                 onPress={createPost}
               ></Btn>
             </View>
@@ -133,7 +130,6 @@ const styles = StyleSheet.create({
   },
   view: {
     flex: 1,
-    marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-    backgroundColor: "#F2F7FF",
+    backgroundColor: "white",
   },
 });

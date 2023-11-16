@@ -3,8 +3,6 @@ import {
   Text,
   ScrollView,
   StyleSheet,
-  Platform,
-  StatusBar,
   TextInput,
   SafeAreaView,
   Modal,
@@ -12,7 +10,7 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useRoute, RouteProp } from "@react-navigation/native";
-import { TabStackParamList } from "../../navigation/TabNavigator";
+import { TabStackParamList } from "../../navigation/RootNavigator";
 import { trpc } from "../../utils/trpc";
 import { Loading } from "../../components/Loading";
 import { Message, User, Lease } from "@prisma/client";
@@ -38,7 +36,7 @@ function MessageCard({ data, userId }: IMessageCard) {
         className={`flex ${
           userId !== data.senderId
             ? "items-start bg-[#ececec]"
-            : "items-end bg-[#10316B]"
+            : "items-end bg-[#0A2472]"
         } rounded-2xl`}
       >
         <Text
@@ -229,7 +227,7 @@ export default function TenantChat() {
                 </Text>
                 <TextInput
                   editable={role !== "TENANT"}
-                  className="font-light text-black" // @ts-ignore
+                  className="font-light text-black"
                   inputMode="decimal"
                   placeholder="0123456789"
                   defaultValue={lease.rentCost.toString()}
@@ -245,7 +243,6 @@ export default function TenantChat() {
                 <TextInput
                   editable={role !== "TENANT"}
                   className="font-light text-black"
-                  // @ts-ignore
                   inputMode="decimal"
                   placeholder="0123456789"
                   defaultValue={lease.utilitiesCost.toString()}
@@ -303,7 +300,7 @@ export default function TenantChat() {
                   <Btn
                     title="Close"
                     bgColor="#F2F7FF"
-                    textColor="#10316B"
+                    textColor="#0A2472"
                     onPress={() => setShow(false)}
                   ></Btn>
                 </View>
@@ -342,7 +339,7 @@ export default function TenantChat() {
           <Btn
             iconName="description"
             iconType="material"
-            bgColor="#10316B"
+            bgColor="#0A2472"
             className="rounded-full"
             onPress={() => setShow(true)}
           ></Btn>
@@ -359,8 +356,7 @@ const styles = StyleSheet.create({
   },
   view: {
     flex: 1,
-    marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-    backgroundColor: "white", // #F2F7FF
+    backgroundColor: "white",
   },
   input: {
     zIndex: 10,

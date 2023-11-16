@@ -17,7 +17,7 @@ import {
   useRoute,
 } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { TabStackParamList } from "../../navigation/TabNavigator";
+import { TabStackParamList } from "../../navigation/RootNavigator";
 import { trpc } from "../../utils/trpc";
 import { Icon } from "react-native-elements";
 import { IDefaulAttributes } from "../../types";
@@ -87,7 +87,7 @@ export default function EditPost() {
           >
             <Icon
               name="arrow-back"
-              color="#10316B"
+              color="#0A2472"
               size={30}
               type="material-icons"
             ></Icon>
@@ -97,11 +97,11 @@ export default function EditPost() {
         <View className="flex-1">
           <ScrollView
             contentContainerStyle={{ flexGrow: 1 }}
-            style={{ backgroundColor: "white" }} // #F2F7FF
+            style={{ backgroundColor: "white" }}
           >
             <View className="flex-1 space-y-2 p-4">
               <View>
-                <Text className="text-base font-bold text-[#10316B]">
+                <Text className="text-base font-bold text-[#0A2472]">
                   Tittle
                 </Text>
                 <TextInput
@@ -114,7 +114,7 @@ export default function EditPost() {
                 />
               </View>
               <View>
-                <Text className="text-base font-bold text-[#10316B]">
+                <Text className="text-base font-bold text-[#0A2472]">
                   Description
                 </Text>
                 <TextInput
@@ -129,7 +129,7 @@ export default function EditPost() {
                 />
               </View>
               <View>
-                <Text className="text-base font-bold text-[#10316B]">
+                <Text className="text-base font-bold text-[#0A2472]">
                   Content
                 </Text>
                 <TextInput
@@ -149,7 +149,7 @@ export default function EditPost() {
               <View className="pt-2">
                 <Btn
                   title="Update"
-                  bgColor="#10316B"
+                  bgColor="#0A2472"
                   onPress={handlePost}
                 ></Btn>
               </View>
@@ -168,6 +168,5 @@ const styles = StyleSheet.create({
   },
   view: {
     flex: 1,
-    marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
 });

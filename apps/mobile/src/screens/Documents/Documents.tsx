@@ -1,39 +1,45 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Image,
   View,
   Text,
-  Platform,
   SafeAreaView,
-  StatusBar,
   StyleSheet,
   ScrollView,
+  TouchableOpacity,
 } from "react-native";
 import axios from "axios";
 import { Buffer } from "buffer";
 import { trpc } from "../../utils/trpc";
 import { Btn } from "../../components/Btn";
-import * as FileSystem from "expo-file-system";
 import * as DocumentPicker from "expo-document-picker";
 import { useRoute, RouteProp } from "@react-navigation/native";
-import { TabStackParamList } from "../../navigation/TabNavigator";
+import { TabStackParamList } from "../../navigation/RootNavigator";
 import { Loading } from "../../components/Loading";
-import Header from "../../components/Header";
+
+import * as FileSystem from "expo-file-system";
+import * as MediaLibrary from "expo-media-library";
+import Toast from "react-native-toast-message";
+
+import * as Sharing from "expo-sharing";
+import { DocumentModal, ZoomImageModal } from "../../components/Modal";
 
 export default function Documents() {
+  const [open, setOpen] = useState(false);
+  const [open1, setOpen1] = useState(false);
+  const [selected, setSelected] = useState({ id: "", url: "" });
   const route = useRoute<RouteProp<TabStackParamList, "Profile">>();
   const { userId } = route.params;
   const {
     data: documents,
     refetch,
     isLoading,
-  } = trpc.document.getSignedUrl.useQuery({
-    userId,
-  });
+  } = trpc.document.getSignedUrl.useQuery({ userId });
   const uploadDocument = trpc.document.putSignedUrl.useMutation();
-  const deleteDocument = trpc.document.deleteSignedUrl.useMutation({
+  const { mutate: deleteDocument } = trpc.document.deleteSignedUrl.useMutation({
     onSuccess() {
       refetch();
+      setOpen(false);
     },
   });
 
@@ -42,6 +48,7 @@ export default function Documents() {
       const documents: {
         assets: DocumentPicker.DocumentPickerAsset[];
         canceled: boolean;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } = (await DocumentPicker.getDocumentAsync({ type: "*/*" })) as any;
       if (documents.canceled) throw new Error("Document picker canceled");
       const [document] = documents.assets;
@@ -70,6 +77,54 @@ export default function Documents() {
     }
   };
 
+  async function getFileUri(url: string, fileName: string) {
+    const fileUri = FileSystem.documentDirectory + fileName;
+    const downloadedFile = await FileSystem.downloadAsync(url, fileUri);
+    if (downloadedFile.status === 200) return downloadedFile.uri;
+    return null;
+  }
+
+  async function saveFile(fileName: string, fileUri: string, ext: string) {
+    const saveAs = `${fileName}.${ext}`;
+    try {
+      const downloadedFile = await getFileUri(fileUri, saveAs);
+      if (!downloadedFile) throw new Error("DOWNLOAD FAILED");
+      if (ext === "pdf")
+        await Sharing.shareAsync(downloadedFile, {
+          mimeType: "application/pdf",
+          dialogTitle: "Download or share a PDF",
+          UTI: "com.adobe.pdf",
+        });
+      else {
+        await MediaLibrary.createAssetAsync(downloadedFile);
+        Toast.show({ type: "success", text1: "File downloaded." });
+      }
+    } catch (e) {
+      console.error(e);
+      Toast.show({
+        type: "error",
+        text1: "The file download was not successful.",
+        text2: "Try again later.",
+      });
+    }
+  }
+
+  async function downloadFile(fileName: string, fileUri: string, ext: string) {
+    const declined = {
+      type: "error",
+      text1: "Access to the library was declined.",
+      text2: "Download canceled.",
+    };
+    const result = await MediaLibrary.getPermissionsAsync();
+    if (result.status === "granted") {
+      await saveFile(fileName, fileUri, ext);
+    } else if (result.status === "undetermined") {
+      const ask = await MediaLibrary.requestPermissionsAsync();
+      if (ask.status === "granted") await saveFile(fileName, fileUri, ext);
+      else Toast.show(declined);
+    } else Toast.show(declined);
+  }
+
   if (isLoading) return <Loading />;
 
   if (!documents)
@@ -83,38 +138,74 @@ export default function Documents() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <DocumentModal
+        open={open}
+        setOpen={setOpen}
+        callback={() => deleteDocument({ userId, documentId: selected.id })}
+      />
+      {open1 && (
+        <ZoomImageModal image={selected} callback={() => setOpen1(false)} />
+      )}
       <View style={styles.view}>
-        <Header />
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-          {documents &&
-            documents.map((doc, key) => (
-              <View
-                key={key}
-                className="bg-navy relative mx-3 mt-2 h-36 rounded-md p-2"
+          {documents.map((doc, key) => (
+            <View
+              key={key}
+              className={`relative mx-3 mt-2 max-h-60 rounded-md bg-[#f1f1f1] p-2`}
+            >
+              <TouchableOpacity
+                disabled={doc.ext === "pdf"}
+                onPress={() => {
+                  setSelected({ id: doc.id, url: doc.url });
+                  setOpen1(true);
+                }}
+                className={`flex max-h-40 ${
+                  doc.ext === "pdf" ? "h-20" : "h-40"
+                } items-center justify-center`}
               >
-                <View className="flex h-32 w-32 items-center justify-center">
-                  <Image
-                    className={`${
-                      doc.ext === "pdf" ? " h-20 w-20" : "h-32 w-32"
-                    } rounded-md`}
-                    source={
-                      doc.ext === "pdf"
-                        ? require("../../../assets/pdf-logo.png")
-                        : { uri: doc.url }
-                    }
-                  ></Image>
-                </View>
-                <Btn
-                  className="absolute right-0 top-0 rounded-md rounded-br-none rounded-tl-none"
-                  bgColor="#ef4444"
-                  iconName="delete"
-                  iconType="material"
-                  onPress={() =>
-                    deleteDocument.mutate({ userId, documentId: doc.id })
+                <Image
+                  className={`${
+                    doc.ext === "pdf" ? "h-20 w-20" : "h-40 w-full"
+                  } block rounded-md object-contain`}
+                  source={
+                    doc.ext === "pdf"
+                      ? require("../../../assets/pdf-logo.png")
+                      : { uri: doc.url }
                   }
-                />
+                ></Image>
+              </TouchableOpacity>
+              <View className="flex flex-row items-center gap-1 pt-2">
+                <View className="flex-1">
+                  <Text>
+                    {doc.id}.{doc.ext}
+                  </Text>
+                </View>
+                <View className="flex flex-row space-x-1">
+                  <View>
+                    <Btn
+                      className="rounded-md"
+                      bgColor="#0A2472"
+                      iconName="download"
+                      iconType="material-community"
+                      onPress={() => downloadFile(doc.id, doc.url, doc.ext)}
+                    />
+                  </View>
+                  <View>
+                    <Btn
+                      className="rounded-md"
+                      bgColor="#ef4444"
+                      iconName="delete"
+                      iconType="material"
+                      onPress={() => {
+                        setSelected({ id: doc.id, url: doc.url });
+                        setOpen(true);
+                      }}
+                    />
+                  </View>
+                </View>
               </View>
-            ))}
+            </View>
+          ))}
         </ScrollView>
         <View>
           <Btn
@@ -136,7 +227,6 @@ const styles = StyleSheet.create({
   },
   view: {
     flex: 1,
-    // marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
     backgroundColor: "white",
   },
 });

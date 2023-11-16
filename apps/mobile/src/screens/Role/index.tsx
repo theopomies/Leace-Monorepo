@@ -1,3 +1,3 @@
-import Role from "./Role";
+import ChooseRole from "./Role";
 
-export default Role;
+export default ChooseRole;

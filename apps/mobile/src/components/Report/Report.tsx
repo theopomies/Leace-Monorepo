@@ -4,8 +4,8 @@ import { Icon } from "react-native-elements";
 import { Btn } from "../Btn";
 import { Reason } from "../../utils/enum";
 import { trpc } from "../../utils/trpc";
-import { ReportReason } from "@leace/db";
-import RNPickerSelect from "react-native-picker-select";
+//import { ReportReason } from "@leace/db";
+// import RNPickerSelect from "react-native-picker-select";
 
 interface IReport {
   type: "USER" | "POST";
@@ -23,7 +23,8 @@ export default function Report({
   iconOnly = false,
 }: IReport) {
   const [open, setOpen] = useState(false);
-  const [reason, setReason] = useState<ReportReason>(Reason.SPAM);
+  // const [reason, setReason] = useState<ReportReason>(Reason.SPAM);
+  const reason = Reason.SPAM;
   const [message, setMessage] = useState("");
 
   const reportUser = trpc.report.reportUserById.useMutation({
@@ -73,7 +74,7 @@ export default function Report({
           >
             <Text className="text-center text-lg font-bold">Report form</Text>
             <Text className="text-sm font-light">Reason:</Text>
-            <RNPickerSelect
+            {/*<RNPickerSelect
               placeholder={{}}
               onValueChange={(itemValue) => setReason(itemValue)}
               items={[
@@ -82,7 +83,7 @@ export default function Report({
                 { label: "INAPPROPRIATE", value: "INAPPROPRIATE" },
                 { label: "OTHER", value: "OTHER" },
               ]}
-            />
+            />*/}
             <Text className="pb-3 text-sm font-light">
               What's happening? Tell us the reason of your report.
             </Text>
@@ -106,7 +107,7 @@ export default function Report({
                 <Btn
                   title="Close"
                   bgColor="#F2F7FF"
-                  textColor="#10316B"
+                  textColor="#0A2472"
                   onPress={() => setOpen(false)}
                 ></Btn>
               </View>

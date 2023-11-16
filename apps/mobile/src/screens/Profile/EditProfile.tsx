@@ -14,14 +14,14 @@ import {
   useFocusEffect,
   useNavigation,
 } from "@react-navigation/native";
-import { TabStackParamList } from "../../navigation/TabNavigator";
+import { TabStackParamList } from "../../navigation/RootNavigator";
 import { Icon } from "react-native-elements";
 import { EditAttributes } from "../../components/Attribute";
 import Separator from "../../components/Separator";
 import { trpc } from "../../utils/trpc";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { LocalStorage } from "../../utils/cache";
-// import { IUserAttrs } from "../../types";
+import { IUserAttrs } from "../../types";
 import { EditInfo } from "../../components/UserProfile";
 import { Btn } from "../../components/Btn";
 import { useAuth } from "@clerk/clerk-expo";
@@ -48,7 +48,7 @@ export default function EditProfile() {
     role: string;
     email: string;
   }>();
-  const [attrs, setAttrs] = useState<any>();
+  const [attrs, setAttrs] = useState<IUserAttrs>();
 
   const userMutation = trpc.user.updateUserById.useMutation({
     onSuccess() {
@@ -75,20 +75,20 @@ export default function EditProfile() {
   useFocusEffect(
     useCallback(() => {
       const parsed = JSON.parse(data);
-      let {
+      const {
         id,
         firstName,
         lastName,
         phoneNumber,
         description,
         birthDate,
-        attribute,
         image,
         role,
         isPremium,
         emailVerified,
         email,
       } = parsed;
+      let { attribute } = parsed;
       if (!attribute) {
         attribute = {
           ...attribute,
@@ -174,7 +174,7 @@ export default function EditProfile() {
                 <Btn
                   title="Close"
                   bgColor="#F2F7FF"
-                  textColor="#10316B"
+                  textColor="#0A2472"
                   onPress={() => setOpen(false)}
                 ></Btn>
               </View>
@@ -187,7 +187,7 @@ export default function EditProfile() {
           contentContainerStyle={{ flexGrow: 1 }}
           style={{ backgroundColor: "white" }}
         >
-          <View className="flex flex-row bg-[#10316B] px-3 py-2">
+          <View className="flex flex-row bg-[#0A2472] px-3 py-2">
             <Image
               source={{
                 uri: user1.image ?? "https://www.gravatar.com/avatar/?d=mp",
@@ -227,11 +227,11 @@ export default function EditProfile() {
           </View>
           <View className="pt-2">
             <View className="flex flex-row items-center justify-between px-2">
-              <Text className="text-base font-bold text-[#10316B]">Kind:</Text>
+              <Text className="text-base font-bold text-[#0A2472]">Kind:</Text>
               <Text className="font-light">{user1.role}</Text>
             </View>
             <View className="flex flex-row items-center justify-between px-2">
-              <Text className="text-base font-bold text-[#10316B]">
+              <Text className="text-base font-bold text-[#0A2472]">
                 Premium:
               </Text>
               <Icon
@@ -242,7 +242,7 @@ export default function EditProfile() {
               ></Icon>
             </View>
             <View className="flex flex-row items-center justify-between px-2">
-              <Text className="text-base font-bold text-[#10316B]">
+              <Text className="text-base font-bold text-[#0A2472]">
                 Verified:
               </Text>
               <Icon
@@ -254,7 +254,7 @@ export default function EditProfile() {
             </View>
           </View>
           <View className="px-3">
-            <Separator color="#10316B" />
+            <Separator color="#0A2472" />
           </View>
           <View style={{ flex: 1 }}>
             <View className="flex flex-row items-center justify-between px-2">
@@ -267,7 +267,7 @@ export default function EditProfile() {
                 className="px-3"
                 style={{ justifyContent: "flex-end", flex: 1 }}
               >
-                <Separator color="#10316B" />
+                <Separator color="#0A2472" />
                 <EditAttributes
                   userId={userId}
                   attrs={attrs}

@@ -4,26 +4,24 @@ import {
   TouchableOpacity,
   Image,
   SafeAreaView,
-  StatusBar,
   StyleSheet,
   ScrollView,
   TextInput,
-  Platform,
 } from "react-native";
 import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { TabStackParamList } from "../../navigation/TabNavigator";
+import { TabStackParamList } from "../../navigation/RootNavigator";
 import { trpc } from "../../utils/trpc";
 import Swiper from "react-native-swiper";
 import Header from "../../components/Header";
 import Separator from "../../components/Separator";
 import { Btn } from "../../components/Btn";
 import { EditAttributes } from "../../components/Attribute";
-// import { IUserAttrs } from "../../types";
+import { IUserAttrs } from "../../types";
 import { EditInfo } from "../../components/UserProfile";
 
-export default function Role() {
+export default function ChooseRole() {
   const navigation =
     useNavigation<NativeStackNavigationProp<TabStackParamList>>();
   const [role, setRole] = useState<"TENANT" | "OWNER" | "AGENCY">("TENANT");
@@ -44,7 +42,7 @@ export default function Role() {
       }
     | undefined
   >({ userId });
-  const [attrs, setAttrs] = useState<any | undefined>({ userId });
+  const [attrs, setAttrs] = useState<IUserAttrs | undefined>({ userId });
 
   const userRole = trpc.user.updateUserRoleById.useMutation({
     onSuccess() {
@@ -83,7 +81,7 @@ export default function Role() {
         <View className="flex-1 items-center justify-center bg-white px-8">
           <View className="flex w-full flex-row items-center">
             <Image
-              source={require("../../../assets/logo.png")}
+              source={require("../../../assets/logo_1024.png")}
               className="h-20 w-20 rounded-full"
             />
             <View className="flex-1">
@@ -93,7 +91,7 @@ export default function Role() {
             </View>
           </View>
           <View
-            className="flex h-1/2 items-center justify-center rounded-md border bg-[#F2F7FF]"
+            className="flex h-1/2 items-center justify-center rounded-md border"
             style={styles.shadow}
           >
             <Swiper
@@ -102,7 +100,7 @@ export default function Role() {
               loadMinimalSize={3}
               autoplay
               autoplayTimeout={5}
-              className="text-[#10316B]"
+              className="text-[#0A2472]"
             >
               <TouchableOpacity
                 onPress={() => submitRole("TENANT")}
@@ -174,7 +172,7 @@ export default function Role() {
                 contentContainerStyle={{ flexGrow: 1 }}
                 style={{ backgroundColor: "white" }}
               >
-                <View className="flex flex-row bg-[#10316B] px-3 py-2">
+                <View className="flex flex-row bg-[#0A2472] px-3 py-2">
                   <Image
                     source={{
                       uri: "https://www.gravatar.com/avatar/?d=mp",
@@ -205,14 +203,14 @@ export default function Role() {
                 </View>
                 <View className="pt-2">
                   <View className="flex flex-row items-center justify-between px-2">
-                    <Text className="text-base font-bold text-[#10316B]">
+                    <Text className="text-base font-bold text-[#0A2472]">
                       Kind:
                     </Text>
                     <Text className="font-light">{role}</Text>
                   </View>
                 </View>
                 <View className="px-3">
-                  <Separator color="#10316B" />
+                  <Separator color="#0A2472" />
                 </View>
                 <View style={{ flex: 1 }}>
                   <EditInfo user={user} setUser={setUser} />
@@ -231,14 +229,14 @@ export default function Role() {
                     <Btn
                       title="Change role"
                       bgColor="#F2F7FF"
-                      textColor="#10316B"
+                      textColor="#0A2472"
                       onPress={() => setPage("CHOOSE")}
                     />
                   </View>
                   <View>
                     <Btn
                       title="Create profile"
-                      bgColor="#10316B"
+                      bgColor="#0A2472"
                       onPress={submitUser}
                     />
                   </View>
@@ -259,8 +257,7 @@ const styles = StyleSheet.create({
   },
   view: {
     flex: 1,
-    // marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-    backgroundColor: "#F2F7FF",
+    backgroundColor: "white",
   },
   shadow: {
     shadowColor: "#000",
