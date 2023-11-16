@@ -18,6 +18,11 @@ export const authRouter = router({
 
     ban = ban && ban.until > new Date() ? ban : null;
 
-    return { auth: ctx.auth, userId: ctx.auth.userId, role: ctx.role, ban };
+    return {
+      auth: ctx.auth,
+      userId: ctx.auth.userId,
+      role: ctx.role,
+      ban,
+    };
   }),
 });

@@ -118,6 +118,7 @@ export function OwnerChat({
       postId={postId}
       additionnalBarComponent={
         <div className="flex items-center gap-8">
+          <OwnerContractPopover relationship={relationship} />
           {relationship && (
             <MatchActions
               fullName={
@@ -134,7 +135,6 @@ export function OwnerChat({
               onDelete={() => onDeleteMatch(relationship.id)}
             />
           )}
-          <OwnerContractPopover relationship={relationship} />
         </div>
       }
     />
