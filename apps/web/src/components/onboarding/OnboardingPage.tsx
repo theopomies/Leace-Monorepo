@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { useMemo } from "react";
 import { RoleSelection } from "./RoleSelection";
 import { IdentityForm } from "./IdentityForm";
+import { PreferencesForm } from "./PreferencesForm";
 
 export function OnboardingPage() {
   const router = useRouter();
@@ -29,7 +30,7 @@ export function OnboardingPage() {
         return <IdentityForm userId={session.userId} />;
       }
       case OnboardingStatus.PREFERENCES_COMPLETION: {
-        return <p>Preferences Completion</p>;
+        return <PreferencesForm userId={session.userId} />;
       }
       default:
         return null;

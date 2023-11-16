@@ -124,7 +124,7 @@ const AuthorizedLayout = ({
       <Head>
         <title>{title ?? "Leace"}</title>
       </Head>
-      <div className="flex h-screen bg-gray-100">
+      <div className="flex min-h-screen bg-gray-100">
         {navbar && <NavBar session={session} activePage={activePage} />}
         {session && session.ban ? <BanMessage ban={session.ban} /> : children}
       </div>

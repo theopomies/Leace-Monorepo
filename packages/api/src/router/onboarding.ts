@@ -45,6 +45,14 @@ export const onboardingRouter = router({
       return OnboardingStatus.IDENTITY_COMPLETION as OnboardingStatus;
     }
 
-    return OnboardingStatus.PREFERENCES_COMPLETION as OnboardingStatus;
+    if (user.role !== Role.TENANT) {
+      return OnboardingStatus.COMPLETE as OnboardingStatus;
+    }
+
+    if (!user.attribute) {
+      return OnboardingStatus.PREFERENCES_COMPLETION as OnboardingStatus;
+    }
+
+    return OnboardingStatus.COMPLETE as OnboardingStatus;
   }),
 });
