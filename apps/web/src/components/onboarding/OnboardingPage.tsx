@@ -6,9 +6,11 @@ import { useMemo } from "react";
 import { RoleSelection } from "./RoleSelection";
 import { IdentityForm } from "./IdentityForm";
 import { PreferencesForm } from "./PreferencesForm";
+import { ToastDescription, ToastTitle, useToast } from "../shared/toast/Toast";
 
 export function OnboardingPage() {
   const router = useRouter();
+  const { renderToast } = useToast();
   const { data: session, isLoading } = trpc.auth.getSession.useQuery();
   const { data: onboardingStatus, isLoading: onboardingStatusIsLoading } =
     trpc.onboarding.getUserOnboardingStatus.useQuery(
@@ -49,6 +51,14 @@ export function OnboardingPage() {
 
   if (onboardingStatus === OnboardingStatus.COMPLETE) {
     router.push("/");
+    renderToast(
+      <>
+        <ToastTitle>That&apos;s it, you&apos;re all set ✅</ToastTitle>
+        <ToastDescription>
+          You can now start trying to find what you&apos;re looking for!
+        </ToastDescription>
+      </>,
+    );
     return <Loader />;
   }
 

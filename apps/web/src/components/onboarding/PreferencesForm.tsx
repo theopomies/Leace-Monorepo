@@ -1,9 +1,7 @@
 import { useState } from "react";
 import { trpc } from "../../utils/trpc";
-import { UserAttributesForm } from "../attributes/UserAttributesForm";
 import { Button } from "../shared/button/Button";
 import { NumberInput } from "../shared/forms/NumberInput";
-import { ToastDescription, ToastTitle, useToast } from "../shared/toast/Toast";
 import { HomeType } from "@prisma/client";
 import { AddressAutocomplete } from "../shared/forms/AddressAutocomplete";
 import { Checkbox } from "../shared/forms/Checkbox";
@@ -14,14 +12,6 @@ export function PreferencesForm({ userId }: { userId: string }) {
     trpc.attribute.updateUserAttributes.useMutation({
       async onSuccess() {
         await utils.onboarding.getUserOnboardingStatus.invalidate();
-        renderToast(
-          <>
-            <ToastTitle>That&apos;s it, you&apos;re all set ✅</ToastTitle>
-            <ToastDescription>
-              You can now start trying to match with your dream property
-            </ToastDescription>
-          </>,
-        );
       },
     });
 
@@ -66,8 +56,6 @@ export function PreferencesForm({ userId }: { userId: string }) {
       value !== "location" &&
       value !== "homeType",
   );
-
-  const { renderToast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
