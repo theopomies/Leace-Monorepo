@@ -1,5 +1,5 @@
 import React from "react";
-import { TouchableOpacity, Image } from "react-native";
+import { TouchableOpacity, Image, Platform } from "react-native";
 import { Icon } from "react-native-elements";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { TabStackParamList } from "../../navigation/TabNavigator";
@@ -43,7 +43,7 @@ const Tenant = ({
                   ? require("../../../assets/navbar/home-hover.png")
                   : require("../../../assets/navbar/home.png")
               }
-              className="mt-5 h-6 w-6"
+              className={` ${Platform.OS === "ios" ? "mt-5" : "mt-2"} h-6 w-6`}
             />
           ),
           tabBarLabel: "",
@@ -62,7 +62,7 @@ const Tenant = ({
                   ? require("../../../assets/navbar/chat-hover.png")
                   : require("../../../assets/navbar/chat.png")
               }
-              className="mt-5 h-6 w-6"
+              className={` ${Platform.OS === "ios" ? "mt-5" : "mt-2"} h-6 w-6`}
             />
           ),
           tabBarLabel: "",
@@ -106,7 +106,7 @@ const Tenant = ({
                   ? require("../../../assets/navbar/avatar-hover.png")
                   : require("../../../assets/navbar/avatar.png")
               }
-              className="mt-5 h-6 w-6"
+              className={` ${Platform.OS === "ios" ? "mt-5" : "mt-2"} h-6 w-6`}
             />
           ),
           tabBarLabel: "",
@@ -149,7 +149,7 @@ const Tenant = ({
                   ? require("../../../assets/navbar/crown-hover.png")
                   : require("../../../assets/navbar/crown.png")
               }
-              className="mt-5 h-6 w-6"
+              className={` ${Platform.OS === "ios" ? "mt-5" : "mt-2"} h-6 w-6`}
             />
           ),
           tabBarLabel: "",

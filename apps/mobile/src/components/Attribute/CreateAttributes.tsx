@@ -20,8 +20,8 @@ interface ICreateAttributes {
   setLocationError: (error: string) => void;
   setPriceError: (error: string) => void;
   setSizeError: (error: string) => void;
-  setSecurityAlarm: (error: string) => void;
-  setInternetFiber: (error: string) => void;
+  setSecurityAlarm: (bool: boolean) => void;
+  setInternetFiber: (bool: boolean) => void;
 }
 interface IAttributeBtn {
   name: string;
@@ -77,8 +77,6 @@ export default function CreateAttributes({
   setSecurityAlarm,
   setInternetFiber,
 }: ICreateAttributes) {
-  const [open, setOpen] = useState(false);
-  const [open1, setOpen1] = useState(false);
   const [reason, setReason] = useState<"HOUSE" | "APARTMENT">("HOUSE");
 
   if (!attrs) return null;
@@ -124,7 +122,7 @@ export default function CreateAttributes({
           style={{
             flexDirection: "row",
             justifyContent: "center",
-            marginBottom: Platform.OS === "android" ? 10 : 50,
+            marginBottom: Platform.OS === "android" ? 10 : 20,
           }}
         >
           <TouchableOpacity
@@ -182,7 +180,7 @@ export default function CreateAttributes({
         <View className="flex flex-row flex-wrap items-center justify-center">
           <View
             style={{
-              marginBottom: Platform.OS === "android" ? 5 : 30,
+              marginBottom: Platform.OS === "android" ? 30 : 30,
             }}
           >
             <View
@@ -193,6 +191,7 @@ export default function CreateAttributes({
               }}
             >
               <TouchableOpacity
+                className="mb-0.5 mr-2"
                 onPress={() =>
                   setAttrs({ ...attrs, furnished: !attrs.furnished })
                 }
@@ -204,6 +203,7 @@ export default function CreateAttributes({
                 />
               </TouchableOpacity>
               <TouchableOpacity
+                className="mb-0.5 mr-2"
                 onPress={() => setAttrs({ ...attrs, terrace: !attrs.terrace })}
               >
                 <AttributeBtn
@@ -213,6 +213,7 @@ export default function CreateAttributes({
                 />
               </TouchableOpacity>
               <TouchableOpacity
+                className="mb-0.5 mr-2"
                 onPress={() => setAttrs({ ...attrs, pets: !attrs.pets })}
               >
                 <AttributeBtn name="Pets" status={attrs.pets} iconName="pets" />
@@ -228,6 +229,7 @@ export default function CreateAttributes({
               </TouchableOpacity>
 
               <TouchableOpacity
+                className="mb-0.5 mr-2"
                 onPress={() =>
                   setAttrs({ ...attrs, disability: !attrs.disability })
                 }
@@ -239,6 +241,7 @@ export default function CreateAttributes({
                 />
               </TouchableOpacity>
               <TouchableOpacity
+                className="mb-0.5 mr-2"
                 onPress={() => setAttrs({ ...attrs, garden: !attrs.garden })}
               >
                 <AttributeBtn
@@ -248,6 +251,7 @@ export default function CreateAttributes({
                 />
               </TouchableOpacity>
               <TouchableOpacity
+                className="mb-0.5 mr-2"
                 onPress={() => setAttrs({ ...attrs, parking: !attrs.parking })}
               >
                 <AttributeBtn
@@ -268,28 +272,42 @@ export default function CreateAttributes({
                 />
               </TouchableOpacity>
               <TouchableOpacity
+                className="mr-2"
                 onPress={() => setAttrs({ ...attrs, pool: !attrs.pool })}
               >
                 <AttributeBtn name="Pool" status={attrs.pool} iconName="poll" />
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => {}}>
+              <TouchableOpacity
+                className="mr-2"
+                onPress={() => {
+                  setSecurityAlarm(!securityAlarm);
+                }}
+              >
                 <AttributeBtn
                   name="Security alarm"
-                  status={attrs.elevator}
+                  status={securityAlarm}
                   iconName="security"
                 />
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => {}}>
+              <TouchableOpacity
+                onPress={() => {
+                  setInternetFiber(!internetFiber);
+                }}
+              >
                 <AttributeBtn
                   name="Internet fiber"
-                  status={attrs.elevator}
+                  status={internetFiber}
                   iconName="wifi"
                 />
               </TouchableOpacity>
             </View>
           </View>
 
-          <View className="flex flex-row justify-around">
+          <View
+            className={`flex w-full flex-row justify-between ${
+              Platform.OS === "android" ? "" : "mt-14"
+            }`}
+          >
             <View className="w-36">
               <Text className="text-sm font-semibold text-[#666666]">
                 Price

@@ -18,6 +18,7 @@ const Details = () => {
           <PaymentView
             product={route.params.selectedProduct?.name}
             amount={route.params.selectedProduct?.amount}
+            buy={route.params.buy}
           />
         </SafeAreaView>
       </StripeProvider>

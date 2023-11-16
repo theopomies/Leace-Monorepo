@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { Platform, View } from "react-native";
 import React, { useEffect } from "react";
 import { PaymentResult } from "../../components/Premium";
 import { trpc } from "../../../../web/src/utils/trpc";
@@ -33,10 +33,8 @@ const Result = () => {
     });
   };
 
-  console.log(route.params.isValidPayment);
-
   return (
-    <View className="mt-20">
+    <View className={`${Platform.OS === "ios" ? "mt-20" : ""}`}>
       <PaymentResult
         isValidPayment={isValidPayment}
         email={user?.email}

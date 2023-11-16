@@ -1,13 +1,15 @@
 import React from "react";
 import { Logs } from "expo";
 import { Auth } from "./screens/Auth";
-import { StatusBar } from "react-native";
+import { LogBox, StatusBar } from "react-native";
 import { tokenCache } from "./utils/cache";
 import { TRPCProvider } from "./utils/trpc";
 import { RootNavigator } from "./navigation";
 import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-expo";
 
 import { SafeAreaProvider } from "react-native-safe-area-context";
+
+LogBox.ignoreAllLogs();
 
 Logs.disableExpoCliLogging();
 

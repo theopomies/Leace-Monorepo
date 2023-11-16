@@ -19,11 +19,10 @@ export type TabStackParamList = {
 
   Premium: undefined;
   Likes: undefined;
-  PaymentDetails: { selectedProduct: any };
+  PaymentDetails: { selectedProduct: any; buy: any };
 
   PaymentResults: {
     isValidPayment: boolean;
-    paymentIntent: any;
     amount: number;
     product: string;
   };

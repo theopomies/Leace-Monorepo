@@ -28,9 +28,9 @@ export default function CreatePost() {
     title: "",
     desc: "",
     content: "",
-    energyClass: "A",
-    ges: "A",
-    constructionDate: "",
+    energyClass: "A" as "A" | "B" | "C" | "D",
+    ges: "A" as "A" | "B" | "C" | "D",
+    constructionDate: new Date(),
     estimatedCost: "",
     nearestShops: "",
     securityAlarm: false,
@@ -124,6 +124,7 @@ export default function CreatePost() {
       <View style={styles.view}>
         <Header />
         <ScrollView
+          scrollEnabled={false}
           contentContainerStyle={{ flexGrow: 1 }}
           style={{ backgroundColor: "white" }}
         >
@@ -136,7 +137,7 @@ export default function CreatePost() {
                 style={{ borderColor: titleError ? "#D84654" : "black" }}
                 className={`rounded-xl border p-${
                   Platform.OS === "ios" ? 4 : 2
-                } focus:border-border-indigo-500 font-light leading-loose `}
+                } font-light leading-loose focus:border-indigo-500 `}
                 placeholder="Enter title..."
                 onChangeText={(text) => {
                   setPostInfo({ ...postInfo, title: text });
@@ -180,12 +181,20 @@ export default function CreatePost() {
                 setLocationError={setLocationError}
                 setPriceError={setPriceError}
                 setSizeError={setSizeError}
+                securityAlarm={postInfo.securityAlarm}
+                internetFiber={postInfo.internetFiber}
+                setSecurityAlarm={(value) =>
+                  setPostInfo({ ...postInfo, securityAlarm: value })
+                }
+                setInternetFiber={(value) =>
+                  setPostInfo({ ...postInfo, internetFiber: value })
+                }
               />
             </View>
             <View
               className={`justify-center p-${
                 Platform.OS === "android" ? 2 : 10
-              }`}
+              } ${Platform.OS === "android" ? "" : "mb-8"}`}
             >
               <Btn
                 title="Submit"
