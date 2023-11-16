@@ -256,6 +256,7 @@ export const PostForm = (props: PostFormProps) => {
             onChange={handleChange(setTitle)}
             value={title}
             className="w-full"
+            required
           />
         </div>
         <div className="mt-5">
@@ -266,6 +267,7 @@ export const PostForm = (props: PostFormProps) => {
             onChange={handleChange(setDescription)}
             value={description}
             className="w-full"
+            required
           />
         </div>
         <h2 className="pb-2 pt-4 text-xl font-bold text-gray-700">
@@ -320,6 +322,7 @@ export const PostForm = (props: PostFormProps) => {
               value={estimatedCosts}
               className="w-full"
               unit="$"
+              required
             />
           </li>
         </ul>
@@ -343,6 +346,7 @@ export const PostForm = (props: PostFormProps) => {
       <FileUploadSection
         selectedFiles={selectedImages}
         setSelectedFiles={setSelectedImages}
+        required
       />
       <DocumentList
         documents={props.documents}
