@@ -20,7 +20,7 @@ export function TenantChat({
   const utils = trpc.useContext();
   const { data: conversation } = trpc.conversation.getConversation.useQuery(
     { conversationId: conversationId ?? "" },
-    { enabled: !!conversationId, refetchInterval: 1000 },
+    { enabled: !!conversationId, refetchInterval: 5000 },
   );
   const sendMutation = trpc.conversation.sendMessage.useMutation({
     onSuccess() {
