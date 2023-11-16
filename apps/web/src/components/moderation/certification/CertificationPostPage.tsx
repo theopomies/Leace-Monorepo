@@ -13,8 +13,10 @@ export function CertificationPostPage({ postId }: { postId: string }) {
         <div className="flex w-5/6 flex-grow py-10">
           <Post postId={postId} />
         </div>
-        <div className="h-full w-1/6">
-          <ActionButtons userId={post.data.createdById} postId={postId} />
+        <div className="flex w-1/6 flex-grow justify-center">
+          <div className="fixed flex h-screen items-center">
+            <ActionButtons userId={post.data.createdById} postId={postId} />
+          </div>
         </div>
       </div>
     );

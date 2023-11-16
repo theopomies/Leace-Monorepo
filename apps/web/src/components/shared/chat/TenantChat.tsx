@@ -96,6 +96,7 @@ export function TenantChat({
       contact={contact}
       additionnalBarComponent={
         <div className="flex items-center gap-8">
+          <TenantContractPopover relationship={relationship} />
           {relationship && (
             <MatchActions
               fullName={
@@ -112,7 +113,6 @@ export function TenantChat({
               onDelete={() => onDelete(relationship.id)}
             />
           )}
-          <TenantContractPopover relationship={relationship} />
         </div>
       }
     />

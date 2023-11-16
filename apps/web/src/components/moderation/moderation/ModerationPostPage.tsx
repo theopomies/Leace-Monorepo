@@ -37,12 +37,14 @@ export function ModeratioPostPage({
             <Post postId={postId} />
           </div>
         </div>
-        <div className="h-full w-1/6">
-          <ActionButtons
-            reportId={reportId}
-            userId={post.data.createdById}
-            conversationLink={`/moderation/reports/${reportId}/users/${post.data.createdById}/conversations`}
-          />
+        <div className="flex w-1/6 flex-grow justify-center">
+          <div className="fixed flex h-screen items-center">
+            <ActionButtons
+              reportId={reportId}
+              userId={post.data.createdById}
+              conversationLink={`/moderation/reports/${reportId}/users/${post.data.createdById}/conversations`}
+            />
+          </div>
         </div>
       </div>
     );

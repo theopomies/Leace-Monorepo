@@ -1,4 +1,4 @@
-import { use, useEffect } from "react";
+import { useEffect } from "react";
 import { MarketingPage } from "../components/marketing/MarketingPage";
 import { trpc } from "../utils/trpc";
 import { useRouter } from "next/router";
