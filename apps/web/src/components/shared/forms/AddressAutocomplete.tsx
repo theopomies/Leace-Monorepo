@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { trpc } from "../../../utils/trpc";
 import React from "react";
+import { LuMapPin } from "react-icons/lu";
+
 
 interface GeocodeResult {
   id: number;
@@ -74,7 +76,7 @@ export const AddressAutocomplete = (props: AddressAutocompleteProps) => {
           ref={inputRef}
           className="focus:shadow-outline ml-2 w-full rounded-full bg-gray-100 py-4 pl-4 text-xs font-bold leading-tight text-gray-700 focus:outline-none lg:text-sm"
           type="text"
-          placeholder="Search"
+          placeholder="Las Vegas, NV, USA"
           name="location"
           autoComplete="off"
           required
@@ -84,19 +86,9 @@ export const AddressAutocomplete = (props: AddressAutocompleteProps) => {
           }}
           value={props.location}
         />
-        <div className="mx-2 cursor-pointer rounded-full bg-gray-600 p-2 hover:bg-blue-400">
-          <svg
-            className="h-6 w-6 text-white"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fillRule="evenodd"
-              d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-              clipRule="evenodd"
-            />
-          </svg>
-        </div>
+    <div className="mx-2 cursor-pointer rounded-full">
+      <LuMapPin className="h-6 w-6" />
+    </div>
       </div>
       {searchResults.length > 0 && showList && (
         <div className="absolute z-10 mt-3 flex w-full items-center justify-between rounded-lg bg-white p-2 text-left shadow">
