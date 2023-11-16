@@ -21,20 +21,25 @@ export function IdentityForm({ userId }: { userId: string }) {
   } = trpc.user.getUserById.useQuery({ userId });
   const updateUser = trpc.user.updateUserById.useMutation();
 
-  const [userInfo, setUserInfo] = useState({
-    firstName: "",
-    lastName: "",
-    description: "",
-    birthDate: new Date(),
+  const [userInfo, setUserInfo] = useState<{
+    firstName?: string;
+    lastName?: string;
+    description?: string;
+    birthDate?: Date;
+  }>({
+    firstName: undefined,
+    lastName: undefined,
+    description: undefined,
+    birthDate: undefined,
   });
 
   useEffect(() => {
     if (user) {
       setUserInfo({
-        firstName: user.firstName || "",
-        lastName: user.lastName || "",
-        description: user.description || "",
-        birthDate: user.birthDate || new Date(),
+        firstName: user.firstName || undefined,
+        lastName: user.lastName || undefined,
+        description: user.description || undefined,
+        birthDate: user.birthDate || undefined,
       });
     }
   }, [user]);
@@ -173,7 +178,7 @@ export function IdentityForm({ userId }: { userId: string }) {
                       birthDate: new Date(e.target.value + "T00:00:00.000Z"),
                     }));
                   }}
-                  value={userInfo.birthDate.toISOString().split("T")[0]}
+                  value={userInfo.birthDate?.toISOString().split("T")[0]}
                   className="w-full"
                 />
               </label>
@@ -192,7 +197,7 @@ export function IdentityForm({ userId }: { userId: string }) {
                   }));
                 }}
                 value={userInfo.description}
-                className="mt-4 w-full"
+                className="w-full"
               />
             </label>
           </div>
