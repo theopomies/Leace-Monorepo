@@ -2,6 +2,10 @@
 module.exports = {
   presets: [require("@leace/tailwind-config")],
   theme: {
+    fontFamily: {
+      display: ["Questrial", "sans-serif"],
+      body: ["Inter", "sans-serif"],
+    },
     extend: {
       keyframes: {
         animated_gradient: {
