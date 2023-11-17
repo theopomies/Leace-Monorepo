@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { trpc } from "../../../utils/trpc";
 import { Post, PostType } from "@prisma/client";
-import { setCacheId } from "../../../utils/useCache";
 import { useRouter } from "next/router";
 
 export interface PostBarProps {
@@ -17,7 +16,6 @@ export const PostBar = ({ post, postLink, selected }: PostBarProps) => {
   });
 
   const handleClick = () => {
-    setCacheId("lastSelectedPostId", post.id);
     router.push(postLink.replace("[postId]", post.id));
   };
 
