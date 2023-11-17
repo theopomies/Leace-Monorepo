@@ -18,9 +18,8 @@ import { PostAttributesForm } from "../../attributes/PostAttributesForm";
 import { TextInput } from "../forms/TextInput";
 import { NumberInput } from "../forms/NumberInput";
 import { FileUploadSection } from "../button/FileUploadSection";
-import { ToastDescription, ToastTitle } from "@radix-ui/react-toast";
 import { useRouter } from "next/router";
-import { useToast } from "../toast/Toast";
+import { ToastDescription, ToastTitle, useToast } from "../toast/Toast";
 
 export type PostFormData = {
   title: string;
