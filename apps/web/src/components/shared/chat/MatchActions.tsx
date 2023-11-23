@@ -17,7 +17,7 @@ export function MatchActions({
 }: MatchActionsProps) {
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-  const [dialogIsOpen, setDialogIsOpen] = useState<boolean>();
+  const [dialogIsOpen, setDialogIsOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
