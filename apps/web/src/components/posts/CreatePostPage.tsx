@@ -24,8 +24,6 @@ export const CreatePostPage = () => {
       energyClass: data.energyClass,
       estimatedCosts: data.estimatedCosts,
       ges: data.ges,
-      internetFiber: data.internetFiber,
-      securityAlarm: data.securityAlarm,
       nearedShops: data.nearestShops,
     });
     await updatePost.mutateAsync({
@@ -41,6 +39,8 @@ export const CreatePostPage = () => {
       elevator: data.elevator,
       pool: data.pool,
       disability: data.disability,
+      internetFiber: data.internetFiber,
+      securityAlarm: data.securityAlarm,
       price: data.price,
       size: data.size,
     });

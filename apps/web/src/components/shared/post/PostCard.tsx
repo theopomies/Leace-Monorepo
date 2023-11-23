@@ -44,6 +44,8 @@ const attributes = {
   parking: "Parking",
   elevator: "Elevator",
   pool: "Pool",
+  securityAlarm: "Alarm / security",
+  internetFiber: "Internet",
 } as const as Record<keyof Attribute, string>;
 
 export const PostCard = ({
@@ -213,16 +215,6 @@ export const PostCard = ({
                 </li>
               );
             })}
-          </ul>
-          <ul className="gap-4 sm:flex sm:flex-wrap md:grid md:grid-cols-3">
-            <li className="mr-8 flex-grow border-b border-indigo-300 pb-2">
-              <h3 className="text-xl font-medium">Alarm / security</h3>
-              {post.securityAlarm ? "✅" : "❌"}
-            </li>
-            <li className="mr-8 flex-grow border-b border-indigo-300 pb-2">
-              <h3 className="text-xl font-medium">Internet</h3>
-              {post.internetFiber ? "✅" : "❌"}
-            </li>
           </ul>
         </div>
         <DocumentList documents={documents} onValidation={onDocValidation} />

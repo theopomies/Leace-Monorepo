@@ -119,13 +119,13 @@ export const PostForm = (props: PostFormProps) => {
       setElevator(props.post.attribute?.elevator ?? false);
       setPool(props.post.attribute?.pool ?? false);
       setDisability(props.post.attribute?.disability ?? false);
+      setSecurityAlarm(props.post.attribute?.securityAlarm ?? false);
+      setInternetFiber(props.post.attribute?.internetFiber ?? false);
       setEnergyClass(props.post.energyClass ?? undefined);
       setGes(props.post.ges ?? undefined);
       setConstructionDate(date);
       setEstimatedCosts(props.post.estimatedCosts ?? 0);
       setNearestShops(props.post.nearestShops ?? 0);
-      setSecurityAlarm(props.post.securityAlarm ?? false);
-      setInternetFiber(props.post.internetFiber ?? false);
     }
   }, [props.post]);
 

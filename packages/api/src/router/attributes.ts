@@ -29,6 +29,8 @@ export const attributesRouter = router({
         parking: z.boolean().optional(),
         elevator: z.boolean().optional(),
         pool: z.boolean().optional(),
+        internetFiber: z.boolean().optional(),
+        securityAlarm: z.boolean().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -96,6 +98,8 @@ export const attributesRouter = router({
         parking: input.parking ?? null,
         elevator: input.elevator ?? null,
         pool: input.pool ?? null,
+        internetFiber: input.internetFiber ?? null,
+        securityAlarm: input.securityAlarm ?? null,
       } as const;
 
       if (!attribute) {
@@ -141,6 +145,8 @@ export const attributesRouter = router({
         parking: z.boolean().optional(),
         elevator: z.boolean().optional(),
         pool: z.boolean().optional(),
+        internetFiber: z.boolean().optional(),
+        securityAlarm: z.boolean().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -216,6 +222,8 @@ export const attributesRouter = router({
             parking: input.parking,
             elevator: input.elevator,
             pool: input.pool,
+            internetFiber: input.internetFiber,
+            securityAlarm: input.securityAlarm,
           },
         });
         if (!created) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
@@ -242,6 +250,8 @@ export const attributesRouter = router({
           parking: input.parking,
           elevator: input.elevator,
           pool: input.pool,
+          internetFiber: input.internetFiber,
+          securityAlarm: input.securityAlarm,
         },
       });
 

@@ -37,8 +37,6 @@ export const UpdatePostPage = ({ postId }: UpdatePostProps) => {
       energyClass: data.energyClass,
       estimatedCosts: data.estimatedCosts,
       ges: data.ges,
-      internetFiber: data.internetFiber,
-      securityAlarm: data.securityAlarm,
       nearedShops: data.nearestShops,
     });
     await updatePostAttributes.mutateAsync({
@@ -54,6 +52,8 @@ export const UpdatePostPage = ({ postId }: UpdatePostProps) => {
       elevator: data.elevator,
       pool: data.pool,
       disability: data.disability,
+      internetFiber: data.internetFiber,
+      securityAlarm: data.securityAlarm,
       price: data.price,
       size: data.size,
     });

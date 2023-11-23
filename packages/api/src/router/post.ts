@@ -3,9 +3,7 @@ import { EnergyClass, PostType, RelationType, Role } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";
-import {
-  getPostsWithAttribute
-} from "../utils/algorithm";
+import { getPostsWithAttribute } from "../utils/algorithm";
 import { filterStrings } from "../utils/filter";
 import { getId } from "../utils/getId";
 
@@ -29,8 +27,6 @@ export const postRouter = router({
         constructionDate: z.date().optional().nullable(),
         estimatedCosts: z.number().optional(),
         nearedShops: z.number().optional(),
-        securityAlarm: z.boolean().optional(),
-        internetFiber: z.boolean().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -56,8 +52,6 @@ export const postRouter = router({
           constructionDate: input.constructionDate,
           estimatedCosts: input.estimatedCosts,
           nearestShops: input.nearedShops,
-          securityAlarm: input.securityAlarm,
-          internetFiber: input.internetFiber,
         },
       });
 
@@ -87,8 +81,6 @@ export const postRouter = router({
         constructionDate: z.date().optional().nullable(),
         estimatedCosts: z.number().optional(),
         nearedShops: z.number().optional(),
-        securityAlarm: z.boolean().optional(),
-        internetFiber: z.boolean().optional(),
         type: z
           .enum([PostType.RENTED, PostType.TO_BE_RENTED, PostType.HIDE])
           .optional(),
@@ -121,8 +113,6 @@ export const postRouter = router({
           constructionDate: input.constructionDate,
           estimatedCosts: input.estimatedCosts,
           nearestShops: input.nearedShops,
-          securityAlarm: input.securityAlarm,
-          internetFiber: input.internetFiber,
           ges: input.ges,
           energyClass: input.energyClass,
         },
