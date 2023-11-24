@@ -11,13 +11,27 @@ import {
 import Link from "next/link";
 import { DialogButton } from "../button/DialogButton";
 import { ImageSelector } from "./ImageSelector";
+import { displayDate } from "../../../utils/displayDate";
+import { Button } from "../button/Button";
+import React from "react";
 import { SewingPinIcon } from "@radix-ui/react-icons";
 import { IoPricetagsOutline } from "react-icons/io5";
 import { RxDimensions } from "react-icons/rx";
 import { LiaCouchSolid } from "react-icons/lia";
-import { MdOutlineShower, MdOutlineBed } from "react-icons/md";
-import { displayDate } from "../../../utils/displayDate";
-import { Button } from "../button/Button";
+import {
+  MdOutlineShower,
+  MdOutlineBed,
+  MdPets,
+  MdPool,
+  MdSecurity,
+  MdOutlineWifi,
+  MdPark,
+  MdDeck,
+} from "react-icons/md";
+import { IconType } from "react-icons";
+import { TbDisabled } from "react-icons/tb";
+import { LuCigarette, LuParkingCircle } from "react-icons/lu";
+import { PiElevator } from "react-icons/pi";
 
 export interface PostCardProps {
   post: Post & {
@@ -47,6 +61,19 @@ const attributes = {
   securityAlarm: "Alarm / security",
   internetFiber: "Internet",
 } as const as Record<keyof Attribute, string>;
+
+const iconMappings = {
+  terrace: MdDeck,
+  pets: MdPets,
+  smoker: LuCigarette,
+  disability: TbDisabled,
+  garden: MdPark,
+  parking: LuParkingCircle,
+  elevator: PiElevator,
+  pool: MdPool,
+  securityAlarm: MdSecurity,
+  internetFiber: MdOutlineWifi,
+} as const as Record<keyof Attribute, IconType>;
 
 export const PostCard = ({
   post,
@@ -187,31 +214,11 @@ export const PostCard = ({
               const attribute = postAttributes[key as keyof Attribute];
 
               return (
-                <li
-                  className="mr-8 flex flex-grow gap-4 border-b border-indigo-300 py-2"
-                  key={key}
-                >
-                  <h3 className="text-xl font-medium">{value}</h3>
-                  {postAttributes && (
-                    <p className={attribute !== null ? "" : " text-indigo-600"}>
-                      {typeof attribute === "boolean"
-                        ? attribute
-                          ? "✅"
-                          : "❌"
-                        : typeof attribute === "number"
-                        ? attribute
-                        : typeof attribute === "string"
-                        ? attribute
-                        : typeof attribute === "object" && attribute !== null
-                        ? displayDate(attribute)
-                        : "Whatever"}{" "}
-                      {value.toLowerCase().includes("price")
-                        ? "€"
-                        : value.toLowerCase().includes("surface")
-                        ? "m²"
-                        : ""}
-                    </p>
-                  )}
+                <li className="flex flex-grow items-center gap-2" key={key}>
+                  {React.createElement(iconMappings[key as keyof Attribute])}
+                  <h3 className={`text-xl ${!attribute && " line-through"} `}>
+                    {value}
+                  </h3>
                 </li>
               );
             })}
