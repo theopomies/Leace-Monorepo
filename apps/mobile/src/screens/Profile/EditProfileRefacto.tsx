@@ -26,8 +26,9 @@ import { EditInfo } from "../../components/UserProfile";
 import { Btn } from "../../components/Btn";
 import { useAuth } from "@clerk/clerk-expo";
 import EditInfoRefacto from "../../components/UserProfile/EditInfoRefacto";
+import EditAttributesRefacto from "../../components/Attribute/EditAttributesRefacto";
 
-export default function EditProfile() {
+export default function EditProfileRefacto() {
   const { signOut } = useAuth();
   const navigation =
     useNavigation<NativeStackNavigationProp<TabStackParamList>>();
@@ -137,7 +138,7 @@ export default function EditProfile() {
         visible={open}
         onRequestClose={() => setOpen(false)}
       >
-        <View className="flex-1 items-center justify-center">
+        {<View className="flex-1 items-center justify-center">
           <View
             className="w-3/4 rounded-md bg-white p-4"
             style={{
@@ -181,7 +182,7 @@ export default function EditProfile() {
               </View>
             </View>
           </View>
-        </View>
+        </View>}
       </Modal>
       <View style={{ flex: 1 }}>
         <ScrollView
@@ -198,7 +199,7 @@ export default function EditProfile() {
             />
 
 
-            <View className="flex flex-col w-full items-center justify-center  space-y-2 py-2">
+            <View className="flex flex-col w-full items-center justify-center space-y-2 py-2">
 
               <TextInput
                 className="w-1/2 text-3xl font-bold text-black"
@@ -244,8 +245,8 @@ export default function EditProfile() {
                 className="px-3"
                 style={{ justifyContent: "flex-end", flex: 1 }}
               >
-                <Separator color="#10316B" />
-                <EditAttributes
+
+                <EditAttributesRefacto
                   userId={userId}
                   attrs={attrs}
                   setAttrs={setAttrs}
