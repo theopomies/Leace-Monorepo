@@ -49,18 +49,18 @@ export default function EditPost() {
     },
   });
 
-  useFocusEffect(
-    useCallback(() => {
-      const parsed = JSON.parse(data);
-      const { id, desc, title, content, attribute } = parsed;
-      setPostInfo({ postId: id, desc, title, content });
-      setPostAttrs({
-        ...attribute,
-        rentStartDate: new Date(attribute.rentStartDate),
-        rentEndDate: new Date(attribute.rentEndDate),
-      });
-    }, [route]),
-  );
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     const parsed = JSON.parse(data);
+  //     const { id, desc, title, content, attribute } = parsed;
+  //     setPostInfo({ postId: id, desc, title, content });
+  //     setPostAttrs({
+  //       ...attribute,
+  //       rentStartDate: new Date(attribute.rentStartDate),
+  //       rentEndDate: new Date(attribute.rentEndDate),
+  //     });
+  //   }, [route]),
+  // );
 
   function handlePost() {
     if (!postInfo || !postAttrs) return;

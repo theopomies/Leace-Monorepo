@@ -1,7 +1,14 @@
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React, { useEffect } from "react";
-import { Animated, View, TouchableOpacity, Image, Text } from "react-native";
+import {
+  Animated,
+  View,
+  TouchableOpacity,
+  Image,
+  Text,
+  Platform,
+} from "react-native";
 import { Icon } from "react-native-elements";
 import { TabStackParamList } from "../../navigation/RootNavigator";
 
@@ -45,8 +52,8 @@ const PaymentResult = ({
   }, [isValidPayment]);
 
   return (
-    <View>
-      <View className="h items-center justify-center">
+    <View className="">
+      <View className="h items-center justify-center bg-white">
         <Image
           source={require("../../../assets/logo_1024.png")}
           className="h-52 w-52"
@@ -54,7 +61,7 @@ const PaymentResult = ({
       </View>
       <View className={"items-center justify-center"}>
         {isValidPayment ? (
-          <View className="my-4 w-full max-w-md rounded bg-white p-6 shadow-lg">
+          <View className=" h-full w-full max-w-md rounded bg-white p-6 shadow-lg">
             <View className={"items-center justify-center"}>
               <View
                 className={`h-16 w-16 items-center justify-center rounded-full ${
@@ -142,7 +149,11 @@ const PaymentResult = ({
                   - Expired or invalid card details
                 </Text>
               </View>
-              <View className="mt-4 flex-row space-x-20">
+              <View
+                className={`${
+                  Platform.OS === "ios" ? "mt-4" : ""
+                } flex-row space-x-20`}
+              >
                 <TouchableOpacity
                   className={"w-24 rounded bg-blue-400 p-2"}
                   onPress={() => {

@@ -42,9 +42,11 @@ function AttributeBtn({ name, status, iconName }: IAttributeBtn) {
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "center",
-          padding: 5,
           backgroundColor: status ? "#6466f1" : "#c7d2fe",
+          padding: 9,
           borderRadius: 5,
+          width: 150,
+          height: 38,
         }}
       >
         <Icon name={iconName} color={"white"} size={20} type="material-icons" />
@@ -54,6 +56,7 @@ function AttributeBtn({ name, status, iconName }: IAttributeBtn) {
             fontSize: 13,
             opacity: 1,
             color: "white",
+            marginLeft: 10,
           }}
         >
           {name}
@@ -90,10 +93,18 @@ export default function CreateAttributes({
   return (
     <View className={`flex space-y-${Platform.OS === "android" ? 20 : 10}`}>
       <View>
-        <Text className="text-sm font-semibold	 text-slate-500">Location</Text>
+        <Text className="mb-1 text-lg font-semibold	 text-slate-500">
+          Location
+        </Text>
         <TextInput
-          style={{ borderColor: locationError ? "#D84654" : "black" }}
-          className={`rounded-xl border p-${
+          style={{
+            borderColor: locationError ? "#D84654" : "black",
+            padding: 4,
+            borderRadius: 5,
+            width: "100%",
+            height: 38,
+          }}
+          className={`rounded-md border p-${
             Platform.OS === "ios" ? 4 : 2
           } font-light leading-loose focus:border-indigo-500`}
           placeholder="Paris"
@@ -112,7 +123,7 @@ export default function CreateAttributes({
           style={{
             alignItems: "center",
             marginBottom: 10,
-            marginTop: 10,
+            marginTop: 30,
             justifyContent: "center",
           }}
         >
@@ -130,7 +141,11 @@ export default function CreateAttributes({
               backgroundColor: reason === "HOUSE" ? "#6466f1" : "#c7d2fe",
               padding: 10,
               marginRight: 10,
+              width: 150,
+              height: 38,
               borderRadius: 5,
+              justifyContent: "center",
+              alignItems: "center",
             }}
             onPress={() => {
               handlePicker("HOUSE");
@@ -151,6 +166,10 @@ export default function CreateAttributes({
               backgroundColor: reason === "APARTMENT" ? "#6466f1" : "#c7d2fe",
               padding: 10,
               borderRadius: 5,
+              width: 150,
+              height: 38,
+              justifyContent: "center",
+              alignItems: "center",
             }}
             onPress={() => {
               handlePicker("APARTMENT");
@@ -173,6 +192,7 @@ export default function CreateAttributes({
           style={{
             alignItems: "center",
             justifyContent: "center",
+            marginTop: 30,
           }}
         >
           <Text className="text-base font-bold text-slate-500">Criteria</Text>
@@ -180,18 +200,22 @@ export default function CreateAttributes({
         <View className="flex flex-row flex-wrap items-center justify-center">
           <View
             style={{
-              marginBottom: Platform.OS === "android" ? 30 : 30,
+              flexDirection: "column",
+              marginBottom: 30,
+
+              justifyContent: "space-between",
             }}
           >
             <View
+              className=""
               style={{
                 flexDirection: "row",
-                flexWrap: "wrap",
-                justifyContent: "center",
+                alignItems: "center",
+                justifyContent: "space-between",
               }}
             >
               <TouchableOpacity
-                className="mb-0.5 mr-2"
+                style={{ margin: 2 }}
                 onPress={() =>
                   setAttrs({ ...attrs, furnished: !attrs.furnished })
                 }
@@ -202,8 +226,9 @@ export default function CreateAttributes({
                   iconName="king-bed"
                 />
               </TouchableOpacity>
+
               <TouchableOpacity
-                className="mb-0.5 mr-2"
+                style={{ margin: 2 }}
                 onPress={() => setAttrs({ ...attrs, terrace: !attrs.terrace })}
               >
                 <AttributeBtn
@@ -212,13 +237,24 @@ export default function CreateAttributes({
                   iconName="deck"
                 />
               </TouchableOpacity>
+            </View>
+
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
               <TouchableOpacity
-                className="mb-0.5 mr-2"
+                style={{ margin: 2 }}
                 onPress={() => setAttrs({ ...attrs, pets: !attrs.pets })}
               >
                 <AttributeBtn name="Pets" status={attrs.pets} iconName="pets" />
               </TouchableOpacity>
+
               <TouchableOpacity
+                style={{ margin: 2 }}
                 onPress={() => setAttrs({ ...attrs, smoker: !attrs.smoker })}
               >
                 <AttributeBtn
@@ -227,9 +263,17 @@ export default function CreateAttributes({
                   iconName="smoking-rooms"
                 />
               </TouchableOpacity>
+            </View>
 
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
               <TouchableOpacity
-                className="mb-0.5 mr-2"
+                style={{ margin: 2 }}
                 onPress={() =>
                   setAttrs({ ...attrs, disability: !attrs.disability })
                 }
@@ -240,8 +284,9 @@ export default function CreateAttributes({
                   iconName="accessible"
                 />
               </TouchableOpacity>
+
               <TouchableOpacity
-                className="mb-0.5 mr-2"
+                style={{ margin: 2 }}
                 onPress={() => setAttrs({ ...attrs, garden: !attrs.garden })}
               >
                 <AttributeBtn
@@ -250,8 +295,17 @@ export default function CreateAttributes({
                   iconName="local-florist"
                 />
               </TouchableOpacity>
+            </View>
+
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
               <TouchableOpacity
-                className="mb-0.5 mr-2"
+                style={{ margin: 2 }}
                 onPress={() => setAttrs({ ...attrs, parking: !attrs.parking })}
               >
                 <AttributeBtn
@@ -260,7 +314,9 @@ export default function CreateAttributes({
                   iconName="local-parking"
                 />
               </TouchableOpacity>
+
               <TouchableOpacity
+                style={{ margin: 2 }}
                 onPress={() =>
                   setAttrs({ ...attrs, elevator: !attrs.elevator })
                 }
@@ -271,17 +327,25 @@ export default function CreateAttributes({
                   iconName="elevator"
                 />
               </TouchableOpacity>
+            </View>
+
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
               <TouchableOpacity
-                className="mr-2"
+                style={{ margin: 2 }}
                 onPress={() => setAttrs({ ...attrs, pool: !attrs.pool })}
               >
                 <AttributeBtn name="Pool" status={attrs.pool} iconName="poll" />
               </TouchableOpacity>
+
               <TouchableOpacity
-                className="mr-2"
-                onPress={() => {
-                  setSecurityAlarm(!securityAlarm);
-                }}
+                style={{ margin: 2 }}
+                onPress={() => setSecurityAlarm(!securityAlarm)}
               >
                 <AttributeBtn
                   name="Security alarm"
@@ -289,10 +353,17 @@ export default function CreateAttributes({
                   iconName="security"
                 />
               </TouchableOpacity>
+            </View>
+
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
               <TouchableOpacity
-                onPress={() => {
-                  setInternetFiber(!internetFiber);
-                }}
+                style={{ margin: 2 }}
+                onPress={() => setInternetFiber(!internetFiber)}
               >
                 <AttributeBtn
                   name="Internet fiber"
@@ -309,17 +380,20 @@ export default function CreateAttributes({
             }`}
           >
             <View className="w-36">
-              <Text className="text-sm font-semibold text-[#666666]">
+              <Text className="mb-1 text-lg font-semibold text-[#666666]">
                 Price
               </Text>
               <TextInput
                 style={{
-                  height: 40,
+                  width: 150,
+                  height: 38,
+                  justifyContent: "center",
+                  alignItems: "center",
                   borderColor: priceError ? "#D84654" : "black",
                 }}
                 className={`rounded-xl border p-${
                   Platform.OS === "android" ? 2 : 2
-                } font-light leading-loose focus:border-[#6466f1]`} // @ts-ignore
+                } font-light leading-loose focus:border-[#6466f1]`}
                 inputMode="numeric"
                 placeholder="0 €"
                 onChangeText={(text) => {
@@ -332,16 +406,20 @@ export default function CreateAttributes({
               ) : null}
             </View>
             <View className="w-36">
-              <Text className="text-sm font-semibold text-[#666666]">Size</Text>
+              <Text className="mb-1 text-lg font-semibold text-[#666666]">
+                Size
+              </Text>
               <TextInput
                 style={{
-                  height: 40,
+                  width: 150,
+                  height: 38,
+                  justifyContent: "center",
+                  alignItems: "center",
                   borderColor: sizeError ? "#D84654" : "black",
                 }}
                 className={`rounded-xl border p-${
                   Platform.OS === "android" ? 2 : 2
                 } font-light leading-loose focus:border-[#6466f1]`}
-                // @ts-ignore
                 inputMode="numeric"
                 placeholder="0 m²"
                 onChangeText={(text) => {
