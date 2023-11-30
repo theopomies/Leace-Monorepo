@@ -214,7 +214,10 @@ export const PostCard = ({
               const attribute = postAttributes[key as keyof Attribute];
 
               return (
-                <li className="flex flex-grow items-center gap-2" key={key}>
+                <li
+                  className="my-2 flex flex-grow items-center gap-2"
+                  key={key}
+                >
                   {React.createElement(iconMappings[key as keyof Attribute])}
                   <h3 className={`text-xl ${!attribute && " line-through"} `}>
                     {value}
