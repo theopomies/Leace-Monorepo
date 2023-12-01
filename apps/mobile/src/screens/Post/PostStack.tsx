@@ -129,6 +129,7 @@ export default function PostStack() {
                 <Btn
                   title="Ready to make your first post ?"
                   onPress={() => navigation.navigate("CreatePost", { userId })}
+                  bgColor="#6366f1"
                 ></Btn>
               </View>
             </View>

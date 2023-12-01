@@ -21,17 +21,11 @@ export default function Btn({
 }) {
   return (
     <TouchableOpacity
-      style={{
-        width: 150,
-        height: 38,
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: bgColor,
-      }}
       className={`flex flex-row items-center justify-center ${
         iconName && iconType ? "space-x-2" : ""
       } rounded-lg p-2.5 ${className}`}
       onPress={onPress}
+      style={{ backgroundColor: bgColor }}
     >
       {iconName && iconType && (
         <Icon size={20} name={iconName} type={iconType} color={"white"}></Icon>

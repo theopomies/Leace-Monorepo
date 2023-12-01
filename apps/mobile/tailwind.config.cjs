@@ -22,6 +22,7 @@ module.exports = {
         navy: "#0A2472",
         "light-blue": "#F1F5F9",
         "light-red": "#D84654",
+        indigo: "#6366f1",
       },
     },
   },

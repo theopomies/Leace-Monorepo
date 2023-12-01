@@ -206,6 +206,7 @@ export default function CreatePost() {
                 } ${Platform.OS === "android" ? "mt-20" : "mt-8"}`}
               >
                 <Btn
+                  className="w-full"
                   title="Submit"
                   bgColor="#6466f1"
                   onPress={validateAndSetAttrs}
