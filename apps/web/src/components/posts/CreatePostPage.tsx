@@ -42,6 +42,8 @@ export const CreatePostPage = () => {
       securityAlarm: data.securityAlarm,
       price: data.price,
       size: data.size,
+      bedrooms: data.bedrooms,
+      bathrooms: data.bathrooms,
     });
     return postCreated;
   };

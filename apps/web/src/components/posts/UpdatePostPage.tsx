@@ -55,6 +55,8 @@ export const UpdatePostPage = ({ postId }: UpdatePostProps) => {
       securityAlarm: data.securityAlarm,
       price: data.price,
       size: data.size,
+      bedrooms: data.bedrooms,
+      bathrooms: data.bathrooms,
     });
     router.push(`/users/${post?.createdById}/posts/${postId}`);
   };

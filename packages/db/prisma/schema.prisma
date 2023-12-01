@@ -185,6 +185,8 @@ model Attribute {
   rentStartDate DateTime?
   rentEndDate   DateTime?
 
+  bedrooms      Int?
+  bathrooms     Int?
   furnished     Boolean?
   homeType      HomeType?
   terrace       Boolean?

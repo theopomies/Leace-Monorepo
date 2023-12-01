@@ -217,7 +217,7 @@ export const PostCard = ({
             </div>
             <div>
               <p className="text-slate-500">Bedrooms</p>
-              <p className="text-lg font-medium">3</p>
+              <p className="text-lg font-medium">{post.attribute.bedrooms}</p>
             </div>
           </div>
           <div className="flex items-center gap-4 rounded-lg p-2">
@@ -226,7 +226,7 @@ export const PostCard = ({
             </div>
             <div>
               <p className="text-slate-500">Bathrooms</p>
-              <p className="text-lg font-medium">2</p>
+              <p className="text-lg font-medium">{post.attribute.bathrooms}</p>
             </div>
           </div>
           <div className="flex items-center gap-4 rounded-lg p-2">

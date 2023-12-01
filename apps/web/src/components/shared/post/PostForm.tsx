@@ -27,6 +27,8 @@ export type PostFormData = {
   location: string;
   price: number;
   size: number;
+  bedrooms: number;
+  bathrooms: number;
   furnished: boolean;
   homeType: HomeType | undefined;
   terrace: boolean;
@@ -65,6 +67,8 @@ export const PostForm = (props: PostFormProps) => {
   const [description, setDescription] = useState("");
 
   const [location, setLocation] = useState("");
+  const [bedrooms, setBedrooms] = useState<number | undefined>(undefined);
+  const [bathrooms, setBathrooms] = useState<number | undefined>(undefined);
   const [furnished, setFurnished] = useState(false);
   const [homeType, setHomeType] = useState<HomeType | undefined>();
   const [terrace, setTerrace] = useState(false);
@@ -112,6 +116,8 @@ export const PostForm = (props: PostFormProps) => {
       setHomeType(props.post.attribute?.homeType ?? undefined);
       setSize(props.post.attribute?.size ?? 0);
       setPrice(props.post.attribute?.price ?? 0);
+      setBedrooms(props.post.attribute?.bedrooms ?? 0);
+      setBathrooms(props.post.attribute?.bathrooms ?? 0);
       setFurnished(props.post.attribute?.furnished ?? false);
       setTerrace(props.post.attribute?.terrace ?? false);
       setPets(props.post.attribute?.pets ?? false);
@@ -166,13 +172,15 @@ export const PostForm = (props: PostFormProps) => {
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
-    if (!size || !price) return null;
+    if (!size || !price || !bedrooms || !bathrooms) return null;
     const data: PostFormData = {
       title,
       description,
       location,
       price,
       size,
+      bedrooms,
+      bathrooms,
       furnished,
       homeType,
       terrace,
@@ -216,6 +224,10 @@ export const PostForm = (props: PostFormProps) => {
     handlePriceChange: handleNumberChange(setPrice),
     size,
     handleSizeChange: handleNumberChange(setSize),
+    bedrooms,
+    handleBedroomsChange: handleNumberChange(setBedrooms),
+    bathrooms,
+    handleBathroomsChange: handleNumberChange(setBathrooms),
     furnished,
     handleFurnishedChange: handleBooleanChange(setFurnished),
     homeType,

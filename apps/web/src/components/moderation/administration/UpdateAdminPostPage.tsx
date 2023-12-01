@@ -51,6 +51,8 @@ export const UpdateAdminPostPage = ({ postId }: { postId: string }) => {
       securityAlarm: data.securityAlarm,
       price: data.price,
       size: data.size,
+      bedrooms: data.bedrooms,
+      bathrooms: data.bathrooms,
     });
     router.push(`/administration/posts/${postId}`);
   };

@@ -12,6 +12,10 @@ interface PostAttributesFormProps {
   handlePriceChange: ChangeEventHandler<HTMLInputElement>;
   size: number | undefined;
   handleSizeChange: ChangeEventHandler<HTMLInputElement>;
+  bedrooms: number | undefined;
+  handleBedroomsChange: ChangeEventHandler<HTMLInputElement>;
+  bathrooms: number | undefined;
+  handleBathroomsChange: ChangeEventHandler<HTMLInputElement>;
   furnished: boolean;
   handleFurnishedChange: ChangeEventHandler<HTMLInputElement>;
   homeType: HomeType | undefined;
@@ -168,6 +172,26 @@ export function PostAttributesForm({ ...attributes }: PostAttributesFormProps) {
               onChange={attributes.handlePriceChange}
               value={attributes.price}
               unit="€"
+              required
+            />
+          </label>
+          <label>
+            <div>Bedrooms</div>
+            <NumberInput
+              placeholder="2"
+              onChange={attributes.handleBedroomsChange}
+              value={attributes.bedrooms}
+              className="inline-block w-full"
+              required
+            />
+          </label>
+          <label>
+            <div>Bathrooms</div>
+            <NumberInput
+              placeholder="1"
+              onChange={attributes.handleBathroomsChange}
+              value={attributes.bathrooms}
+              className="w-full"
               required
             />
           </label>
