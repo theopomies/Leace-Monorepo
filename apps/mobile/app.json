@@ -14,12 +14,13 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.daaak.leace"
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "Allow $(PRODUCT_NAME) to access your photos.",
+        "NSPhotoLibraryAddUsageDescription": "Allow $(PRODUCT_NAME) to save photos."
+      }
     },
     "web": {
       "favicon": "./assets/logo_1024.png"
@@ -35,8 +36,20 @@
         }
       ]
     ],
+    "scheme": "com.leaceeip.leace",
     "extra": {
+      "eas": {
+        "projectId": "2eb16b83-91bd-4533-856e-cef45685028c"
+      },
       "CLERK_PUBLISHABLE_KEY": "pk_test_Y2VydGFpbi1jcmFiLTU0LmNsZXJrLmFjY291bnRzLmRldiQ"
+    },
+    "android": {
+      "package": "com.leaceeip.leace",
+      "permissions": [
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.ACCESS_MEDIA_LOCATION"
+      ]
     }
   }
 }
