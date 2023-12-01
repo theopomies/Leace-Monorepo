@@ -38,7 +38,6 @@ export type PostFormData = {
   elevator: boolean;
   pool: boolean;
   energyClass?: EnergyClass;
-  ges?: EnergyClass;
   constructionDate?: string;
   estimatedCosts?: number;
   nearestShops?: number;
@@ -83,7 +82,6 @@ export const PostForm = (props: PostFormProps) => {
   const [energyClass, setEnergyClass] = useState<EnergyClass | undefined>(
     undefined,
   );
-  const [ges, setGes] = useState<EnergyClass | undefined>(undefined);
   const [constructionDate, setConstructionDate] = useState<string>("");
   const [estimatedCosts, setEstimatedCosts] = useState<number>(0);
   const [nearestShops, setNearestShops] = useState<number>(0);
@@ -122,7 +120,6 @@ export const PostForm = (props: PostFormProps) => {
       setSecurityAlarm(props.post.attribute?.securityAlarm ?? false);
       setInternetFiber(props.post.attribute?.internetFiber ?? false);
       setEnergyClass(props.post.energyClass ?? undefined);
-      setGes(props.post.ges ?? undefined);
       setConstructionDate(date);
       setEstimatedCosts(props.post.estimatedCosts ?? 0);
       setNearestShops(props.post.nearestShops ?? 0);
@@ -182,7 +179,6 @@ export const PostForm = (props: PostFormProps) => {
       elevator,
       pool,
       energyClass,
-      ges,
       constructionDate,
       estimatedCosts,
       nearestShops,
@@ -274,25 +270,13 @@ export const PostForm = (props: PostFormProps) => {
           <li className="flex-grow pr-8">
             <h3 className="text-x2 font-medium">Energy class</h3>
             <select
-              placeholder="A"
               onChange={handleEnergyClassChange(setEnergyClass)}
-              value={energyClass}
+              value={energyClass ?? ""}
               className="w-full rounded-lg border-2 border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-600 focus:outline-none"
             >
-              <option value="A">A</option>
-              <option value="B">B</option>
-              <option value="C">C</option>
-              <option value="D">D</option>
-            </select>
-          </li>
-          <li className="flex-grow">
-            <h3 className="text-x2 font-medium">GES</h3>
-            <select
-              placeholder="A"
-              onChange={handleEnergyClassChange(setGes)}
-              value={ges}
-              className="w-full rounded-lg border-2 border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-600 focus:outline-none"
-            >
+              <option value="" disabled>
+                Select one
+              </option>
               <option value="A">A</option>
               <option value="B">B</option>
               <option value="C">C</option>
@@ -318,7 +302,7 @@ export const PostForm = (props: PostFormProps) => {
               onChange={handleNumberChange(setEstimatedCosts)}
               value={estimatedCosts}
               className="w-full"
-              unit="$"
+              unit="€"
             />
           </li>
         </ul>

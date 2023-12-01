@@ -134,7 +134,6 @@ model Post {
   desc             String?      @db.Text
   type             PostType?    @default(TO_BE_RENTED)
   energyClass      EnergyClass?
-  ges              EnergyClass?
   constructionDate DateTime?
   estimatedCosts   Int?
   nearestShops     Int?
