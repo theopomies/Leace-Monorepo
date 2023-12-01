@@ -8,9 +8,9 @@ import { NumberInput } from "../shared/forms/NumberInput";
 interface PostAttributesFormProps {
   location: string;
   handleLocationChange: ChangeEventHandler<HTMLInputElement>;
-  price: number;
+  price: number | undefined;
   handlePriceChange: ChangeEventHandler<HTMLInputElement>;
-  size: number;
+  size: number | undefined;
   handleSizeChange: ChangeEventHandler<HTMLInputElement>;
   furnished: boolean;
   handleFurnishedChange: ChangeEventHandler<HTMLInputElement>;
@@ -156,6 +156,7 @@ export function PostAttributesForm({ ...attributes }: PostAttributesFormProps) {
               onChange={attributes.handleSizeChange}
               value={attributes.size}
               unit="m²"
+              required
             />
           </label>
           <label>
@@ -167,6 +168,7 @@ export function PostAttributesForm({ ...attributes }: PostAttributesFormProps) {
               onChange={attributes.handlePriceChange}
               value={attributes.price}
               unit="€"
+              required
             />
           </label>
         </div>

@@ -21,9 +21,6 @@ export const postRouter = router({
         energyClass: z
           .enum([EnergyClass.A, EnergyClass.B, EnergyClass.C, EnergyClass.D])
           .optional(),
-        ges: z
-          .enum([EnergyClass.A, EnergyClass.B, EnergyClass.C, EnergyClass.D])
-          .optional(),
         constructionDate: z.date().optional().nullable(),
         estimatedCosts: z.number().optional(),
         nearedShops: z.number().optional(),
@@ -75,9 +72,6 @@ export const postRouter = router({
         energyClass: z
           .enum([EnergyClass.A, EnergyClass.B, EnergyClass.C, EnergyClass.D])
           .optional(),
-        ges: z
-          .enum([EnergyClass.A, EnergyClass.B, EnergyClass.C, EnergyClass.D])
-          .optional(),
         constructionDate: z.date().optional().nullable(),
         estimatedCosts: z.number().optional(),
         nearedShops: z.number().optional(),
@@ -113,7 +107,6 @@ export const postRouter = router({
           constructionDate: input.constructionDate,
           estimatedCosts: input.estimatedCosts,
           nearestShops: input.nearedShops,
-          ges: input.ges,
           energyClass: input.energyClass,
         },
       });

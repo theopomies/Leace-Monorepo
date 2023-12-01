@@ -29,6 +29,10 @@ export const UpdateAdminPostPage = ({ postId }: { postId: string }) => {
       title: data.title,
       desc: data.description,
       content: "",
+      constructionDate: new Date(data.constructionDate + "T00:00:00.000Z"),
+      energyClass: data.energyClass,
+      estimatedCosts: data.estimatedCosts,
+      nearedShops: data.nearestShops,
     });
     await updatePostAttributes.mutateAsync({
       postId,
@@ -43,6 +47,8 @@ export const UpdateAdminPostPage = ({ postId }: { postId: string }) => {
       elevator: data.elevator,
       pool: data.pool,
       disability: data.disability,
+      internetFiber: data.internetFiber,
+      securityAlarm: data.securityAlarm,
       price: data.price,
       size: data.size,
     });
@@ -51,7 +57,7 @@ export const UpdateAdminPostPage = ({ postId }: { postId: string }) => {
 
   const handleCancel: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.preventDefault();
-    router.back();
+    router.push(`/administration/posts/${postId}`);
   };
 
   const handleUploadImages = (files: File[]) => {

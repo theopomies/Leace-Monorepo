@@ -132,6 +132,33 @@ export const PostCard = ({
     }
   };
 
+  const filterDetails = () => {
+    return Object.entries(details)
+      .map(([key, label]) => {
+        const value = post[key as keyof Post] as
+          | string
+          | number
+          | boolean
+          | Date
+          | null;
+
+        return (
+          (!!value || value === 0) && (
+            <li className="flex flex-grow items-center gap-2" key={key}>
+              {React.createElement(detailsIcons[key as keyof Post])}
+              <h3 className="text-lg">
+                {label}{" "}
+                {formatValue(key as keyof Post, post[key as keyof Post])}
+              </h3>
+            </li>
+          )
+        );
+      })
+      .filter(Boolean);
+  };
+
+  const detailsList = filterDetails();
+
   return (
     <div className="flex h-full w-full flex-col justify-between overflow-auto rounded-lg bg-white p-8 shadow">
       <section>
@@ -225,37 +252,16 @@ export const PostCard = ({
           )}
           <div>
             <h2 className="text-xl font-bold">Property details</h2>
-            <ul className="col flex gap-4 border-b border-slate-200 py-6 sm:flex sm:flex-wrap md:grid md:grid-cols-4">
-              {Object.entries(details).map(([key, label]) => {
-                const value = post[key as keyof Post] as
-                  | string
-                  | number
-                  | boolean
-                  | Date
-                  | null;
-
-                return (
-                  (!!value || value === 0) && (
-                    <li className="flex flex-grow items-center gap-2" key={key}>
-                      {React.createElement(detailsIcons[key as keyof Post])}
-                      <h3 className="text-lg">
-                        {label}{" "}
-                        {formatValue(
-                          key as keyof Post,
-                          post[key as keyof Post],
-                        )}
-                      </h3>
-                    </li>
-                  )
-                );
-              })}
-            </ul>
+            {detailsList.length > 0 && (
+              <ul className="col flex gap-4 border-b border-slate-200 py-6 sm:flex sm:flex-wrap md:grid md:grid-cols-4">
+                {detailsList}
+              </ul>
+            )}
             <ul className="gap-4 py-6 sm:flex sm:flex-wrap md:grid md:grid-cols-4">
               {Object.entries(attributes).map(([key, value]) => {
-                const postAttributes = post.attribute;
-                if (!postAttributes) return null;
+                if (!post.attribute) return null;
 
-                const attribute = postAttributes[key as keyof Attribute];
+                const attribute = post.attribute[key as keyof Attribute];
 
                 return (
                   <li className="flex flex-grow items-center gap-2" key={key}>

@@ -77,14 +77,18 @@ export const PostForm = (props: PostFormProps) => {
   const [pool, setPool] = useState(false);
   const [securityAlarm, setSecurityAlarm] = useState(false);
   const [internetFiber, setInternetFiber] = useState(false);
-  const [size, setSize] = useState(0);
-  const [price, setPrice] = useState(0);
+  const [size, setSize] = useState<number | undefined>(undefined);
+  const [price, setPrice] = useState<number | undefined>(undefined);
   const [energyClass, setEnergyClass] = useState<EnergyClass | undefined>(
     undefined,
   );
   const [constructionDate, setConstructionDate] = useState<string>("");
-  const [estimatedCosts, setEstimatedCosts] = useState<number>(0);
-  const [nearestShops, setNearestShops] = useState<number>(0);
+  const [estimatedCosts, setEstimatedCosts] = useState<number | undefined>(
+    undefined,
+  );
+  const [nearestShops, setNearestShops] = useState<number | undefined>(
+    undefined,
+  );
 
   const [selectedDocuments, setSelectedDocuments] = useState<File[]>([]);
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
@@ -121,8 +125,8 @@ export const PostForm = (props: PostFormProps) => {
       setInternetFiber(props.post.attribute?.internetFiber ?? false);
       setEnergyClass(props.post.energyClass ?? undefined);
       setConstructionDate(date);
-      setEstimatedCosts(props.post.estimatedCosts ?? 0);
-      setNearestShops(props.post.nearestShops ?? 0);
+      setEstimatedCosts(props.post.estimatedCosts ?? undefined);
+      setNearestShops(props.post.nearestShops ?? undefined);
     }
   }, [props.post]);
 
@@ -143,7 +147,7 @@ export const PostForm = (props: PostFormProps) => {
     };
 
   const handleNumberChange =
-    (setter: Dispatch<SetStateAction<number>>) =>
+    (setter: Dispatch<SetStateAction<number | undefined>>) =>
     (event: React.ChangeEvent<HTMLInputElement>) => {
       setter(event.target.valueAsNumber);
     };
@@ -162,6 +166,7 @@ export const PostForm = (props: PostFormProps) => {
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
+    if (!size || !price) return null;
     const data: PostFormData = {
       title,
       description,
@@ -251,6 +256,7 @@ export const PostForm = (props: PostFormProps) => {
             onChange={handleChange(setTitle)}
             value={title}
             className="w-full"
+            required
           />
         </div>
         <div className="mt-5">
@@ -310,7 +316,6 @@ export const PostForm = (props: PostFormProps) => {
           <li className="flex-grow pr-8">
             <h3 className="text-x2 font-medium">Nearest store</h3>
             <NumberInput
-              required
               placeholder="2"
               onChange={handleNumberChange(setNearestShops)}
               value={nearestShops}
