@@ -1,16 +1,16 @@
 import {
+  Conversation,
   Post,
   Relationship,
+  Role,
   SupportRelationship,
   User,
-  Role,
-  Conversation,
 } from "@prisma/client";
 import Link from "next/link";
-import { SupportButton } from "./SupportButton";
-import { Select } from "../button/Select";
 import { useRouter } from "next/router";
+import { Select } from "../button/Select";
 import { UserImage } from "../user/UserImage";
+import { SupportButton } from "./SupportButton";
 
 export type Relationships =
   | (Relationship & {
@@ -52,24 +52,6 @@ export const ChatList = ({
   const router = useRouter();
   return (
     <div className="flex h-full w-1/5 flex-shrink-0 flex-col rounded-tl-lg rounded-bl-lg bg-white">
-      <div className="flex w-full flex-row items-center justify-center rounded-tl-lg bg-indigo-500 p-6">
-        <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-indigo-100 text-indigo-700">
-          <svg
-            className="h-6 w-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
-            ></path>
-          </svg>
-        </div>
-        <div className="ml-2 text-2xl font-bold">Leace</div>
-      </div>
       {posts !== undefined && posts.length > 1 && (
         <div className=" border-t border-slate-300 p-6">
           <h3 className="text-center text-lg font-medium">See matches for</h3>
@@ -100,7 +82,7 @@ export const ChatList = ({
       )}
       <div className="mt-8 flex flex-shrink flex-grow flex-col overflow-auto px-5">
         <div className="flex flex-row items-center justify-between pl-2 text-xs">
-          <span className="font-bold">Conversations</span>
+          <h1 className="text-xl">Conversations</h1>
           <div className="flex gap-2">
             {((supportRelationships && supportRelationships.length !== 0) ||
               role === Role.ADMIN ||
