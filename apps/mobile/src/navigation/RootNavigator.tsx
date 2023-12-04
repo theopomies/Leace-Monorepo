@@ -394,11 +394,12 @@ const RootNavigator = () => {
     { userId: session?.userId as string },
     { enabled: !!session?.userId },
   );
+  console.log(user);
 
   if (isLoading) return <Loading />;
   if (!session) return <Loading signOut={true} />;
   if (userLoading) return <Loading />;
-  if (!user) return <Loading signOut={true} />;
+  if (!user) return <ChooseRole />;
 
   return (
     <>

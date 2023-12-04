@@ -22,8 +22,8 @@ import { IUserAttrs } from "../../types";
 import { EditInfo } from "../../components/UserProfile";
 
 export default function ChooseRole() {
-  const navigation =
-    useNavigation<NativeStackNavigationProp<TabStackParamList>>();
+  // const navigation =
+  //   useNavigation<NativeStackNavigationProp<TabStackParamList>>();
   const [role, setRole] = useState<"TENANT" | "OWNER" | "AGENCY">("TENANT");
   const [page, setPage] = useState<"CHOOSE" | "CREATE">("CHOOSE");
   const createUser = trpc.user.createUser.useMutation();
@@ -46,18 +46,25 @@ export default function ChooseRole() {
 
   const userRole = trpc.user.updateUserRoleById.useMutation({
     onSuccess() {
-      utils.auth.getSession.invalidate();
+      // utils.auth.getSession.invalidate();
+      utils.user.getUserById.invalidate();
     },
   });
 
   const userProfile = trpc.user.updateUserById.useMutation({
     onSuccess() {
-      if (role !== "TENANT") navigation.navigate("Profile", { userId });
+      // if (role !== "TENANT") navigation.navigate("Profile", { userId });
+      if (role !== "TENANT") {
+        // utils.auth.getSession.invalidate();
+        utils.user.getUserById.invalidate();
+      }
     },
   });
   const userAttrs = trpc.attribute.updateUserAttributes.useMutation({
     onSuccess() {
-      navigation.navigate("Profile", { userId });
+      // navigation.navigate("Profile", { userId });
+      // utils.auth.getSession.invalidate();
+      utils.user.getUserById.invalidate();
     },
   });
 
