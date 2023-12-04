@@ -1,13 +1,32 @@
 import Link from "next/link";
 import { useUUIDSearch } from "./useUUIDSearch";
+import { useEffect, useRef, useState } from "react";
 
 export const Search = () => {
   const { setUUID, uuid, userList, isLoading, type } = useUUIDSearch();
+  const [showResults, setShowResults] = useState(false);
+  const searchRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        searchRef.current &&
+        !searchRef.current.contains(event.target as Node)
+      ) {
+        setShowResults(false);
+      }
+    };
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
 
   return (
-    <div className="relative">
+    <div className="relative" ref={searchRef}>
       <div className="sticky flex w-full items-center justify-between rounded-full bg-white p-2 shadow">
         <input
+          onClick={() => setShowResults(true)}
           autoFocus
           className="focus:shadow-outline ml-2 w-full rounded-full bg-gray-100 py-4 pl-4 text-xs font-bold text-gray-700 focus:outline-none lg:text-sm"
           type="text"
@@ -54,7 +73,7 @@ export const Search = () => {
           </div>
         </Link>
       </div>
-      {userList && userList.length > 0 && (
+      {userList && userList.length > 0 && showResults && (
         <div className="absolute top-full left-0 z-10 w-full">
           <div className="mt-2 flex flex-col items-center justify-between rounded-lg bg-white p-2 shadow">
             {userList.map((user) => (

@@ -3,7 +3,6 @@ import { Loader } from "../shared/Loader";
 import { useMemo } from "react";
 import { PostCard } from "../shared/post/PostCard";
 import { useRouter } from "next/router";
-import { deleteCacheId } from "../../utils/useCache";
 import { PostType } from "@prisma/client";
 
 export interface PostProps {
@@ -48,7 +47,6 @@ export const Post = ({ postId, authorId, updateLink }: PostProps) => {
   if (!post) return <p>Something went wrong</p>;
 
   const handleDeletePost = async () => {
-    deleteCacheId("lastSelectedPostId");
     await deletePost.mutateAsync({ postId });
     router.push(`/users/${authorId}/posts`);
   };

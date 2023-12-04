@@ -8,7 +8,7 @@ import { ReportReason } from "@prisma/client";
 export interface ReportDialogProps {
   fullName: string;
   onReport: (data: { reason: ReportReason; description: string }) => void;
-  setOpen?: Dispatch<SetStateAction<boolean | undefined>>;
+  setOpen?: Dispatch<SetStateAction<boolean>>;
 }
 
 export function ReportDialog({
