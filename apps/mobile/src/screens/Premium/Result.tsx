@@ -1,5 +1,5 @@
 import { Platform, View } from "react-native";
-import React, { useEffect } from "react";
+import React from "react";
 import { PaymentResult } from "../../components/Premium";
 import { trpc } from "../../../../web/src/utils/trpc";
 import { useRoute, RouteProp } from "@react-navigation/native";
@@ -17,14 +17,6 @@ const Result = () => {
   const route = useRoute<RouteProp<TabStackParamList, "PaymentResults">>();
 
   const isValidPayment = route.params?.isValidPayment;
-
-  useEffect(() => {
-    console.log(isValidPayment);
-  }, [isValidPayment]);
-
-  useEffect(() => {
-    console.log(isValidPayment);
-  }, [isValidPayment]);
 
   const updateStatus = async () => {
     updateUser.mutateAsync({

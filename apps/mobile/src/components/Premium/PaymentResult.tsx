@@ -1,4 +1,4 @@
-import { useNavigation } from "@react-navigation/native";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React, { useEffect } from "react";
 import { Animated, View, TouchableOpacity, Image, Text } from "react-native";
@@ -33,6 +33,10 @@ const PaymentResult = ({
 
   const navigation =
     useNavigation<NativeStackNavigationProp<TabStackParamList>>();
+
+  const route = useRoute<RouteProp<TabStackParamList, "PaymentResults">>();
+
+  const { subscriptionId } = route.params;
 
   useEffect(() => {
     if (isValidPayment) {
@@ -87,7 +91,7 @@ const PaymentResult = ({
                 </View>
                 <View className="mx-8 flex-row justify-between">
                   <Text className={"text-base font-bold"}>Product</Text>
-                  <Text className={"text-base"}>{product}€</Text>
+                  <Text className={"text-base"}>{product}</Text>
                 </View>
                 <View className="mx-8 flex-row justify-between">
                   <Text className={"text-base font-bold"}>Amount paid</Text>
@@ -99,7 +103,9 @@ const PaymentResult = ({
                   className={"w-24 rounded bg-blue-400 p-2"}
                   onPress={() => {
                     updateStatus();
-                    navigation.navigate("Likes");
+                    navigation.navigate("Likes", {
+                      subscriptionId,
+                    });
                   }}
                 >
                   <Text
