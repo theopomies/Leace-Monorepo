@@ -25,6 +25,7 @@ import { TenantStack } from "../screens/Stack";
 import { Loading } from "../components/Loading";
 import Toast from "react-native-toast-message";
 import { PostsReviews, UsersReviews } from "../screens/Reviews";
+import { OnBoarding } from "../screens/OnBoarding";
 
 const Tab = createBottomTabNavigator();
 
@@ -448,7 +449,7 @@ const RootNavigator = () => {
   if (isLoading) return <Loading />;
   if (!session) return <Loading signOut={true} />;
   if (userLoading) return <Loading />;
-  if (!user) return <ChooseRole />;
+  if (!user) return <OnBoarding />;
 
   return (
     <>

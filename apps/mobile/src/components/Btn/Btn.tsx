@@ -8,7 +8,7 @@ export default function Btn({
   textColor = "white",
   iconName,
   iconType,
-  bgColor = "#0A2472",
+  bgColor = "#6366f1",
   className,
 }: {
   title?: string;

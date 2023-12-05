@@ -9,9 +9,6 @@ import {
   TextInput,
 } from "react-native";
 import React, { useState } from "react";
-import { useNavigation } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { TabStackParamList } from "../../navigation/RootNavigator";
 import { trpc } from "../../utils/trpc";
 import Swiper from "react-native-swiper";
 import Header from "../../components/Header";
