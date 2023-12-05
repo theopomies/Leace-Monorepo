@@ -1,4 +1,9 @@
-import { router, protectedProcedure, AuthenticatedProcedure } from "../trpc";
+import {
+  router,
+  protectedProcedure,
+  AuthenticatedProcedure,
+  publicProcedure,
+} from "../trpc";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { Role, UserStatus, MaritalStatus } from "@prisma/client";
@@ -176,16 +181,10 @@ export const userRouter = router({
         ],
       });
     }),
-  getUserById: protectedProcedure([
-    Role.TENANT,
-    Role.OWNER,
-    Role.AGENCY,
-    Role.ADMIN,
-    Role.MODERATOR,
-  ])
+  getUserById: publicProcedure
     .input(z.object({ userId: z.string() }))
     .query(async ({ ctx, input }) => {
-      const userId = input.userId;
+      const userId = getId({ ctx: ctx, userId: input.userId });
 
       const user = await ctx.prisma.user.findUnique({
         where: {

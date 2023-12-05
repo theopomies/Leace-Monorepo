@@ -112,8 +112,10 @@ export const imageRouter = router({
         Bucket: "leaceawsbucket",
         Key: `users/${input.userId}/image/profilePicture.${ext}`,
       };
-      const command = new GetObjectCommand(bucketParams);
-      return await getSignedUrl(ctx.s3Client, command);
+
+      // return the public url of the picture
+      const url = `https://${bucketParams.Bucket}.s3.eu-west-3.amazonaws.com/${bucketParams.Key}`;
+      return url;
     }),
   deleteSignedPostUrl: protectedProcedure([
     Role.TENANT,

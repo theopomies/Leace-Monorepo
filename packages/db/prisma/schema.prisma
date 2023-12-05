@@ -173,8 +173,6 @@ model Post {
   constructionDate DateTime?
   estimatedCosts   Int?
   nearestShops     Int?
-  securityAlarm    Boolean?
-  internetFiber    Boolean?
 
   attribute Attribute?
 
@@ -224,16 +222,18 @@ model Attribute {
   rentStartDate DateTime?
   rentEndDate   DateTime?
 
-  furnished  Boolean?
-  homeType   HomeType?
-  terrace    Boolean?
-  pets       Boolean?
-  smoker     Boolean?
-  disability Boolean?
-  garden     Boolean?
-  parking    Boolean?
-  elevator   Boolean?
-  pool       Boolean?
+  furnished     Boolean?
+  homeType      HomeType?
+  terrace       Boolean?
+  pets          Boolean?
+  smoker        Boolean?
+  disability    Boolean?
+  garden        Boolean?
+  parking       Boolean?
+  elevator      Boolean?
+  pool          Boolean?
+  securityAlarm Boolean?
+  internetFiber Boolean?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

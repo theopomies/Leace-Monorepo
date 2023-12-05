@@ -1,11 +1,11 @@
+import { Role } from "@prisma/client";
+import { useRouter } from "next/router";
 import { useMemo } from "react";
 import { trpc } from "../../../utils/trpc";
 import { Loader } from "../Loader";
 import { Chat } from "./Chat";
-import { Role } from "@prisma/client";
-import { OwnerContractPopover } from "./contracts/OwnerContractPopover";
 import { MatchActions } from "./MatchActions";
-import { useRouter } from "next/router";
+import { OwnerContractPopover } from "./contracts/OwnerContractPopover";
 
 export function OwnerChat({
   userId,
@@ -20,16 +20,11 @@ export function OwnerChat({
 }) {
   const router = useRouter();
   const utils = trpc.useContext();
-  const { data: conversation, isLoading: conversationIsLoadingOrNotEnabled } =
-    trpc.conversation.getConversation.useQuery(
-      {
-        conversationId: conversationId ?? "",
-      },
-      { enabled: !!conversationId, refetchOnWindowFocus: true },
-    );
-  const conversationIsLoading = useMemo(
-    () => conversationIsLoadingOrNotEnabled && !!conversationId,
-    [conversationIsLoadingOrNotEnabled, conversationId],
+  const { data: conversation } = trpc.conversation.getConversation.useQuery(
+    {
+      conversationId: conversationId ?? "",
+    },
+    { enabled: !!conversationId, refetchInterval: 5000 },
   );
   const sendMutation = trpc.conversation.sendMessage.useMutation({
     onSuccess() {
@@ -67,17 +62,8 @@ export function OwnerChat({
     trpc.relationship.deleteRelationForOwner.useMutation();
 
   const isLoading = useMemo(
-    () =>
-      conversationIsLoading ||
-      relationshipsLoading ||
-      postsLoading ||
-      supportRelationshipsLoading,
-    [
-      conversationIsLoading,
-      relationshipsLoading,
-      supportRelationshipsLoading,
-      postsLoading,
-    ],
+    () => relationshipsLoading || postsLoading || supportRelationshipsLoading,
+    [relationshipsLoading, supportRelationshipsLoading, postsLoading],
   );
 
   const relationship = useMemo(() => {
@@ -118,6 +104,7 @@ export function OwnerChat({
       postId={postId}
       additionnalBarComponent={
         <div className="flex items-center gap-8">
+          <OwnerContractPopover relationship={relationship} />
           {relationship && (
             <MatchActions
               fullName={
@@ -134,7 +121,6 @@ export function OwnerChat({
               onDelete={() => onDeleteMatch(relationship.id)}
             />
           )}
-          <OwnerContractPopover relationship={relationship} />
         </div>
       }
     />

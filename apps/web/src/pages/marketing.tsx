@@ -17,6 +17,12 @@ const MarketingIndex = () => {
     });
   }, [router.asPath, session?.userId]);
 
+  useEffect(() => {
+    if (session) {
+      router.push("/");
+    }
+  }, [router, session]);
+
   return <MarketingPage />;
 };
 

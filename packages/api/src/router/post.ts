@@ -3,7 +3,7 @@ import { EnergyClass, PostType, RelationType, Role } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";
-import { getPostsWithAttribute, shuffle } from "../utils/algorithm";
+import { getPostsWithAttribute } from "../utils/algorithm";
 import { filterStrings } from "../utils/filter";
 import { getId } from "../utils/getId";
 
@@ -107,8 +107,6 @@ export const postRouter = router({
         constructionDate: z.date().optional().nullable(),
         estimatedCosts: z.number().optional(),
         nearedShops: z.number().optional(),
-        securityAlarm: z.boolean().optional(),
-        internetFiber: z.boolean().optional(),
         type: z
           .enum([PostType.RENTED, PostType.TO_BE_RENTED, PostType.HIDE])
           .optional(),
@@ -166,8 +164,6 @@ export const postRouter = router({
           constructionDate: input.constructionDate,
           estimatedCosts: input.estimatedCosts,
           nearestShops: input.nearedShops,
-          securityAlarm: input.securityAlarm,
-          internetFiber: input.internetFiber,
           ges: input.ges,
           energyClass: input.energyClass,
           managedById: input.managedBy,
@@ -337,11 +333,9 @@ export const postRouter = router({
             postsToBeSeen: { include: { images: true, attribute: true } },
           },
         });
-        shuffle(updatedUser.postsToBeSeen);
         return updatedUser.postsToBeSeen;
       }
       // If more than 3 posts, return the list
-      shuffle(user.postsToBeSeen);
       return user.postsToBeSeen;
     }),
   getUsersToBeSeen: protectedProcedure([Role.AGENCY, Role.OWNER])

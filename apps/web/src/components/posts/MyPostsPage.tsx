@@ -4,15 +4,25 @@ import { PostBar } from "../shared/post/PostBar";
 import { Post } from "./Post";
 import { Button } from "../shared/button/Button";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export interface MyPostsPageProps {
   userId: string;
   postId?: string;
 }
 
-export const MyPostsPage = ({ userId, postId }: MyPostsPageProps) => {
+export const MyPostsPage = ({
+  userId,
+  postId: defaultPostId,
+}: MyPostsPageProps) => {
   const { data: posts, isLoading: postsLoading } =
     trpc.post.getPostsByUserId.useQuery({ userId });
+
+  const [postId, setPostId] = useState<string | undefined>(defaultPostId);
+
+  useEffect(() => {
+    setPostId(defaultPostId ?? posts?.[0]?.id);
+  }, [posts, defaultPostId]);
 
   if (postsLoading) {
     return <Loader />;
@@ -54,16 +64,11 @@ export const MyPostsPage = ({ userId, postId }: MyPostsPageProps) => {
       ) : (
         <div className="flex w-full flex-col items-center justify-center overflow-auto rounded-lg bg-white p-8 shadow">
           <h1 className="text-2xl font-bold text-gray-700">
-            {!posts || posts.length === 0
-              ? "You don't have any post yet"
-              : "Please, select a post"}
+            You don&apos;t have any post yet
           </h1>
-          {!posts ||
-            (posts.length === 0 && (
-              <Link href={`/users/${userId}/posts/create`}>
-                <Button className="mt-5">Create a new post</Button>
-              </Link>
-            ))}
+          <Link href={`/users/${userId}/posts/create`}>
+            <Button className="mt-5">Create a new post</Button>
+          </Link>
         </div>
       )}
     </div>

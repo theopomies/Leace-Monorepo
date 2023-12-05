@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/router";
 import mixpanel from "../utils/mixpanel";
 import { PremiumPage } from "../components/premium/PremiumPage";
+import { Role } from "@prisma/client";
 
 const Premium = () => {
   const router = useRouter();
@@ -26,7 +27,7 @@ const Premium = () => {
   if (!session) return <div>Not logged in</div>;
 
   return (
-    <LoggedLayout title="Premium | Leace">
+    <LoggedLayout title="Premium | Leace" roles={[Role.TENANT]}>
       <PremiumPage session={session} />
     </LoggedLayout>
   );

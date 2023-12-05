@@ -27,13 +27,12 @@ export const ActionButtons = ({
       )}
       {postId && <CertifyPostButtons postId={postId} />}
       {reportId && (
-        <div className="flex w-full flex-col gap-2 border-t border-black pt-4">
+        <div className="flex w-full flex-col gap-2  pt-4">
           <p className="text-center text-xl">Report</p>
           <ReportButton reportId={reportId} />
           <RejectReports reportId={reportId} />
         </div>
       )}
-      <div className="w-full border-t border-black" />
       <Ban userId={userId} />
     </div>
   );
