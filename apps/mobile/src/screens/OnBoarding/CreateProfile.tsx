@@ -16,10 +16,15 @@ import {
 } from "expo-document-picker";
 import Toast from "react-native-toast-message";
 import { Icon } from "react-native-elements";
-import { IStep } from "../../types/onboarding";
+import { IStep, Role } from "../../types/onboarding";
 import { trpc } from "../../utils/trpc";
 
-export default function CreateProfile({ userId, setStep, setProgress }: IStep) {
+export default function CreateProfile({
+  userId,
+  setStep,
+  setProgress,
+  selectedRole,
+}: IStep & { selectedRole: Role }) {
   const [open, setOpen] = useState(false);
   const [birthDate, setBirthDate] = useState(new Date());
   const [firstName, setFirstName] = useState("");
@@ -27,7 +32,17 @@ export default function CreateProfile({ userId, setStep, setProgress }: IStep) {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [description, setDescription] = useState("");
   const [profile, setProfile] = useState<DocumentPickerAsset>();
-  const userProfile = trpc.user.updateUserById.useMutation({});
+  const utils = trpc.useContext();
+  const userProfile = trpc.user.updateUserById.useMutation({
+    onSuccess() {
+      if (selectedRole === "TENANT") {
+        setProgress(75);
+        setStep("ATTRIBUTES");
+      } else {
+        utils.user.getUserById.invalidate();
+      }
+    },
+  });
 
   async function pickImage() {
     try {
@@ -141,10 +156,10 @@ export default function CreateProfile({ userId, setStep, setProgress }: IStep) {
             }}
           />
           <Btn
-            title="Next"
+            title={`${
+              selectedRole === "TENANT" ? "Next" : "Finish setting me up"
+            }`}
             onPress={() => {
-              setProgress(75);
-              setStep("ATTRIBUTES");
               userProfile.mutate({
                 userId,
                 firstName,

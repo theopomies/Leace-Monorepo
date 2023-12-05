@@ -1,7 +1,7 @@
 import { View, SafeAreaView } from "react-native";
 import React, { useState } from "react";
 import Welcome from "./Welcome";
-import { Step } from "../../types/onboarding";
+import { Role, Step } from "../../types/onboarding";
 import SelectRole from "./SelectRole";
 import CreateProfile from "./CreateProfile";
 import Toast from "react-native-toast-message";
@@ -10,6 +10,7 @@ import { trpc } from "../../utils/trpc";
 
 export default function OnBoarding() {
   const [step, setStep] = useState<Step>("WELCOME");
+  const [selectedRole, setSelectedRole] = useState<Role>("TENANT");
   const [process, setProgress] = useState(25);
   const utils = trpc.useContext();
   const data = utils.auth.getSession.getData();
@@ -26,7 +27,6 @@ export default function OnBoarding() {
         </View>
         {step === "WELCOME" && (
           <Welcome
-            step={step}
             setStep={setStep}
             setProgress={setProgress}
             userId={userId}
@@ -34,23 +34,23 @@ export default function OnBoarding() {
         )}
         {step === "SELECT" && (
           <SelectRole
-            step={step}
             setStep={setStep}
             setProgress={setProgress}
             userId={userId}
+            selectedRole={selectedRole}
+            setSelectedRole={setSelectedRole}
           />
         )}
         {step === "PROFILE" && (
           <CreateProfile
-            step={step}
             setStep={setStep}
             setProgress={setProgress}
             userId={userId}
+            selectedRole={selectedRole}
           />
         )}
         {step === "ATTRIBUTES" && (
           <ChooseAttributes
-            step={step}
             setStep={setStep}
             setProgress={setProgress}
             userId={userId}
