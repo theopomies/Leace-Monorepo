@@ -24,7 +24,7 @@ import { TenantMatches } from "../screens/Matches";
 import { TenantStack } from "../screens/Stack";
 import { Loading } from "../components/Loading";
 import Toast from "react-native-toast-message";
-import { PostsReviews } from "../screens/Reviews";
+import { PostsReviews, UsersReviews } from "../screens/Reviews";
 
 const Tab = createBottomTabNavigator();
 
@@ -79,6 +79,7 @@ export type TabStackParamList = {
   Documents: { userId: string };
   Settings: undefined;
   PostReviews: undefined;
+  UsersReviews: undefined;
 };
 
 function NavigationRoutes({
@@ -232,6 +233,30 @@ function NavigationRoutes({
       <Tab.Screen
         name="PostReviews"
         component={PostsReviews}
+        options={{
+          tabBarStyle: { display: "none" },
+          tabBarButton: () => null,
+          headerShown: true,
+          headerTitleStyle: { color: "#0A2472" },
+          title: "Reviews",
+          headerLeft: () => (
+            <TouchableOpacity
+              className="ml-4"
+              onPress={() => navigation.goBack()}
+            >
+              <Icon
+                name="arrow-back"
+                color="#0A2472"
+                size={30}
+                type="material-icons"
+              ></Icon>
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="UsersReviews"
+        component={UsersReviews}
         options={{
           tabBarStyle: { display: "none" },
           tabBarButton: () => null,

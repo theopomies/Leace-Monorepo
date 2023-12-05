@@ -1,14 +1,13 @@
 import React, { useState } from "react";
 import { View, Text, Image, StyleSheet, ScrollView } from "react-native";
 import { Picker } from "@react-native-picker/picker";
-
 const reviews = [
   {
     name: "John Doe",
     image:
       "https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&w=1600",
     notes:
-      "Lovely apartment with a beautiful view. Very clean and well-maintained.",
+      "The owner is fantastic! They ensure that the apartment has a beautiful view and is always very clean and well-maintained. Highly recommended.",
     rating: 4.5,
     accountId: "123",
     postId: "456",
@@ -19,7 +18,7 @@ const reviews = [
     image:
       "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=1600",
     notes:
-      "Fantastic location! Close to amenities and public transport. Highly recommended.",
+      "I couldn't ask for a better owner! The location is fantastic, close to amenities and public transport. Highly recommended.",
     rating: 5,
     accountId: "456",
     postId: "789",
@@ -30,7 +29,7 @@ const reviews = [
     image:
       "https://images.pexels.com/photos/1704488/pexels-photo-1704488.jpeg?auto=compress&cs=tinysrgb&w=1600",
     notes:
-      "Spacious and cozy apartment. Great neighborhood with friendly neighbors.",
+      "The owner is responsive and attentive. The apartment is spacious and cozy, situated in a great neighborhood with friendly neighbors.",
     rating: 4,
     accountId: "789",
     postId: "101",
@@ -41,7 +40,7 @@ const reviews = [
     image:
       "https://images.pexels.com/photos/1080213/pexels-photo-1080213.jpeg?auto=compress&cs=tinysrgb&w=300",
     notes:
-      "The apartment is a bit small, but its well-designed and feels comfortable.",
+      "The owner is great! While the apartment is a bit small, it's well-designed and feels comfortable. Responsive landlord.",
     rating: 3.5,
     accountId: "101",
     postId: "112",
@@ -52,7 +51,7 @@ const reviews = [
     image:
       "https://images.pexels.com/photos/1310522/pexels-photo-1310522.jpeg?auto=compress&cs=tinysrgb&w=1600",
     notes:
-      "Quiet and peaceful environment. Perfect for someone looking for a serene place.",
+      "I appreciate the owner's effort in maintaining a quiet and peaceful environment. Perfect for someone looking for a serene place.",
     rating: 4,
     accountId: "112",
     postId: "123",
@@ -62,7 +61,8 @@ const reviews = [
     name: "Chris Brown",
     image:
       "https://images.pexels.com/photos/2269872/pexels-photo-2269872.jpeg?auto=compress&cs=tinysrgb&w=1600",
-    notes: "Good value for the rent. Responsive landlord and maintenance team.",
+    notes:
+      "Good value for the rent. Responsive landlord and maintenance team. Recommended!",
     rating: 3,
     accountId: "123",
     postId: "134",
@@ -72,7 +72,8 @@ const reviews = [
     name: "Olivia White",
     image:
       "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=1600",
-    notes: "Modern amenities and stylish interiors. Love the community vibe.",
+    notes:
+      "The owner has created a modern and stylish space. Love the community vibe. Great experience!",
     rating: 4.5,
     accountId: "134",
     postId: "145",
@@ -83,7 +84,7 @@ const reviews = [
     image:
       "https://images.pexels.com/photos/428364/pexels-photo-428364.jpeg?auto=compress&cs=tinysrgb&w=600",
     notes:
-      "Great location for professionals. Convenient to workplaces and restaurants.",
+      "The owner provides a great location for professionals. Convenient to workplaces and restaurants. A five-star experience!",
     rating: 5,
     accountId: "145",
     postId: "156",
@@ -94,7 +95,7 @@ const reviews = [
     image:
       "https://images.pexels.com/photos/1499327/pexels-photo-1499327.jpeg?auto=compress&cs=tinysrgb&w=300",
     notes:
-      "Responsive and friendly property management. Always quick to address concerns.",
+      "Responsive and friendly property management. The owner is always quick to address concerns. I feel well taken care of.",
     rating: 4,
     accountId: "156",
     postId: "167",
@@ -105,7 +106,7 @@ const reviews = [
     image:
       "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=300",
     notes:
-      "Well-maintained common areas. Enjoying the gym and communal spaces.",
+      "The owner ensures well-maintained common areas. I'm enjoying the gym and communal spaces. Great landlord!",
     rating: 3.5,
     accountId: "167",
     postId: "178",
@@ -116,7 +117,7 @@ const reviews = [
     image:
       "https://images.pexels.com/photos/4065187/pexels-photo-4065187.jpeg?auto=compress&cs=tinysrgb&w=300",
     notes:
-      "Beautiful sunrise view from the apartment. Cozy and inviting atmosphere.",
+      "The owner provides a beautiful sunrise view from the apartment. The atmosphere is cozy and inviting. Highly recommended!",
     rating: 4,
     accountId: "178",
     postId: "189",
@@ -127,7 +128,7 @@ const reviews = [
     image:
       "https://images.pexels.com/photos/1040880/pexels-photo-1040880.jpeg?auto=compress&cs=tinysrgb&w=300",
     notes:
-      "Affordable rent for the area. Well-equipped kitchen and spacious living room.",
+      "Affordable rent for the area. Well-equipped kitchen and spacious living room. The owner is responsive and accommodating.",
     rating: 3,
     accountId: "189",
     postId: "190",
@@ -138,7 +139,7 @@ const reviews = [
     image:
       "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=1600",
     notes:
-      "Friendly neighbors and a pet-friendly community. Enjoying my time here!",
+      "The owner fosters a friendly environment with pet-friendly policies. Enjoying my time here!",
     rating: 4.5,
     accountId: "190",
     postId: "201",
@@ -149,7 +150,7 @@ const reviews = [
     image:
       "https://images.pexels.com/photos/2182970/pexels-photo-2182970.jpeg?auto=compress&cs=tinysrgb&w=300",
     notes:
-      "Safe and secure neighborhood. Close to parks for outdoor activities.",
+      "Safe and secure neighborhood provided by the owner. Close to parks for outdoor activities. Excellent landlord!",
     rating: 5,
     accountId: "201",
     postId: "212",
@@ -239,7 +240,7 @@ const OverallRating = () => {
   );
 };
 
-export default function PostsReviews() {
+export default function UsersReviews() {
   /*const navigation =
     useNavigation<NativeStackNavigationProp<TabStackParamList>>();
   const route = useRoute<RouteProp<TabStackParamList, "PostReviews">>();*/
