@@ -1,6 +1,7 @@
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import { IStep } from "../../types/onboarding";
+import { trpc } from "../../utils/trpc";
 
 interface IRole {
   title: string;
@@ -63,7 +64,9 @@ function Role({ data, callback }: { data: IRole; callback: () => void }) {
   );
 }
 
-export default function SelectRole({ setStep, setProgress }: IStep) {
+export default function SelectRole({ setStep, setProgress, userId }: IStep) {
+  const userRole = trpc.user.updateUserRoleById.useMutation();
+
   return (
     <>
       <View className="flex h-40 flex-col justify-center px-8">
@@ -78,6 +81,7 @@ export default function SelectRole({ setStep, setProgress }: IStep) {
             callback={() => {
               setProgress(75);
               setStep("PROFILE");
+              userRole.mutate({ userId, role: role.role });
             }}
           />
         ))}

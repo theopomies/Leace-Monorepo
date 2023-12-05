@@ -4,9 +4,20 @@ import { IStep } from "../../types/onboarding";
 import { IUserAttrs } from "../../types";
 import { EditAttributes } from "../../components/Attribute";
 import { Btn } from "../../components/Btn";
+import { trpc } from "../../utils/trpc";
 
-export default function ChooseAttributes({ setStep, setProgress }: IStep) {
-  const [attrs, setAttrs] = useState<IUserAttrs | undefined>({ userId: "" });
+export default function ChooseAttributes({
+  userId,
+  setStep,
+  setProgress,
+}: IStep) {
+  const [attrs, setAttrs] = useState<IUserAttrs | undefined>({ userId });
+  const utils = trpc.useContext();
+  const userAttributes = trpc.attribute.updateUserAttributes.useMutation({
+    onSuccess() {
+      utils.user.getUserById.invalidate();
+    },
+  });
 
   return (
     <>
@@ -29,8 +40,10 @@ export default function ChooseAttributes({ setStep, setProgress }: IStep) {
         <Btn
           title="Finish setting me up"
           onPress={() => {
-            setProgress(75);
-            setStep("ATTRIBUTES");
+            userAttributes.mutate({
+              userId,
+              ...attrs,
+            });
           }}
         />
       </View>

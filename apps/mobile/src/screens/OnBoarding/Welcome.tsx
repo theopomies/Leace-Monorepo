@@ -2,8 +2,11 @@ import { View, Text } from "react-native";
 import React from "react";
 import { Btn } from "../../components/Btn";
 import { IStep } from "../../types/onboarding";
+import { trpc } from "../../utils/trpc";
 
 export default function Welcome({ setStep, setProgress }: IStep) {
+  const createUser = trpc.user.createUser.useMutation();
+
   return (
     <>
       <View className="flex h-40 flex-col justify-center px-8">
@@ -28,6 +31,7 @@ export default function Welcome({ setStep, setProgress }: IStep) {
             onPress={() => {
               setProgress(50);
               setStep("SELECT");
+              createUser.mutate();
             }}
           />
         </View>
