@@ -32,6 +32,7 @@ enum DocType {
   STUDENT_CARD
   BUSINESS_CARD
   INSEE_CERTIFICATE
+
   D1_EXTRAIT
   K_EXTRAIT
   OTHERS
@@ -311,7 +312,7 @@ model Document {
 
   valid Boolean @default(false)
   ext   String
-  type DocType
+  type DocType?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -27,8 +27,6 @@ export const postRouter = router({
         constructionDate: z.date().optional().nullable(),
         estimatedCosts: z.number().optional(),
         nearedShops: z.number().optional(),
-        securityAlarm: z.boolean().optional(),
-        internetFiber: z.boolean().optional(),
         managedBy: z.string().optional(),
       }),
     )
@@ -75,8 +73,6 @@ export const postRouter = router({
           constructionDate: input.constructionDate,
           estimatedCosts: input.estimatedCosts,
           nearestShops: input.nearedShops,
-          securityAlarm: input.securityAlarm,
-          internetFiber: input.internetFiber,
           managedById: input.managedBy,
         },
       });
