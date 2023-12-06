@@ -9,7 +9,7 @@ import ChooseAttributes from "./ChooseAttributes";
 import { trpc } from "../../utils/trpc";
 
 export default function OnBoarding() {
-  const [step, setStep] = useState<Step>("WELCOME");
+  const [step, setStep] = useState<Step>("PROFILE");
   const [selectedRole, setSelectedRole] = useState<Role>("TENANT");
   const [process, setProgress] = useState(25);
   const utils = trpc.useContext();

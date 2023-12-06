@@ -25,6 +25,7 @@ export default function CreateProfile({
   setProgress,
   selectedRole,
 }: IStep & { selectedRole: Role }) {
+  const [show, setShow] = useState(false);
   const [open, setOpen] = useState(false);
   const [birthDate, setBirthDate] = useState(new Date());
   const [firstName, setFirstName] = useState("");
@@ -63,11 +64,31 @@ export default function CreateProfile({
     }
   }
 
+  function isAdult() {
+    const eighteenYearsAgo = new Date();
+    const currentDate = new Date();
+    eighteenYearsAgo.setFullYear(currentDate.getFullYear() - 18);
+    return birthDate < eighteenYearsAgo;
+  }
+
+  function validate() {
+    if (!(firstName && lastName && phoneNumber)) return setShow(true);
+    if (!isAdult) return setShow(true);
+    userProfile.mutate({
+      userId,
+      firstName,
+      lastName,
+      phoneNumber,
+      description,
+      birthDate,
+    });
+  }
+
   return (
     <>
       <DateTimePickerModal
         isVisible={open}
-        date={new Date()}
+        date={birthDate}
         mode={"date"}
         onConfirm={(date) => {
           setOpen(false);
@@ -104,36 +125,76 @@ export default function CreateProfile({
           <View className="flex flex-col gap-3">
             <View className="flex flex-col gap-1">
               <Text>First Name</Text>
-              <TextInput
-                className="border-indigo h-9 rounded-lg border pl-2"
-                value={firstName}
-                onChangeText={(text) => setFirstName(text)}
-              ></TextInput>
+              <View className="relative">
+                <TextInput
+                  className="border-indigo h-9 rounded-lg border pl-2"
+                  value={firstName}
+                  onChangeText={(text) => setFirstName(text)}
+                ></TextInput>
+                {!firstName && show && (
+                  <Text
+                    className="text-light-red absolute -bottom-3"
+                    style={{ fontSize: 10 }}
+                  >
+                    Required field.
+                  </Text>
+                )}
+              </View>
             </View>
             <View className="flex flex-col gap-1">
               <Text>Last Name</Text>
-              <TextInput
-                className="border-indigo h-9 rounded-lg border pl-2"
-                value={lastName}
-                onChangeText={(text) => setLastName(text)}
-              ></TextInput>
+              <View className="relative">
+                <TextInput
+                  className="border-indigo h-9 rounded-lg border pl-2"
+                  value={lastName}
+                  onChangeText={(text) => setLastName(text)}
+                ></TextInput>
+                {!lastName && show && (
+                  <Text
+                    className="text-light-red absolute -bottom-3"
+                    style={{ fontSize: 10 }}
+                  >
+                    Required field.
+                  </Text>
+                )}
+              </View>
             </View>
             <View className="flex flex-col gap-1">
               <Text>Birthdate</Text>
-              <TouchableOpacity onPress={() => setOpen(true)}>
-                <Text className="border-indigo h-9 rounded-lg border pl-2 leading-9">
-                  {birthDate.toLocaleDateString()}
-                </Text>
-              </TouchableOpacity>
+              <View className="relative">
+                <TouchableOpacity onPress={() => setOpen(true)}>
+                  <Text className="border-indigo h-9 rounded-lg border pl-2 leading-9">
+                    {birthDate.toLocaleDateString()}
+                  </Text>
+                  {!isAdult() && show && (
+                    <Text
+                      className="text-light-red absolute -bottom-3"
+                      style={{ fontSize: 10 }}
+                    >
+                      You must be 18 years old.
+                    </Text>
+                  )}
+                </TouchableOpacity>
+              </View>
             </View>
             <View className="flex flex-col gap-1">
               <Text>Phone Number</Text>
-              <TextInput
-                className="border-indigo h-9 rounded-lg border pl-2"
-                value={phoneNumber}
-                inputMode="tel"
-                onChangeText={(text) => setPhoneNumber(text)}
-              ></TextInput>
+              <View className="relative">
+                <TextInput
+                  className="border-indigo h-9 rounded-lg border pl-2"
+                  value={phoneNumber}
+                  inputMode="tel"
+                  onChangeText={(text) => setPhoneNumber(text)}
+                ></TextInput>
+                {!phoneNumber && show && (
+                  <Text
+                    className="text-light-red absolute -bottom-3"
+                    style={{ fontSize: 10 }}
+                  >
+                    Required field.
+                  </Text>
+                )}
+              </View>
             </View>
             <View className="flex flex-col gap-1">
               <Text>Description</Text>
@@ -159,16 +220,7 @@ export default function CreateProfile({
             title={`${
               selectedRole === "TENANT" ? "Next" : "Finish setting me up"
             }`}
-            onPress={() => {
-              userProfile.mutate({
-                userId,
-                firstName,
-                lastName,
-                phoneNumber,
-                description,
-                birthDate,
-              });
-            }}
+            onPress={validate}
           />
         </View>
       </ScrollView>
