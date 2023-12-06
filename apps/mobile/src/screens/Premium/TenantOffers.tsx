@@ -5,8 +5,9 @@ import {
   Platform,
   Image,
   SafeAreaView,
+  Alert,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { TabStackParamList } from "../../navigation/RootNavigator";
@@ -20,6 +21,7 @@ interface Item {
   name: string;
   amount: number;
   period: string;
+  interval: "year" | "month";
 }
 
 const TenantOffers = () => {
@@ -29,12 +31,14 @@ const TenantOffers = () => {
       name: "1 Month",
       amount: 19.99,
       period: "Monthly",
+      interval: "month",
     },
     {
       id: 2,
       name: "1 Year",
       amount: 199.99,
       period: "Yearly",
+      interval: "year",
     },
   ];
 
@@ -49,49 +53,88 @@ const TenantOffers = () => {
 
   const handleCardClick = (item: Item) => {
     setSelectedProduct(item);
+    setIsBuyButtonDisabled(true);
   };
 
-  const [paymentDataInitialized, setPaymentDataInitialized] = useState(false);
+  const [isBuyButtonDisabled, setIsBuyButtonDisabled] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const payment = trpc.stripe.createPayment.useQuery({
-    amount: Math.round((selectedProduct?.amount as number) * 100),
-  });
+  const { data: payment, mutate: createPayment } =
+    trpc.stripe.createPayment.useMutation({
+      onSuccess: () => {
+        setIsBuyButtonDisabled(false);
+      },
+    });
+
+  const { data: subscription, mutate: confirmPayment } =
+    trpc.stripe.confirmPayment.useMutation();
+
+  useEffect(() => {
+    if (selectedProduct) {
+      createPayment({
+        amount: Math.round((selectedProduct.amount as number) * 100),
+      });
+    }
+
+    if (subscription) {
+      setIsLoading(false);
+      navigation.navigate("PaymentResults", {
+        isValidPayment: true,
+        amount: selectedProduct?.amount as number,
+        product: selectedProduct?.name as string,
+        subscriptionId: subscription.subscriptionId as string,
+      });
+    }
+  }, [selectedProduct, subscription]);
 
   const { initPaymentSheet, presentPaymentSheet } = usePaymentSheet();
 
-  const initialisePaymentSheet = async () => {
-    const { error } = await initPaymentSheet({
-      customerId: payment.data?.customerId as string,
-      customerEphemeralKeySecret: payment.data?.ephemeralKey as string,
-      paymentIntentClientSecret: payment.data?.paymentIntent as string,
+  const initialisePaymentSheet = async (
+    customerId: string,
+    customerSecret: string,
+    intentSecret: string,
+  ) => {
+    await initPaymentSheet({
+      customerId: customerId,
+      customerEphemeralKeySecret: customerSecret,
+      paymentIntentClientSecret: intentSecret,
       merchantDisplayName: "Leace",
       returnURL: "https://example.com",
     });
-
-    if (!error) {
-      setPaymentDataInitialized(true);
-    }
   };
 
   async function buy() {
-    if (payment.data) {
-      initialisePaymentSheet();
-      const { error } = await presentPaymentSheet();
+    await initialisePaymentSheet(
+      payment?.customerId as string,
+      payment?.ephemeralKey as string,
+      payment?.paymentIntentClientSecret as string,
+    );
 
-      if (!error) {
-        navigation.navigate("PaymentResults", {
-          isValidPayment: true,
-          amount: selectedProduct?.amount as number,
-          product: selectedProduct?.name as string,
+    const { error } = await presentPaymentSheet();
+
+    if (!error) {
+      try {
+        confirmPayment({
+          paymentIntentId: payment?.paymentIntentId as string,
+          amount: Math.round((selectedProduct?.amount as number) * 100),
+          name: selectedProduct?.name as string,
+          interval: selectedProduct?.interval === "year" ? "year" : "month",
+          customer: payment?.customerId as string,
         });
+        setIsLoading(true);
+      } catch (subscriptionError) {
+        console.error("Error creating subscription:", subscriptionError);
+        Alert.alert(
+          "Error",
+          "Failed to create subscription. Please try again.",
+        );
       }
     }
   }
 
-  if (!payment.data && !paymentDataInitialized) {
+  if (isLoading) {
     return <Loading />;
   }
-
   return (
     <StripeProvider
       publishableKey="pk_test_51NNNqUKqsAbQAwatETMGlUoLBiwWN5ZP27fCOs3YQbC76Sk5FNHN3xpdyrdD2gGIfTFFho7F5a8x8RCw8rWJXYb800BBEbzKLo"
@@ -204,6 +247,7 @@ const TenantOffers = () => {
                   borderRadius: 10,
                   alignItems: "center",
                 }}
+                disabled={isBuyButtonDisabled}
                 onPress={buy}
               >
                 <Text

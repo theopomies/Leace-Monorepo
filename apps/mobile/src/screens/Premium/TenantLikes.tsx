@@ -13,6 +13,8 @@ import React, { useState } from "react";
 import { trpc } from "../../../../web/src/utils/trpc";
 import { Btn } from "../../components/Btn";
 import { UserProfile } from "../../components/UserProfile";
+import { useRoute, RouteProp } from "@react-navigation/native";
+import { TabStackParamList } from "../../navigation/TabNavigator";
 
 const ClientCard = ({
   firstName,
@@ -114,6 +116,10 @@ const ClientCard = ({
 };
 
 const TenantLikes = () => {
+  const route = useRoute<RouteProp<TabStackParamList, "Likes">>();
+
+  const subscriptionId = route.params?.subscriptionId;
+
   const { data: session } = trpc.auth.getSession.useQuery();
 
   const rs = trpc.relationship.getLikesForTenant.useQuery({
@@ -144,7 +150,12 @@ const TenantLikes = () => {
 
   const updateUser = trpc.user.updateUserById.useMutation();
 
+  const payment = trpc.stripe.cancelPayment.useMutation();
+
   const updateStatus = async () => {
+    payment.mutateAsync({
+      subscriptionId,
+    });
     updateUser.mutateAsync({
       isPremium: false,
       userId: user?.id as string,

@@ -18,14 +18,17 @@ export type TabStackParamList = {
   CreatePost: { userId: string };
 
   Premium: undefined;
-  Likes: undefined;
-  PaymentDetails: { selectedProduct: any; makePayment: boolean };
+
+  Likes: {
+    subscriptionId: string;
+  };
+  PaymentDetails: undefined;
 
   PaymentResults: {
-    loading: boolean;
-    paymentStatus: boolean;
-    response: any;
-    selectedProduct: any;
+    isValidPayment: boolean;
+    amount: number;
+    product: string;
+    subscriptionId: string;
   };
 
   EditProfile: {
