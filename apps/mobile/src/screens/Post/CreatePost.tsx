@@ -1,12 +1,11 @@
 import {
   View,
   Text,
-  Platform,
-  StatusBar,
   SafeAreaView,
   StyleSheet,
   TextInput,
   ScrollView,
+  Platform,
 } from "react-native";
 import React, { useState } from "react";
 import Header from "../../components/Header";
@@ -16,7 +15,7 @@ import { CreateAttributes } from "../../components/Attribute";
 import { Btn } from "../../components/Btn";
 import { LocalStorage } from "../../utils/cache";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { TabStackParamList } from "../../navigation/TabNavigator";
+import { TabStackParamList } from "../../navigation/RootNavigator";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 
 export default function CreatePost() {
@@ -120,92 +119,104 @@ export default function CreatePost() {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.view}>
-        <Header />
-        <ScrollView
-          scrollEnabled={false}
-          contentContainerStyle={{ flexGrow: 1 }}
-          style={{ backgroundColor: "white" }}
-        >
-          <View className="flex-1 space-y-2 p-4">
-            <View>
-              <Text className="text-sm font-semibold	 text-[#666666]">
-                Title
-              </Text>
-              <TextInput
-                style={{ borderColor: titleError ? "#D84654" : "black" }}
-                className={`rounded-xl border p-${
-                  Platform.OS === "ios" ? 4 : 2
-                } font-light leading-loose focus:border-indigo-500 `}
-                placeholder="Enter title..."
-                onChangeText={(text) => {
-                  setPostInfo({ ...postInfo, title: text });
-                  setTitleError("");
-                }}
-              />
-              {titleError ? (
-                <Text className="text-xs text-[#D84654]">{titleError}</Text>
-              ) : null}
-            </View>
-            <View>
-              <Text className="text-sm	font-semibold	 text-[#666666]">
-                Description
-              </Text>
-              <TextInput
-                multiline
-                style={{ borderColor: descriptionError ? "#D84654" : "black" }}
-                className={`rounded-xl border
+    <ScrollView>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.view}>
+          <Header />
+          <ScrollView
+            scrollEnabled={false}
+            contentContainerStyle={{ flexGrow: 1 }}
+            style={{ backgroundColor: "white" }}
+          >
+            <View className="flex-1 space-y-2 p-4">
+              <View>
+                <Text className="mb-1 text-lg font-semibold	 text-[#666666]">
+                  Title
+                </Text>
+                <TextInput
+                  style={{
+                    borderColor: titleError ? "#D84654" : "black",
+                    padding: 4,
+                    width: "100%",
+                    height: 38,
+                  }}
+                  className={`rounded-md border p-${
+                    Platform.OS === "ios" ? 4 : 2
+                  } font-light leading-loose focus:border-indigo-500 `}
+                  placeholder="Enter title..."
+                  onChangeText={(text) => {
+                    setPostInfo({ ...postInfo, title: text });
+                    setTitleError("");
+                  }}
+                />
+                {titleError ? (
+                  <Text className="text-lg text-[#D84654]">{titleError}</Text>
+                ) : null}
+              </View>
+              <View>
+                <Text className="mb-1 text-lg	font-semibold	 text-[#666666]">
+                  Description
+                </Text>
+                <TextInput
+                  style={{
+                    borderColor: descriptionError ? "#D84654" : "black",
+                    padding: 4,
+                    width: "100%",
+                    height: 38,
+                  }}
+                  className={`rounded-md border
                 p-${
                   Platform.OS === "ios" ? 4 : 2
                 } font-light leading-loose focus:border-indigo-500`}
-                placeholder="Enter description..."
-                onChangeText={(text) => {
-                  setPostInfo({ ...postInfo, desc: text });
-                  setDescriptionError("");
-                }}
-              />
-              {descriptionError ? (
-                <Text className="text-xs text-[#D84654]">
-                  {descriptionError}
-                </Text>
-              ) : null}
+                  placeholder="Enter description..."
+                  onChangeText={(text) => {
+                    setPostInfo({ ...postInfo, desc: text });
+                    setDescriptionError("");
+                  }}
+                />
+                {descriptionError ? (
+                  <Text className="text-xs text-[#D84654]">
+                    {descriptionError}
+                  </Text>
+                ) : null}
+              </View>
+              <View className="flex-1">
+                <CreateAttributes
+                  attrs={postAttrs}
+                  setAttrs={setPostAttrs}
+                  locationError={locationError}
+                  priceError={priceError}
+                  sizeError={sizeError}
+                  setLocationError={setLocationError}
+                  setPriceError={setPriceError}
+                  setSizeError={setSizeError}
+                  securityAlarm={postInfo.securityAlarm}
+                  internetFiber={postInfo.internetFiber}
+                  setSecurityAlarm={(value) =>
+                    setPostInfo({ ...postInfo, securityAlarm: value })
+                  }
+                  setInternetFiber={(value) =>
+                    setPostInfo({ ...postInfo, internetFiber: value })
+                  }
+                />
+              </View>
+              <View
+                className={`items-center justify-center p-${
+                  Platform.OS === "android" ? 2 : 10
+                } ${Platform.OS === "android" ? "mt-20" : "mt-8"}`}
+              >
+                <Btn
+                  className="w-full"
+                  title="Submit"
+                  bgColor="#6466f1"
+                  onPress={validateAndSetAttrs}
+                ></Btn>
+              </View>
             </View>
-            <View className="flex-1">
-              <CreateAttributes
-                attrs={postAttrs}
-                setAttrs={setPostAttrs}
-                locationError={locationError}
-                priceError={priceError}
-                sizeError={sizeError}
-                setLocationError={setLocationError}
-                setPriceError={setPriceError}
-                setSizeError={setSizeError}
-                securityAlarm={postInfo.securityAlarm}
-                internetFiber={postInfo.internetFiber}
-                setSecurityAlarm={(value) =>
-                  setPostInfo({ ...postInfo, securityAlarm: value })
-                }
-                setInternetFiber={(value) =>
-                  setPostInfo({ ...postInfo, internetFiber: value })
-                }
-              />
-            </View>
-            <View
-              className={`justify-center p-${
-                Platform.OS === "android" ? 2 : 10
-              } ${Platform.OS === "android" ? "" : "mb-8"}`}
-            >
-              <Btn
-                title="Submit"
-                bgColor="#6466f1"
-                onPress={validateAndSetAttrs}
-              ></Btn>
-            </View>
-          </View>
-        </ScrollView>
-      </View>
-    </SafeAreaView>
+          </ScrollView>
+        </View>
+      </SafeAreaView>
+    </ScrollView>
   );
 }
 
@@ -216,7 +227,6 @@ const styles = StyleSheet.create({
   },
   view: {
     flex: 1,
-    marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-    backgroundColor: "#F2F7FF",
+    backgroundColor: "white",
   },
 });

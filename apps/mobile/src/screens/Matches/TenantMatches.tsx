@@ -2,26 +2,19 @@ import {
   View,
   Text,
   StyleSheet,
-  Platform,
-  StatusBar,
   SafeAreaView,
   ScrollView,
   TouchableOpacity,
   Image,
 } from "react-native";
 import React from "react";
-import {
-  RouteProp,
-  useRoute,
-  useNavigation,
-  useFocusEffect,
-} from "@react-navigation/native";
+import { RouteProp, useRoute, useNavigation } from "@react-navigation/native";
 import Header from "../../components/Header";
 import { trpc } from "../../utils/trpc";
 import { Loading } from "../../components/Loading";
 import { Relationship, User, Post, Lease, Conversation } from "@prisma/client";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { TabStackParamList } from "../../navigation/TabNavigator";
+import { TabStackParamList } from "../../navigation/RootNavigator";
 import { Btn } from "../../components/Btn";
 
 interface IMatchCard {
@@ -53,7 +46,7 @@ function MatchCard({
 
   return (
     <TouchableOpacity
-      className="relative mt-3 flex min-h-[100px] flex-row rounded-md bg-[#10316B] p-2"
+      className="relative mt-3 flex min-h-[100px] flex-row rounded-md bg-[#0A2472] p-2"
       onPress={() =>
         navigation.navigate("ChatTenant", {
           relationshipId: data.id,
@@ -147,11 +140,12 @@ export default function TenantMatches() {
 
   if (!data)
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <View style={styles.view}>
+          <Header />
           <Text>Data not found</Text>
         </View>
-      </View>
+      </SafeAreaView>
     );
 
   /*useFocusEffect(
@@ -165,7 +159,7 @@ export default function TenantMatches() {
       <View style={styles.view}>
         <Header />
         <View className="flex-1 bg-white">
-          {data && (
+          {data.length > 0 ? (
             <ScrollView
               contentContainerStyle={{ flexGrow: 1 }}
               className="px-2"
@@ -182,6 +176,12 @@ export default function TenantMatches() {
                 />
               ))}
             </ScrollView>
+          ) : (
+            <View className={`flex-1 items-center justify-center px-3`}>
+              <Text className="text-center font-bold">
+                No one has matched with your apartment lease listing, yet.
+              </Text>
+            </View>
           )}
         </View>
       </View>
@@ -196,7 +196,6 @@ const styles = StyleSheet.create({
   },
   view: {
     flex: 1,
-    // marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-    backgroundColor: "white", // #F2F7FF
+    backgroundColor: "white",
   },
 });

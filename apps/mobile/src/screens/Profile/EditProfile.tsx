@@ -14,17 +14,19 @@ import {
   useFocusEffect,
   useNavigation,
 } from "@react-navigation/native";
-import { TabStackParamList } from "../../navigation/TabNavigator";
+import { TabStackParamList } from "../../navigation/RootNavigator";
 import { Icon } from "react-native-elements";
 import { EditAttributes } from "../../components/Attribute";
 import Separator from "../../components/Separator";
 import { trpc } from "../../utils/trpc";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { LocalStorage } from "../../utils/cache";
-// import { IUserAttrs } from "../../types";
+import { IUserAttrs } from "../../types";
 import { EditInfo } from "../../components/UserProfile";
 import { Btn } from "../../components/Btn";
 import { useAuth } from "@clerk/clerk-expo";
+import EditInfoRefacto from "../../components/UserProfile/EditInfoRefacto";
+import EditAttributesRefacto from "../../components/Attribute/EditAttributesRefacto";
 
 export default function EditProfile() {
   const { signOut } = useAuth();
@@ -48,7 +50,7 @@ export default function EditProfile() {
     role: string;
     email: string;
   }>();
-  const [attrs, setAttrs] = useState<any>();
+  const [attrs, setAttrs] = useState<IUserAttrs>();
 
   const userMutation = trpc.user.updateUserById.useMutation({
     onSuccess() {
@@ -75,20 +77,20 @@ export default function EditProfile() {
   useFocusEffect(
     useCallback(() => {
       const parsed = JSON.parse(data);
-      let {
+      const {
         id,
         firstName,
         lastName,
         phoneNumber,
         description,
         birthDate,
-        attribute,
         image,
         role,
         isPremium,
         emailVerified,
         email,
       } = parsed;
+      let { attribute } = parsed;
       if (!attribute) {
         attribute = {
           ...attribute,
@@ -174,7 +176,7 @@ export default function EditProfile() {
                 <Btn
                   title="Close"
                   bgColor="#F2F7FF"
-                  textColor="#10316B"
+                  textColor="#0A2472"
                   onPress={() => setOpen(false)}
                 ></Btn>
               </View>
@@ -187,88 +189,63 @@ export default function EditProfile() {
           contentContainerStyle={{ flexGrow: 1 }}
           style={{ backgroundColor: "white" }}
         >
-          <View className="flex flex-row bg-[#10316B] px-3 py-2">
+          <View className="flex flex-col items-center py-2">
             <Image
               source={{
                 uri: user1.image ?? "https://www.gravatar.com/avatar/?d=mp",
               }}
               className="h-24 w-24 rounded-full"
-              style={{ borderWidth: 2, borderColor: "white" }}
+              style={{ borderWidth: 1.5, borderColor: "#111827" }}
             />
-            <View className="flex flex-1 items-start justify-center px-4">
+
+
+            <View className="flex flex-col w-full items-center justify-center  space-y-2 py-2">
+
               <TextInput
-                className="w-full text-xl font-bold text-white"
+                className="w-1/2 text-3xl font-bold text-black"
                 placeholder="First Name"
-                placeholderTextColor={"white"}
+                placeholderTextColor={"black"}
                 defaultValue={user.firstName ?? ""}
+                style={{ borderBottomWidth: 1 }}
                 onChangeText={(text) => setUser({ ...user, firstName: text })}
               />
               <TextInput
-                className="w-full text-white"
+                className="w-1/2 text-3xl text-black"
                 placeholder="Last Name"
-                placeholderTextColor={"white"}
+                placeholderTextColor={"black"}
                 defaultValue={user.lastName ?? ""}
+                style={{  borderBottomWidth: 1 }}
                 onChangeText={(text) => setUser({ ...user, lastName: text })}
               />
+              <View className="w-full bg-[#6C47FF] py-6">
+
+                <TouchableOpacity
+                  className="flex flex-row items-center justify-center space-x-1 rounded-md px-2 py-2 border mx-32 bg-[#F1F5F9]"
+                  style={{ borderColor: "black" }}
+                  onPress={updateUser}
+                >
+                  <Icon
+                    name="save"
+                    color="black"
+                    size={28}
+                    type="material-icons"
+                  ></Icon>
+                  <Text className=" text-lg font-bold text-black">Save</Text>
+                </TouchableOpacity>
+
+              </View>
             </View>
-            <TouchableOpacity
-              className="absolute bottom-1.5 right-2 flex flex-row items-center justify-center space-x-1 rounded-full px-2 py-0.5"
-              style={{ borderWidth: 1, borderColor: "white" }}
-              onPress={updateUser}
-            >
-              <Icon
-                name="save"
-                color="white"
-                size={20}
-                type="material-icons"
-              ></Icon>
-              <Text className="font-bold text-white">Save</Text>
-            </TouchableOpacity>
-          </View>
-          <View className="pt-2">
-            <View className="flex flex-row items-center justify-between px-2">
-              <Text className="text-base font-bold text-[#10316B]">Kind:</Text>
-              <Text className="font-light">{user1.role}</Text>
-            </View>
-            <View className="flex flex-row items-center justify-between px-2">
-              <Text className="text-base font-bold text-[#10316B]">
-                Premium:
-              </Text>
-              <Icon
-                name={user1.isPremium ? "star" : "close"}
-                color={user1.isPremium ? "#FFE867" : "red"}
-                size={25}
-                type="material-icons"
-              ></Icon>
-            </View>
-            <View className="flex flex-row items-center justify-between px-2">
-              <Text className="text-base font-bold text-[#10316B]">
-                Verified:
-              </Text>
-              <Icon
-                name={user1.emailVerified ? "done" : "close"}
-                color={user1.emailVerified ? "green" : "red"}
-                size={25}
-                type="material-icons"
-              ></Icon>
-            </View>
-          </View>
-          <View className="px-3">
-            <Separator color="#10316B" />
+
+
           </View>
           <View style={{ flex: 1 }}>
-            <View className="flex flex-row items-center justify-between px-2">
-              <Text className="text-base font-bold text-[#394867]">Email:</Text>
-              <Text className="font-light">{user1.email}</Text>
-            </View>
-            <EditInfo user={user} setUser={setUser} />
+            <EditInfoRefacto user={user} setUser={setUser} />
             {showAttrs && (
               <View
                 className="px-3"
                 style={{ justifyContent: "flex-end", flex: 1 }}
               >
-                <Separator color="#10316B" />
-                <EditAttributes
+                <EditAttributesRefacto
                   userId={userId}
                   attrs={attrs}
                   setAttrs={setAttrs}

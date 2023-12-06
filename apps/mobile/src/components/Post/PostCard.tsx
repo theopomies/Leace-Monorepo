@@ -1,10 +1,10 @@
 import { View, Text, TouchableOpacity, Image as RNIMage } from "react-native";
 import React from "react";
 import { Attribute, Post, Image } from "@prisma/client";
-import { useRoute, RouteProp, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { TabStackParamList } from "../../navigation/TabNavigator";
+import { TabStackParamList } from "../../navigation/RootNavigator";
 
 interface IPostCard {
   data: Post & {
@@ -20,14 +20,19 @@ export default function PostCard({ data, userId }: IPostCard) {
 
   return (
     <TouchableOpacity
-      className="mt-3 flex min-h-[100px] flex-row rounded-md bg-[#10316B] p-2"
-      onPress={() =>
+      className="bg-indigo mt-3 flex min-h-[100px] flex-row rounded-md p-2"
+      onPress={() => {
+        /*navigation.push("PostInfo", {
+          userId,
+          postId: data.id,
+          editable: true,
+        });*/
         navigation.navigate("PostInfo", {
           userId,
           postId: data.id,
           editable: true,
-        })
-      }
+        });
+      }}
     >
       <View>
         <RNIMage
@@ -54,7 +59,7 @@ export default function PostCard({ data, userId }: IPostCard) {
           <Text className="font-light text-white">
             Status:{" "}
             <Text
-              className={`font-light ${
+              className={`font-bold ${
                 data.type === "TO_BE_RENTED" ? "text-red-500" : "text-green-500"
               }`}
             >

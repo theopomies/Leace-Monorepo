@@ -4,7 +4,6 @@ import {
   SafeAreaView,
   StyleSheet,
   Platform,
-  StatusBar,
   ScrollView,
   TouchableOpacity,
   TextInput,
@@ -17,7 +16,7 @@ import {
   useRoute,
 } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { TabStackParamList } from "../../navigation/TabNavigator";
+import { TabStackParamList } from "../../navigation/RootNavigator";
 import { trpc } from "../../utils/trpc";
 import { Icon } from "react-native-elements";
 import { IDefaulAttributes } from "../../types";
@@ -50,18 +49,18 @@ export default function EditPost() {
     },
   });
 
-  useFocusEffect(
-    useCallback(() => {
-      const parsed = JSON.parse(data);
-      const { id, desc, title, content, attribute } = parsed;
-      setPostInfo({ postId: id, desc, title, content });
-      setPostAttrs({
-        ...attribute,
-        rentStartDate: new Date(attribute.rentStartDate),
-        rentEndDate: new Date(attribute.rentEndDate),
-      });
-    }, [route]),
-  );
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     const parsed = JSON.parse(data);
+  //     const { id, desc, title, content, attribute } = parsed;
+  //     setPostInfo({ postId: id, desc, title, content });
+  //     setPostAttrs({
+  //       ...attribute,
+  //       rentStartDate: new Date(attribute.rentStartDate),
+  //       rentEndDate: new Date(attribute.rentEndDate),
+  //     });
+  //   }, [route]),
+  // );
 
   function handlePost() {
     if (!postInfo || !postAttrs) return;
@@ -136,7 +135,7 @@ export default function EditPost() {
           >
             <Icon
               name="arrow-back"
-              color="#10316B"
+              color="#0A2472"
               size={30}
               type="material-icons"
             ></Icon>
@@ -198,6 +197,14 @@ export default function EditPost() {
                   setLocationError={setLocationError}
                   setPriceError={setPriceError}
                   setSizeError={setSizeError}
+                  securityAlarm={false}
+                  internetFiber={false}
+                  setSecurityAlarm={function (bool: boolean): void {
+                    throw new Error("Function not implemented.");
+                  }}
+                  setInternetFiber={function (bool: boolean): void {
+                    throw new Error("Function not implemented.");
+                  }}
                 />{" "}
               </View>
               <View className="pt-2">
@@ -222,6 +229,5 @@ const styles = StyleSheet.create({
   },
   view: {
     flex: 1,
-    marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
 });

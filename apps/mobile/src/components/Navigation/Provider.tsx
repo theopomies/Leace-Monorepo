@@ -18,6 +18,7 @@ import {
 import { TenantChat } from "../../screens/Chat";
 import { TenantMatches } from "../../screens/Matches";
 import { Documents } from "../../screens/Documents";
+import EditProfileRefacto from "../../screens/Profile/EditProfileRefacto";
 
 const Tab = createBottomTabNavigator<TabStackParamList>();
 
@@ -246,9 +247,9 @@ const Provider = ({
         }}
       />
       <Tab.Screen
-        name="EditProfile"
+        name="EditProfileRefacto"
         initialParams={{ userId, showAttrs: false }}
-        component={EditProfile}
+        component={EditProfileRefacto}
         options={{
           tabBarStyle: { display: "none" },
           tabBarButton: () => null,
