@@ -27,11 +27,15 @@ import {
   MdOutlineWifi,
   MdPark,
   MdDeck,
+  MdConstruction,
+  MdEuroSymbol,
 } from "react-icons/md";
 import { IconType } from "react-icons";
 import { TbDisabled } from "react-icons/tb";
 import { LuCigarette, LuParkingCircle } from "react-icons/lu";
 import { PiElevator } from "react-icons/pi";
+import { FaHouseFlag } from "react-icons/fa6";
+import { FaShoppingCart } from "react-icons/fa";
 
 export interface PostCardProps {
   post: Post & {
@@ -48,6 +52,20 @@ export interface PostCardProps {
   onPause?: () => Promise<void>;
   onUnpause?: () => Promise<void>;
 }
+
+const details = {
+  energyClass: "Energy class",
+  constructionDate: "Built in",
+  estimatedCosts: "Charge fees",
+  nearestShops: "Nearest Shops",
+} as const as Record<keyof Post, string>;
+
+const detailsIcons = {
+  energyClass: FaHouseFlag,
+  constructionDate: MdConstruction,
+  estimatedCosts: MdEuroSymbol,
+  nearestShops: FaShoppingCart,
+} as const as Record<keyof Post, IconType>;
 
 const attributes = {
   terrace: "Terrace",
@@ -88,6 +106,58 @@ export const PostCard = ({
   onUnpause,
 }: PostCardProps) => {
   if (!post.attribute) return <h1>Something went wrong</h1>;
+
+  const formatValue = (
+    key: keyof Post,
+    value: string | number | boolean | Date | null,
+  ): React.ReactNode => {
+    if (value instanceof Date) {
+      return value.getFullYear();
+    }
+    if (key === "estimatedCosts" && value === 0) {
+      return "included";
+    }
+    const unit = getUnit(key);
+    return `${value}${unit}`;
+  };
+
+  const getUnit = (key: keyof Post): string => {
+    switch (key) {
+      case "nearestShops":
+        return "km";
+      case "estimatedCosts":
+        return "€";
+      default:
+        return "";
+    }
+  };
+
+  const filterDetails = () => {
+    return Object.entries(details)
+      .map(([key, label]) => {
+        const value = post[key as keyof Post] as
+          | string
+          | number
+          | boolean
+          | Date
+          | null;
+
+        return (
+          (!!value || value === 0) && (
+            <li className="flex flex-grow items-center gap-2" key={key}>
+              {React.createElement(detailsIcons[key as keyof Post])}
+              <h3 className="text-lg">
+                {label}{" "}
+                {formatValue(key as keyof Post, post[key as keyof Post])}
+              </h3>
+            </li>
+          )
+        );
+      })
+      .filter(Boolean);
+  };
+
+  const detailsList = filterDetails();
 
   return (
     <div className="flex h-full w-full flex-col justify-between overflow-auto rounded-lg bg-white p-8 shadow">
@@ -147,7 +217,7 @@ export const PostCard = ({
             </div>
             <div>
               <p className="text-slate-500">Bedrooms</p>
-              <p className="text-lg font-medium">3</p>
+              <p className="text-lg font-medium">{post.attribute.bedrooms}</p>
             </div>
           </div>
           <div className="flex items-center gap-4 rounded-lg p-2">
@@ -156,7 +226,7 @@ export const PostCard = ({
             </div>
             <div>
               <p className="text-slate-500">Bathrooms</p>
-              <p className="text-lg font-medium">2</p>
+              <p className="text-lg font-medium">{post.attribute.bathrooms}</p>
             </div>
           </div>
           <div className="flex items-center gap-4 rounded-lg p-2">
@@ -171,58 +241,39 @@ export const PostCard = ({
             </div>
           </div>
         </div>
-        <div className="mt-12 flex flex-col gap-4">
-          <h2 className="pb-2 text-xl font-medium">Property details</h2>
+        <div className="mt-12 flex flex-col gap-10">
           {!!post.desc && (
-            <p className="rounded-lg border border-dashed border-slate-300 p-4">
-              {post.desc}
-            </p>
+            <div>
+              <h2 className="pb-2 text-xl font-bold">Description</h2>
+              <p className="rounded-lg border border-dashed border-slate-300 p-4">
+                {post.desc}
+              </p>
+            </div>
           )}
-          <ul className="gap-4 sm:flex sm:flex-wrap md:grid md:grid-cols-3">
-            <li className="mr-8 flex-grow border-b border-indigo-300 pb-2">
-              <h3 className="text-xl font-medium">Energy class</h3>
-              {post.energyClass ? post.energyClass : "Not specified"}
-            </li>
-            <li className="mr-8 flex-grow border-b border-indigo-300 pb-2">
-              <h3 className="text-xl font-medium">GES</h3>
-              {post.ges ? post.ges : "Not specified"}
-            </li>
-            <li className="mr-8 flex-grow border-b border-indigo-300 pb-2">
-              <h3 className="text-xl font-medium">Construction date</h3>
-              {post.constructionDate?.toDateString()
-                ? post.constructionDate?.toDateString()
-                : "Not specified"}
-            </li>
-          </ul>
-          <ul className="gap-4 sm:flex sm:flex-wrap md:grid md:grid-cols-3">
-            <li className="mr-8 flex-grow border-b border-indigo-300 pb-2">
-              <h3 className="text-xl font-medium">Estimated fees costs</h3>
-              {post.estimatedCosts
-                ? post.estimatedCosts + " $"
-                : "Not specified"}
-            </li>
-            <li className="mr-8 flex-grow border-b border-indigo-300 pb-2">
-              <h3 className="text-xl font-medium">Nearest shops</h3>
-              {post.nearestShops ? post.nearestShops + " km" : "Not specified"}
-            </li>
-          </ul>
-          <ul className="mt-6 gap-4 sm:flex sm:flex-wrap md:grid md:grid-cols-3">
-            {Object.entries(attributes).map(([key, value]) => {
-              const postAttributes = post.attribute;
-              if (!postAttributes) return null;
+          <div>
+            <h2 className="text-xl font-bold">Property details</h2>
+            {detailsList.length > 0 && (
+              <ul className="col flex gap-4 border-b border-slate-200 py-6 sm:flex sm:flex-wrap md:grid md:grid-cols-4">
+                {detailsList}
+              </ul>
+            )}
+            <ul className="gap-4 py-6 sm:flex sm:flex-wrap md:grid md:grid-cols-4">
+              {Object.entries(attributes).map(([key, value]) => {
+                if (!post.attribute) return null;
 
-              const attribute = postAttributes[key as keyof Attribute];
+                const attribute = post.attribute[key as keyof Attribute];
 
-              return (
-                <li className="flex flex-grow items-center gap-2" key={key}>
-                  {React.createElement(iconMappings[key as keyof Attribute])}
-                  <h3 className={`text-xl ${!attribute && " line-through"} `}>
-                    {value}
-                  </h3>
-                </li>
-              );
-            })}
-          </ul>
+                return (
+                  <li className="flex flex-grow items-center gap-2" key={key}>
+                    {React.createElement(iconMappings[key as keyof Attribute])}
+                    <h3 className={`text-lg ${!attribute && " line-through"} `}>
+                      {value}
+                    </h3>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
         </div>
         <DocumentList documents={documents} onValidation={onDocValidation} />
         <DisplayReports reports={post.reports} />

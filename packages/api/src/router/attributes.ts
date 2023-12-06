@@ -133,6 +133,8 @@ export const attributesRouter = router({
         location: z.string().optional(),
         price: z.number().optional(),
         size: z.number().optional(),
+        bedrooms: z.number().optional(),
+        bathrooms: z.number().optional(),
         rentStartDate: z.date().optional(),
         rentEndDate: z.date().optional(),
         furnished: z.boolean().optional(),
@@ -159,7 +161,8 @@ export const attributesRouter = router({
       if (
         post.createdById != ctx.auth.userId &&
         ctx.role != Role.ADMIN &&
-        ctx.role != Role.MODERATOR
+        ctx.role != Role.MODERATOR &&
+        ctx.auth.userId != post.managedById
       )
         throw new TRPCError({
           code: "FORBIDDEN",
@@ -210,6 +213,8 @@ export const attributesRouter = router({
             lng: lng,
             price: input.price,
             size: input.size,
+            bedrooms: input.bedrooms,
+            bathrooms: input.bathrooms,
             rentStartDate: input.rentStartDate,
             rentEndDate: input.rentEndDate,
             furnished: input.furnished,
@@ -238,6 +243,8 @@ export const attributesRouter = router({
           lng: lng,
           price: input.price,
           size: input.size,
+          bedrooms: input.bedrooms,
+          bathrooms: input.bathrooms,
           rentStartDate: input.rentStartDate,
           rentEndDate: input.rentEndDate,
           furnished: input.furnished,

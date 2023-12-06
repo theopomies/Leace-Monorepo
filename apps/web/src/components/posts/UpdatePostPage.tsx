@@ -36,7 +36,6 @@ export const UpdatePostPage = ({ postId }: UpdatePostProps) => {
       constructionDate: new Date(data.constructionDate + "T00:00:00.000Z"),
       energyClass: data.energyClass,
       estimatedCosts: data.estimatedCosts,
-      ges: data.ges,
       nearedShops: data.nearestShops,
     });
     await updatePostAttributes.mutateAsync({
@@ -56,13 +55,15 @@ export const UpdatePostPage = ({ postId }: UpdatePostProps) => {
       securityAlarm: data.securityAlarm,
       price: data.price,
       size: data.size,
+      bedrooms: data.bedrooms,
+      bathrooms: data.bathrooms,
     });
     router.push(`/users/${post?.createdById}/posts/${postId}`);
   };
 
   const handleCancel: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.preventDefault();
-    router.back();
+    router.push(`/users/${post?.createdById}/posts/${postId}`);
   };
 
   const handleUploadImages = (files: File[]) => {

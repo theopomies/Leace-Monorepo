@@ -27,6 +27,8 @@ export type PostFormData = {
   location: string;
   price: number;
   size: number;
+  bedrooms: number;
+  bathrooms: number;
   furnished: boolean;
   homeType: HomeType | undefined;
   terrace: boolean;
@@ -38,7 +40,6 @@ export type PostFormData = {
   elevator: boolean;
   pool: boolean;
   energyClass?: EnergyClass;
-  ges?: EnergyClass;
   constructionDate?: string;
   estimatedCosts?: number;
   nearestShops?: number;
@@ -66,6 +67,8 @@ export const PostForm = (props: PostFormProps) => {
   const [description, setDescription] = useState("");
 
   const [location, setLocation] = useState("");
+  const [bedrooms, setBedrooms] = useState<number | undefined>(undefined);
+  const [bathrooms, setBathrooms] = useState<number | undefined>(undefined);
   const [furnished, setFurnished] = useState(false);
   const [homeType, setHomeType] = useState<HomeType | undefined>();
   const [terrace, setTerrace] = useState(false);
@@ -78,15 +81,18 @@ export const PostForm = (props: PostFormProps) => {
   const [pool, setPool] = useState(false);
   const [securityAlarm, setSecurityAlarm] = useState(false);
   const [internetFiber, setInternetFiber] = useState(false);
-  const [size, setSize] = useState(0);
-  const [price, setPrice] = useState(0);
+  const [size, setSize] = useState<number | undefined>(undefined);
+  const [price, setPrice] = useState<number | undefined>(undefined);
   const [energyClass, setEnergyClass] = useState<EnergyClass | undefined>(
     undefined,
   );
-  const [ges, setGes] = useState<EnergyClass | undefined>(undefined);
   const [constructionDate, setConstructionDate] = useState<string>("");
-  const [estimatedCosts, setEstimatedCosts] = useState<number>(0);
-  const [nearestShops, setNearestShops] = useState<number>(0);
+  const [estimatedCosts, setEstimatedCosts] = useState<number | undefined>(
+    undefined,
+  );
+  const [nearestShops, setNearestShops] = useState<number | undefined>(
+    undefined,
+  );
 
   const [selectedDocuments, setSelectedDocuments] = useState<File[]>([]);
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
@@ -110,6 +116,8 @@ export const PostForm = (props: PostFormProps) => {
       setHomeType(props.post.attribute?.homeType ?? undefined);
       setSize(props.post.attribute?.size ?? 0);
       setPrice(props.post.attribute?.price ?? 0);
+      setBedrooms(props.post.attribute?.bedrooms ?? 0);
+      setBathrooms(props.post.attribute?.bathrooms ?? 0);
       setFurnished(props.post.attribute?.furnished ?? false);
       setTerrace(props.post.attribute?.terrace ?? false);
       setPets(props.post.attribute?.pets ?? false);
@@ -122,10 +130,9 @@ export const PostForm = (props: PostFormProps) => {
       setSecurityAlarm(props.post.attribute?.securityAlarm ?? false);
       setInternetFiber(props.post.attribute?.internetFiber ?? false);
       setEnergyClass(props.post.energyClass ?? undefined);
-      setGes(props.post.ges ?? undefined);
       setConstructionDate(date);
-      setEstimatedCosts(props.post.estimatedCosts ?? 0);
-      setNearestShops(props.post.nearestShops ?? 0);
+      setEstimatedCosts(props.post.estimatedCosts ?? undefined);
+      setNearestShops(props.post.nearestShops ?? undefined);
     }
   }, [props.post]);
 
@@ -146,7 +153,7 @@ export const PostForm = (props: PostFormProps) => {
     };
 
   const handleNumberChange =
-    (setter: Dispatch<SetStateAction<number>>) =>
+    (setter: Dispatch<SetStateAction<number | undefined>>) =>
     (event: React.ChangeEvent<HTMLInputElement>) => {
       setter(event.target.valueAsNumber);
     };
@@ -165,12 +172,15 @@ export const PostForm = (props: PostFormProps) => {
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
+    if (!size || !price || !bedrooms || !bathrooms) return null;
     const data: PostFormData = {
       title,
       description,
       location,
       price,
       size,
+      bedrooms,
+      bathrooms,
       furnished,
       homeType,
       terrace,
@@ -182,7 +192,6 @@ export const PostForm = (props: PostFormProps) => {
       elevator,
       pool,
       energyClass,
-      ges,
       constructionDate,
       estimatedCosts,
       nearestShops,
@@ -215,6 +224,10 @@ export const PostForm = (props: PostFormProps) => {
     handlePriceChange: handleNumberChange(setPrice),
     size,
     handleSizeChange: handleNumberChange(setSize),
+    bedrooms,
+    handleBedroomsChange: handleNumberChange(setBedrooms),
+    bathrooms,
+    handleBathroomsChange: handleNumberChange(setBathrooms),
     furnished,
     handleFurnishedChange: handleBooleanChange(setFurnished),
     homeType,
@@ -255,6 +268,7 @@ export const PostForm = (props: PostFormProps) => {
             onChange={handleChange(setTitle)}
             value={title}
             className="w-full"
+            required
           />
         </div>
         <div className="mt-5">
@@ -274,25 +288,13 @@ export const PostForm = (props: PostFormProps) => {
           <li className="flex-grow pr-8">
             <h3 className="text-x2 font-medium">Energy class</h3>
             <select
-              placeholder="A"
               onChange={handleEnergyClassChange(setEnergyClass)}
-              value={energyClass}
+              value={energyClass ?? ""}
               className="w-full rounded-lg border-2 border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-600 focus:outline-none"
             >
-              <option value="A">A</option>
-              <option value="B">B</option>
-              <option value="C">C</option>
-              <option value="D">D</option>
-            </select>
-          </li>
-          <li className="flex-grow">
-            <h3 className="text-x2 font-medium">GES</h3>
-            <select
-              placeholder="A"
-              onChange={handleEnergyClassChange(setGes)}
-              value={ges}
-              className="w-full rounded-lg border-2 border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-600 focus:outline-none"
-            >
+              <option value="" disabled>
+                Select one
+              </option>
               <option value="A">A</option>
               <option value="B">B</option>
               <option value="C">C</option>
@@ -318,7 +320,7 @@ export const PostForm = (props: PostFormProps) => {
               onChange={handleNumberChange(setEstimatedCosts)}
               value={estimatedCosts}
               className="w-full"
-              unit="$"
+              unit="€"
             />
           </li>
         </ul>
@@ -326,7 +328,6 @@ export const PostForm = (props: PostFormProps) => {
           <li className="flex-grow pr-8">
             <h3 className="text-x2 font-medium">Nearest store</h3>
             <NumberInput
-              required
               placeholder="2"
               onChange={handleNumberChange(setNearestShops)}
               value={nearestShops}
