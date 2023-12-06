@@ -1,8 +1,8 @@
-import { Button } from "../../shared/button/Button";
-import { calcAge } from "../../../utils/calcAge";
-import { trpc } from "../../../utils/trpc";
 import { User } from "@prisma/client";
 import Link from "next/link";
+import { calcAge } from "../../../utils/calcAge";
+import { trpc } from "../../../utils/trpc";
+import { Button } from "../../shared/button/Button";
 import { UserImage } from "../../shared/user/UserImage";
 
 export interface TenantBarProps {
@@ -35,52 +35,54 @@ export function TenantBar({ postId, tenant }: TenantBarProps) {
 
   return (
     <div
-      className={`h-56 flex-grow cursor-pointer flex-col overflow-hidden rounded-xl bg-white shadow ${
+      className={`flex h-36 w-full cursor-pointer items-center overflow-hidden rounded-xl bg-white shadow ${
         tenant.isPremium ? "border-2 border-yellow-300" : ""
       }`}
     >
-      <Link href={"/users/" + tenant.id} className="flex-grow">
-        <div className="flex h-2/3 flex-grow gap-4 overflow-hidden p-4">
-          <UserImage user={tenant} />
-          <div className="flex-shrink-0 p-2">
-            <div className="flex gap-2">
-              <h3 className="text-2xl">{tenant.firstName}</h3>
-              <h3 className="text-2xl">{tenant.lastName}</h3>
-              {tenant.isPremium && (
-                <p className="m-auto rounded-full border border-yellow-500 p-0.5 px-1 text-xs text-yellow-500">
-                  Premium
-                </p>
-              )}
-              {tenant.certified && (
-                <p className="m-auto rounded-full border border-indigo-500 p-0.5 px-1 text-xs text-indigo-500">
-                  Certified
-                </p>
-              )}
-            </div>
-            <div className="flex items-center">
-              {tenant.birthDate && (
-                <p className="text-gray-500">{calcAge(tenant.birthDate)} ans</p>
-              )}
-              <span className="mx-2">•</span>
-              <p className="text-gray-500">{tenant.job}</p>
-            </div>
-            <p className="mt-4 text-gray-500">Click to view profile</p>
+      <Link href={"/users/" + tenant.id} className="flex h-full flex-grow p-4">
+        <UserImage user={tenant} />
+        <div className="p-2">
+          <div className="flex gap-2">
+            <h3 className="text-2xl">{tenant.firstName}</h3>
+            <h3 className="text-2xl">{tenant.lastName}</h3>
+            {tenant.isPremium && (
+              <p className="m-auto rounded-full border border-yellow-500 p-0.5 px-1 text-xs text-yellow-500">
+                Premium
+              </p>
+            )}
+            {tenant.certified && (
+              <p className="m-auto rounded-full border border-indigo-500 p-0.5 px-1 text-xs text-indigo-500">
+                Certified
+              </p>
+            )}
           </div>
+          <div className="flex items-center">
+            {tenant.birthDate && (
+              <p className="text-gray-500">{calcAge(tenant.birthDate)} ans</p>
+            )}
+            <span className="mx-2">•</span>
+            <p className="text-gray-500">{tenant.job}</p>
+          </div>
+          <p className="mt-4 text-gray-500">Click to view profile</p>
         </div>
+        <div className="flex items-center">
+          {tenant.birthDate && (
+            <p className="text-gray-500">{calcAge(tenant.birthDate)} ans</p>
+          )}
+          <span className="mx-2">•</span>
+          <p className="text-gray-500">{tenant.job}</p>
+        </div>
+        <p className="mt-4 text-gray-500">Click to view profile</p>
       </Link>
-      <div className="flex cursor-auto gap-4 bg-gray-100 p-4">
-        <Button
-          loading={likeIsLoading}
-          onClick={() => onLike(tenant.id)}
-          className="w-1/2"
-        >
+      <div className="flex w-1/4 cursor-auto flex-col justify-center gap-y-2 p-4">
+        <Button loading={likeIsLoading} onClick={() => onLike(tenant.id)}>
           Accept
         </Button>
         <Button
           loading={dislikeIsLoading}
           onClick={() => onDislike(tenant.id)}
-          theme="grey"
-          className="w-1/2"
+          overrideStyles
+          className="rounded-md border-2 border-indigo-500 bg-white px-4 py-3 font-bold text-indigo-500 hover:border-gray-100 hover:bg-gray-500 hover:text-white"
         >
           Decline
         </Button>

@@ -3,11 +3,11 @@ import { PostType } from "@prisma/client";
 import router from "next/router";
 import { useEffect } from "react";
 import { trpc } from "../../../utils/trpc";
+import { useParameterCache } from "../../../utils/useCache";
 import { Loader } from "../../shared/Loader";
+import { Button } from "../../shared/button/Button";
 import { Select } from "../../shared/button/Select";
 import { TenantBar } from "./TenantBar";
-import { Button } from "../../shared/button/Button";
-import { useParameterCache } from "../../../utils/useCache";
 
 export interface TenantListProps {
   userId: string;
@@ -66,7 +66,7 @@ export function TenantList({ userId }: TenantListProps) {
 
   if (!postId)
     return (
-      <div className="flex flex-grow flex-col items-center justify-center">
+      <div className="flex flex-col items-center justify-center">
         <h1 className="text-2xl font-bold text-gray-700">
           Please select a post
         </h1>
@@ -74,8 +74,11 @@ export function TenantList({ userId }: TenantListProps) {
     );
 
   return (
-    <div className="flex flex-grow flex-col p-8">
-      <div className="flex-grow-0">
+    <div className="flex w-3/4 flex-col items-center gap-y-10 p-8 pt-16">
+      <div className="flex h-28 w-1/3 items-center justify-center text-center">
+        <h2 className="text-2xl">Here are your potential tenants:</h2>
+      </div>
+      <div className="w-full">
         <Select
           options={
             posts
@@ -90,14 +93,8 @@ export function TenantList({ userId }: TenantListProps) {
           placeholder="Select a post"
         />
       </div>
-      {postId && (
-        <h2 className="mt-8 text-2xl font-bold">
-          Here are your potential tenants for{" "}
-          {posts.find((p) => p.id === postId)?.title}
-        </h2>
-      )}
       {tenants && tenants.length > 0 ? (
-        <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <div className="w-full flex-grow flex-col">
           {tenants.map((tenant) => (
             <TenantBar key={tenant.id} postId={postId} tenant={tenant} />
           ))}

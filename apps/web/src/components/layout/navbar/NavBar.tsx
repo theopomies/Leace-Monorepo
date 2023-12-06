@@ -1,11 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
-import { Role } from "@prisma/client";
 import { useClerk } from "@clerk/clerk-react";
+import { Role } from "@prisma/client";
 import Link from "next/link";
-import { RouterOutputs, trpc } from "../../../utils/trpc";
-import { getLinks } from "./links";
-import { UserImage } from "../../shared/user/UserImage";
 import { useRouter } from "next/router";
+import { RouterOutputs, trpc } from "../../../utils/trpc";
+import { Logo } from "../../shared/Logo";
+import { UserImage } from "../../shared/user/UserImage";
+import { getLinks } from "./links";
 
 export interface NavBarProps {
   session: RouterOutputs["auth"]["getSession"];
@@ -66,19 +67,8 @@ export function NavBar({ session, activePage }: NavBarProps) {
   return (
     <div className="w-72 flex-shrink-0">
       <div className="fixed flex min-h-screen w-72 flex-shrink-0 flex-col overflow-hidden bg-white">
-        <div className="flex items-end gap-5 py-16 pl-10">
-          <img
-            src="/logo.png"
-            referrerPolicy="no-referrer"
-            alt="logo"
-            className="w-[30px]"
-          />
-          <p
-            className="text-3xl leading-none tracking-wide text-indigo-500"
-            style={{ fontWeight: 100 }}
-          >
-            Leace
-          </p>
+        <div className="flex items-center justify-center p-12">
+          <Logo className="w-40 fill-indigo-500" />
         </div>
         <ul className="flex flex-col gap-8 py-4">
           {links.map((link) => handleLink(link))}

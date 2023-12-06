@@ -1,7 +1,8 @@
+import { RelationType } from "@leace/db";
 import { Role } from "@prisma/client";
-import { protectedProcedure, router } from "../trpc";
-import { z } from "zod";
 import { TRPCError } from "@trpc/server";
+import { z } from "zod";
+import { protectedProcedure, router } from "../trpc";
 import { checkConversation } from "../utils/checkConversation";
 
 export const conversationRouter = router({
@@ -169,5 +170,57 @@ export const conversationRouter = router({
       });
 
       return count;
+    }),
+  totalUnreads: protectedProcedure([Role.AGENCY, Role.OWNER, Role.TENANT])
+    .input(z.object({ userId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const relationshipsWithConversations = await ctx.prisma.relationship.findMany({
+        where: {
+          userId: input.userId,
+          relationType: RelationType.MATCH,
+        },
+        include: {
+          conversation: true
+        },
+      });
+
+      if (!relationshipsWithConversations) throw new TRPCError({ code: "NOT_FOUND" });
+
+      const supportRelationshipsWithConversations = await ctx.prisma.supportRelationship.findMany({
+        where: {
+          userId: input.userId
+        },
+        include: { conversation: true },
+      });
+
+      if (!supportRelationshipsWithConversations) throw new TRPCError({ code: "NOT_FOUND" });
+
+      const unreadsList = relationshipsWithConversations.map(async (relationship) => {
+        return ctx.prisma.message.count({
+          where: {
+            conversationId: relationship.conversation?.id,
+            senderId: { not: input.userId },
+            read: false,
+          },
+        });
+      })
+
+      const supportUnreadsList = supportRelationshipsWithConversations.map(async (relationship) => {
+        return ctx.prisma.message.count({
+          where: {
+            conversationId: relationship.conversation?.id,
+            senderId: { not: input.userId },
+            read: false,
+          },
+        });
+      })
+
+      const unreads = await Promise.all(unreadsList);
+      const supportUnreads = await Promise.all(supportUnreadsList);
+
+      const totalUnreads = unreads.reduce((a, b) => a + b, 0);
+      const totalSupportUnreads = supportUnreads.reduce((a, b) => a + b, 0);
+
+      return totalUnreads + totalSupportUnreads;
     }),
 });
