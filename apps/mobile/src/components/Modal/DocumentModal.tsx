@@ -46,18 +46,18 @@ export default function DocumentModal({
           <View className="flex flex-row gap-1 pt-2">
             <View className="flex-1">
               <Btn
-                title="Delete"
-                bgColor="#ef4444"
-                textColor="#FFFFFF"
-                onPress={callback}
-              ></Btn>
-            </View>
-            <View className="flex-1">
-              <Btn
                 title="Close"
                 bgColor="#F2F7FF"
                 textColor="#0A2472"
                 onPress={() => setOpen(false)}
+              ></Btn>
+            </View>
+            <View className="flex-1">
+              <Btn
+                title="Delete"
+                bgColor="#ef4444"
+                textColor="#FFFFFF"
+                onPress={callback}
               ></Btn>
             </View>
           </View>

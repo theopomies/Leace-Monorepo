@@ -15,13 +15,13 @@ import { LocalStorage } from "../../utils/cache";
 import { Post, Attribute, Image } from "@leace/db";
 import { Btn } from "../../components/Btn";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-
-// import RNPickerSelect from "react-native-picker-select";
+import { Picker } from "@react-native-picker/picker";
 
 export default function PostStack() {
   const navigation =
     useNavigation<NativeStackNavigationProp<TabStackParamList>>();
   const route = useRoute<RouteProp<TabStackParamList, "MyPosts">>();
+  const [selectedType, setSelectedType] = useState("");
   const { userId } = route.params;
   const [posts, setPosts] = useState<
     (Post & {
@@ -29,10 +29,12 @@ export default function PostStack() {
       images: Image[];
     })[]
   >([]);
-  const { isLoading, refetch } = trpc.post.getPostsByUserId.useQuery(
-    {
-      userId,
-    },
+  const {
+    data: fetchedPosts,
+    isLoading,
+    refetch,
+  } = trpc.post.getPostsByUserId.useQuery(
+    { userId },
     {
       onSuccess(data) {
         if (!data) return;
@@ -40,9 +42,6 @@ export default function PostStack() {
       },
     },
   );
-  /*const [reason, setReason] = useState<"ALL" | "RENTED" | "TO_BE_RENTED">(
-    "ALL",
-  );*/
   useFocusEffect(
     useCallback(() => {
       const check = LocalStorage.getItem("refreshPosts");
@@ -52,11 +51,6 @@ export default function PostStack() {
       refetch();
     }, [userId]),
   );
-  /*useEffect(() => {
-    if (posts.length > 0) return;
-    setPosts([...data]);
-  }, [data]);*/
-
   if (isLoading)
     return (
       <SafeAreaView style={styles.container}>
@@ -75,43 +69,39 @@ export default function PostStack() {
         </View>
       </SafeAreaView>
     );
-  /*function handlePicker(itemValue: "ALL" | "RENTED" | "TO_BE_RENTED") {
-    if (posts.length === 0) return;
-    if (itemValue === reason) return;
+  function handlePicker(itemValue: string) {
+    if (!fetchedPosts) return;
+    setSelectedType(itemValue);
     if (itemValue === "RENTED") {
-      const tmp = posts.filter((posts) => posts.type === "RENTED");
+      const tmp = fetchedPosts.filter((posts) => posts.type === "RENTED");
       setPosts([...tmp]);
     } else if (itemValue === "TO_BE_RENTED") {
-      const tmp = posts.filter((posts) => posts.type === "TO_BE_RENTED");
+      const tmp = fetchedPosts.filter((posts) => posts.type === "TO_BE_RENTED");
       setPosts([...tmp]);
-    } else setPosts([...posts]);
-    setReason(itemValue);
-  }*/
+    } else setPosts([...fetchedPosts]);
+  }
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.view}>
         <Header />
-        {/*
-        <View
-          style={{
-            borderBottomColor: "#d3d3d3",
-            borderBottomWidth: 1,
-          }}
-        >
-          <RNPickerSelect
-            placeholder={{ label: "ALL", value: "ALL" }}
-            onValueChange={handlePicker}
-            items={[
-              { label: "ALL", value: "ALL" },
-              { label: "RENTED", value: "RENTED" },
-              { label: "TO_BE_RENTED", value: "TO_BE_RENTED" },
-            ]}
-          />
-        </View>
-          */}
-        {posts.length > 0 ? (
+        {fetchedPosts && fetchedPosts.length > 0 ? (
           <View className={`flex-1`}>
+            <View
+              style={{ borderBottomColor: "#d3d3d3", borderBottomWidth: 0.2 }}
+            >
+              <Picker
+                selectedValue={selectedType}
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                onValueChange={(itemValue, itemIndex) =>
+                  handlePicker(itemValue)
+                }
+              >
+                <Picker.Item label="All" value="ALL" />
+                <Picker.Item label="Rented" value="RENTED" />
+                <Picker.Item label="Available" value="TO_BE_RENTED" />
+              </Picker>
+            </View>
             <ScrollView
               contentContainerStyle={{ flexGrow: 1 }}
               className="px-2"

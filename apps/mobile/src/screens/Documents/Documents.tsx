@@ -22,11 +22,16 @@ import * as MediaLibrary from "expo-media-library";
 import Toast from "react-native-toast-message";
 
 import * as Sharing from "expo-sharing";
-import { DocumentModal, ZoomImageModal } from "../../components/Modal";
+import {
+  DocumentModal,
+  ZoomImageModal,
+  ConfirmUpload,
+} from "../../components/Modal";
 
 export default function Documents() {
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(false);
+  const [open2, setOpen2] = useState(false);
   const [selected, setSelected] = useState({ id: "", url: "" });
   const route = useRoute<RouteProp<TabStackParamList, "Profile">>();
   const { userId } = route.params;
@@ -42,6 +47,39 @@ export default function Documents() {
       setOpen(false);
     },
   });
+  const [tmpDocument, setTmpDocument] = useState<
+    DocumentPicker.DocumentPickerAsset | undefined
+  >();
+
+  function uploadHandler() {
+    if (!tmpDocument) return;
+    if (!tmpDocument.mimeType) return;
+    uploadDocument
+      .mutateAsync({
+        userId,
+        fileType: tmpDocument.mimeType,
+        fileName: tmpDocument.name,
+      })
+      .then(async (url) => {
+        if (!url) return;
+        const fileContent = await FileSystem.readAsStringAsync(
+          tmpDocument.uri,
+          {
+            encoding: FileSystem.EncodingType.Base64,
+          },
+        );
+        const buffer = Buffer.from(fileContent, "base64");
+        await axios({
+          method: "PUT",
+          url: url,
+          data: buffer,
+          headers: { "Content-Type": tmpDocument.mimeType },
+        })
+          .then(() => refetch())
+          .catch((e) => console.error(e))
+          .finally(() => setOpen2(false));
+      });
+  }
 
   const pickDocument = async () => {
     try {
@@ -55,7 +93,9 @@ export default function Documents() {
       if (!document) throw new Error("Document picker failed");
       if (!document.mimeType || !document.uri)
         throw new Error("Invalid document");
-      await uploadDocument
+      setTmpDocument(document);
+      setOpen2(true);
+      /*await uploadDocument
         .mutateAsync({ userId, fileType: document.mimeType })
         .then(async (url) => {
           if (!url) return;
@@ -71,7 +111,7 @@ export default function Documents() {
           })
             .then(() => refetch())
             .catch((e) => console.error(e));
-        });
+        });*/
     } catch (e) {
       console.error(e);
     }
@@ -143,6 +183,13 @@ export default function Documents() {
         setOpen={setOpen}
         callback={() => deleteDocument({ userId, documentId: selected.id })}
       />
+      <ConfirmUpload
+        open={open2}
+        setOpen={setOpen2}
+        document={tmpDocument}
+        setDocument={setTmpDocument}
+        callback={uploadHandler}
+      />
       {open1 && (
         <ZoomImageModal image={selected} callback={() => setOpen1(false)} />
       )}
@@ -176,9 +223,7 @@ export default function Documents() {
               </TouchableOpacity>
               <View className="flex flex-row items-center gap-1 pt-2">
                 <View className="flex-1">
-                  <Text>
-                    {doc.id}.{doc.ext}
-                  </Text>
+                  <Text>{doc.name}</Text>
                 </View>
                 <View className="flex flex-row space-x-1">
                   <View>

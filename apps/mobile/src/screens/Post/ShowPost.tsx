@@ -215,15 +215,27 @@ export default function ShowPost() {
               <Separator />
               <View>
                 <Btn
+                  title="Reviews"
+                  bgColor="#F2F7FF"
+                  textColor="#0A2472"
+                  onPress={() => navigation.navigate("PostReviews")}
+                ></Btn>
+              </View>
+              <View className="pt-1.5">
+                <Btn
                   title="Edit"
                   bgColor="#F2F7FF"
                   textColor="#0A2472"
-                  onPress={() =>
-                    navigation.navigate("EditPost", {
+                  onPress={() => {
+                    navigation.push("EditPost", {
                       userId,
                       data: JSON.stringify(post),
-                    })
-                  }
+                    });
+                    /*navigation.navigate("EditPost", {
+                      userId,
+                      data: JSON.stringify(post),
+                    });*/
+                  }}
                 ></Btn>
               </View>
               <View className="pt-1.5">

@@ -24,6 +24,8 @@ import { TenantMatches } from "../screens/Matches";
 import { TenantStack } from "../screens/Stack";
 import { Loading } from "../components/Loading";
 import Toast from "react-native-toast-message";
+import { PostsReviews, UsersReviews } from "../screens/Reviews";
+import { OnBoarding } from "../screens/OnBoarding";
 
 const Tab = createBottomTabNavigator();
 
@@ -77,6 +79,8 @@ export type TabStackParamList = {
 
   Documents: { userId: string };
   Settings: undefined;
+  PostReviews: undefined;
+  UsersReviews: undefined;
 };
 
 function NavigationRoutes({
@@ -102,6 +106,7 @@ function NavigationRoutes({
           }}
         />
       )}
+
       {role === "TENANT" && (
         <>
           <Tab.Screen
@@ -226,7 +231,54 @@ function NavigationRoutes({
           }}
         />
       )}
-
+      <Tab.Screen
+        name="PostReviews"
+        component={PostsReviews}
+        options={{
+          tabBarStyle: { display: "none" },
+          tabBarButton: () => null,
+          headerShown: true,
+          headerTitleStyle: { color: "#0A2472" },
+          title: "Reviews",
+          headerLeft: () => (
+            <TouchableOpacity
+              className="ml-4"
+              onPress={() => navigation.goBack()}
+            >
+              <Icon
+                name="arrow-back"
+                color="#0A2472"
+                size={30}
+                type="material-icons"
+              ></Icon>
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="UsersReviews"
+        component={UsersReviews}
+        options={{
+          tabBarStyle: { display: "none" },
+          tabBarButton: () => null,
+          headerShown: true,
+          headerTitleStyle: { color: "#0A2472" },
+          title: "Reviews",
+          headerLeft: () => (
+            <TouchableOpacity
+              className="ml-4"
+              onPress={() => navigation.goBack()}
+            >
+              <Icon
+                name="arrow-back"
+                color="#0A2472"
+                size={30}
+                type="material-icons"
+              ></Icon>
+            </TouchableOpacity>
+          ),
+        }}
+      />
       <Tab.Screen
         name="Likes"
         component={role === "TENANT" ? TenantLikes : OwnerLikes}
@@ -394,11 +446,10 @@ const RootNavigator = () => {
     { userId: session?.userId as string },
     { enabled: !!session?.userId },
   );
-
   if (isLoading) return <Loading />;
   if (!session) return <Loading signOut={true} />;
   if (userLoading) return <Loading />;
-  if (!user) return <Loading signOut={true} />;
+  if (!user) return <OnBoarding />;
 
   return (
     <>
