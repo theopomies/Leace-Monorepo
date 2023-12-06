@@ -17,6 +17,7 @@ interface ICreateUserAttrs {
   userId: string;
   attrs: any | undefined;
   setAttrs: React.Dispatch<React.SetStateAction<any | undefined>>;
+  onBoarding?: boolean;
 }
 
 function AttributeBtn({ name, status, iconName }: IAttributeBtn) {
@@ -40,14 +41,14 @@ function AttributeBtn({ name, status, iconName }: IAttributeBtn) {
   );
 }
 
-function HouseTypeBtn({ name, status, iconName, disabled }: IAttributeBtn) {
+function HouseTypeBtn({ name, iconName, disabled }: IAttributeBtn) {
   return (
     <View
       className="flex min-w-[150px] min-h-[50px] flex-row items-center justify-center space-x-1 rounded-lg px-2 py-1"
       style={{
         margin: 6,
-        backgroundColor: !disabled ? "#D3D3D3" : "#6C47FF" ,
-        opacity: status ? 1 : 0.5,
+        backgroundColor: !disabled ? "gray" : "#6C47FF",
+        opacity: disabled ? 1 : 0.5,
       }}
     >
       <Icon
@@ -65,6 +66,7 @@ export default function EditAttributesRefacto({
   userId,
   attrs,
   setAttrs,
+  onBoarding,
 }: ICreateUserAttrs) {
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(false);
@@ -126,42 +128,43 @@ export default function EditAttributesRefacto({
           onChangeText={(text) => setAttrs({ ...attrs, location: text })}
         />
       </View>
-      <Divider width={1.5} color="black" className="mb-6"></Divider>
+      {!onBoarding && (<Divider width={1.5} color="black" className="mb-6"></Divider>)}
+
       <Text className="text-xl font-bold text-[#111827]">Type:</Text>
-      <View className="flex flex-row justify-center mb-6">
 
-        <TouchableOpacity
-        disabled={attrs.homeType == "HOUSE"}
-          onPress={() => {
-            if (attrs.homeType == "APARTMENT")
-            setAttrs({ ...attrs, homeType: "HOUSE" })
-          }}
-        >
-          <HouseTypeBtn
-            name="House"
-            status={attrs.furnished}
-            iconName="house"
+
+        <View className="flex flex-row justify-center mb-6">
+
+          <TouchableOpacity
             disabled={attrs.homeType == "HOUSE"}
-          />
-        </TouchableOpacity>
+            onPress={() => {
+              if (attrs.homeType == "APARTMENT" || !attrs.homeType)
+                setAttrs({ ...attrs, homeType: "HOUSE" })
+            }}
+          >
+            <HouseTypeBtn
+              name="House"
+              iconName="house"
+              disabled={attrs.homeType == "HOUSE"}
+            />
+          </TouchableOpacity>
 
-        <TouchableOpacity
-        disabled={attrs.homeType == "APARTMENT"}
-          onPress={() => {
-            if (attrs.homeType == "HOUSE")
-            setAttrs({ ...attrs, homeType: "APARTMENT" })
-          }}
-        >
-          <HouseTypeBtn
-            name="Appartment"
-            status={attrs.furnished}
-            iconName="apartment"
+          <TouchableOpacity
             disabled={attrs.homeType == "APARTMENT"}
-          />
-        </TouchableOpacity>
+            onPress={() => {
+              if (attrs.homeType == "HOUSE" || !attrs.homeType)
+                setAttrs({ ...attrs, homeType: "APARTMENT" })
+            }}
+          >
+            <HouseTypeBtn
+              name="Appartment"
+              iconName="apartment"
+              disabled={attrs.homeType == "APARTMENT"}
+            />
+          </TouchableOpacity>
 
-      </View>
-
+        </View>
+      
 
       <Text className="text-start text-xl font-bold text-[#111827]">
         Rent dates:
