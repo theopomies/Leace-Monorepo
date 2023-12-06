@@ -120,8 +120,6 @@ const TenantLikes = () => {
 
   const subscriptionId = route.params?.subscriptionId;
 
-  console.log("LIKES = " + subscriptionId);
-
   const { data: session } = trpc.auth.getSession.useQuery();
 
   const rs = trpc.relationship.getLikesForTenant.useQuery({

@@ -75,11 +75,8 @@ const TenantOffers = () => {
         amount: Math.round((selectedProduct.amount as number) * 100),
       });
     }
-  }, [selectedProduct]);
 
-  useEffect(() => {
     if (subscription) {
-      console.log(subscription);
       setIsLoading(false);
       navigation.navigate("PaymentResults", {
         isValidPayment: true,
@@ -88,7 +85,7 @@ const TenantOffers = () => {
         subscriptionId: subscription.subscriptionId as string,
       });
     }
-  }, [subscription]);
+  }, [selectedProduct, subscription]);
 
   const { initPaymentSheet, presentPaymentSheet } = usePaymentSheet();
 
