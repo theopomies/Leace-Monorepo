@@ -61,7 +61,6 @@ export default function EditInfoRefacto({ user, setUser }: IEditInfoRefacto) {
           className="text-lg font-light mb-6"
           inputMode="tel"
           style={styles.input}
-          autoFocus={true}
           multiline={true}
           placeholder="0123456789"
           defaultValue={user.phoneNumber ?? ""}

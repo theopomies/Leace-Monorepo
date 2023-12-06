@@ -26,6 +26,7 @@ import { EditInfo } from "../../components/UserProfile";
 import { Btn } from "../../components/Btn";
 import { useAuth } from "@clerk/clerk-expo";
 import EditInfoRefacto from "../../components/UserProfile/EditInfoRefacto";
+import EditAttributesRefacto from "../../components/Attribute/EditAttributesRefacto";
 
 export default function EditProfile() {
   const { signOut } = useAuth();
@@ -244,8 +245,7 @@ export default function EditProfile() {
                 className="px-3"
                 style={{ justifyContent: "flex-end", flex: 1 }}
               >
-                <Separator color="#0A2472" />
-                <EditAttributes
+                <EditAttributesRefacto
                   userId={userId}
                   attrs={attrs}
                   setAttrs={setAttrs}

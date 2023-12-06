@@ -28,16 +28,16 @@ function AttributeBtn({
   if (!status) return null;
   return (
     <View
-      className="flex min-w-[100px] flex-row items-center justify-center space-x-1 rounded-full px-2 py-1"
+      className="flex min-w-[150px] min-h-[50px] flex-row items-center justify-center space-x-1 rounded-lg px-2 py-1"
       style={{
-        margin: 2,
+        margin: 6,
         backgroundColor: iconBGColor,
       }}
     >
       <Icon
         name={iconName}
         color={iconTextColor}
-        size={20}
+        size={25}
         type="material-icons"
       ></Icon>
       <Text className="font-light" style={{ color: iconTextColor }}>
@@ -50,7 +50,7 @@ function AttributeBtn({
 export default function ShowAttributes({
   attribute,
   iconTextColor = "#FFFFFF",
-  iconBGColor = "#10316B",
+  iconBGColor = "#6C47FF",
   titleColor = "#10316B",
   show = true,
 }: IShowAttributes) {
@@ -58,10 +58,14 @@ export default function ShowAttributes({
     <View>
       {show && (
         <View className="p-6 mx-4">
-          <Text className="text-xl font-bold text-[#111827] mb-2">
+          <Text className="text-xl font-bold text-black mb-2">
             Preferences:
           </Text>
-          <Text className="text-lg font-semibold text-[#111827]">
+          <View className="flex flex-row items-center space-x-2 w-full h-12 ">
+            <Text className="text-lg font-semibold text-black">Home type:</Text>
+            <Text className="text-lg capitalize font-light">{attribute?.homeType ?? "-"}</Text>
+          </View>
+          <Text className="text-lg font-semibold text-black">
             Renting dates:
           </Text>
           <View className="flex flex-row justify-evenly my-4">
@@ -82,7 +86,7 @@ export default function ShowAttributes({
               </Text>
             </View>
           </View>
-          <Text className="text-lg font-semibold text-[#111827]">
+          <Text className="text-lg font-semibold text-black">
             Price Range:
           </Text>
           <View className="flex flex-row justify-evenly my-4">
@@ -106,7 +110,7 @@ export default function ShowAttributes({
             </View>
           </View>
 
-          <Text className="text-lg font-semibold text-[#111827]">
+          <Text className="text-lg font-semibold text-black">
             Surface Range:
           </Text>
           <View className="flex flex-row justify-evenly my-4">
@@ -129,18 +133,18 @@ export default function ShowAttributes({
               </Text>
             </View>
           </View>
-          <Text className="text-lg font-semibold text-[#111827]">
+          <Text className="text-lg font-semibold text-black">
             Attributes:
           </Text>
 
           {!attribute.furnished && !attribute.terrace && !attribute.pets && !attribute.smoker && !attribute.disability && !attribute.garden && !attribute.parking && !attribute.elevator && !attribute.pool && (
-            <Text className="text-md font-semibold text-[#111827] my-2">
+            <Text className="text-md font-semibold text-black my-2">
               No attribute selected
             </Text>
           )}
 
 
-          <View className="mt-2 flex flex-row flex-wrap items-center justify-center">
+          <View className="mt-4 flex flex-row flex-wrap items-center justify-center space-x-2">
             <AttributeBtn
               name="Furnished"
               status={attribute.furnished}

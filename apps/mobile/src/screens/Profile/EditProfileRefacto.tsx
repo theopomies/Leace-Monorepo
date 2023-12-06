@@ -120,7 +120,6 @@ export default function EditProfileRefacto() {
 
   function updateUser() {
     if (!user) return;
-    //alert(JSON.stringify(attrs))
     userMutation.mutate({ ...user });
     if (showAttrs && attrs) {
       attributesMutation.mutate(attrs);

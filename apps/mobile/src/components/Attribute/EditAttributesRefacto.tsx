@@ -10,6 +10,7 @@ interface IAttributeBtn {
   name: string;
   status?: boolean;
   iconName: string;
+  disabled?: boolean
 }
 
 interface ICreateUserAttrs {
@@ -25,6 +26,27 @@ function AttributeBtn({ name, status, iconName }: IAttributeBtn) {
       style={{
         margin: 6,
         backgroundColor: "#6C47FF",
+        opacity: status ? 1 : 0.5,
+      }}
+    >
+      <Icon
+        name={iconName}
+        color={"white"}
+        size={25}
+        type="material-icons"
+      ></Icon>
+      <Text className="text-lg font-light text-white">{name}</Text>
+    </View>
+  );
+}
+
+function HouseTypeBtn({ name, status, iconName, disabled }: IAttributeBtn) {
+  return (
+    <View
+      className="flex min-w-[150px] min-h-[50px] flex-row items-center justify-center space-x-1 rounded-lg px-2 py-1"
+      style={{
+        margin: 6,
+        backgroundColor: !disabled ? "#D3D3D3" : "#6C47FF" ,
         opacity: status ? 1 : 0.5,
       }}
     >
@@ -106,19 +128,40 @@ export default function EditAttributesRefacto({
       </View>
       <Divider width={1.5} color="black" className="mb-6"></Divider>
       <Text className="text-xl font-bold text-[#111827]">Type:</Text>
-      <View className="pl-2 mt-1.5 h-10 justify-center mb-6 w-1/4 border-[1px] border-black rounded-lg">
+      <View className="flex flex-row justify-center mb-6">
 
-        <RNPickerSelect
-          placeholder={{}}
-          onValueChange={(itemValue) =>
-            setAttrs({ ...attrs, homeType: itemValue })
-          }
-          items={[
-            { label: "HOUSE", value: "HOUSE" },
-            { label: "APARTMENT", value: "APARTMENT" },
-          ]}
-        />
+        <TouchableOpacity
+        disabled={attrs.homeType == "HOUSE"}
+          onPress={() => {
+            if (attrs.homeType == "APARTMENT")
+            setAttrs({ ...attrs, homeType: "HOUSE" })
+          }}
+        >
+          <HouseTypeBtn
+            name="House"
+            status={attrs.furnished}
+            iconName="house"
+            disabled={attrs.homeType == "HOUSE"}
+          />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+        disabled={attrs.homeType == "APARTMENT"}
+          onPress={() => {
+            if (attrs.homeType == "HOUSE")
+            setAttrs({ ...attrs, homeType: "APARTMENT" })
+          }}
+        >
+          <HouseTypeBtn
+            name="Appartment"
+            status={attrs.furnished}
+            iconName="apartment"
+            disabled={attrs.homeType == "APARTMENT"}
+          />
+        </TouchableOpacity>
+
       </View>
+
 
       <Text className="text-start text-xl font-bold text-[#111827]">
         Rent dates:
