@@ -2,6 +2,7 @@ import { protectedProcedure, router } from "../trpc";
 import { z } from "zod";
 import { Role } from "@prisma/client";
 import { Stripe } from "stripe";
+import { TRPCError } from "@trpc/server";
 
 const secret = process.env.STRIPE_SK as string;
 
@@ -57,9 +58,10 @@ export const stripeRouter = router({
         name: z.string(),
         amount: z.number(),
         interval: z.enum(["year", "month"]),
+        userId: z.string(),
       }),
     )
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
       const product = await stripe.products.create({
         name: input.name,
       });
@@ -82,6 +84,17 @@ export const stripeRouter = router({
         expand: ["latest_invoice.payment_intent"],
       });
 
+      await ctx.prisma?.stripe.create({
+        data: {
+          subscriptionId: subscription.id,
+          user: {
+            connect: {
+              id: input.userId,
+            },
+          },
+        },
+      });
+
       return {
         subscriptionId: subscription.id,
       };
@@ -90,12 +103,28 @@ export const stripeRouter = router({
   cancelPayment: protectedProcedure([Role.TENANT])
     .input(
       z.object({
-        subscriptionId: z.string(),
+        userId: z.string(),
       }),
     )
-    .mutation(async ({ input }) => {
-      await stripe.subscriptions.update(input.subscriptionId, {
+    .mutation(async ({ input, ctx }) => {
+      const sub = await ctx.prisma?.stripe.findUnique({
+        where: {
+          userId: input.userId,
+        },
+      });
+
+      if (!sub) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+
+      await stripe.subscriptions.update(sub.subscriptionId, {
         cancel_at_period_end: true,
+      });
+
+      await ctx.prisma?.stripe.delete({
+        where: {
+          userId: input.userId,
+        },
       });
     }),
 });

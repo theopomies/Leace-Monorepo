@@ -115,10 +115,13 @@ model User {
   supportedBy SupportRelationship[] @relation("supportedBy")
   supporting  SupportRelationship[] @relation("supporting")
 
+  stripe    Stripe?
+  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@map("users")
+
 }
 
 model Post {
@@ -399,4 +402,12 @@ model Lease {
 
   @@index([relationshipId])
   @@index([createdById])
+}
+
+model Stripe {
+  id             String @id @default(cuid())
+  subscriptionId String
+
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String? @unique
 }

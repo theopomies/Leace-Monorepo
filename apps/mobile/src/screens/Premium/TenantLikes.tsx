@@ -113,13 +113,7 @@ const ClientCard = ({
   );
 };
 
-const TenantLikes = ({
-  subscriptionId,
-  callback,
-}: {
-  subscriptionId: string;
-  callback: () => void;
-}) => {
+const TenantLikes = ({ callback }: { callback: () => void }) => {
   const { data: session } = trpc.auth.getSession.useQuery();
 
   const rs = trpc.relationship.getLikesForTenant.useQuery({
@@ -154,7 +148,7 @@ const TenantLikes = ({
 
   const updateStatus = async () => {
     payment.mutateAsync({
-      subscriptionId,
+      userId: session?.userId as string,
     });
     updateUser
       .mutateAsync({

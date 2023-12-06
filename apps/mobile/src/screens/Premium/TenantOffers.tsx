@@ -145,6 +145,7 @@ const TenantOffers = () => {
           name: selectedProduct?.name as string,
           interval: selectedProduct?.interval === "year" ? "year" : "month",
           customer: payment?.customerId as string,
+          userId,
         });
         setIsLoading(true);
       } catch (subscriptionError) {
@@ -298,12 +299,7 @@ const TenantOffers = () => {
       </StripeProvider>
     );
   } else {
-    return (
-      <TenantLikes
-        subscriptionId={subscription?.subscriptionId as string}
-        callback={refetch}
-      />
-    );
+    return <TenantLikes callback={refetch} />;
   }
 };
 

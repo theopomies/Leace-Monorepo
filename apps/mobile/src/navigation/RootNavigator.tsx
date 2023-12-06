@@ -12,9 +12,9 @@ import ChooseRole from "../screens/Role";
 import { Role, Lease } from "@leace/db";
 import { PostStack, CreatePost, ShowPost, EditPost } from "../screens/Post";
 import {
-  OwnerLikes,
+  // OwnerLikes,
   Result,
-  TenantLikes,
+  // TenantLikes,
   TenantOffers,
 } from "../screens/Premium";
 import { Documents } from "../screens/Documents";
@@ -282,7 +282,7 @@ function NavigationRoutes({
           ),
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Likes"
         component={role === "TENANT" ? TenantLikes : OwnerLikes}
         options={{
@@ -290,7 +290,7 @@ function NavigationRoutes({
           tabBarLabel: "",
           headerShown: false,
         }}
-      />
+      /> */}
       <Tab.Screen
         name="PaymentResults"
         component={Result}
