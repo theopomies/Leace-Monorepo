@@ -1,7 +1,7 @@
 import React from "react";
 import { PaymentView } from "../../components/Premium";
 import { RouteProp, useRoute } from "@react-navigation/native";
-import { TabStackParamList } from "../../navigation/TabNavigator";
+import { TabStackParamList } from "../../navigation/RootNavigator";
 import { SafeAreaView, View } from "react-native";
 import { StripeProvider } from "@stripe/stripe-react-native";
 

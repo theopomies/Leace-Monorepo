@@ -3,7 +3,7 @@ import React from "react";
 import { PaymentResult } from "../../components/Premium";
 import { trpc } from "../../../../web/src/utils/trpc";
 import { useRoute, RouteProp } from "@react-navigation/native";
-import { TabStackParamList } from "../../navigation/TabNavigator";
+import { TabStackParamList } from "../../navigation/RootNavigator";
 
 const Result = () => {
   const { data: session } = trpc.auth.getSession.useQuery();
