@@ -98,7 +98,9 @@ export const AgencyOwnerHome = ({ userId }: AgencyOwnerHomeProps) => {
           </div>
         </div>
         <Link
-          className="flex h-16 w-full flex-col items-center justify-center rounded-md border-2 border-indigo-500 bg-white duration-500 hover:shadow-md hover:shadow-indigo-300 hover:duration-500"
+          className={`flex h-16 w-full flex-col items-center justify-center rounded-md ${
+            totalUnreadMessages ?? 0 > 0 ? "border-2 border-indigo-500" : ""
+          } bg-white duration-500 hover:shadow-md hover:shadow-indigo-300 hover:duration-500`}
           href={`/users/${userId}/matches`}
         >
           {totalUnreadMessagesLoading ? (
@@ -110,7 +112,7 @@ export const AgencyOwnerHome = ({ userId }: AgencyOwnerHomeProps) => {
               nouveaux messages
             </p>
           ) : (
-            <p>Vous n'avez aucun nouveau message</p>
+            <p>Vous n&apos;avez aucun nouveau message</p>
           )}
         </Link>
 
