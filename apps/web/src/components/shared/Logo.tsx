@@ -8,12 +8,11 @@ export const Logo = (props: LogoProps) => (
     xmlns="http://www.w3.org/2000/svg"
     version="1.1"
     viewBox="0.00 0.00 2221.00 943.00"
-    fill={props.fill}
     className={props.className}
   >
     <g stroke-width="2.00" fill="none" stroke-linecap="butt">
       <path
-        stroke="#b6a3ff"
+        stroke={props.fill}
         vector-effect="non-scaling-stroke"
         d="
   M 810.81 158.06
@@ -38,7 +37,7 @@ export const Logo = (props: LogoProps) => (
   Q 810.88 158.13 810.81 158.06"
       />
       <path
-        stroke="#b6a3ff"
+        stroke={props.fill}
         vector-effect="non-scaling-stroke"
         d="
   M 87.51 848.40
@@ -56,7 +55,7 @@ export const Logo = (props: LogoProps) => (
   L 87.51 848.40"
       />
       <path
-        stroke="#b6a3ff"
+        stroke={props.fill}
         vector-effect="non-scaling-stroke"
         d="
   M 442.88 601.63
@@ -87,7 +86,7 @@ export const Logo = (props: LogoProps) => (
   C 524.11 505.34 470.42 544.38 442.88 601.63"
       />
       <path
-        stroke="#b6a3ff"
+        stroke={props.fill}
         vector-effect="non-scaling-stroke"
         d="
   M 1215.03 566.05
@@ -116,7 +115,7 @@ export const Logo = (props: LogoProps) => (
   Q 1215.18 566.26 1215.03 566.05"
       />
       <path
-        stroke="#b6a3ff"
+        stroke={props.fill}
         vector-effect="non-scaling-stroke"
         d="
   M 1375.27 610.17
@@ -153,7 +152,7 @@ export const Logo = (props: LogoProps) => (
   Q 1375.38 610.11 1375.27 610.17"
       />
       <path
-        stroke="#b6a3ff"
+        stroke={props.fill}
         vector-effect="non-scaling-stroke"
         d="
   M 1822.86 597.06
@@ -185,7 +184,7 @@ export const Logo = (props: LogoProps) => (
   C 1823.90 594.40 1823.46 595.97 1822.86 597.06"
       />
       <path
-        stroke="#b6a3ff"
+        stroke={props.fill}
         vector-effect="non-scaling-stroke"
         d="
   M 647.02 551.17
@@ -201,7 +200,7 @@ export const Logo = (props: LogoProps) => (
   C 656.77 553.27 651.93 551.82 647.02 551.17"
       />
       <path
-        stroke="#b6a3ff"
+        stroke={props.fill}
         vector-effect="non-scaling-stroke"
         d="
   M 1204.26 777.24
@@ -216,7 +215,7 @@ export const Logo = (props: LogoProps) => (
   C 1186.09 809.40 1197.72 792.90 1204.26 777.24"
       />
       <path
-        stroke="#b6a3ff"
+        stroke={props.fill}
         vector-effect="non-scaling-stroke"
         d="
   M 2133.95 651.51
@@ -393,7 +392,7 @@ export const Logo = (props: LogoProps) => (
   Z"
     />
     <path
-      fill="#6c47ff"
+      fill={props.fill}
       d="
   M 810.94 158.12
   Q 810.96 158.11 810.98 158.10
@@ -418,7 +417,7 @@ export const Logo = (props: LogoProps) => (
   Z"
     />
     <path
-      fill="#6c47ff"
+      fill={props.fill}
       d="
   M 87.51 848.40
   L 379.88 848.40
@@ -436,7 +435,7 @@ export const Logo = (props: LogoProps) => (
   Z"
     />
     <path
-      fill="#6c47ff"
+      fill={props.fill}
       d="
   M 442.88 601.63
   C 470.42 544.38 524.11 505.34 587.27 496.68
@@ -479,7 +478,7 @@ export const Logo = (props: LogoProps) => (
   Z"
     />
     <path
-      fill="#6c47ff"
+      fill={props.fill}
       d="
   M 1215.18 566.00
   L 1215.28 501.18
@@ -519,7 +518,7 @@ export const Logo = (props: LogoProps) => (
   Z"
     />
     <path
-      fill="#6c47ff"
+      fill={props.fill}
       d="
   M 1375.40 610.02
   Q 1375.75 608.70 1376.69 606.69
@@ -556,7 +555,7 @@ export const Logo = (props: LogoProps) => (
   Z"
     />
     <path
-      fill="#6c47ff"
+      fill={props.fill}
       d="
   M 1822.86 597.06
   C 1823.46 595.97 1823.90 594.40 1824.64 593.19

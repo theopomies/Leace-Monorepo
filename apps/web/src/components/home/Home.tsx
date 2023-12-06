@@ -3,8 +3,8 @@ import { useRouter } from "next/router";
 import { RouterOutputs } from "../../utils/trpc";
 import { ModerationReportPage } from "../moderation/moderation/ModerationReportPage";
 import { Loader } from "../shared/Loader";
+import { AgencyOwnerHome } from "./AgencyOwnerHome";
 import { PostStack } from "./stack/PostStack";
-import { TenantList } from "./stack/TenantList";
 
 export interface HomeProps {
   session: RouterOutputs["auth"]["getSession"];
@@ -29,5 +29,5 @@ export const Home = ({ session }: HomeProps) => {
 
   if (role == Role.TENANT) return <PostStack userId={session.userId} />;
 
-  return <TenantList userId={session.userId} />;
+  return <AgencyOwnerHome userId={session.userId} />;
 };

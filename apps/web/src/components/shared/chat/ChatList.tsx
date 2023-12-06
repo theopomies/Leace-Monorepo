@@ -98,7 +98,7 @@ export const ChatList = ({
             )}
           </div>
         </div>
-        <div className="mt-4 flex h-full w-full flex-col space-y-1">
+        <div className="mt-4 flex h-full w-full flex-col gap-y-1">
           {supportRelationships?.map((supportRelationship) => (
             <Link
               href={conversationLink
