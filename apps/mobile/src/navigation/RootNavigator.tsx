@@ -13,7 +13,6 @@ import { Role, Lease } from "@leace/db";
 import { PostStack, CreatePost, ShowPost, EditPost } from "../screens/Post";
 import {
   OwnerLikes,
-  Details,
   Result,
   TenantLikes,
   TenantOffers,
@@ -40,7 +39,6 @@ export type TabStackParamList = {
   Likes: {
     subscriptionId: string;
   };
-  PaymentDetails: { selectedProduct: any; makePayment: boolean; buy: any };
 
   PaymentResults: {
     isValidPayment: boolean;
@@ -285,15 +283,6 @@ function NavigationRoutes({
       <Tab.Screen
         name="Likes"
         component={role === "TENANT" ? TenantLikes : OwnerLikes}
-        options={{
-          tabBarButton: () => null,
-          tabBarLabel: "",
-          headerShown: false,
-        }}
-      />
-      <Tab.Screen
-        name="PaymentDetails"
-        component={Details}
         options={{
           tabBarButton: () => null,
           tabBarLabel: "",
