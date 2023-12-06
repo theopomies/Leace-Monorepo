@@ -7,7 +7,7 @@ import { RoleSelection } from "./RoleSelection";
 import { IdentityForm } from "./IdentityForm";
 import { PreferencesForm } from "./PreferencesForm";
 import { ToastDescription, ToastTitle, useToast } from "../shared/toast/Toast";
-import { OnboardingDocumentsForm } from "./DocumentsForm";
+import { OnboardingDocumentsForm } from "./OnboardingDocumentsForm";
 
 export function OnboardingPage() {
   const router = useRouter();
