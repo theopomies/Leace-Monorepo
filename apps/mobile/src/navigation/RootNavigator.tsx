@@ -35,7 +35,8 @@ export type TabStackParamList = {
 
   CreatePost: { userId: string };
 
-  Premium: undefined;
+  Premium: { userId: string };
+
   Likes: {
     subscriptionId: string;
   };
@@ -45,6 +46,7 @@ export type TabStackParamList = {
     amount: number;
     product: string;
     subscriptionId: string;
+    userId: string;
   };
 
   EditProfile: {
@@ -93,7 +95,6 @@ function NavigationRoutes({
 }) {
   const navigation =
     useNavigation<NativeStackNavigationProp<TabStackParamList>>();
-  const isPremium = false;
   return (
     <Tab.Navigator initialRouteName="Role">
       {!role && (
@@ -213,7 +214,8 @@ function NavigationRoutes({
       {role === "TENANT" && (
         <Tab.Screen
           name="Premium"
-          component={isPremium ? TenantLikes : TenantOffers}
+          initialParams={{ userId }}
+          component={TenantOffers}
           options={{
             tabBarIcon: ({ focused }) => (
               <Image
@@ -292,6 +294,7 @@ function NavigationRoutes({
       <Tab.Screen
         name="PaymentResults"
         component={Result}
+        initialParams={{ userId }}
         options={{
           tabBarButton: () => null,
           tabBarLabel: "",

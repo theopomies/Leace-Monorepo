@@ -7,14 +7,21 @@ import {
   SafeAreaView,
   Alert,
 } from "react-native";
-import React, { useEffect, useState } from "react";
-import { useNavigation } from "@react-navigation/native";
+import React, { useCallback, useEffect, useState } from "react";
+import {
+  RouteProp,
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { TabStackParamList } from "../../navigation/RootNavigator";
 import { StripeProvider, usePaymentSheet } from "@stripe/stripe-react-native";
 import { trpc } from "../../utils/trpc";
 import { Icon } from "react-native-elements";
 import { Loading } from "../../components/Loading";
+import TenantLikes from "./TenantLikes";
+import { LocalStorage } from "../../utils/cache";
 
 interface Item {
   id: number;
@@ -44,6 +51,14 @@ const TenantOffers = () => {
 
   const navigation =
     useNavigation<NativeStackNavigationProp<TabStackParamList>>();
+
+  const route = useRoute<RouteProp<TabStackParamList, "Premium">>();
+
+  const { userId } = route.params;
+
+  const { data: user, refetch } = trpc.user.getUserById.useQuery({
+    userId: userId as string,
+  });
 
   const initialSelectedProduct = items[0] || null;
 
@@ -83,9 +98,19 @@ const TenantOffers = () => {
         amount: selectedProduct?.amount as number,
         product: selectedProduct?.name as string,
         subscriptionId: subscription.subscriptionId as string,
+        userId: user?.id as string,
       });
     }
   }, [selectedProduct, subscription]);
+
+  useFocusEffect(
+    useCallback(() => {
+      const check = LocalStorage.getItem("refresh_premium");
+      if (!check) return;
+      LocalStorage.setItem("refresh_premium", false);
+      refetch();
+    }, [userId]),
+  );
 
   const { initPaymentSheet, presentPaymentSheet } = usePaymentSheet();
 
@@ -135,141 +160,146 @@ const TenantOffers = () => {
   if (isLoading) {
     return <Loading />;
   }
-  return (
-    <StripeProvider
-      publishableKey="pk_test_51NNNqUKqsAbQAwatETMGlUoLBiwWN5ZP27fCOs3YQbC76Sk5FNHN3xpdyrdD2gGIfTFFho7F5a8x8RCw8rWJXYb800BBEbzKLo"
-      merchantIdentifier="merchant.identifier"
-    >
-      <SafeAreaView>
-        <View className={`h-full rounded-xl bg-white`}>
-          <View className="h-2/6 items-center rounded-xl ">
-            <Image
-              source={require("../../../assets/logo_1024.png")}
-              className="h-52 w-52"
-            />
-          </View>
-          <View className="h-full items-center rounded">
-            <View className="mb-10 ">
-              <View className="mb-8 flex-row ">
-                <Icon name="verified" color="rgb(99 102 241)" size={25} />
-                <Text
-                  style={{
-                    marginLeft: 15,
-                    fontSize: 18,
-                    fontWeight: "bold",
-                    textAlign: "center",
-                  }}
-                >
-                  See agencies that liked your profile.
-                </Text>
-              </View>
-              <View className="mb-8 flex-row ">
-                <Icon name="verified" color="rgb(99 102 241)" size={25} />
-                <Text
-                  style={{
-                    marginLeft: 15,
-                    fontSize: 18,
-                    fontWeight: "bold",
-                    textAlign: "center",
-                  }}
-                >
-                  Faster document verification.
-                </Text>
-              </View>
-              <View className="mb-8 flex-row  ">
-                <Icon name="verified" color="rgb(99 102 241)" size={25} />
-                <Text
-                  style={{
-                    fontSize: 18,
-                    marginLeft: 15,
-                    fontWeight: "bold",
-                    textAlign: "center",
-                  }}
-                >
-                  Certified member of Leace.
-                </Text>
-              </View>
-            </View>
 
-            <View
-              style={{
-                flex: 1,
-                alignItems: "center",
-              }}
-            >
-              {items.map((item) => (
-                <TouchableOpacity
-                  key={item.id}
-                  style={{
-                    backgroundColor: "#e2e8f0",
-                    padding: 20,
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    borderRadius: 10,
-                    borderWidth: 1.5,
-                    width: 250,
-                    borderColor:
-                      selectedProduct?.id === item.id
-                        ? "#6366f1"
-                        : "transparent",
-                    marginTop: item.id !== 1 ? 20 : 0,
-                  }}
-                  onPress={() => handleCardClick(item)}
-                >
+  if (!user?.isPremium) {
+    return (
+      <StripeProvider
+        publishableKey="pk_test_51NNNqUKqsAbQAwatETMGlUoLBiwWN5ZP27fCOs3YQbC76Sk5FNHN3xpdyrdD2gGIfTFFho7F5a8x8RCw8rWJXYb800BBEbzKLo"
+        merchantIdentifier="merchant.identifier"
+      >
+        <SafeAreaView>
+          <View className={`h-full rounded-xl bg-white`}>
+            <View className="h-2/6 items-center rounded-xl ">
+              <Image
+                source={require("../../../assets/logo_1024.png")}
+                className="h-52 w-52"
+              />
+            </View>
+            <View className="h-full items-center rounded">
+              <View className="mb-10 ">
+                <View className="mb-8 flex-row ">
+                  <Icon name="verified" color="rgb(99 102 241)" size={25} />
                   <Text
                     style={{
-                      color:
-                        selectedProduct?.id === item.id ? "black" : "black",
-                      fontSize: 16,
+                      marginLeft: 15,
+                      fontSize: 18,
                       fontWeight: "bold",
+                      textAlign: "center",
                     }}
                   >
-                    {item.name}
+                    See agencies that liked your profile.
                   </Text>
+                </View>
+                <View className="mb-8 flex-row ">
+                  <Icon name="verified" color="rgb(99 102 241)" size={25} />
                   <Text
                     style={{
-                      color:
-                        selectedProduct?.id === item.id ? "black" : "black",
-                      fontSize: 16,
+                      marginLeft: 15,
+                      fontSize: 18,
                       fontWeight: "bold",
+                      textAlign: "center",
                     }}
                   >
-                    {item.amount}€
+                    Faster document verification.
                   </Text>
-                </TouchableOpacity>
-              ))}
-              <TouchableOpacity
+                </View>
+                <View className="mb-8 flex-row  ">
+                  <Icon name="verified" color="rgb(99 102 241)" size={25} />
+                  <Text
+                    style={{
+                      fontSize: 18,
+                      marginLeft: 15,
+                      fontWeight: "bold",
+                      textAlign: "center",
+                    }}
+                  >
+                    Certified member of Leace.
+                  </Text>
+                </View>
+              </View>
+
+              <View
                 style={{
-                  width: 250,
-                  marginTop: Platform.OS === "android" ? 30 : 50,
-                  padding: Platform.OS === "android" ? 5 : 10,
-                  backgroundColor: "#6366f1",
-                  borderRadius: 10,
+                  flex: 1,
                   alignItems: "center",
                 }}
-                disabled={isBuyButtonDisabled}
-                onPress={buy}
               >
-                <Text
+                {items.map((item) => (
+                  <TouchableOpacity
+                    key={item.id}
+                    style={{
+                      backgroundColor: "#e2e8f0",
+                      padding: 20,
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      borderRadius: 10,
+                      borderWidth: 1.5,
+                      width: 250,
+                      borderColor:
+                        selectedProduct?.id === item.id
+                          ? "#6366f1"
+                          : "transparent",
+                      marginTop: item.id !== 1 ? 20 : 0,
+                    }}
+                    onPress={() => handleCardClick(item)}
+                  >
+                    <Text
+                      style={{
+                        color:
+                          selectedProduct?.id === item.id ? "black" : "black",
+                        fontSize: 16,
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {item.name}
+                    </Text>
+                    <Text
+                      style={{
+                        color:
+                          selectedProduct?.id === item.id ? "black" : "black",
+                        fontSize: 16,
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {item.amount}€
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+                <TouchableOpacity
                   style={{
-                    padding: 10,
-                    fontSize: 20,
-                    fontWeight: "bold",
-                    color: "white",
-                    textShadowColor: "rgba(0, 0, 0, 0.3)",
-                    textShadowOffset: { width: 1, height: 1 },
-                    textShadowRadius: 3,
+                    width: 250,
+                    marginTop: Platform.OS === "android" ? 30 : 50,
+                    padding: Platform.OS === "android" ? 5 : 10,
+                    backgroundColor: "#6366f1",
+                    borderRadius: 10,
+                    alignItems: "center",
                   }}
+                  disabled={isBuyButtonDisabled}
+                  onPress={buy}
                 >
-                  Continue
-                </Text>
-              </TouchableOpacity>
+                  <Text
+                    style={{
+                      padding: 10,
+                      fontSize: 20,
+                      fontWeight: "bold",
+                      color: "white",
+                      textShadowColor: "rgba(0, 0, 0, 0.3)",
+                      textShadowOffset: { width: 1, height: 1 },
+                      textShadowRadius: 3,
+                    }}
+                  >
+                    Continue
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
-        </View>
-      </SafeAreaView>
-    </StripeProvider>
-  );
+        </SafeAreaView>
+      </StripeProvider>
+    );
+  } else {
+    return <TenantLikes />;
+  }
 };
 
 export default TenantOffers;

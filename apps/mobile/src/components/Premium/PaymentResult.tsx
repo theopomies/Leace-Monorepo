@@ -1,5 +1,3 @@
-import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React, { useEffect } from "react";
 import {
   Animated,
@@ -10,7 +8,6 @@ import {
   Platform,
 } from "react-native";
 import { Icon } from "react-native-elements";
-import { TabStackParamList } from "../../navigation/RootNavigator";
 
 const PaymentResult = ({
   isValidPayment,
@@ -27,6 +24,7 @@ const PaymentResult = ({
   product: string | null | undefined;
   firstName: string | null | undefined;
   lastName: string | null | undefined;
+  userId: string;
   updateStatus: () => void;
 }) => {
   const checkmarkScale = new Animated.Value(0);
@@ -37,13 +35,6 @@ const PaymentResult = ({
       useNativeDriver: true,
     }).start();
   }, []);
-
-  const navigation =
-    useNavigation<NativeStackNavigationProp<TabStackParamList>>();
-
-  const route = useRoute<RouteProp<TabStackParamList, "PaymentResults">>();
-
-  const { subscriptionId } = route.params;
 
   useEffect(() => {
     if (isValidPayment) {
@@ -110,9 +101,6 @@ const PaymentResult = ({
                   className={"w-24 rounded bg-blue-400 p-2"}
                   onPress={() => {
                     updateStatus();
-                    navigation.navigate("Likes", {
-                      subscriptionId,
-                    });
                   }}
                 >
                   <Text
@@ -160,12 +148,7 @@ const PaymentResult = ({
                   Platform.OS === "ios" ? "mt-4" : ""
                 } flex-row space-x-20`}
               >
-                <TouchableOpacity
-                  className={"w-24 rounded bg-blue-400 p-2"}
-                  onPress={() => {
-                    navigation.navigate("Premium");
-                  }}
-                >
+                <TouchableOpacity className={"w-24 rounded bg-blue-400 p-2"}>
                   <Text
                     className={"text-center text-base font-bold text-white"}
                   >
