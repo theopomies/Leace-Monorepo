@@ -143,6 +143,7 @@ export default function ShowProfile() {
           showAttrs={data.role === "TENANT" ? true : false}
           showLogout={true}
         />
+        {/* TODO: Move at the end of User Profile ? */}
         <View>
           <ScrollView
             horizontal
