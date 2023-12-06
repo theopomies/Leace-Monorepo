@@ -1,15 +1,15 @@
-import { View, Text, Image, TouchableOpacity } from "react-native";
+import { View, Text, Image, ScrollView, TouchableOpacity } from "react-native";
 import React from "react";
 import { User } from "@leace/db";
 import { Attribute } from "@prisma/client";
-import { ShowAttributes } from "../Attribute";
 import Separator from "../Separator";
-import { Icon } from "react-native-elements";
+import { Divider, Icon } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { TabStackParamList } from "../../navigation/RootNavigator";
 import { Btn } from "../Btn";
 import { useAuth } from "@clerk/clerk-expo";
+import ShowAttributes from "../Attribute/ShowAttributesRefacto";
 
 interface IUserProfile {
   userId: string;
@@ -32,37 +32,57 @@ export default function UserProfile({
   const { signOut } = useAuth();
 
   return (
-    <View className="flex-1">
-      <View className="flex flex-row bg-[#0A2472] px-3 py-2">
+    <ScrollView className="">
+      {showLogout && (
+        <View className="px-3 pb-2 w-fit h-fit">
+          <TouchableOpacity
+            className=" items-end top-6 rounded-full"
+            hitSlop={{ top: 30, bottom: 30, left: 30, right: 30 }}
+            onPress={() => {
+              signOut();
+            }}
+          >
+            <Icon
+              name="logout"
+              color="#6C47FF"
+              size={35}
+              type="material-icons"
+            ></Icon>
+          </TouchableOpacity>
+        </View>
+      )}
+      <View className="flex flex-col items-center px-3 py-2">
         <Image
           source={{
             uri: data.image ?? "https://www.gravatar.com/avatar/?d=mp",
           }}
           className="h-24 w-24 rounded-full"
-          style={{ borderWidth: 2, borderColor: "white" }}
+          style={{ borderWidth: 1.5, borderColor: "#111827" }}
         />
-        <View className="flex flex-1 items-start justify-center px-4">
-          <Text className="text-xl font-bold text-white">{data.firstName}</Text>
-          <Text className="text-white ">{data.lastName}</Text>
+
+
+        <View className="flex flex-row items-center justify-center px-4 space-x-2 py-2">
+          <Text className="text-3xl font-bold">{data.firstName}</Text>
+          <Text className="text-3xl ">{data.lastName}</Text>
+          {data.emailVerified && (
+            <Icon className="bg-[#2196F3] h-fit w-fit p-1 flex items-center justify-center rounded-full"
+              name={"done"}
+              color={"white"}
+              size={25}
+              type="material-icons"
+            ></Icon>
+          )}
         </View>
-        {editable && (
-          <View className="absolute bottom-1.5 right-2 flex flex-row gap-1">
+      </View>
+      <View className="flex justify-center items-center h-14">
+        <View className="flex flex-col items-center bg-[#6C47FF] space-x-2 space-y-1 py-3 w-full">
+          <Text className="text-xl font-bold text-white">{data.isPremium ? "Premium " + data.role : "Not premium " + data.role}</Text>
+          <Text className="text-sm text-white">{"Member since: " + data.createdAt.toLocaleDateString("fr-FR")}</Text>
+        </View>
+        <View className="flex ml-96">
+          {editable && (
             <TouchableOpacity
-              className="flex flex-row items-center justify-center space-x-1 rounded-full px-2 py-0.5"
-              style={{ borderWidth: 1, borderColor: "white" }}
-              onPress={() => navigation.navigate("Documents", { userId })}
-            >
-              <Icon
-                color="white"
-                size={20}
-                name="description"
-                type="material-icons"
-              ></Icon>
-              <Text className="font-bold text-white">Documents</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              className="flex flex-row items-center justify-center rounded-full px-0.5 py-0.5"
-              style={{ borderWidth: 1, borderColor: "white" }}
+              className="absolute bottom-5 right-[-8] rounded-full"
               onPress={() => {
                 navigation.navigate("EditProfile", {
                   userId: userId,
@@ -77,87 +97,52 @@ export default function UserProfile({
               <Icon
                 name="settings"
                 color="white"
-                size={20}
+                size={38}
                 type="material-icons"
               ></Icon>
             </TouchableOpacity>
+          )}
+
+        </View>
+      </View>
+
+      {/* bg-[#F1F5F9] rounded-xl shadow shadow-md shadow-gray-400 */}
+      <View className="pt-4 flex flex-col w-full px-4">
+        <View className="flex flex-row items-center px-6 space-x-2 w-full h-12">
+          <Text className="text-xl font-bold text-[#111827]">Email:</Text>
+          <Text className="text-lg font-light">{data.email}</Text>
+        </View>
+
+        <View className="flex flex-row items-center px-6 space-x-2 w-full h-12">
+          <Text className="text-xl font-bold text-[#111827]">Phone:</Text>
+          <Text className="text-lg font-light">{data.phoneNumber}</Text>
+        </View>
+
+        <View className="flex flex-row items-center px-6 space-x-2 w-full h-12">
+          <Text className="text-xl font-bold text-[#111827]">Birthday:</Text>
+          <Text className="text-lg font-light">{data.birthDate?.toLocaleDateString('fr-FR') ?? "-"}</Text>
+        </View>
+        <View className="flex flex-row items-center px-6 space-x-2 w-full h-12">
+          <Text className="text-xl font-bold text-[#111827]">Location:</Text>
+          <Text className="text-lg font-light">{data.attribute?.location ?? "-"}</Text>
+        </View>
+
+        <View className="flex flex-col items-start px-6 space-y-2 w-full h-36 mb-2">
+          <Text className="mt-2 text-xl font-bold text-[#111827]">Description:</Text>
+          <View className="h-20 w-full border-2 border-gray border-dashed rounded-xl p-2">
+            <Text className="font-light">{data.description}</Text>
           </View>
-        )}
-      </View>
-      <View className="pt-2">
-        <View className="flex flex-row items-center justify-between px-2">
-          <Text className="text-base font-bold text-[#0A2472]">Kind:</Text>
-          <Text className="font-light">{data.role}</Text>
         </View>
-        <View className="flex flex-row items-center justify-between px-2">
-          <Text className="text-base font-bold text-[#0A2472]">Premium:</Text>
-          <Icon
-            name={data.isPremium ? "star" : "close"}
-            color={data.isPremium ? "#FFE867" : "red"}
-            size={25}
-            type="material-icons"
-          ></Icon>
-        </View>
-        <View className="flex flex-row items-center justify-between px-2">
-          <Text className="text-base font-bold text-[#0A2472]">Verified:</Text>
-          <Icon
-            name={data.emailVerified ? "done" : "close"}
-            color={data.emailVerified ? "green" : "red"}
-            size={25}
-            type="material-icons"
-          ></Icon>
-        </View>
-      </View>
-      <View className="px-3">
-        <Separator color="#0A2472" />
-      </View>
-      <View style={{ flex: 1 }}>
-        <View className="flex flex-row items-center justify-between px-2">
-          <Text className="text-base font-bold text-[#394867]">Location:</Text>
-          <Text className="font-light">{data.attribute?.location ?? "-"}</Text>
-        </View>
-        <View className="flex flex-row items-center justify-between px-2">
-          <Text className="text-base font-bold text-[#394867]">Phone:</Text>
-          <Text className="font-light">{data.phoneNumber ?? "-"}</Text>
-        </View>
-        <View className="flex flex-row items-center justify-between px-2">
-          <Text className="text-base font-bold text-[#394867]">Birthdate:</Text>
-          <Text className="font-light">
-            {data.birthDate?.toLocaleDateString() ?? "-"}
-          </Text>
-        </View>
-        <View className="flex flex-row items-center justify-between px-2">
-          <Text className="text-base font-bold text-[#394867]">Email:</Text>
-          <Text className="font-light">{data.email}</Text>
-        </View>
-        <View className="flex px-2">
-          <Text className="text-base font-bold text-[#0A2472]">
-            Description:
-          </Text>
-          <Text className="font-light">{data.description}</Text>
-        </View>
+        <Divider width={2}></Divider>
       </View>
       {showAttrs && (
         <>
           {data.attribute && (
-            <View className="mb-3 px-3">
-              <Separator color="#0A2472" />
-              <ShowAttributes attribute={data.attribute} />
-            </View>
+            <ShowAttributes attribute={data.attribute} />
           )}
         </>
       )}
-      {showLogout && (
-        <View className="px-3 pb-2">
-          <Btn
-            title="Log out"
-            bgColor="#EF4444"
-            iconName="logout"
-            iconType="material-icons"
-            onPress={() => signOut()}
-          />
-        </View>
-      )}
-    </View>
+
+    </ScrollView>
   );
 }

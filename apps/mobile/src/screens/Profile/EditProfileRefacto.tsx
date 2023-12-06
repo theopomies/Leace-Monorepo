@@ -14,20 +14,19 @@ import {
   useFocusEffect,
   useNavigation,
 } from "@react-navigation/native";
-import { TabStackParamList } from "../../navigation/RootNavigator";
+import { TabStackParamList } from "../../navigation/TabNavigator";
 import { Icon } from "react-native-elements";
-import { EditAttributes } from "../../components/Attribute";
-import Separator from "../../components/Separator";
 import { trpc } from "../../utils/trpc";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { LocalStorage } from "../../utils/cache";
-import { IUserAttrs } from "../../types";
-import { EditInfo } from "../../components/UserProfile";
 import { Btn } from "../../components/Btn";
 import { useAuth } from "@clerk/clerk-expo";
+import { EditInfo } from "../../components/UserProfile";
+import { EditAttributes } from "../../components/Attribute";
 import EditInfoRefacto from "../../components/UserProfile/EditInfoRefacto";
+import EditAttributesRefacto from "../../components/Attribute/EditAttributesRefacto";
 
-export default function EditProfile() {
+export default function EditProfileRefacto() {
   const { signOut } = useAuth();
   const navigation =
     useNavigation<NativeStackNavigationProp<TabStackParamList>>();
@@ -49,7 +48,7 @@ export default function EditProfile() {
     role: string;
     email: string;
   }>();
-  const [attrs, setAttrs] = useState<IUserAttrs>();
+  const [attrs, setAttrs] = useState<any>();
 
   const userMutation = trpc.user.updateUserById.useMutation({
     onSuccess() {
@@ -76,20 +75,20 @@ export default function EditProfile() {
   useFocusEffect(
     useCallback(() => {
       const parsed = JSON.parse(data);
-      const {
+      let {
         id,
         firstName,
         lastName,
         phoneNumber,
         description,
         birthDate,
+        attribute,
         image,
         role,
         isPremium,
         emailVerified,
         email,
       } = parsed;
-      let { attribute } = parsed;
       if (!attribute) {
         attribute = {
           ...attribute,
@@ -121,6 +120,7 @@ export default function EditProfile() {
 
   function updateUser() {
     if (!user) return;
+    //alert(JSON.stringify(attrs))
     userMutation.mutate({ ...user });
     if (showAttrs && attrs) {
       attributesMutation.mutate(attrs);
@@ -137,7 +137,7 @@ export default function EditProfile() {
         visible={open}
         onRequestClose={() => setOpen(false)}
       >
-        <View className="flex-1 items-center justify-center">
+        {<View className="flex-1 items-center justify-center">
           <View
             className="w-3/4 rounded-md bg-white p-4"
             style={{
@@ -175,13 +175,13 @@ export default function EditProfile() {
                 <Btn
                   title="Close"
                   bgColor="#F2F7FF"
-                  textColor="#0A2472"
+                  textColor="#10316B"
                   onPress={() => setOpen(false)}
                 ></Btn>
               </View>
             </View>
           </View>
-        </View>
+        </View>}
       </Modal>
       <View style={{ flex: 1 }}>
         <ScrollView
@@ -198,14 +198,14 @@ export default function EditProfile() {
             />
 
 
-            <View className="flex flex-col w-full items-center justify-center  space-y-2 py-2">
+            <View className="flex flex-col w-full items-center justify-center space-y-2 py-2">
 
               <TextInput
                 className="w-1/2 text-3xl font-bold text-black"
                 placeholder="First Name"
                 placeholderTextColor={"black"}
                 defaultValue={user.firstName ?? ""}
-                style={{ borderBottomWidth: 1 }}
+                style={{ borderColor: "black", borderBottomWidth: 1 }}
                 onChangeText={(text) => setUser({ ...user, firstName: text })}
               />
               <TextInput
@@ -213,7 +213,7 @@ export default function EditProfile() {
                 placeholder="Last Name"
                 placeholderTextColor={"black"}
                 defaultValue={user.lastName ?? ""}
-                style={{  borderBottomWidth: 1 }}
+                style={{ borderColor: "black", borderBottomWidth: 1 }}
                 onChangeText={(text) => setUser({ ...user, lastName: text })}
               />
               <View className="w-full bg-[#6C47FF] py-6">
@@ -244,8 +244,8 @@ export default function EditProfile() {
                 className="px-3"
                 style={{ justifyContent: "flex-end", flex: 1 }}
               >
-                <Separator color="#0A2472" />
-                <EditAttributes
+
+                <EditAttributesRefacto
                   userId={userId}
                   attrs={attrs}
                   setAttrs={setAttrs}

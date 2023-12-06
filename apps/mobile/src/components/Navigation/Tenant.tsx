@@ -17,6 +17,7 @@ import {
 } from "../../screens/Premium";
 import { TenantChat } from "../../screens/Chat";
 import { Documents } from "../../screens/Documents";
+import EditProfileRefacto from "../../screens/Profile/EditProfileRefacto";
 
 const Tab = createBottomTabNavigator<TabStackParamList>();
 const Tenant = ({
@@ -186,6 +187,75 @@ const Tenant = ({
           tabBarButton: () => null,
           tabBarLabel: "",
           headerShown: false,
+        }}
+      />
+
+      <Tab.Screen
+        name="Profile"
+        component={ShowProfile}
+        initialParams={{ userId }}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <Icon
+              name={focused ? "person" : "person-outline"}
+              color="#002642"
+              type="material-icons"
+            />
+          ),
+          tabBarLabel: "",
+          headerShown: false,
+        }}
+      />
+
+      <Tab.Screen
+        name="EditProfile"
+        initialParams={{ userId }}
+        component={EditProfile}
+        options={{
+          tabBarStyle: { display: "none" },
+          tabBarButton: () => null,
+          headerShown: true,
+          headerTitleStyle: { color: "#10316B" },
+          title: "Edit Profile",
+          headerLeft: () => (
+            <TouchableOpacity
+              className="ml-4"
+              onPress={() => navigation.navigate("Profile", { userId })}
+            >
+              <Icon
+                name="arrow-back"
+                color="#10316B"
+                size={30}
+                type="material-icons"
+              ></Icon>
+            </TouchableOpacity>
+          ),
+        }}
+      />
+
+      <Tab.Screen
+        name="EditProfileRefacto"
+        initialParams={{ userId }}
+        component={EditProfileRefacto}
+        options={{
+          tabBarStyle: { display: "none" },
+          tabBarButton: () => null,
+          headerShown: true,
+          headerTitleStyle: { color: "#10316B" },
+          title: "Edit Profile",
+          headerLeft: () => (
+            <TouchableOpacity
+              className="ml-4"
+              onPress={() => navigation.navigate("Profile", { userId })}
+            >
+              <Icon
+                name="arrow-back"
+                color="#10316B"
+                size={30}
+                type="material-icons"
+              ></Icon>
+            </TouchableOpacity>
+          ),
         }}
       />
 
