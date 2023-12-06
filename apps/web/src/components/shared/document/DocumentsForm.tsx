@@ -90,9 +90,6 @@ export function DocumentsForm({
           const filesOfType = files.filter(
             (file) => file.documentType === documentType,
           );
-          const cantAddAnother = filesOfType.some(
-            (file) => file.file === undefined || file.docType === undefined,
-          );
           const label = documentTypeLabels[documentType];
 
           return (
@@ -176,7 +173,7 @@ export function DocumentsForm({
               </div>
               <div className="p-2 text-right">
                 <Button
-                  disabled={cantAddAnother}
+                  disabled={!everyFileIsValid}
                   onClick={() => addAnother(documentType as DocumentType)}
                 >
                   Add {filesOfType.length ? "another" : "one"}
