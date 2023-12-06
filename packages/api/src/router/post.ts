@@ -21,9 +21,6 @@ export const postRouter = router({
         energyClass: z
           .enum([EnergyClass.A, EnergyClass.B, EnergyClass.C, EnergyClass.D])
           .optional(),
-        ges: z
-          .enum([EnergyClass.A, EnergyClass.B, EnergyClass.C, EnergyClass.D])
-          .optional(),
         constructionDate: z.date().optional().nullable(),
         estimatedCosts: z.number().optional(),
         nearedShops: z.number().optional(),
@@ -75,9 +72,6 @@ export const postRouter = router({
         energyClass: z
           .enum([EnergyClass.A, EnergyClass.B, EnergyClass.C, EnergyClass.D])
           .optional(),
-        ges: z
-          .enum([EnergyClass.A, EnergyClass.B, EnergyClass.C, EnergyClass.D])
-          .optional(),
         constructionDate: z.date().optional().nullable(),
         estimatedCosts: z.number().optional(),
         nearedShops: z.number().optional(),
@@ -113,7 +107,6 @@ export const postRouter = router({
           constructionDate: input.constructionDate,
           estimatedCosts: input.estimatedCosts,
           nearestShops: input.nearedShops,
-          ges: input.ges,
           energyClass: input.energyClass,
         },
       });
@@ -264,7 +257,8 @@ export const postRouter = router({
           user.id,
           user.isPremium ?? false,
         );
-        if (newPosts.length === 0) return user.postsToBeSeen;
+        if (newPosts.length === 0)
+          return user.postsToBeSeen.sort((p) => (p.certified ? -1 : 1));
         const updatedUser = await ctx.prisma.user.update({
           where: { id: user.id },
           data: {
@@ -276,10 +270,10 @@ export const postRouter = router({
             postsToBeSeen: { include: { images: true, attribute: true } },
           },
         });
-        return updatedUser.postsToBeSeen;
+        return updatedUser.postsToBeSeen.sort((p) => (p.certified ? -1 : 1));
       }
-      // If more than 3 posts, return the list
-      return user.postsToBeSeen;
+      // If more than 3 posts, return the list with certified posts first
+      return user.postsToBeSeen.sort((p) => (p.certified ? -1 : 1));
     }),
   getUsersToBeSeen: protectedProcedure([Role.AGENCY, Role.OWNER])
     .input(z.object({ postId: z.string() }))

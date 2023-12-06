@@ -134,7 +134,6 @@ model Post {
   desc             String?      @db.Text
   type             PostType?    @default(TO_BE_RENTED)
   energyClass      EnergyClass?
-  ges              EnergyClass?
   constructionDate DateTime?
   estimatedCosts   Int?
   nearestShops     Int?
@@ -186,6 +185,8 @@ model Attribute {
   rentStartDate DateTime?
   rentEndDate   DateTime?
 
+  bedrooms      Int?
+  bathrooms     Int?
   furnished     Boolean?
   homeType      HomeType?
   terrace       Boolean?
