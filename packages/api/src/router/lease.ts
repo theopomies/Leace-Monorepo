@@ -32,7 +32,8 @@ export const leaseRouter = router({
       if (
         ctx.role != Role.MODERATOR &&
         ctx.role != Role.ADMIN &&
-        ctx.auth.userId != post.createdById
+        ctx.auth.userId != post.createdById &&
+        ctx.auth.userId != post.managedById
       ) {
         throw new TRPCError({ code: "FORBIDDEN" });
       }
@@ -145,7 +146,8 @@ export const leaseRouter = router({
       if (
         ctx.auth.userId != post.createdById &&
         ctx.role != Role.MODERATOR &&
-        ctx.role != Role.ADMIN
+        ctx.role != Role.ADMIN &&
+        ctx.auth.userId != post.managedById
       ) {
         throw new TRPCError({ code: "FORBIDDEN" });
       }
@@ -186,7 +188,8 @@ export const leaseRouter = router({
       if (
         ctx.role != Role.MODERATOR &&
         ctx.role != Role.ADMIN &&
-        ctx.auth.userId != post.createdById
+        ctx.auth.userId != post.createdById &&
+        ctx.auth.userId != post.managedById
       ) {
         throw new TRPCError({ code: "FORBIDDEN" });
       }
@@ -222,7 +225,8 @@ export const leaseRouter = router({
         ctx.role != Role.MODERATOR &&
         ctx.role != Role.ADMIN &&
         ctx.auth.userId != post.createdById &&
-        ctx.auth.userId != relationship.userId
+        ctx.auth.userId != relationship.userId &&
+        ctx.auth.userId != post.managedById
       ) {
         throw new TRPCError({ code: "FORBIDDEN" });
       }

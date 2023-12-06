@@ -161,7 +161,8 @@ export const attributesRouter = router({
       if (
         post.createdById != ctx.auth.userId &&
         ctx.role != Role.ADMIN &&
-        ctx.role != Role.MODERATOR
+        ctx.role != Role.MODERATOR &&
+        ctx.auth.userId != post.managedById
       )
         throw new TRPCError({
           code: "FORBIDDEN",

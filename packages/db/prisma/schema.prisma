@@ -17,6 +17,36 @@ enum UserStatus {
   INACTIVE
 }
 
+enum DocType {
+  IDENTITY_CARD
+  PASSPORT
+  DRIVER_LICENSE
+  RESIDENCE_PERMIT
+
+  RENT_RECEIPT
+  SWORN_STATEMENT
+  DOMICILE_ACCEPTANCE
+  TAX_ASSESSMENT
+
+  EMPLOYMENT_CONTRACT
+  STUDENT_CARD
+  BUSINESS_CARD
+  INSEE_CERTIFICATE
+
+  D1_EXTRAIT
+  K_EXTRAIT
+  OTHERS
+
+  SALARY_PROOF
+  COMPENSATION
+  ACCOUNTING_BALANCE
+  PROPERTY_TITLE
+  SCHOLARSHIP
+  FINANCIAL_CONTRIBUTION
+  TAX_NOTICES
+}
+
+
 enum ReportReason {
   SPAM
   INAPPROPRIATE
@@ -90,12 +120,15 @@ model User {
   maritalStatus      MaritalStatus?
   status             UserStatus?    @default(INACTIVE)
   isPremium          Boolean?       @default(false)
+  certified Boolean @default(false)
+
 
   lastLogin DateTime @default(now())
 
   attribute Attribute?
 
   posts Post[] @relation("posts_created")
+  posts_managed Post[] @relation("posts_managed")
 
   postsSeen     Post[] @relation("posts_seen")
   postsToBeSeen Post[] @relation("posts_to_be_seen")
@@ -127,6 +160,9 @@ model Post {
   createdBy   User   @relation(fields: [createdById], references: [id], "posts_created", onDelete: Cascade)
   createdById String
 
+  managedBy   User?   @relation(fields: [managedById], references: [id], "posts_managed", onDelete: Cascade)
+  managedById String?
+
   certified Boolean @default(false)
 
   title            String?
@@ -152,6 +188,7 @@ model Post {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@index([managedById])
   @@index([createdById])
   @@map("posts")
 }
@@ -261,6 +298,7 @@ model Report {
   @@map("reports")
 }
 
+
 model Document {
   id String @id @default(cuid())
 
@@ -275,6 +313,7 @@ model Document {
 
   valid Boolean @default(false)
   ext   String
+  type DocType?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
