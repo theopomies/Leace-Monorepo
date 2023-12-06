@@ -50,8 +50,8 @@ function AttributeBtn({
 export default function ShowAttributes({
   attribute,
   iconTextColor = "#FFFFFF",
-  iconBGColor = "#10316B",
-  titleColor = "#10316B",
+  iconBGColor = "#0A2472",
+  titleColor = "#0A2472",
   show = true,
 }: IShowAttributes) {
   return (
@@ -63,12 +63,12 @@ export default function ShowAttributes({
               Rent:
             </Text>
             <View className="flex flex-row justify-evenly">
-              <View className="flex min-w-[100px] items-center justify-center rounded-full bg-[#10316B] px-2 py-1">
+              <View className="flex min-w-[100px] items-center justify-center rounded-full bg-[#0A2472] px-2 py-1">
                 <Text className="font-light text-white">
                   Start: {attribute.rentStartDate?.toLocaleDateString() ?? "-"}
                 </Text>
               </View>
-              <View className="flex min-w-[100px] items-center justify-center rounded-full bg-[#10316B] px-2 py-1">
+              <View className="flex min-w-[100px] items-center justify-center rounded-full bg-[#0A2472] px-2 py-1">
                 <Text className="font-light text-white">
                   End: {attribute.rentEndDate?.toLocaleDateString() ?? "-"}
                 </Text>
@@ -80,12 +80,12 @@ export default function ShowAttributes({
               Budget:
             </Text>
             <View className="flex flex-row justify-evenly">
-              <View className="flex min-w-[100px] items-center justify-center rounded-full bg-[#10316B] px-2 py-1">
+              <View className="flex min-w-[100px] items-center justify-center rounded-full bg-[#0A2472] px-2 py-1">
                 <Text className="font-light text-white">
                   Min: {attribute.minPrice ?? "-"} €
                 </Text>
               </View>
-              <View className="flex min-w-[100px] items-center justify-center rounded-full bg-[#10316B] px-2 py-1">
+              <View className="flex min-w-[100px] items-center justify-center rounded-full bg-[#0A2472] px-2 py-1">
                 <Text className="font-light text-white">
                   Max: {attribute.maxPrice ?? "-"} €
                 </Text>
@@ -97,12 +97,12 @@ export default function ShowAttributes({
               Size:
             </Text>
             <View className="flex flex-row justify-evenly">
-              <View className="flex min-w-[100px] items-center justify-center rounded-full bg-[#10316B] px-2 py-1">
+              <View className="flex min-w-[100px] items-center justify-center rounded-full bg-[#0A2472] px-2 py-1">
                 <Text className="font-light text-white">
                   Min: {attribute.minSize ?? "-"} m²
                 </Text>
               </View>
-              <View className="flex min-w-[100px] items-center justify-center rounded-full bg-[#10316B] px-2 py-1">
+              <View className="flex min-w-[100px] items-center justify-center rounded-full bg-[#0A2472] px-2 py-1">
                 <Text className="font-light text-white">
                   Max: {attribute.maxSize ?? "-"} m²
                 </Text>

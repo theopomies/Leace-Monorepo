@@ -1,5 +1,5 @@
 import React from "react";
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, Image, Platform } from "react-native";
 import { Icon } from "react-native-elements";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -9,7 +9,12 @@ import { EditPost, PostStack, ShowPost, CreatePost } from "../../screens/Post";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { EditProfile, ShowProfile } from "../../screens/Profile";
-import { OwnerLikes, OffersList, Result, Details } from "../../screens/Premium";
+import {
+  OwnerLikes,
+  BusinessOffers,
+  Result,
+  Details,
+} from "../../screens/Premium";
 import { TenantChat } from "../../screens/Chat";
 import { TenantMatches } from "../../screens/Matches";
 import { Documents } from "../../screens/Documents";
@@ -51,7 +56,14 @@ const Provider = ({
         initialParams={{ userId }}
         options={{
           tabBarIcon: ({ focused }) => (
-            <Icon name={"list-alt"} type="font-awesome" />
+            <Image
+              source={
+                focused
+                  ? require("../../../assets/navbar/home-hover.png")
+                  : require("../../../assets/navbar/home.png")
+              }
+              className={` ${Platform.OS === "ios" ? "mt-5" : "mt-2"} h-6 w-6`}
+            />
           ),
           tabBarLabel: "",
           headerShown: false,
@@ -63,9 +75,13 @@ const Provider = ({
         initialParams={{ userId }}
         options={{
           tabBarIcon: ({ focused }) => (
-            <Icon
-              name={focused ? "plus-square" : "plus-square-o"}
-              type="font-awesome"
+            <Image
+              source={
+                focused
+                  ? require("../../../assets/navbar/write-hover.png")
+                  : require("../../../assets/navbar/write.png")
+              }
+              className={` ${Platform.OS === "ios" ? "mt-5" : "mt-2"} h-6 w-6`}
             />
           ),
           tabBarLabel: "",
@@ -107,20 +123,24 @@ const Provider = ({
           headerShown: false,
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Premium"
         options={{
           tabBarIcon: ({ focused }) => (
-            <Icon
-              name={focused ? "star-four-points" : "star-four-points-outline"}
-              type="material-community"
+            <Image
+              source={
+                focused
+                  ? require("../../../assets/navbar/crown-hover.png")
+                  : require("../../../assets/navbar/crown.png")
+              }
+              className="mt-5 h-6 w-6"
             />
           ),
           tabBarLabel: "",
           headerShown: false,
         }}
       >
-        {() => (isPremium ? <OwnerLikes /> : <OffersList />)}
+        {() => (isPremium ? <OwnerLikes /> : <BusinessOffers />)}
       </Tab.Screen>
 
       <Tab.Screen
@@ -151,16 +171,21 @@ const Provider = ({
           tabBarLabel: "",
           headerShown: false,
         }}
-      />
+      /> */}
+
       <Tab.Screen
         name="MatchTenant"
         component={TenantMatches}
         initialParams={{ userId, role: "OWNER" }}
         options={{
           tabBarIcon: ({ focused }) => (
-            <Icon
-              name={focused ? "account-multiple" : "account-multiple-outline"}
-              type="material-community"
+            <Image
+              source={
+                focused
+                  ? require("../../../assets/navbar/chat-hover.png")
+                  : require("../../../assets/navbar/chat.png")
+              }
+              className={` ${Platform.OS === "ios" ? "mt-5" : "mt-2"} h-6 w-6`}
             />
           ),
           tabBarLabel: "",
@@ -197,9 +222,7 @@ const Provider = ({
         component={Documents}
         initialParams={{ userId }}
         options={{
-          tabBarIcon: ({ focused }) => (
-            <Icon name="description" type="material" />
-          ),
+          tabBarButton: () => null,
           tabBarLabel: "",
           headerShown: false,
         }}
@@ -210,10 +233,13 @@ const Provider = ({
         initialParams={{ userId }}
         options={{
           tabBarIcon: ({ focused }) => (
-            <Icon
-              name={focused ? "person" : "person-outline"}
-              color="#002642"
-              type="material-icons"
+            <Image
+              source={
+                focused
+                  ? require("../../../assets/navbar/avatar-hover.png")
+                  : require("../../../assets/navbar/avatar.png")
+              }
+              className={` ${Platform.OS === "ios" ? "mt-5" : "mt-2"} h-6 w-6`}
             />
           ),
           tabBarLabel: "",

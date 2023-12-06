@@ -62,7 +62,7 @@ export default function EditInfo({ user, setUser }: IEditInfo) {
         </TouchableOpacity>
       </View>
       <View className="flex px-2">
-        <Text className="text-base font-bold text-[#10316B]">Description:</Text>
+        <Text className="text-base font-bold text-[#0A2472]">Description:</Text>
         <TextInput
           multiline
           numberOfLines={4}

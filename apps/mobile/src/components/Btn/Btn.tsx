@@ -1,11 +1,6 @@
 import { Icon } from "react-native-elements";
-import React, { ReactNode } from "react";
-import {
-  GestureResponderEvent,
-  TouchableOpacity,
-  Text,
-  View,
-} from "react-native";
+import React from "react";
+import { GestureResponderEvent, TouchableOpacity, Text } from "react-native";
 
 export default function Btn({
   title,
@@ -13,7 +8,7 @@ export default function Btn({
   textColor = "white",
   iconName,
   iconType,
-  bgColor = "#002642",
+  bgColor = "#6366f1",
   className,
 }: {
   title?: string;
@@ -26,7 +21,9 @@ export default function Btn({
 }) {
   return (
     <TouchableOpacity
-      className={`flex flex-row items-center justify-center rounded-lg p-2.5 ${className}`}
+      className={`flex flex-row items-center justify-center ${
+        iconName && iconType ? "space-x-2" : ""
+      } rounded-lg p-2.5 ${className}`}
       onPress={onPress}
       style={{ backgroundColor: bgColor }}
     >

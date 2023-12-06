@@ -2,7 +2,7 @@ import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { UserRoles } from "../utils/enum";
 import { trpc } from "../utils/trpc";
-import { Tenant, Provider } from "../components/Navigation";
+//import { Tenant, Provider } from "../components/Navigation";
 import { View, Platform, StatusBar } from "react-native";
 import { useAuth } from "@clerk/clerk-expo";
 import { Lease } from "@leace/db";
@@ -113,11 +113,11 @@ const TabNavigator = () => {
     );
   }
 
-  if (role === UserRoles.TENANT)
+  /* if (role === UserRoles.TENANT)
     return <Tenant userId={session.userId} isPremium={isPremium} />;
   else if (role === UserRoles.OWNER)
     return <Provider userId={session.userId} isPremium={isPremium} />;
-  return <Role />;
+  return <Role />; */
 };
 
 export default TabNavigator;

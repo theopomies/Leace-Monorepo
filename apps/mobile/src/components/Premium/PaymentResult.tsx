@@ -1,14 +1,22 @@
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import React from "react";
-import { Animated, View, TouchableOpacity, Image, Text } from "react-native";
+import React, { useEffect } from "react";
+import {
+  Animated,
+  View,
+  TouchableOpacity,
+  Image,
+  Text,
+  Platform,
+} from "react-native";
 import { Icon } from "react-native-elements";
-import { TabStackParamList } from "../../navigation/TabNavigator";
+import { TabStackParamList } from "../../navigation/RootNavigator";
 
 const PaymentResult = ({
   isValidPayment,
   email,
   amount,
+  product,
   firstName,
   lastName,
   updateStatus,
@@ -16,6 +24,7 @@ const PaymentResult = ({
   isValidPayment: boolean;
   email: string | null | undefined;
   amount: number | null | undefined;
+  product: string | null | undefined;
   firstName: string | null | undefined;
   lastName: string | null | undefined;
   updateStatus: () => void;
@@ -32,17 +41,27 @@ const PaymentResult = ({
   const navigation =
     useNavigation<NativeStackNavigationProp<TabStackParamList>>();
 
+  useEffect(() => {
+    if (isValidPayment) {
+      const delay = setTimeout(() => {
+        updateStatus();
+      }, 10000);
+
+      return () => clearTimeout(delay);
+    }
+  }, [isValidPayment]);
+
   return (
-    <View>
-      <View className="items-center justify-center">
+    <View className="">
+      <View className="h items-center justify-center bg-white">
         <Image
-          source={require("../../../assets/logo.png")}
-          className="h-40 w-40"
+          source={require("../../../assets/logo_1024.png")}
+          className="h-52 w-52"
         />
       </View>
       <View className={"items-center justify-center"}>
         {isValidPayment ? (
-          <View className="my-4 w-full max-w-md rounded bg-white p-6 shadow-lg">
+          <View className=" h-full w-full max-w-md rounded bg-white p-6 shadow-lg">
             <View className={"items-center justify-center"}>
               <View
                 className={`h-16 w-16 items-center justify-center rounded-full ${
@@ -72,6 +91,10 @@ const PaymentResult = ({
                 <View className="mx-8 flex-row justify-between">
                   <Text className={"text-base font-bold"}>Email</Text>
                   <Text className={"text-base"}>{email}</Text>
+                </View>
+                <View className="mx-8 flex-row justify-between">
+                  <Text className={"text-base font-bold"}>Product</Text>
+                  <Text className={"text-base"}>{product}€</Text>
                 </View>
                 <View className="mx-8 flex-row justify-between">
                   <Text className={"text-base font-bold"}>Amount paid</Text>
@@ -126,19 +149,11 @@ const PaymentResult = ({
                   - Expired or invalid card details
                 </Text>
               </View>
-              <View className="mt-4 flex-row space-x-20">
-                <TouchableOpacity
-                  className={"w-24 rounded bg-blue-400 p-2"}
-                  onPress={() => {
-                    navigation.navigate("Premium");
-                  }}
-                >
-                  <Text
-                    className={"text-center text-base font-bold text-white"}
-                  >
-                    Retry
-                  </Text>
-                </TouchableOpacity>
+              <View
+                className={`${
+                  Platform.OS === "ios" ? "mt-4" : ""
+                } flex-row space-x-20`}
+              >
                 <TouchableOpacity
                   className={"w-24 rounded bg-blue-400 p-2"}
                   onPress={() => {

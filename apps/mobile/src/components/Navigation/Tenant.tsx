@@ -1,5 +1,5 @@
 import React from "react";
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, Image, Platform } from "react-native";
 import { Icon } from "react-native-elements";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { TabStackParamList } from "../../navigation/TabNavigator";
@@ -11,7 +11,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ShowPost } from "../../screens/Post";
 import {
   Details,
-  OffersList,
+  TenantOffers,
   Result,
   TenantLikes,
 } from "../../screens/Premium";
@@ -38,9 +38,13 @@ const Tenant = ({
         initialParams={{ userId }}
         options={{
           tabBarIcon: ({ focused }) => (
-            <Icon
-              name={focused ? "favorite" : "favorite-border"}
-              color="#002642"
+            <Image
+              source={
+                focused
+                  ? require("../../../assets/navbar/home-hover.png")
+                  : require("../../../assets/navbar/home.png")
+              }
+              className={` ${Platform.OS === "ios" ? "mt-5" : "mt-2"} h-6 w-6`}
             />
           ),
           tabBarLabel: "",
@@ -53,9 +57,13 @@ const Tenant = ({
         initialParams={{ userId, role: "TENANT" }}
         options={{
           tabBarIcon: ({ focused }) => (
-            <Icon
-              name={focused ? "account-heart" : "account-heart-outline"}
-              type="material-community"
+            <Image
+              source={
+                focused
+                  ? require("../../../assets/navbar/chat-hover.png")
+                  : require("../../../assets/navbar/chat.png")
+              }
+              className={` ${Platform.OS === "ios" ? "mt-5" : "mt-2"} h-6 w-6`}
             />
           ),
           tabBarLabel: "",
@@ -88,19 +96,68 @@ const Tenant = ({
         }}
       />
       <Tab.Screen
+        name="Profile"
+        component={ShowProfile}
+        initialParams={{ userId }}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <Image
+              source={
+                focused
+                  ? require("../../../assets/navbar/avatar-hover.png")
+                  : require("../../../assets/navbar/avatar.png")
+              }
+              className={` ${Platform.OS === "ios" ? "mt-5" : "mt-2"} h-6 w-6`}
+            />
+          ),
+          tabBarLabel: "",
+          headerShown: false,
+        }}
+      />
+      <Tab.Screen
+        name="EditProfile"
+        initialParams={{ userId }}
+        component={EditProfile}
+        options={{
+          tabBarStyle: { display: "none" },
+          tabBarButton: () => null,
+          headerShown: true,
+          headerTitleStyle: { color: "#10316B" },
+          title: "Edit Profile",
+          headerLeft: () => (
+            <TouchableOpacity
+              className="ml-4"
+              onPress={() => navigation.navigate("Profile", { userId })}
+            >
+              <Icon
+                name="arrow-back"
+                color="#10316B"
+                size={30}
+                type="material-icons"
+              ></Icon>
+            </TouchableOpacity>
+          ),
+        }}
+      />
+
+      <Tab.Screen
         name="Premium"
         options={{
           tabBarIcon: ({ focused }) => (
-            <Icon
-              name={focused ? "star-four-points" : "star-four-points-outline"}
-              type="material-community"
+            <Image
+              source={
+                focused
+                  ? require("../../../assets/navbar/crown-hover.png")
+                  : require("../../../assets/navbar/crown.png")
+              }
+              className={` ${Platform.OS === "ios" ? "mt-5" : "mt-2"} h-6 w-6`}
             />
           ),
           tabBarLabel: "",
           headerShown: false,
         }}
       >
-        {() => (isPremium ? <TenantLikes /> : <OffersList />)}
+        {() => (isPremium ? <TenantLikes /> : <TenantOffers />)}
       </Tab.Screen>
       <Tab.Screen
         name="Likes"
@@ -232,9 +289,7 @@ const Tenant = ({
         component={Documents}
         initialParams={{ userId }}
         options={{
-          tabBarIcon: ({ focused }) => (
-            <Icon name="description" type="material" />
-          ),
+          tabBarButton: () => null,
           tabBarLabel: "",
           headerShown: false,
         }}

@@ -6,7 +6,7 @@ import Separator from "../Separator";
 import { Divider, Icon } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { TabStackParamList } from "../../navigation/TabNavigator";
+import { TabStackParamList } from "../../navigation/RootNavigator";
 import { Btn } from "../Btn";
 import { useAuth } from "@clerk/clerk-expo";
 import ShowAttributes from "../Attribute/ShowAttributesRefacto";
@@ -84,7 +84,7 @@ export default function UserProfile({
             <TouchableOpacity
               className="absolute bottom-5 right-[-8] rounded-full"
               onPress={() => {
-                navigation.navigate("EditProfileRefacto", {
+                navigation.navigate("EditProfile", {
                   userId: userId,
                   data: JSON.stringify({
                     ...data,

@@ -17,6 +17,7 @@ export const documentRouter = router({
         userId: z.string().optional(),
         postId: z.string().optional(),
         leaseId: z.string().optional(),
+        fileName: z.string().optional(),
         fileType: z.string(),
       }),
     )
@@ -34,7 +35,12 @@ export const documentRouter = router({
         if (!getUser) throw new TRPCError({ code: "NOT_FOUND" });
 
         const created = await ctx.prisma.document.create({
-          data: { id: id, userId: ctx.auth.userId, ext: ext },
+          data: {
+            id: id,
+            userId: ctx.auth.userId,
+            ext: ext,
+            name: input.fileName ?? id,
+          },
         });
         if (!created) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
 
@@ -54,7 +60,12 @@ export const documentRouter = router({
         if (!getPost) throw new TRPCError({ code: "NOT_FOUND" });
 
         const created = await ctx.prisma.document.create({
-          data: { id: id, postId: getPost.id, ext: ext },
+          data: {
+            id: id,
+            postId: getPost.id,
+            ext: ext,
+            name: input.fileName ?? id,
+          },
         });
         if (!created) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
         const key = `posts/${getPost.id}/documents/${id}.${ext}`;
@@ -71,7 +82,12 @@ export const documentRouter = router({
         });
         if (!getLease) throw new TRPCError({ code: "NOT_FOUND" });
         const created = await ctx.prisma.document.create({
-          data: { id: id, leaseId: getLease.id, ext: ext },
+          data: {
+            id: id,
+            leaseId: getLease.id,
+            ext: ext,
+            name: input.fileName ?? id,
+          },
         });
         if (!created) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
         const key = `leases/${getLease.id}/documents/${id}.${ext}`;

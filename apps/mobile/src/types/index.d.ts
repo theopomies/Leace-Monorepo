@@ -1,3 +1,16 @@
+export interface IDefaultPost {
+  title: string;
+  desc: string;
+  content?: string;
+  energyClass?: "A" | "B" | "C" | "D";
+  ges?: "A" | "B" | "C" | "D";
+  constructionDate?: Date;
+  estimatedCost?: string;
+  nearestShops?: string;
+  securityAlarm?: boolean;
+  internetFiber?: boolean;
+}
+
 export interface IDefaulAttributes {
   postId: string;
   location?: string;
