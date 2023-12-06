@@ -1,7 +1,7 @@
 import { View, Text } from "react-native";
 import React from "react";
 import { Attribute } from "@prisma/client";
-import { Icon } from "react-native-elements";
+import { Divider, Icon } from "react-native-elements";
 
 interface IShowAttributes {
   attribute: Attribute;
@@ -57,7 +57,7 @@ export default function ShowAttributes({
   return (
     <View>
       {show && (
-        <View className="p-6 mx-4 mt-8 bg-[#F1F5F9] rounded-xl shadow shadow-md shadow-gray-400">
+        <View className="p-6 mx-4">
           <Text className="text-xl font-bold text-[#111827] mb-2">
             Preferences:
           </Text>

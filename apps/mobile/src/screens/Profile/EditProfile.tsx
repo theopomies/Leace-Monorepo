@@ -205,7 +205,7 @@ export default function EditProfile() {
                 placeholder="First Name"
                 placeholderTextColor={"black"}
                 defaultValue={user.firstName ?? ""}
-                style={{ borderBlockColor: "black", borderBottomWidth: 1 }}
+                style={{ borderBottomWidth: 1 }}
                 onChangeText={(text) => setUser({ ...user, firstName: text })}
               />
               <TextInput
@@ -213,7 +213,7 @@ export default function EditProfile() {
                 placeholder="Last Name"
                 placeholderTextColor={"black"}
                 defaultValue={user.lastName ?? ""}
-                style={{ borderBlockColor: "black", borderBottomWidth: 1 }}
+                style={{  borderBottomWidth: 1 }}
                 onChangeText={(text) => setUser({ ...user, lastName: text })}
               />
               <View className="w-full bg-[#6C47FF] py-6">

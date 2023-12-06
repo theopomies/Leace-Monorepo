@@ -2,7 +2,8 @@ import { View, Text, TouchableOpacity, TextInput } from "react-native";
 import React, { useState } from "react";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import RNPickerSelect from "react-native-picker-select";
-import { Icon } from "react-native-elements";
+import { Divider, Icon } from "react-native-elements";
+import { StyleSheet } from "react-native";
 //import { IUserAttrs } from "../../types";
 
 interface IAttributeBtn {
@@ -46,8 +47,30 @@ export default function EditAttributesRefacto({
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(false);
   if (!attrs) return null;
+
+  const styles = StyleSheet.create({
+    input: {
+      paddingLeft: 10,
+      textAlignVertical: 'center',
+      height: 50,
+      width: '100%',
+      borderWidth: 1,
+      borderRadius: 5,
+    },
+    small_input: {
+      paddingLeft: 10,
+      textAlignVertical: 'center',
+      height: 40,
+      width: '100%',
+    }
+  });
+
+  function displayField(v: string) {
+
+  }
+
   return (
-    <View className="flex space-y-4">
+    <View className="flex mx-5">
       <View>
         <DateTimePickerModal
           isVisible={open}
@@ -70,188 +93,181 @@ export default function EditAttributesRefacto({
           onCancel={() => setOpen1(false)}
         />
       </View>
-
-      < View className="flex flex-row items-center px-6 space-x-2 w-full h-16 bg-[#F1F5F9] rounded-xl shadow shadow-md shadow-gray-400 ">
-        <Icon className="h-fit w-fit p-1 flex items-center justify-center rounded-full"
-          name={"location-on"}
-          color={"#111827"}
-          size={40}
-          type="material-icons"
-        ></Icon>
+      <Text className="text-xl font-bold text-[#111827]">Location:</Text>
+      <View>
         <TextInput
-          className="text-lg font-light pb-2 mb-2"
+          className="text-lg font-light w-full h-full mb-9"
+          style={styles.input}
+          multiline={true}
           placeholder="Paris"
           defaultValue={attrs.location ?? ""}
-          style={{ borderBlockColor: "black", borderBottomWidth: 1 }}
           onChangeText={(text) => setAttrs({ ...attrs, location: text })}
         />
       </View>
+      <Divider width={1.5} color="black" className="mb-6"></Divider>
+      <Text className="text-xl font-bold text-[#111827]">Type:</Text>
+      <View className="pl-2 mt-1.5 h-10 justify-center mb-6 w-1/4 border-[1px] border-black rounded-lg">
 
-
-      {/* ICI */}
-      < View className="flex flex-row items-center px-6 space-x-2 w-full h-16 bg-[#F1F5F9] rounded-xl shadow shadow-md shadow-gray-400 ">
-        <Text className="text-xl font-bold text-[#111827]">Type:</Text>
-        <View>
-          <RNPickerSelect
-            placeholder={{}}
-            onValueChange={(itemValue) =>
-              setAttrs({ ...attrs, homeType: itemValue })
-            }
-            items={[
-              { label: "HOUSE", value: "HOUSE" },
-              { label: "APARTMENT", value: "APARTMENT" },
-            ]}
-          />
-        </View>
+        <RNPickerSelect
+          placeholder={{}}
+          onValueChange={(itemValue) =>
+            setAttrs({ ...attrs, homeType: itemValue })
+          }
+          items={[
+            { label: "HOUSE", value: "HOUSE" },
+            { label: "APARTMENT", value: "APARTMENT" },
+          ]}
+        />
       </View>
-      <View>
 
-        <Text className="text-start mx-7 mb-2 text-xl font-bold text-[#111827]">
-          Rent dates:
-        </Text>
-        < View className="flex flex-row space-x-4 justify-center items-center px-6 w-full h-16">
-          <View className="flex flex-col items-center w-1/2 h-16 bg-[#6C47FF] rounded-xl py-1">
-            <TouchableOpacity onPress={() => setOpen(true)}>
-              <Text className="text-center text-base font-bold text-white">
-                Rent start
-              </Text>
-              <Text className="text-center text-lg font-base text-white leading-loose focus:border-blue-500">
+      <Text className="text-start text-xl font-bold text-[#111827]">
+        Rent dates:
+      </Text>
+      < View className="flex flex-row space-x-4 justify-center items-center px-2 w-full h-16 mb-10">
+        <View className="flex flex-col items-start align-middle w-1/2 h-16 rounded-xl">
+          <Text className="text-base font-bold text-black">
+            Rent start
+          </Text>
+
+          <TouchableOpacity onPress={() => setOpen(true)} className="w-[95%]">
+            <View className="w-full border-[1px] border-black rounded-lg pl-2 py-1.5">
+              <Text className="text-lg font-base text-black leading-loose focus:border-blue-500">
                 {attrs.rentStartDate?.toLocaleDateString() ??
                   new Date().toLocaleDateString()}
               </Text>
-            </TouchableOpacity>
-          </View>
-          < View className="flex flex-col items-center w-1/2 h-16 bg-[#6C47FF] rounded-xl py-1">
-            <TouchableOpacity onPress={() => setOpen1(true)}>
-              <Text className="text-center text-base font-bold text-white">
-                Rent end
-              </Text>
-              <Text className="text-center text-lg font-base text-white leading-loose focus:border-blue-500">
+            </View>
+          </TouchableOpacity>
+        </View>
+        < View className="flex flex-col items-start w-1/2 h-16 rounded-xl">
+          <Text className="text-base font-bold text-black ml-1">
+            Rent end
+          </Text>
+          <TouchableOpacity onPress={() => setOpen1(true)} className="w-[100%] ml-1">
+            <View className="w-full border-[1px] border-black rounded-lg pl-2 py-1.5">
+
+              <Text className="text-lg font-base text-black leading-loose focus:border-blue-500">
                 {attrs.rentEndDate?.toLocaleDateString() ??
                   new Date().toLocaleDateString()}
               </Text>
-            </TouchableOpacity>
-          </View>
+            </View>
+          </TouchableOpacity>
         </View>
-
       </View>
+
 
 
       <View>
 
-        <Text className="text-start mx-7 mb-2 text-xl font-bold text-[#111827]">
+        <Text className="text-start  text-xl font-bold">
           Price range:
         </Text>
-        < View className="flex flex-row space-x-4 justify-center items-center px-6 w-full h-16">
-          <View className="flex flex-col items-center w-1/2 h-16 bg-[#6C47FF] rounded-xl py-1">
-
-            <Text className="text-center text-base font-bold text-white">
-              Minimum
+        < View className="flex flex-row space-x-8 items-center w-full h-16 mb-8">
+          <View className="flex flex-col items-start w-[45%] h-16 rounded-xl py-1">
+            <Text className="text-center text-base font-bold text-black align-center">
+              Minimum (€)
             </Text>
-            <View className="flex flex-row justify-center w-full h-10">
-              <View className="w-1/4 h-10 ">
+
+            <View className="flex flex-row justify-start w-full h-10 border rounded-md">
+              <View className="w-full h-10">
                 <TextInput
                   inputMode="numeric"
                   placeholder="0"
-                  className="font-light text-white"
-                  placeholderTextColor={"white"}
-                  style={{ borderColor: "black", borderBottomWidth: 1, fontSize: 18 }}
+                  className="font-light text-black w-full"
+                  placeholderTextColor={"black"}
+                  style={styles.small_input}
                   onChangeText={(text) => {
                     setAttrs({ ...attrs, minPrice: parseInt(text) ?? 0 });
                   }}
-                  defaultValue={attrs.minPrice?.toString() ?? ""}
+                  defaultValue={attrs.minPrice ?? ""}
+
                 />
+
               </View>
-              <Text className="font-light text-white"> €</Text>
+              {/* <Text className="font-light text-black"> €</Text> */}
             </View>
           </View>
-          < View className="flex flex-col items-center w-1/2 h-16 bg-[#6C47FF] rounded-xl py-1">
+          < View className="flex flex-col items-start w-[45%] h-16 rounded-xl py-1">
 
-            <Text className="text-center text-base font-bold text-white">
-              Maximum
+            <Text className="text-center text-base font-bold text-black">
+              Maximum (€)
             </Text>
-            <View className="flex flex-row justify-center w-full h-10">
-              <View className="w-1/4 h-10 ">
+            <View className="flex flex-row justify-start w-full h-10 border rounded-md">
+              <View className="w-full h-10">
                 <TextInput
-                  // @ts-ignore
                   inputMode="numeric"
                   placeholder="0"
-                  className="font-light text-white"
-                  placeholderTextColor={"white"}
-                  style={{ borderColor: "black", borderBottomWidth: 1, fontSize: 18 }}
+                  className="font-light text-black w-full"
+                  placeholderTextColor={"black"}
+                  style={styles.small_input}
                   onChangeText={(text) => {
-                    setAttrs({ ...attrs, maxPrice: parseInt(text) });
+                    setAttrs({ ...attrs, maxPrice: parseInt(text) ?? 0 });
                   }}
-                  defaultValue={attrs.maxPrice?.toString() ?? ""}
+                  defaultValue={attrs.maxPrice ?? ""}
                 />
               </View>
-              <Text className="font-light text-white"> €</Text>
             </View>
           </View>
         </View>
       </View>
 
 
-      <View>
-
-        <Text className="text-start mx-7 mb-2 text-xl font-bold text-[#111827]">
+      <View className="pt-2">
+        <Text className="text-start mb-2 text-xl font-bold">
           Size range:
         </Text>
-        < View className="flex flex-row space-x-4 justify-center items-center px-6 w-full h-16">
-          <View className="flex flex-col items-center w-1/2 h-16 bg-[#6C47FF] rounded-xl py-1">
-
-            <Text className="text-center text-base font-bold text-white">
-              Minimum
+        < View className="flex flex-row space-x-8 items-center w-full h-16">
+          <View className="flex flex-col items-start w-[45%] h-16 rounded-xl py-1">
+            <Text className="text-center text-base font-bold text-black align-center">
+              Minimum (m²)
             </Text>
-            <View className="flex flex-row justify-center w-full h-10">
-              <View className="w-1/4 h-10 ">
+            <View className="flex flex-row justify-start w-full h-10 border rounded-md">
+              <View className="w-full h-10">
                 <TextInput
                   inputMode="numeric"
                   placeholder="0"
-                  className="font-light text-white"
-                  placeholderTextColor={"white"}
-                  style={{ borderColor: "black", borderBottomWidth: 1, fontSize: 18 }}
+                  className="font-light text-black w-full"
+                  placeholderTextColor={"black"}
+                  style={styles.small_input}
                   onChangeText={(text) => {
-                    setAttrs({ ...attrs, minSize: parseInt(text) });
+                    setAttrs({ ...attrs, minSize: parseInt(text) ?? 0 });
                   }}
-                  defaultValue={attrs.minSize?.toString() ?? ""}
+                  defaultValue={attrs.minSize ?? ""}
+
                 />
+
               </View>
-              <Text className="font-light text-white"> m²</Text>
             </View>
           </View>
-          < View className="flex flex-col items-center w-1/2 h-16 bg-[#6C47FF] rounded-xl py-1">
+          < View className="flex flex-col items-start w-[45%] h-16 rounded-xl py-1">
 
-            <Text className="text-center text-base font-bold text-white">
-              Maximum
+            <Text className="text-center text-base font-bold text-black">
+              Maximum (m²)
             </Text>
-            <View className="flex flex-row justify-center w-full h-10">
-              <View className="w-1/4 h-10 ">
-
+            <View className="flex flex-row justify-start w-full h-10 border rounded-md">
+              <View className="w-full h-10">
                 <TextInput
-                  // @ts-ignore
                   inputMode="numeric"
                   placeholder="0"
-                  className="font-light text-white"
-                  placeholderTextColor={"white"}
-                  style={{ borderColor: "black", borderBottomWidth: 1, fontSize: 18 }}
+                  className="font-light text-black w-full"
+                  placeholderTextColor={"black"}
+                  style={styles.small_input}
                   onChangeText={(text) => {
-                    setAttrs({ ...attrs, maxSize: parseInt(text) });
+                    setAttrs({ ...attrs, minSize: parseInt(text) ?? 0 });
                   }}
-                  defaultValue={attrs.maxSize?.toString() ?? ""}
+                  defaultValue={attrs.minSize ?? ""}
                 />
               </View>
-              <Text className="font-light text-white"> m²</Text>
             </View>
           </View>
         </View>
+
       </View>
 
 
 
 
-      <View>
-        <Text className="text-base font-bold text-[#10316B]">Attributes:</Text>
+      <View className="pt-9 pb-4">
+        <Text className="text-xl font-bold text-black mb-3">Attributes:</Text>
         <View className="flex flex-row flex-wrap items-center justify-center">
           <TouchableOpacity
             onPress={() => {

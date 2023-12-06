@@ -16,15 +16,13 @@ import {
 } from "@react-navigation/native";
 import { TabStackParamList } from "../../navigation/TabNavigator";
 import { Icon } from "react-native-elements";
-import { EditAttributes } from "../../components/Attribute";
-import Separator from "../../components/Separator";
 import { trpc } from "../../utils/trpc";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { LocalStorage } from "../../utils/cache";
-// import { IUserAttrs } from "../../types";
-import { EditInfo } from "../../components/UserProfile";
 import { Btn } from "../../components/Btn";
 import { useAuth } from "@clerk/clerk-expo";
+import { EditInfo } from "../../components/UserProfile";
+import { EditAttributes } from "../../components/Attribute";
 import EditInfoRefacto from "../../components/UserProfile/EditInfoRefacto";
 import EditAttributesRefacto from "../../components/Attribute/EditAttributesRefacto";
 
@@ -122,6 +120,7 @@ export default function EditProfileRefacto() {
 
   function updateUser() {
     if (!user) return;
+    //alert(JSON.stringify(attrs))
     userMutation.mutate({ ...user });
     if (showAttrs && attrs) {
       attributesMutation.mutate(attrs);
@@ -206,7 +205,7 @@ export default function EditProfileRefacto() {
                 placeholder="First Name"
                 placeholderTextColor={"black"}
                 defaultValue={user.firstName ?? ""}
-                style={{ borderBlockColor: "black", borderBottomWidth: 1 }}
+                style={{ borderColor: "black", borderBottomWidth: 1 }}
                 onChangeText={(text) => setUser({ ...user, firstName: text })}
               />
               <TextInput
@@ -214,7 +213,7 @@ export default function EditProfileRefacto() {
                 placeholder="Last Name"
                 placeholderTextColor={"black"}
                 defaultValue={user.lastName ?? ""}
-                style={{ borderBlockColor: "black", borderBottomWidth: 1 }}
+                style={{ borderColor: "black", borderBottomWidth: 1 }}
                 onChangeText={(text) => setUser({ ...user, lastName: text })}
               />
               <View className="w-full bg-[#6C47FF] py-6">
