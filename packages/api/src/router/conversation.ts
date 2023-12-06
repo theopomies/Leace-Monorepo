@@ -193,8 +193,6 @@ export const conversationRouter = router({
         include: { conversation: true },
       });
 
-      console.log(relationshipsWithConversations);
-
       if (!supportRelationshipsWithConversations) throw new TRPCError({ code: "NOT_FOUND" });
 
       const unreadsList = relationshipsWithConversations.map(async (relationship) => {
