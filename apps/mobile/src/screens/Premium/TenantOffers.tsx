@@ -298,7 +298,12 @@ const TenantOffers = () => {
       </StripeProvider>
     );
   } else {
-    return <TenantLikes />;
+    return (
+      <TenantLikes
+        subscriptionId={subscription?.subscriptionId as string}
+        callback={refetch}
+      />
+    );
   }
 };
 
