@@ -7,6 +7,7 @@ import { RoleSelection } from "./RoleSelection";
 import { IdentityForm } from "./IdentityForm";
 import { PreferencesForm } from "./PreferencesForm";
 import { ToastDescription, ToastTitle, useToast } from "../shared/toast/Toast";
+import { OnboardingDocumentsForm } from "./DocumentsForm";
 
 export function OnboardingPage() {
   const router = useRouter();
@@ -33,6 +34,9 @@ export function OnboardingPage() {
       }
       case OnboardingStatus.PREFERENCES_COMPLETION: {
         return <PreferencesForm userId={session.userId} />;
+      }
+      case OnboardingStatus.DOCUMENTS_COMPLETION: {
+        return <OnboardingDocumentsForm userId={session.userId} />;
       }
       default:
         return null;

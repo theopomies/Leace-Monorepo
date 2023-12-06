@@ -81,13 +81,13 @@ export const Select = ({
         </button>
         {open && (
           <motion.div
-            className="absolute mt-1 w-full rounded-md bg-white shadow-lg"
+            className=" absolute z-50 mt-1 min-w-full rounded-md bg-white shadow-lg"
             exit={{ opacity: 0 }}
             initial={{ opacity: 0, y: "-2vh" }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ type: "spring", bounce: 0.1 }}
           >
-            <ul className="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-white p-2 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+            <ul className="mt-1 max-h-56 min-w-full overflow-auto rounded-md bg-white p-2 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
               {options.map((option, index) => (
                 <li
                   key={index}

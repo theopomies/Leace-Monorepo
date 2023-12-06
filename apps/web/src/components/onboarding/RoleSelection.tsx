@@ -27,11 +27,11 @@ export function RoleSelection({ userId }: { userId: string }) {
         <div className="h-2 w-[1%] bg-indigo-500" />
         <div className="mx-64 flex flex-grow flex-col justify-center gap-24 text-lg">
           <h1 className="text-center text-4xl">Welcome on Leace</h1>
-          <p>
+          <p className="text-center">
             To ensure the safest and most pleasant experience on Leace, we
             require each user to have a minimally complete profile.
           </p>
-          <p>
+          <p className="text-center">
             Before we can create your account you will have to go through a
             small bootstrapping process, don&apos;t worry, this won&apos;t take
             more that a few minutes, and you can leave and come back right where
