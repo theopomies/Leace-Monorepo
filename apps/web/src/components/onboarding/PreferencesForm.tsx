@@ -267,7 +267,7 @@ export function PreferencesForm({ userId }: { userId: string }) {
             </div>
           </section>
           <div className="flex w-full justify-end pr-12">
-            <Button type="submit">Finish setting me up</Button>
+            <Button type="submit">Continue</Button>
           </div>
         </form>
       </div>

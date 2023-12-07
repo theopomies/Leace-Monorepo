@@ -1,42 +1,11 @@
 import { Context } from "../context";
-import { DocType } from "@prisma/client";
-
-export const identityDocumentTypes = [
-  DocType.IDENTITY_CARD,
-  DocType.PASSPORT,
-  DocType.DRIVER_LICENSE,
-  DocType.RESIDENCE_PERMIT,
-];
-
-export const residenceDocumentTypes = [
-  DocType.RENT_RECEIPT,
-  DocType.SWORN_STATEMENT,
-  DocType.DOMICILE_ACCEPTANCE,
-  DocType.TAX_ASSESSMENT,
-];
-
-export const professionalDocumentTypes = [
-  DocType.EMPLOYMENT_CONTRACT,
-  DocType.STUDENT_CARD,
-  DocType.BUSINESS_CARD,
-  DocType.INSEE_CERTIFICATE,
-];
-
-export const administrativeDocumentTypes = [
-  DocType.D1_EXTRAIT,
-  DocType.K_EXTRAIT,
-  DocType.OTHERS,
-];
-
-export const financialDocumentTypes = [
-  DocType.SALARY_PROOF,
-  DocType.COMPENSATION,
-  DocType.ACCOUNTING_BALANCE,
-  DocType.PROPERTY_TITLE,
-  DocType.SCHOLARSHIP,
-  DocType.FINANCIAL_CONTRIBUTION,
-  DocType.TAX_NOTICES,
-];
+import {
+  administrativeDocumentTypes,
+  financialDocumentTypes,
+  identityDocumentTypes,
+  professionalDocumentTypes,
+  residenceDocumentTypes,
+} from "./types";
 
 export interface CertificationProps {
   ctx: Context;
