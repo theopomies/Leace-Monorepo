@@ -65,14 +65,6 @@ export function TenantBar({ postId, tenant }: TenantBarProps) {
           </div>
           <p className="mt-4 text-gray-500">Click to view profile</p>
         </div>
-        <div className="flex items-center">
-          {tenant.birthDate && (
-            <p className="text-gray-500">{calcAge(tenant.birthDate)} ans</p>
-          )}
-          <span className="mx-2">•</span>
-          <p className="text-gray-500">{tenant.job}</p>
-        </div>
-        <p className="mt-4 text-gray-500">Click to view profile</p>
       </Link>
       <div className="flex w-1/4 cursor-auto flex-col justify-center gap-y-2 p-4">
         <Button loading={likeIsLoading} onClick={() => onLike(tenant.id)}>
