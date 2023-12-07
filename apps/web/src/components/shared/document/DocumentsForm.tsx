@@ -68,10 +68,7 @@ export function DocumentsForm({
     documentTypesByRole[role as keyof typeof documentTypesByRole];
 
   const everyFileIsValid = files.every(
-    (file) =>
-      file.file !== undefined &&
-      file.docType !== undefined &&
-      requiredDocumentTypes.includes(file.documentType),
+    (file) => file.file !== undefined && file.docType !== undefined,
   );
   const hasUploadedAllRequiredDocuments = requiredDocumentTypes.every(
     (requiredDocumentType) =>
