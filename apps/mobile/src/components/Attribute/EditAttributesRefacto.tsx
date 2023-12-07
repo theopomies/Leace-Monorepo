@@ -10,7 +10,7 @@ interface IAttributeBtn {
   name: string;
   status?: boolean;
   iconName: string;
-  disabled?: boolean
+  disabled?: boolean;
 }
 
 interface ICreateUserAttrs {
@@ -23,7 +23,7 @@ interface ICreateUserAttrs {
 function AttributeBtn({ name, status, iconName }: IAttributeBtn) {
   return (
     <View
-      className="flex min-w-[150px] min-h-[50px] flex-row items-center justify-center space-x-1 rounded-lg px-2 py-1"
+      className="flex min-h-[50px] min-w-[150px] flex-row items-center justify-center space-x-1 rounded-lg px-2 py-1"
       style={{
         margin: 6,
         backgroundColor: "#6C47FF",
@@ -44,7 +44,7 @@ function AttributeBtn({ name, status, iconName }: IAttributeBtn) {
 function HouseTypeBtn({ name, iconName, disabled }: IAttributeBtn) {
   return (
     <View
-      className="flex min-w-[150px] min-h-[50px] flex-row items-center justify-center space-x-1 rounded-lg px-2 py-1"
+      className="flex min-h-[50px] min-w-[150px] flex-row items-center justify-center space-x-1 rounded-lg px-2 py-1"
       style={{
         margin: 6,
         backgroundColor: !disabled ? "gray" : "#6C47FF",
@@ -75,26 +75,24 @@ export default function EditAttributesRefacto({
   const styles = StyleSheet.create({
     input: {
       paddingLeft: 10,
-      textAlignVertical: 'center',
+      textAlignVertical: "center",
       height: 50,
-      width: '100%',
+      width: "100%",
       borderWidth: 1,
       borderRadius: 5,
     },
     small_input: {
       paddingLeft: 10,
-      textAlignVertical: 'center',
+      textAlignVertical: "center",
       height: 40,
-      width: '100%',
-    }
+      width: "100%",
+    },
   });
 
-  function displayField(v: string) {
-
-  }
+  function displayField(v: string) {}
 
   return (
-    <View className="flex mx-5">
+    <View className="mx-5 flex">
       <View>
         <DateTimePickerModal
           isVisible={open}
@@ -120,7 +118,7 @@ export default function EditAttributesRefacto({
       <Text className="text-xl font-bold text-[#111827]">Location:</Text>
       <View>
         <TextInput
-          className="text-lg font-light w-full h-full mb-9"
+          className="mb-9 h-full w-full text-lg font-light"
           style={styles.input}
           multiline={true}
           placeholder="Paris"
@@ -128,70 +126,66 @@ export default function EditAttributesRefacto({
           onChangeText={(text) => setAttrs({ ...attrs, location: text })}
         />
       </View>
-      {!onBoarding && (<Divider width={1.5} color="black" className="mb-6"></Divider>)}
+      {!onBoarding && (
+        <Divider width={1.5} color="black" className="mb-6"></Divider>
+      )}
 
       <Text className="text-xl font-bold text-[#111827]">Type:</Text>
 
-
-        <View className="flex flex-row justify-center mb-6">
-
-          <TouchableOpacity
+      <View className="mb-6 flex flex-row justify-center">
+        <TouchableOpacity
+          disabled={attrs.homeType == "HOUSE"}
+          onPress={() => {
+            if (attrs.homeType == "APARTMENT" || !attrs.homeType)
+              setAttrs({ ...attrs, homeType: "HOUSE" });
+          }}
+        >
+          <HouseTypeBtn
+            name="House"
+            iconName="house"
             disabled={attrs.homeType == "HOUSE"}
-            onPress={() => {
-              if (attrs.homeType == "APARTMENT" || !attrs.homeType)
-                setAttrs({ ...attrs, homeType: "HOUSE" })
-            }}
-          >
-            <HouseTypeBtn
-              name="House"
-              iconName="house"
-              disabled={attrs.homeType == "HOUSE"}
-            />
-          </TouchableOpacity>
+          />
+        </TouchableOpacity>
 
-          <TouchableOpacity
+        <TouchableOpacity
+          disabled={attrs.homeType == "APARTMENT"}
+          onPress={() => {
+            if (attrs.homeType == "HOUSE" || !attrs.homeType)
+              setAttrs({ ...attrs, homeType: "APARTMENT" });
+          }}
+        >
+          <HouseTypeBtn
+            name="Appartment"
+            iconName="apartment"
             disabled={attrs.homeType == "APARTMENT"}
-            onPress={() => {
-              if (attrs.homeType == "HOUSE" || !attrs.homeType)
-                setAttrs({ ...attrs, homeType: "APARTMENT" })
-            }}
-          >
-            <HouseTypeBtn
-              name="Appartment"
-              iconName="apartment"
-              disabled={attrs.homeType == "APARTMENT"}
-            />
-          </TouchableOpacity>
-
-        </View>
-      
+          />
+        </TouchableOpacity>
+      </View>
 
       <Text className="text-start text-xl font-bold text-[#111827]">
         Rent dates:
       </Text>
-      < View className="flex flex-row space-x-4 justify-center items-center px-2 w-full h-16 mb-10">
-        <View className="flex flex-col items-start align-middle w-1/2 h-16 rounded-xl">
-          <Text className="text-base font-bold text-black">
-            Rent start
-          </Text>
+      <View className="mb-10 flex h-16 w-full flex-row items-center justify-center space-x-4 px-2">
+        <View className="flex h-16 w-1/2 flex-col items-start rounded-xl align-middle">
+          <Text className="text-base font-bold text-black">Rent start</Text>
 
           <TouchableOpacity onPress={() => setOpen(true)} className="w-[95%]">
-            <View className="w-full border-[1px] border-black rounded-lg pl-2 py-1.5">
-              <Text className="text-lg font-base text-black leading-loose focus:border-blue-500">
+            <View className="w-full rounded-lg border-[1px] border-black py-1.5 pl-2">
+              <Text className="font-base text-lg leading-loose text-black focus:border-blue-500">
                 {attrs.rentStartDate?.toLocaleDateString() ??
                   new Date().toLocaleDateString()}
               </Text>
             </View>
           </TouchableOpacity>
         </View>
-        < View className="flex flex-col items-start w-1/2 h-16 rounded-xl">
-          <Text className="text-base font-bold text-black ml-1">
-            Rent end
-          </Text>
-          <TouchableOpacity onPress={() => setOpen1(true)} className="w-[100%] ml-1">
-            <View className="w-full border-[1px] border-black rounded-lg pl-2 py-1.5">
-
-              <Text className="text-lg font-base text-black leading-loose focus:border-blue-500">
+        <View className="flex h-16 w-1/2 flex-col items-start rounded-xl">
+          <Text className="ml-1 text-base font-bold text-black">Rent end</Text>
+          <TouchableOpacity
+            onPress={() => setOpen1(true)}
+            className="ml-1 w-[100%]"
+          >
+            <View className="w-full rounded-lg border-[1px] border-black py-1.5 pl-2">
+              <Text className="font-base text-lg leading-loose text-black focus:border-blue-500">
                 {attrs.rentEndDate?.toLocaleDateString() ??
                   new Date().toLocaleDateString()}
               </Text>
@@ -200,49 +194,41 @@ export default function EditAttributesRefacto({
         </View>
       </View>
 
-
-
       <View>
-
-        <Text className="text-start  text-xl font-bold">
-          Price range:
-        </Text>
-        < View className="flex flex-row space-x-8 items-center w-full h-16 mb-8">
-          <View className="flex flex-col items-start w-[45%] h-16 rounded-xl py-1">
-            <Text className="text-center text-base font-bold text-black align-center">
+        <Text className="text-start  text-xl font-bold">Price range:</Text>
+        <View className="mb-8 flex h-16 w-full flex-row items-center space-x-8">
+          <View className="flex h-16 w-[45%] flex-col items-start rounded-xl py-1">
+            <Text className="align-center text-center text-base font-bold text-black">
               Minimum (€)
             </Text>
 
-            <View className="flex flex-row justify-start w-full h-10 border rounded-md">
-              <View className="w-full h-10">
+            <View className="flex h-10 w-full flex-row justify-start rounded-md border">
+              <View className="h-10 w-full">
                 <TextInput
                   inputMode="numeric"
                   placeholder="0"
-                  className="font-light text-black w-full"
+                  className="w-full font-light text-black"
                   placeholderTextColor={"black"}
                   style={styles.small_input}
                   onChangeText={(text) => {
                     setAttrs({ ...attrs, minPrice: parseInt(text) ?? 0 });
                   }}
                   defaultValue={attrs.minPrice ?? ""}
-
                 />
-
               </View>
               {/* <Text className="font-light text-black"> €</Text> */}
             </View>
           </View>
-          < View className="flex flex-col items-start w-[45%] h-16 rounded-xl py-1">
-
+          <View className="flex h-16 w-[45%] flex-col items-start rounded-xl py-1">
             <Text className="text-center text-base font-bold text-black">
               Maximum (€)
             </Text>
-            <View className="flex flex-row justify-start w-full h-10 border rounded-md">
-              <View className="w-full h-10">
+            <View className="flex h-10 w-full flex-row justify-start rounded-md border">
+              <View className="h-10 w-full">
                 <TextInput
                   inputMode="numeric"
                   placeholder="0"
-                  className="font-light text-black w-full"
+                  className="w-full font-light text-black"
                   placeholderTextColor={"black"}
                   style={styles.small_input}
                   onChangeText={(text) => {
@@ -256,22 +242,19 @@ export default function EditAttributesRefacto({
         </View>
       </View>
 
-
       <View className="pt-2">
-        <Text className="text-start mb-2 text-xl font-bold">
-          Size range:
-        </Text>
-        < View className="flex flex-row space-x-8 items-center w-full h-16">
-          <View className="flex flex-col items-start w-[45%] h-16 rounded-xl py-1">
-            <Text className="text-center text-base font-bold text-black align-center">
+        <Text className="mb-2 text-start text-xl font-bold">Size range:</Text>
+        <View className="flex h-16 w-full flex-row items-center space-x-8">
+          <View className="flex h-16 w-[45%] flex-col items-start rounded-xl py-1">
+            <Text className="align-center text-center text-base font-bold text-black">
               Minimum (m²)
             </Text>
-            <View className="flex flex-row justify-start w-full h-10 border rounded-md">
-              <View className="w-full h-10">
+            <View className="flex h-10 w-full flex-row justify-start rounded-md border">
+              <View className="h-10 w-full">
                 <TextInput
                   inputMode="numeric"
                   placeholder="0"
-                  className="font-light text-black w-full"
+                  className="w-full font-light text-black"
                   placeholderTextColor={"black"}
                   style={styles.small_input}
                   onChangeText={(text) => {
@@ -279,21 +262,19 @@ export default function EditAttributesRefacto({
                   }}
                   defaultValue={attrs.minSize ?? ""}
                 />
-
               </View>
             </View>
           </View>
-          < View className="flex flex-col items-start w-[45%] h-16 rounded-xl py-1">
-
+          <View className="flex h-16 w-[45%] flex-col items-start rounded-xl py-1">
             <Text className="text-center text-base font-bold text-black">
               Maximum (m²)
             </Text>
-            <View className="flex flex-row justify-start w-full h-10 border rounded-md">
-              <View className="w-full h-10">
+            <View className="flex h-10 w-full flex-row justify-start rounded-md border">
+              <View className="h-10 w-full">
                 <TextInput
                   inputMode="numeric"
                   placeholder="0"
-                  className="font-light text-black w-full"
+                  className="w-full font-light text-black"
                   placeholderTextColor={"black"}
                   style={styles.small_input}
                   onChangeText={(text) => {
@@ -305,14 +286,10 @@ export default function EditAttributesRefacto({
             </View>
           </View>
         </View>
-
       </View>
 
-
-
-
-      <View className="pt-9 pb-4">
-        <Text className="text-xl font-bold text-black mb-3">Attributes:</Text>
+      <View className="pb-4 pt-9">
+        <Text className="mb-3 text-xl font-bold text-black">Attributes:</Text>
         <View className="flex flex-row flex-wrap items-center justify-center">
           <TouchableOpacity
             onPress={() => {
@@ -407,6 +384,6 @@ export default function EditAttributesRefacto({
           </TouchableOpacity>
         </View>
       </View>
-    </View >
+    </View>
   );
 }

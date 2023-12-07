@@ -51,7 +51,7 @@ export default function TenantStack() {
   const route = useRoute<RouteProp<TabStackParamList, "Stack">>();
   const { userId } = route.params;
   const [idx, setIdx] = useState(0);
-  const { data, isLoading } = trpc.post.getPosts.useQuery();
+  const { data, isLoading, refetch } = trpc.post.getPosts.useQuery();
   const [post, setPost] = useState<
     | Post & {
         attribute: Attribute | null;
@@ -119,7 +119,9 @@ export default function TenantStack() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.view}>
-        <Header />
+        <GestureRecognizer onSwipeDown={() => refetch()}>
+          <Header />
+        </GestureRecognizer>
         <View style={styles.box}>
           {post && (
             <>

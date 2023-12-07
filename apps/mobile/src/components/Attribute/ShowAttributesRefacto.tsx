@@ -28,7 +28,7 @@ function AttributeBtn({
   if (!status) return null;
   return (
     <View
-      className="flex min-w-[150px] min-h-[50px] flex-row items-center justify-center space-x-1 rounded-lg px-2 py-1"
+      className="flex min-h-[50px] min-w-[150px] flex-row items-center justify-center space-x-1 rounded-lg px-2 py-1"
       style={{
         margin: 6,
         backgroundColor: iconBGColor,
@@ -57,24 +57,27 @@ export default function ShowAttributes({
   return (
     <View>
       {show && (
-        <View className="p-6 mx-4">
-          <Text className="text-xl font-bold text-black mb-2">
+        <View className="mx-4 p-6">
+          <Text className="mb-2 text-xl font-bold text-black">
             Preferences:
           </Text>
-          <View className="flex flex-row items-center space-x-2 w-full h-12 ">
+          <View className="flex h-12 w-full flex-row items-center space-x-2 ">
             <Text className="text-lg font-semibold text-black">Home type:</Text>
-            <Text className="text-lg capitalize font-light">{attribute?.homeType ?? "-"}</Text>
+            <Text className="text-lg font-light capitalize">
+              {attribute?.homeType ?? "-"}
+            </Text>
           </View>
           <Text className="text-lg font-semibold text-black">
             Renting dates:
           </Text>
-          <View className="flex flex-row justify-evenly my-4">
+          <View className="my-4 flex flex-row justify-evenly">
             <View className="flex min-w-[350px] items-center justify-center rounded-xl bg-[#6C47FF] px-2 py-2">
-              <Text className="text-lg font-md text-white">
+              <Text className="font-md text-lg text-white">
                 <Text className="text-xl  text-white">
                   {attribute.rentStartDate?.toLocaleDateString() ?? "_"}
                 </Text>
-                <Icon className="w-32"
+                <Icon
+                  className="w-32"
                   name={"arrow-right-alt"}
                   color={"white"}
                   size={32}
@@ -86,17 +89,16 @@ export default function ShowAttributes({
               </Text>
             </View>
           </View>
-          <Text className="text-lg font-semibold text-black">
-            Price Range:
-          </Text>
-          <View className="flex flex-row justify-evenly my-4">
+          <Text className="text-lg font-semibold text-black">Price Range:</Text>
+          <View className="my-4 flex flex-row justify-evenly">
             <View className="flex min-w-[350px] items-center justify-center rounded-xl bg-[#6C47FF] px-2 py-2">
-              <Text className="text-lg font-md text-white">
+              <Text className="font-md text-lg text-white">
                 <Text className="text-xl  text-white">
                   {attribute.minPrice ?? "_"}
                   {" €"}
                 </Text>
-                <Icon className="w-32"
+                <Icon
+                  className="w-32"
                   name={"arrow-right-alt"}
                   color={"white"}
                   size={32}
@@ -113,14 +115,15 @@ export default function ShowAttributes({
           <Text className="text-lg font-semibold text-black">
             Surface Range:
           </Text>
-          <View className="flex flex-row justify-evenly my-4">
+          <View className="my-4 flex flex-row justify-evenly">
             <View className="flex min-w-[350px] items-center justify-center rounded-xl bg-[#6C47FF] px-2 py-2">
-              <Text className="text-lg font-md text-white">
+              <Text className="font-md text-lg text-white">
                 <Text className="text-xl  text-white">
                   {attribute.minSize ?? "_"}
                   {" m²"}
                 </Text>
-                <Icon className="w-32"
+                <Icon
+                  className="w-32"
                   name={"arrow-right-alt"}
                   color={"white"}
                   size={32}
@@ -133,16 +136,21 @@ export default function ShowAttributes({
               </Text>
             </View>
           </View>
-          <Text className="text-lg font-semibold text-black">
-            Attributes:
-          </Text>
+          <Text className="text-lg font-semibold text-black">Attributes:</Text>
 
-          {!attribute.furnished && !attribute.terrace && !attribute.pets && !attribute.smoker && !attribute.disability && !attribute.garden && !attribute.parking && !attribute.elevator && !attribute.pool && (
-            <Text className="text-md font-semibold text-black my-2">
-              No attribute selected
-            </Text>
-          )}
-
+          {!attribute.furnished &&
+            !attribute.terrace &&
+            !attribute.pets &&
+            !attribute.smoker &&
+            !attribute.disability &&
+            !attribute.garden &&
+            !attribute.parking &&
+            !attribute.elevator &&
+            !attribute.pool && (
+              <Text className="text-md my-2 font-semibold text-black">
+                No attribute selected
+              </Text>
+            )}
 
           <View className="mt-4 flex flex-row flex-wrap items-center justify-center space-x-2">
             <AttributeBtn
@@ -211,7 +219,6 @@ export default function ShowAttributes({
           </View>
         </View>
       )}
-
     </View>
   );
 }
