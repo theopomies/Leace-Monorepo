@@ -274,6 +274,24 @@ export const postRouter = router({
         },
       });
 
+      const totalPosts = await ctx.prisma.post.count();
+
+      const signedLeasesCount = await ctx.prisma.post.count({
+        where: {
+          relationships: {
+            some: {
+              lease: {
+                isSigned: true,
+              },
+            },
+          },
+        },
+      });
+
+      const unsignedLeasesCount = totalPosts - signedLeasesCount;
+
+      const location_rate = (signedLeasesCount / totalPosts) * 100;
+
       if (!leases) throw new TRPCError({ code: "NOT_FOUND" });
 
       let income = 0;
@@ -283,7 +301,14 @@ export const postRouter = router({
         expense += lease.utilitiesCost;
       });
 
-      return { income, expense };
+      return {
+        totalPosts,
+        signedLeasesCount,
+        unsignedLeasesCount,
+        location_rate,
+        income,
+        expense,
+      };
     }),
   getPostsToBeSeen: protectedProcedure([Role.TENANT])
     .input(z.object({ userId: z.string() }))
