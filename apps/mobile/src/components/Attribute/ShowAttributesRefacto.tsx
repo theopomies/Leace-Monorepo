@@ -127,7 +127,7 @@ export default function ShowAttributes({
                   type="material-icons"
                 ></Icon>
                 <Text className="text-xl  text-white">
-                  {attribute.minSize ?? "_"}
+                  {attribute.maxSize ?? "_"}
                   {" m²"}
                 </Text>
               </Text>

@@ -298,9 +298,9 @@ export default function EditAttributesRefacto({
                   placeholderTextColor={"black"}
                   style={styles.small_input}
                   onChangeText={(text) => {
-                    setAttrs({ ...attrs, minSize: parseInt(text) ?? 0 });
+                    setAttrs({ ...attrs, maxSize: parseInt(text) ?? 0 });
                   }}
-                  defaultValue={attrs.minSize ?? ""}
+                  defaultValue={attrs.maxSize ?? ""}
                 />
               </View>
             </View>
