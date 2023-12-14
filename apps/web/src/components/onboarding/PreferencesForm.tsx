@@ -86,8 +86,8 @@ export function PreferencesForm({ userId }: { userId: string }) {
           </h2>
         </div>
         <form className="flex flex-col gap-8" onSubmit={handleSubmit}>
-          <section className="flex gap-8">
-            <div className="flex-grow">
+          <section className="flex flex-wrap justify-between gap-8">
+            <div>
               <h3 className="mb-2 text-xl">Budget</h3>
               <div className="flex gap-8">
                 <label>
@@ -124,7 +124,7 @@ export function PreferencesForm({ userId }: { userId: string }) {
                 </label>
               </div>
             </div>
-            <div className="flex-grow">
+            <div>
               <h3 className="mb-2 text-xl">Size</h3>
               <div className="flex gap-8">
                 <label>
@@ -161,7 +161,9 @@ export function PreferencesForm({ userId }: { userId: string }) {
                 </label>
               </div>
             </div>
-            <div className="flex-grow">
+          </section>
+          <section className="flex flex-wrap justify-between gap-8">
+            <div>
               <h3 className="mb-2 text-xl">Bedrooms</h3>
               <div className="flex gap-8">
                 <label>
@@ -198,7 +200,7 @@ export function PreferencesForm({ userId }: { userId: string }) {
                 </label>
               </div>
             </div>
-            <div className="flex-grow">
+            <div>
               <h3 className="mb-2 text-xl">Bathrooms</h3>
               <div className="flex gap-8">
                 <label>
@@ -236,10 +238,10 @@ export function PreferencesForm({ userId }: { userId: string }) {
               </div>
             </div>
           </section>
-          <section>
-            <label className="flex flex-col gap-2">
+          <section className="flex gap-8">
+            <label className="flex flex-grow flex-col gap-2">
               <h3 className="text-xl">Location</h3>
-              <div className="flex w-[50%]">
+              <div className="flex">
                 <AddressAutocomplete
                   required
                   location={attributes.location ?? ""}
@@ -252,7 +254,7 @@ export function PreferencesForm({ userId }: { userId: string }) {
                 />
               </div>
             </label>
-            <label>
+            <label className="flex flex-col gap-2">
               <h4>Range</h4>
               <NumberInput
                 value={attributes.range}
