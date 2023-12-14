@@ -13,7 +13,10 @@ const Index = () => {
   }
 
   return (
-    <LoggedLayout title="Post | Leace" roles={[Role.AGENCY, Role.OWNER]}>
+    <LoggedLayout
+      title="Post | Leace"
+      roles={[Role.AGENCY, Role.OWNER, Role.TENANT]}
+    >
       <div className="flex flex-grow overflow-hidden p-10">
         <Post postId={postId} />
       </div>

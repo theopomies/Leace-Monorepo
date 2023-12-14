@@ -184,11 +184,9 @@ export const userRouter = router({
   getUserById: publicProcedure
     .input(z.object({ userId: z.string() }))
     .query(async ({ ctx, input }) => {
-      const userId = getId({ ctx: ctx, userId: input.userId });
-
       const user = await ctx.prisma.user.findUnique({
         where: {
-          id: userId,
+          id: input.userId,
         },
         include: {
           attribute: true,

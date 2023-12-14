@@ -60,8 +60,12 @@ export function TenantBar({ postId, tenant }: TenantBarProps) {
             {tenant.birthDate && (
               <p className="text-gray-500">{calcAge(tenant.birthDate)} ans</p>
             )}
-            <span className="mx-2">•</span>
-            <p className="text-gray-500">{tenant.job}</p>
+            {tenant.job && (
+              <p className="text-gray-500">
+                <span className="mx-2">•</span>
+                {tenant.job}
+              </p>
+            )}
           </div>
           <p className="mt-4 text-gray-500">Click to view profile</p>
         </div>
