@@ -338,23 +338,31 @@ export const PostForm = (props: PostFormProps) => {
         </ul>
       </div>
       <PostAttributesForm {...attributesStates} />
-      <ImageList images={props.images} onDelete={props.onImgDelete} />
-      <p className="bold pt-4 text-xl">Upload Images</p>
-      <FileUploadSection
-        selectedFiles={selectedImages}
-        setSelectedFiles={setSelectedImages}
-      />
-      <DocumentList
-        documents={props.documents}
-        onDelete={props.onDocDelete}
-        isLoggedInOrAdmin
-      />
-      <p className="bold pt-4 text-xl">Upload Documents</p>
-      <FileUploadSection
-        selectedFiles={selectedDocuments}
-        setSelectedFiles={setSelectedDocuments}
-        accept=".pdf"
-      />
+      <section className="flex flex-col gap-4">
+        <div>
+          <h2 className="border-t py-5 text-3xl font-medium">Images</h2>
+          <ImageList images={props.images} onDelete={props.onImgDelete} />
+          <FileUploadSection
+            selectedFiles={selectedImages}
+            setSelectedFiles={setSelectedImages}
+            title="Upload Images"
+          />
+        </div>
+        <div>
+          <h2 className="py-5 text-3xl font-medium">Documents</h2>
+          <DocumentList
+            documents={props.documents}
+            onDelete={props.onDocDelete}
+            isLoggedInOrAdmin
+          />
+          <FileUploadSection
+            selectedFiles={selectedDocuments}
+            setSelectedFiles={setSelectedDocuments}
+            accept=".pdf"
+            title="Upload Documents"
+          />
+        </div>
+      </section>
       <div className="mt-10 flex justify-center gap-4">
         <Button type="button" theme="danger" onClick={props.onCancel}>
           Cancel

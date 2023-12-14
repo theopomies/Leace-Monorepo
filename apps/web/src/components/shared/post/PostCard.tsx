@@ -21,21 +21,13 @@ import { LiaCouchSolid } from "react-icons/lia";
 import {
   MdOutlineShower,
   MdOutlineBed,
-  MdPets,
-  MdPool,
-  MdSecurity,
-  MdOutlineWifi,
-  MdPark,
-  MdDeck,
   MdConstruction,
   MdEuroSymbol,
 } from "react-icons/md";
 import { IconType } from "react-icons";
-import { TbDisabled } from "react-icons/tb";
-import { LuCigarette, LuParkingCircle } from "react-icons/lu";
-import { PiElevator } from "react-icons/pi";
 import { FaHouseFlag } from "react-icons/fa6";
 import { FaShoppingCart } from "react-icons/fa";
+import { attributesIcons } from "../icons/attributesIcons";
 
 export interface PostCardProps {
   post: Post & {
@@ -79,19 +71,6 @@ const attributes = {
   securityAlarm: "Alarm / security",
   internetFiber: "Internet",
 } as const as Record<keyof Attribute, string>;
-
-const iconMappings = {
-  terrace: MdDeck,
-  pets: MdPets,
-  smoker: LuCigarette,
-  disability: TbDisabled,
-  garden: MdPark,
-  parking: LuParkingCircle,
-  elevator: PiElevator,
-  pool: MdPool,
-  securityAlarm: MdSecurity,
-  internetFiber: MdOutlineWifi,
-} as const as Record<keyof Attribute, IconType>;
 
 export const PostCard = ({
   post,
@@ -170,11 +149,11 @@ export const PostCard = ({
         <div className="flex items-end justify-between">
           <div>
             {post.title && (
-              <p className="py-2 text-xl font-semibold">{post.title} </p>
+              <h2 className="py-2 text-2xl font-medium">{post.title}</h2>
             )}
             <div className="flex items-center text-slate-400">
-              <SewingPinIcon height={30} width={30} />
               <p className="text-lg font-medium">{post.attribute.location}</p>
+              <SewingPinIcon height={30} width={30} />
             </div>
           </div>
           <div className="flex gap-2">
@@ -244,16 +223,16 @@ export const PostCard = ({
         <div className="mt-12 flex flex-col gap-10">
           {!!post.desc && (
             <div>
-              <h2 className="pb-2 text-xl font-bold">Description</h2>
+              <h2 className="py-4 text-3xl font-medium">Description</h2>
               <p className="rounded-lg border border-dashed border-slate-300 p-4">
                 {post.desc}
               </p>
             </div>
           )}
           <div>
-            <h2 className="text-xl font-bold">Property details</h2>
+            <h2 className="pt-4 text-3xl font-medium">Property details</h2>
             {detailsList.length > 0 && (
-              <ul className="col flex gap-4 border-b border-slate-200 py-6 sm:flex sm:flex-wrap md:grid md:grid-cols-4">
+              <ul className="flex gap-4 border-b py-6 sm:flex sm:flex-wrap md:grid md:grid-cols-4">
                 {detailsList}
               </ul>
             )}
@@ -265,7 +244,9 @@ export const PostCard = ({
 
                 return (
                   <li className="flex flex-grow items-center gap-2" key={key}>
-                    {React.createElement(iconMappings[key as keyof Attribute])}
+                    {React.createElement(
+                      attributesIcons[key as keyof Attribute],
+                    )}
                     <h3 className={`text-lg ${!attribute && " line-through"} `}>
                       {value}
                     </h3>
@@ -275,7 +256,23 @@ export const PostCard = ({
             </ul>
           </div>
         </div>
-        <DocumentList documents={documents} onValidation={onDocValidation} />
+        {(isLoggedIn || isAdmin) && (
+          <section>
+            <h2 className="py-4 text-3xl font-medium">Documents</h2>
+            {documents && documents.length > 0 ? (
+              <DocumentList
+                documents={documents}
+                onValidation={onDocValidation}
+              />
+            ) : (
+              <p className="text-indigo-600">
+                No document available
+                {isLoggedIn &&
+                  ", please add any necessary documents by updating your profile"}
+              </p>
+            )}
+          </section>
+        )}
         <DisplayReports reports={post.reports} />
       </section>
       {(isLoggedIn || isAdmin) && (

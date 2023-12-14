@@ -83,12 +83,17 @@ export const makeUserAttributes = async (prisma: PrismaClient) => {
     attributes.push({
       userId: userId,
       location: attributeLocation,
+      range: getRandomInt(0, 100),
       lat: lat,
       lng: lng,
       maxPrice: getRandomInt(700, 3000),
       minPrice: getRandomInt(100, 600),
       maxSize: getRandomInt(60, 200),
       minSize: getRandomInt(10, 50),
+      maxBedrooms: getRandomInt(1, 5),
+      minBedrooms: getRandomInt(1, 3),
+      maxBathrooms: getRandomInt(1, 3),
+      minBathrooms: getRandomInt(1, 2),
       furnished: [true, false][getRandomInt(0, 1)],
       homeType: [HomeType.APARTMENT, HomeType.HOUSE][getRandomInt(0, 1)],
       terrace: [true, false][getRandomInt(0, 1)],
@@ -99,6 +104,8 @@ export const makeUserAttributes = async (prisma: PrismaClient) => {
       parking: [true, false][getRandomInt(0, 1)],
       elevator: [true, false][getRandomInt(0, 1)],
       pool: [true, false][getRandomInt(0, 1)],
+      securityAlarm: [true, false][getRandomInt(0, 1)],
+      internetFiber: [true, false][getRandomInt(0, 1)],
     });
   }
 
@@ -122,15 +129,12 @@ export const makePosts = async (prisma: PrismaClient) => {
         desc: generateRandomPostDescriptions(),
         type: [PostType.TO_BE_RENTED, PostType.RENTED][getRandomInt(0, 1)],
         energyClass: [EnergyClass.A, EnergyClass.C][getRandomInt(0, 1)],
-        ges: [EnergyClass.A, EnergyClass.C][getRandomInt(0, 1)],
         constructionDate: new Date(
           +new Date("2000-01-01") +
             Math.random() * (+new Date() - +new Date("2000-01-01")),
         ),
         estimatedCosts: getRandomInt(50, 200),
         nearestShops: getRandomInt(0, 5),
-        securityAlarm: [true, false][getRandomInt(0, 1)],
-        internetFiber: [true, false][getRandomInt(0, 1)],
       });
     }
   }
@@ -154,6 +158,8 @@ export const makePostAttributes = async (prisma: PrismaClient) => {
       lng: lng,
       price: getRandomInt(100, 3000),
       size: getRandomInt(10, 200),
+      bedrooms: getRandomInt(1, 5),
+      bathrooms: getRandomInt(1, 3),
       rentStartDate: rentStartDate,
       rentEndDate: rentEndDate,
       furnished: [true, false][getRandomInt(0, 1)],
@@ -166,6 +172,8 @@ export const makePostAttributes = async (prisma: PrismaClient) => {
       parking: [true, false][getRandomInt(0, 1)],
       elevator: [true, false][getRandomInt(0, 1)],
       pool: [true, false][getRandomInt(0, 1)],
+      securityAlarm: [true, false][getRandomInt(0, 1)],
+      internetFiber: [true, false][getRandomInt(0, 1)],
     });
   }
 

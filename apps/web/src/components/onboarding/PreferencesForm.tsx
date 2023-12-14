@@ -17,10 +17,15 @@ export function PreferencesForm({ userId }: { userId: string }) {
 
   const [attributes, setAttributes] = useState<{
     location: string | undefined;
+    range: number | undefined;
     maxPrice: number | undefined;
     minPrice: number | undefined;
     maxSize: number | undefined;
     minSize: number | undefined;
+    maxBedrooms: number | undefined;
+    minBedrooms: number | undefined;
+    maxBathrooms: number | undefined;
+    minBathrooms: number | undefined;
     furnished: boolean | undefined;
     homeType: HomeType | "";
     terrace: boolean | undefined;
@@ -33,10 +38,15 @@ export function PreferencesForm({ userId }: { userId: string }) {
     pool: boolean | undefined;
   }>({
     location: undefined,
+    range: undefined,
     maxPrice: undefined,
     minPrice: undefined,
     maxSize: undefined,
     minSize: undefined,
+    maxBedrooms: undefined,
+    minBedrooms: undefined,
+    maxBathrooms: undefined,
+    minBathrooms: undefined,
     furnished: undefined,
     homeType: "",
     terrace: undefined,
@@ -151,6 +161,80 @@ export function PreferencesForm({ userId }: { userId: string }) {
                 </label>
               </div>
             </div>
+            <div className="flex-grow">
+              <h3 className="mb-2 text-xl">Bedrooms</h3>
+              <div className="flex gap-8">
+                <label>
+                  <h4>Min</h4>
+                  <NumberInput
+                    value={attributes.minBedrooms}
+                    onChange={(e) => {
+                      setAttributes((prevAttributes) => ({
+                        ...prevAttributes,
+                        minBedrooms:
+                          e.target.value == ""
+                            ? undefined
+                            : e.target.valueAsNumber,
+                      }));
+                    }}
+                    placeholder="0"
+                  />
+                </label>
+                <label>
+                  <h4>Max</h4>
+                  <NumberInput
+                    value={attributes.maxBedrooms}
+                    onChange={(e) => {
+                      setAttributes((prevAttributes) => ({
+                        ...prevAttributes,
+                        maxBedrooms:
+                          e.target.value == ""
+                            ? undefined
+                            : e.target.valueAsNumber,
+                      }));
+                    }}
+                    placeholder="300"
+                  />
+                </label>
+              </div>
+            </div>
+            <div className="flex-grow">
+              <h3 className="mb-2 text-xl">Bathrooms</h3>
+              <div className="flex gap-8">
+                <label>
+                  <h4>Min</h4>
+                  <NumberInput
+                    value={attributes.minBathrooms}
+                    onChange={(e) => {
+                      setAttributes((prevAttributes) => ({
+                        ...prevAttributes,
+                        minBathrooms:
+                          e.target.value == ""
+                            ? undefined
+                            : e.target.valueAsNumber,
+                      }));
+                    }}
+                    placeholder="0"
+                  />
+                </label>
+                <label>
+                  <h4>Max</h4>
+                  <NumberInput
+                    value={attributes.maxBathrooms}
+                    onChange={(e) => {
+                      setAttributes((prevAttributes) => ({
+                        ...prevAttributes,
+                        maxBathrooms:
+                          e.target.value == ""
+                            ? undefined
+                            : e.target.valueAsNumber,
+                      }));
+                    }}
+                    placeholder="300"
+                  />
+                </label>
+              </div>
+            </div>
           </section>
           <section>
             <label className="flex flex-col gap-2">
@@ -167,6 +251,21 @@ export function PreferencesForm({ userId }: { userId: string }) {
                   }}
                 />
               </div>
+            </label>
+            <label>
+              <h4>Range</h4>
+              <NumberInput
+                value={attributes.range}
+                onChange={(e) => {
+                  setAttributes((prevAttributes) => ({
+                    ...prevAttributes,
+                    range:
+                      e.target.value == "" ? undefined : e.target.valueAsNumber,
+                  }));
+                }}
+                placeholder="50"
+                unit="km"
+              />
             </label>
           </section>
           <section className="mb-12">

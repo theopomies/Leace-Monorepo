@@ -158,8 +158,8 @@ export const userRouter = router({
           description: input.description,
           job: input.job,
           employmentContract: input.employmentContract,
-          income: input.income,
-          creditScore: input.creditScore,
+          income: input.income ?? null,
+          creditScore: input.creditScore ?? null,
           maritalStatus: input.maritalStatus,
         },
       });
