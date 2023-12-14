@@ -9,6 +9,16 @@ import { DisplayReports } from "../../moderation/report/DisplayReports";
 import { UserImage } from "./UserImage";
 import React from "react";
 import { attributesIcons } from "../icons/attributesIcons";
+import { IconType } from "react-icons";
+import { IoBed } from "react-icons/io5";
+import {
+  MdShower,
+  MdEuroSymbol,
+  MdOutlineLocationSearching,
+  MdHomeWork,
+} from "react-icons/md";
+import { FaLocationDot } from "react-icons/fa6";
+import { IoMdResize } from "react-icons/io";
 
 export interface UserCardProps {
   user: User & {
@@ -27,16 +37,26 @@ export interface UserCardProps {
 const details = {
   location: "Location",
   range: "Range",
-  maxPrice: "Max price",
   minPrice: "Min price",
-  maxSize: "Max surface",
+  maxPrice: "Max price",
   minSize: "Min surface",
-  maxBedrooms: "Max bedrooms",
+  maxSize: "Max surface",
   minBedrooms: "Min bedrooms",
-  maxBathrooms: "Max bathrooms",
+  maxBedrooms: "Max bedrooms",
   minBathrooms: "Min bathrooms",
-  homeType: "Housing type",
+  maxBathrooms: "Max bathrooms",
+  homeType: "House type",
 } as const as Record<keyof Attribute, string>;
+
+export const detailsIcons = {
+  location: FaLocationDot,
+  range: MdOutlineLocationSearching,
+  minPrice: MdEuroSymbol,
+  minSize: IoMdResize,
+  minBedrooms: IoBed,
+  minBathrooms: MdShower,
+  homeType: MdHomeWork,
+} as const as Record<keyof Attribute, IconType>;
 
 const attributes = {
   furnished: "Furnished",
@@ -236,29 +256,42 @@ export function UserCard({
           {user.role === Role.TENANT && user.attribute && (
             <section>
               <h2 className="pt-4 text-3xl font-medium">Preferences</h2>
-              <ul className="gap-4 py-4 sm:flex sm:flex-wrap md:grid md:grid-cols-4">
+              <ul className="gap-4 py-4 sm:flex sm:flex-wrap md:grid md:grid-cols-3">
                 {Object.entries(details).map(([key, value]) => {
                   const userAttributes = user.attribute;
-                  if (!userAttributes) return null;
+                  if (!userAttributes || key.startsWith("max")) return null;
 
                   const attribute = userAttributes[key as keyof Attribute];
 
-                  if (attribute == null) return null;
+                  let displayValue = attribute as string | number;
+
+                  let cleanValue = value;
+
+                  if (key.startsWith("min")) {
+                    const maxKey = key.replace("min", "max") as keyof Attribute;
+                    const minValue = attribute ?? 0;
+                    const maxValue = userAttributes[maxKey] ?? "∞";
+
+                    cleanValue = key.replace(/^(min|max)/, "");
+                    displayValue = `${minValue} - ${maxValue}`;
+                  }
 
                   return (
                     <li className="flex flex-grow items-center gap-2" key={key}>
-                      <h3 className="text-lg">{value}</h3>
+                      {React.createElement(
+                        detailsIcons[key as keyof Attribute],
+                      )}
+                      <h3 className="text-lg">{cleanValue}</h3>
+                      <span>•</span>
                       {user.attribute && (
                         <p className="text-lg">
-                          {attribute as string | number}
-                          {value.toLowerCase().includes("price") && attribute
+                          {displayValue ?? "Whatever"}
+                          {cleanValue.toLowerCase().includes("price")
                             ? "€"
-                            : value.toLowerCase().includes("surface") &&
-                              attribute
+                            : cleanValue.toLowerCase().includes("size")
                             ? "m²"
-                            : value.toLowerCase().includes("range") && attribute
-                            ? "km"
-                            : ""}
+                            : cleanValue.toLowerCase().includes("range") &&
+                              "km"}
                         </p>
                       )}
                     </li>
