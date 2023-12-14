@@ -1,12 +1,15 @@
 import { motion } from "framer-motion";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { CrossSvg } from "../../shared/icons/CrossSvg";
-import { LikeSvg } from "../../shared/icons/LikeSvg";
-import { RewindSvg } from "../../shared/icons/RewindSvg";
 import { StackButton } from "./StackButton";
 import { SwipeCard } from "./SwipeCard";
 import { PostType } from "./PostStack";
+import LikeSvg from "../../../../public/iconsButton/like.svg";
+import RewindSvg from "../../../../public/iconsButton/rewind.svg";
+import DislikeSvg from "../../../../public/iconsButton/dislike.svg";
+import Image from "next/image";
+import { PostCard } from "../../shared/post/PostCard";
+import { trpc } from "../../../utils/trpc";
 
 export type StackProps = {
   posts: PostType[];
@@ -42,8 +45,8 @@ export function Stack({ posts, onLike, onDislike, onRewind }: StackProps) {
   }
 
   return (
-    <div className="relative my-10 flex w-full flex-grow items-center justify-center overflow-hidden">
-      <div className="relative z-10 flex h-full flex-col rounded-lg bg-white shadow">
+    <div className="relative flex w-full flex-grow items-center justify-center overflow-hidden py-10">
+      <div className="relative z-10 flex h-full flex-col">
         <SwipeCard
           onSwipeLeft={dislikeHandler}
           onSwipeRight={likeHandler}
@@ -57,39 +60,56 @@ export function Stack({ posts, onLike, onDislike, onRewind }: StackProps) {
         <motion.div
           layout
           className={
-            "z-10 my-5 flex w-full justify-around " +
+            "z-10 mt-10 flex w-full items-center justify-center gap-20 " +
             (isSelected ? "-top-36" : "bottom-10")
           }
         >
           <StackButton
             onClick={dislikeHandler}
-            className={` border-red-200 transition-colors hover:border-red-600 hover:stroke-red-600 ${
-              likeState == "dislike"
-                ? "border-red-600 stroke-red-600"
-                : "border-red-200 stroke-red-200"
+            className={`hover:drop-shadow-dislike transform border-[#FF6A4F] transition-all duration-300 ease-in-out hover:scale-105 ${
+              likeState == "dislike" && "drop-shadow-dislike scale-105"
             }`}
           >
-            <CrossSvg />
+            <Image
+              src={DislikeSvg}
+              alt="Dislike"
+              width="50"
+              height="50"
+              className="p-1"
+            />
           </StackButton>
           <StackButton
             onClick={onRewind}
-            className="border-blue-200 fill-blue-200 transition-colors hover:border-blue-600 hover:fill-blue-600"
+            className="hover:drop-shadow-rewind flex h-fit transform border-[#F7D332] transition-all duration-300 ease-in-out hover:scale-105"
           >
-            <RewindSvg />
+            <Image src={RewindSvg} alt="Rewind" width="40" height="40" />
           </StackButton>
           <StackButton
             onClick={likeHandler}
-            className={`border-green-200 hover:border-green-600 hover:fill-green-600
-          ${
-            likeState == "like"
-              ? "border-green-600 fill-green-600"
-              : "border-green-200 fill-green-200"
-          }`}
+            className={`hover:drop-shadow-like transform border-[#63DE9A] transition-all duration-300 ease-in-out hover:scale-105 ${
+              likeState == "like" && "drop-shadow-like scale-105"
+            }`}
           >
-            <LikeSvg />
+            <Image src={LikeSvg} alt="Like" width="50" height="50" />
           </StackButton>
         </motion.div>
       </div>
+      {posts.slice(1, 4).map((post, index) => {
+        const { data: images } = trpc.image.getSignedPostUrl.useQuery({
+          postId: post.id,
+        });
+        return (
+          <div
+            className="absolute top-0 mt-10"
+            style={{
+              zIndex: 5 - index,
+            }}
+            key={index}
+          >
+            <PostCard post={post} images={images} />
+          </div>
+        );
+      })}
     </div>
   );
 }

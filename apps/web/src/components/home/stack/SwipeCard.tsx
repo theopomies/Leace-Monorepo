@@ -34,7 +34,7 @@ export function SwipeCard({
 
   return (
     <motion.div
-      className="h-full w-full overflow-hidden"
+      className="h-full w-full"
       style={{ x, opacity, scale, rotate }}
       drag={isSelected ? false : "x"}
       dragConstraints={{ left: -200, right: 200 }}

@@ -11,7 +11,7 @@ export function StackButton({
 }: StackButtonProps) {
   return (
     <button
-      className={`rounded-full border-4 bg-white p-2 shadow ${className}`}
+      className={`rounded-full border-4 bg-white p-3 shadow ${className}`}
       onClick={onClick}
     >
       {children}

@@ -85,7 +85,7 @@ export function PreferencesForm({ userId }: { userId: string }) {
             can update your preferences later
           </h2>
         </div>
-        <form className="flex flex-col gap-8" onSubmit={handleSubmit}>
+        <form className="mb-8 flex flex-col gap-8" onSubmit={handleSubmit}>
           <section className="flex flex-wrap justify-between gap-8">
             <div>
               <h3 className="mb-2 text-xl">Budget</h3>
