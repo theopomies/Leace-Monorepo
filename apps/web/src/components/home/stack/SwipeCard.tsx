@@ -34,7 +34,7 @@ export function SwipeCard({
 
   return (
     <motion.div
-      className="h-full w-full"
+      className="z-50"
       style={{ x, opacity, scale, rotate }}
       drag={isSelected ? false : "x"}
       dragConstraints={{ left: -200, right: 200 }}
@@ -76,7 +76,7 @@ export function SwipeCard({
         });
       }}
     >
-      <PostCard post={post} images={images} />
+      <PostCard post={post} images={images} isReduced />
       {!!likeValue && !isSelected && (
         <div
           className={`absolute top-8 left-8 border-2 px-1 font-bold ${

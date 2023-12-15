@@ -45,8 +45,8 @@ export function Stack({ posts, onLike, onDislike, onRewind }: StackProps) {
   }
 
   return (
-    <div className="relative flex w-full flex-grow items-center justify-center overflow-hidden py-10">
-      <div className="relative z-10 flex h-full flex-col">
+    <div className="flex w-full flex-grow items-center justify-center overflow-hidden py-10">
+      <div className="relative flex flex-col">
         <SwipeCard
           onSwipeLeft={dislikeHandler}
           onSwipeRight={likeHandler}
@@ -57,12 +57,22 @@ export function Stack({ posts, onLike, onDislike, onRewind }: StackProps) {
           post={posts[0]}
           onClick={() => router.push(`/posts/${posts[0]?.id}`)}
         />
+
+        <div className="absolute">
+          {posts.slice(1, 4).map((post, index) => {
+            const { data: images } = trpc.image.getSignedPostUrl.useQuery({
+              postId: post.id,
+            });
+            return (
+              <div key={index} style={{ zIndex: 5 - index }}>
+                <PostCard post={post} images={images} isReduced />
+              </div>
+            );
+          })}
+        </div>
         <motion.div
           layout
-          className={
-            "z-10 mt-10 flex w-full items-center justify-center gap-20 " +
-            (isSelected ? "-top-36" : "bottom-10")
-          }
+          className="mt-10 flex w-full flex-grow items-center justify-center gap-20"
         >
           <StackButton
             onClick={dislikeHandler}
@@ -94,22 +104,6 @@ export function Stack({ posts, onLike, onDislike, onRewind }: StackProps) {
           </StackButton>
         </motion.div>
       </div>
-      {posts.slice(1, 4).map((post, index) => {
-        const { data: images } = trpc.image.getSignedPostUrl.useQuery({
-          postId: post.id,
-        });
-        return (
-          <div
-            className="absolute top-0 mt-10"
-            style={{
-              zIndex: 5 - index,
-            }}
-            key={index}
-          >
-            <PostCard post={post} images={images} />
-          </div>
-        );
-      })}
     </div>
   );
 }

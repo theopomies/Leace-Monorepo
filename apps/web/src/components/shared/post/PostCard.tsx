@@ -43,6 +43,7 @@ export interface PostCardProps {
   isAdmin?: boolean;
   onPause?: () => Promise<void>;
   onUnpause?: () => Promise<void>;
+  isReduced?: boolean;
 }
 
 const details = {
@@ -83,6 +84,7 @@ export const PostCard = ({
   isAdmin,
   onPause,
   onUnpause,
+  isReduced,
 }: PostCardProps) => {
   if (!post.attribute) return <h1>Something went wrong</h1>;
 
@@ -220,42 +222,46 @@ export const PostCard = ({
             </div>
           </div>
         </div>
-        <div className="mt-12 flex flex-col gap-10">
-          {!!post.desc && (
-            <div>
-              <h2 className="py-4 text-3xl font-medium">Description</h2>
-              <p className="rounded-lg border border-dashed border-slate-300 p-4">
-                {post.desc}
-              </p>
-            </div>
-          )}
-          <div>
-            <h2 className="pt-4 text-3xl font-medium">Property details</h2>
-            {detailsList.length > 0 && (
-              <ul className="flex gap-4 border-b py-6 sm:flex sm:flex-wrap md:grid md:grid-cols-4">
-                {detailsList}
-              </ul>
+        {!isReduced && (
+          <div className="mt-12 flex flex-col gap-10">
+            {!!post.desc && (
+              <div>
+                <h2 className="py-4 text-3xl font-medium">Description</h2>
+                <p className="rounded-lg border border-dashed border-slate-300 p-4">
+                  {post.desc}
+                </p>
+              </div>
             )}
-            <ul className="gap-4 py-6 sm:flex sm:flex-wrap md:grid md:grid-cols-4">
-              {Object.entries(attributes).map(([key, value]) => {
-                if (!post.attribute) return null;
+            <div>
+              <h2 className="pt-4 text-3xl font-medium">Property details</h2>
+              {detailsList.length > 0 && (
+                <ul className="flex gap-4 border-b py-6 sm:flex sm:flex-wrap md:grid md:grid-cols-4">
+                  {detailsList}
+                </ul>
+              )}
+              <ul className="gap-4 py-6 sm:flex sm:flex-wrap md:grid md:grid-cols-4">
+                {Object.entries(attributes).map(([key, value]) => {
+                  if (!post.attribute) return null;
 
-                const attribute = post.attribute[key as keyof Attribute];
+                  const attribute = post.attribute[key as keyof Attribute];
 
-                return (
-                  <li className="flex flex-grow items-center gap-2" key={key}>
-                    {React.createElement(
-                      attributesIcons[key as keyof Attribute],
-                    )}
-                    <h3 className={`text-lg ${!attribute && " line-through"} `}>
-                      {value}
-                    </h3>
-                  </li>
-                );
-              })}
-            </ul>
+                  return (
+                    <li className="flex flex-grow items-center gap-2" key={key}>
+                      {React.createElement(
+                        attributesIcons[key as keyof Attribute],
+                      )}
+                      <h3
+                        className={`text-lg ${!attribute && " line-through"} `}
+                      >
+                        {value}
+                      </h3>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
           </div>
-        </div>
+        )}
         {(isLoggedIn || isAdmin) && (
           <section>
             <h2 className="py-4 text-3xl font-medium">Documents</h2>
