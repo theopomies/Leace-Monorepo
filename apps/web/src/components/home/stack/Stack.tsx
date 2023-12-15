@@ -1,5 +1,4 @@
 import { motion } from "framer-motion";
-import { useRouter } from "next/router";
 import { useState } from "react";
 import { StackButton } from "./StackButton";
 import { SwipeCard } from "./SwipeCard";
@@ -19,10 +18,8 @@ export type StackProps = {
 };
 
 export function Stack({ posts, onLike, onDislike, onRewind }: StackProps) {
-  const router = useRouter();
-
   const [likeState, setLikeState] = useState<"dislike" | "like" | null>(null);
-  const [isSelected, setIsSelected] = useState(false);
+  const [isSelected, setIsSelected] = useState(true);
 
   const dislikeHandler = () => {
     if (posts[0]) {
@@ -55,7 +52,6 @@ export function Stack({ posts, onLike, onDislike, onRewind }: StackProps) {
           }}
           isSelected={isSelected}
           post={posts[0]}
-          onClick={() => router.push(`/posts/${posts[0]?.id}`)}
         />
 
         <div className="absolute">

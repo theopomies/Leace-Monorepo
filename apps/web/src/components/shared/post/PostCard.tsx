@@ -86,6 +86,8 @@ export const PostCard = ({
   onUnpause,
   isReduced,
 }: PostCardProps) => {
+  const [isExpanded, setIsExpanded] = React.useState(false);
+
   if (!post.attribute) return <h1>Something went wrong</h1>;
 
   const formatValue = (
@@ -142,13 +144,9 @@ export const PostCard = ({
 
   return (
     <div className="flex h-full w-full flex-col justify-between overflow-auto rounded-lg bg-white p-8 shadow">
-      <section>
-        {images && images.length > 0 && (
-          <div className="h-[40vh]">
-            <ImageSelector images={images?.map((image) => image.url) ?? []} />
-          </div>
-        )}
-        <div className="flex items-end justify-between">
+      <ImageSelector images={images?.map((image) => image.url) ?? []} />
+      <section onClick={() => isReduced && setIsExpanded(!isExpanded)}>
+        <div className="mt-4 flex items-end justify-between">
           <div>
             {post.title && (
               <h2 className="py-2 text-2xl font-medium">{post.title}</h2>
@@ -222,7 +220,7 @@ export const PostCard = ({
             </div>
           </div>
         </div>
-        {!isReduced && (
+        {(!isReduced || isExpanded) && (
           <div className="mt-12 flex flex-col gap-10">
             {!!post.desc && (
               <div>

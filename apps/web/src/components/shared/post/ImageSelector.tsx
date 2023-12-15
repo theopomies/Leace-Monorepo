@@ -8,27 +8,31 @@ interface ImageSelectorProps {
 export const ImageSelector = ({ images }: ImageSelectorProps) => {
   const [selectedImage, setSelectedImage] = useState(0);
 
-  return (
-    <div className="relative h-full">
-      <div className="absolute inset-0 h-full w-4/5 p-6">
+  return images.length > 0 ? (
+    <div className="flex h-[40vh] gap-2">
+      <div className="flex-grow">
         <img
           alt="post"
           src={images[selectedImage]}
-          className="h-full w-full rounded-2xl object-contain"
+          className="h-full w-full rounded-lg object-cover"
         />
       </div>
 
-      <div className="absolute inset-y-0 right-0 flex w-1/5 flex-col gap-4 overflow-y-auto shadow-inner">
+      <div className="flex flex-col gap-2 overflow-y-auto">
         {images.map((image, index) => (
           <img
             alt="post image"
             key={image}
             src={image}
-            className="h-auto w-full rounded-xl"
+            className="h-44 cursor-pointer rounded-lg object-cover"
             onClick={() => setSelectedImage(index)}
           />
         ))}
       </div>
+    </div>
+  ) : (
+    <div className="flex h-[40vh] w-full items-center justify-center bg-gray-100 text-2xl text-indigo-500">
+      <h1>No images</h1>
     </div>
   );
 };
