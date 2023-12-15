@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { useState } from "react";
 import { DocumentModal } from "./DocumentModal";
-import Link from "next/link";
 import { Button } from "../button/Button";
 import { Document } from "@prisma/client";
 import { CrossSvg } from "../icons/CrossSvg";
@@ -39,25 +38,13 @@ export const DocumentList = ({
     <div className="flex flex-wrap gap-4 pb-5">
       {documents.map((doc, index) => (
         <div key={index} className="relative flex items-center">
-          {doc.ext === "pdf" ? (
-            <Link href={doc.url}>
-              <img
-                src="/pdfLogo.jpg"
-                referrerPolicy="no-referrer"
-                alt="document"
-                className="w-32 cursor-pointer"
-                onClick={() => handleDocumentClick(doc)}
-              />
-            </Link>
-          ) : (
-            <img
-              src={doc.url}
-              referrerPolicy="no-referrer"
-              alt="document"
-              className="w-32 cursor-pointer"
-              onClick={() => handleDocumentClick(doc)}
-            />
-          )}
+          <img
+            src={doc.ext === "pdf" ? "/pdfLogo.jpg" : doc.url}
+            referrerPolicy="no-referrer"
+            alt="document"
+            className="w-32 cursor-pointer"
+            onClick={() => handleDocumentClick(doc)}
+          />
           {doc.valid && (
             <div className="absolute -right-1 -bottom-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-green-500 stroke-white p-1">
               <CheckSvg />

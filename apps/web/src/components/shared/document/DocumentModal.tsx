@@ -17,11 +17,7 @@ export const DocumentModal = ({
   return (
     <>
       <div className="px-auto fixed inset-0 z-50 flex justify-center p-5">
-        <div
-          className={`${
-            document.ext === "pdf" ? "w-full" : "h-full"
-          } flex items-center justify-center rounded-lg bg-slate-50 shadow-lg`}
-        >
+        <div className="flex flex-grow items-center justify-center rounded-lg bg-slate-50 shadow-lg">
           {document.ext === "pdf" ? (
             <object
               data={document.url}
