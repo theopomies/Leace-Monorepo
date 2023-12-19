@@ -18,22 +18,7 @@ export type StackProps = {
 };
 
 export function Stack({ posts, onLike, onDislike, onRewind }: StackProps) {
-  const [likeState, setLikeState] = useState<"dislike" | "like" | null>(null);
-  const [clickOn, setClickOn] = useState<"like" | "dislike" | null>(null);
-
-  const dislikeHandler = () => {
-    if (posts[0]) {
-      setLikeState(null);
-      setClickOn("dislike");
-    }
-  };
-
-  const likeHandler = () => {
-    if (posts[0]) {
-      setLikeState(null);
-      setClickOn("like");
-    }
-  };
+  const [likeState, setLikeState] = useState<"like" | "dislike" | null>(null);
 
   if (!posts[0] || !posts[0].attribute) {
     return null;
@@ -43,12 +28,9 @@ export function Stack({ posts, onLike, onDislike, onRewind }: StackProps) {
     <div className="flex w-full flex-grow items-center justify-center overflow-hidden py-10 px-60">
       <div className="relative flex flex-grow flex-col">
         <SwipeCard
-          onSwiping={(direction: "like" | "dislike" | null) => {
-            setLikeState(direction);
-          }}
-          clickOn={clickOn}
-          setClickOn={setClickOn}
           post={posts[0]}
+          likeState={likeState}
+          setLikeState={setLikeState}
           onLike={onLike}
           onDislike={onDislike}
         />
@@ -74,7 +56,7 @@ export function Stack({ posts, onLike, onDislike, onRewind }: StackProps) {
           className="mt-10 flex w-full flex-grow items-center justify-center gap-20"
         >
           <StackButton
-            onClick={dislikeHandler}
+            onClick={() => setLikeState("dislike")}
             className={`hover:drop-shadow-dislike transform border-[#FF6A4F] transition-all duration-300 ease-in-out hover:scale-105 ${
               likeState == "dislike" && "drop-shadow-dislike scale-105"
             }`}
@@ -94,7 +76,7 @@ export function Stack({ posts, onLike, onDislike, onRewind }: StackProps) {
             <Image src={RewindSvg} alt="Rewind" width="40" height="40" />
           </StackButton>
           <StackButton
-            onClick={likeHandler}
+            onClick={() => setLikeState("like")}
             className={`hover:drop-shadow-like transform border-[#63DE9A] transition-all duration-300 ease-in-out hover:scale-105 ${
               likeState == "like" && "drop-shadow-like scale-105"
             }`}

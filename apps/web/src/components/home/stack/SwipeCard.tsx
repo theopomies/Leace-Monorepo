@@ -5,19 +5,17 @@ import { PostType } from "./PostStack";
 import { trpc } from "../../../utils/trpc";
 
 type SwipeCardProps = {
-  onSwiping?: (direction: "like" | "dislike" | null) => void;
-  clickOn: "like" | "dislike" | null;
-  setClickOn: (value: "like" | "dislike" | null) => void;
   post: PostType;
+  likeState: "like" | "dislike" | null;
+  setLikeState: (value: "like" | "dislike" | null) => void;
   onLike: (post: PostType) => void;
   onDislike: (post: PostType) => void;
 };
 
 export function SwipeCard({
-  onSwiping = () => null,
-  clickOn,
-  setClickOn,
   post,
+  likeState,
+  setLikeState,
   onLike,
   onDislike,
 }: SwipeCardProps) {
@@ -29,37 +27,38 @@ export function SwipeCard({
   const opacity = useTransform(x, [-200, 0, 200], [0.5, 1, 0.5]);
   const scale = useTransform(x, [-200, 0, 200], [0.8, 1, 0.8]);
   const rotate = useTransform(x, [-200, 0, 200], [-15, 0, 15]);
-  const [likeValue, setLikeValue] = useState<"like" | null | "dislike">();
+  const [isDragging, setIsDragging] = useState(false);
 
   useEffect(() => {
-    if (clickOn === "like") {
-      x.set(0);
-      setLikeValue("like");
-      animate(x, 200, {
-        type: "tween",
-        duration: 0.2,
-        onComplete: () => {
-          onLike(post);
-          setClickOn(null);
-        },
-      });
-    } else if (clickOn === "dislike") {
-      x.set(0);
-      setLikeValue("dislike");
-      animate(x, -200, {
-        type: "tween",
-        duration: 0.2,
-        onComplete: () => {
-          onDislike(post);
-          setClickOn(null);
-        },
-      });
-    } else {
-      x.set(0);
-      setLikeValue(null);
+    if (!isDragging) {
+      if (likeState === "like") {
+        x.set(0);
+        setLikeState("like");
+        animate(x, 200, {
+          type: "tween",
+          duration: 0.2,
+          onComplete: () => {
+            onLike(post);
+            setLikeState(null);
+          },
+        });
+      } else if (likeState === "dislike") {
+        x.set(0);
+        setLikeState("dislike");
+        animate(x, -200, {
+          type: "tween",
+          duration: 0.2,
+          onComplete: () => {
+            onDislike(post);
+            setLikeState(null);
+          },
+        });
+      } else {
+        x.set(0);
+        setLikeState(null);
+      }
     }
-    x.set(0);
-  }, [clickOn, setClickOn, x, onLike, onDislike, post, images]);
+  }, [likeState, setLikeState, x, onLike, onDislike, post, images, isDragging]);
 
   return (
     <motion.div
@@ -68,50 +67,43 @@ export function SwipeCard({
       drag="x"
       dragConstraints={{ left: -200, right: 200 }}
       dragSnapToOrigin
+      onDragStart={() => setIsDragging(true)}
       onDrag={(event, info) => {
         if (info.offset.x > 100) {
           // Swiping right
-          onSwiping("like");
-          setLikeValue("like");
+          setLikeState("like");
         } else if (info.offset.x < -100) {
           // Swiping left
-          onSwiping("dislike");
-          setLikeValue("dislike");
+          setLikeState("dislike");
         } else {
-          setLikeValue(null);
-          onSwiping(null);
+          setLikeState(null);
         }
       }}
       onDragEnd={(event, info) => {
+        setIsDragging(false);
         if (info.offset.x > 100) {
           // Swiped right
-          animate(x, 0, {
-            type: "tween",
-            duration: 0,
-          });
-          onSwiping(null);
+          animate(x, 0, { type: "tween", duration: 0 });
+          setLikeState(null);
           onLike(post);
         } else if (info.offset.x < -100) {
           // Swiped left
-          animate(x, 0, {
-            type: "tween",
-            duration: 0,
-          });
-          onSwiping(null);
+          animate(x, 0, { type: "tween", duration: 0 });
+          setLikeState(null);
           onDislike(post);
         }
       }}
     >
       <PostCard key={post.id} post={post} images={images} isReduced />
-      {!!likeValue && (
+      {!!likeState && (
         <div
           className={`absolute top-8 left-8 rounded-lg border-4 p-2 text-[5vh] font-bold ${
-            likeValue == "like"
+            likeState == "like"
               ? "border-green-600 text-green-600"
               : "border-red-600 text-red-500"
           }`}
         >
-          {likeValue.toLocaleUpperCase()}
+          {likeState.toLocaleUpperCase()}
         </div>
       )}
     </motion.div>
