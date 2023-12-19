@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface ImageSelectorProps {
   images: string[];
@@ -7,14 +7,32 @@ interface ImageSelectorProps {
 
 export const ImageSelector = ({ images }: ImageSelectorProps) => {
   const [selectedImage, setSelectedImage] = useState(0);
+  const [imageClass, setImageClass] = useState("object-cover");
+
+  const getImageClass = (img: HTMLImageElement): void => {
+    if (img.height > img.width) {
+      setImageClass("object-contain");
+    } else {
+      setImageClass("object-cover");
+    }
+  };
+
+  useEffect(() => {
+    const img = new Image();
+    img.src = images[selectedImage] ?? "";
+
+    img.onload = () => {
+      getImageClass(img);
+    };
+  }, [selectedImage, images]);
 
   return images.length > 0 ? (
-    <div className="flex h-[40vh] gap-2">
+    <div className="flex h-[44vh] min-w-[114vh] gap-2">
       <div className="flex-grow">
         <img
           alt="post"
           src={images[selectedImage]}
-          className="h-full w-full rounded-lg object-cover"
+          className={`h-full w-full rounded-lg bg-gray-100 ${imageClass}`}
         />
       </div>
 
@@ -31,7 +49,7 @@ export const ImageSelector = ({ images }: ImageSelectorProps) => {
       </div>
     </div>
   ) : (
-    <div className="flex h-[40vh] w-full items-center justify-center bg-gray-100 text-2xl text-indigo-500">
+    <div className="flex h-[40vh] w-full items-center justify-center rounded-lg bg-gray-100 text-2xl text-indigo-500">
       <h1>No images</h1>
     </div>
   );
