@@ -8,7 +8,6 @@ import RewindSvg from "../../../../public/iconsButton/rewind.svg";
 import DislikeSvg from "../../../../public/iconsButton/dislike.svg";
 import Image from "next/image";
 import { PostCard } from "../../shared/post/PostCard";
-import { trpc } from "../../../utils/trpc";
 
 export type StackProps = {
   posts: PostType[];
@@ -37,16 +36,13 @@ export function Stack({ posts, onLike, onDislike, onRewind }: StackProps) {
 
         <div className="absolute w-full">
           {posts.slice(1, 4).map((post, index) => {
-            const { data: images } = trpc.image.getSignedPostUrl.useQuery({
-              postId: post.id,
-            });
             return (
               <div
                 key={index}
                 style={{ zIndex: 5 - index }}
                 className="absolute w-full"
               >
-                <PostCard post={post} images={images} isReduced />
+                <PostCard post={post} images={post.images} isReduced />
               </div>
             );
           })}

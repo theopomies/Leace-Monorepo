@@ -6,10 +6,31 @@ import { protectedProcedure, router } from "../trpc";
 import { getPostsWithAttribute } from "../utils/algorithm";
 import { filterStrings } from "../utils/filter";
 import { getId } from "../utils/getId";
+import { imageRouter } from "./image";
+import { Context } from "../context";
+import { Attribute, Image, Post } from "@prisma/client";
 
 interface UserLike extends User {
   relationshipCreated: Date;
 }
+
+const getImagesWithSignedUrl = async (
+  ctx: Context,
+  posts: (Post & {
+    attribute: Attribute | null;
+    images: Image[];
+  })[],
+) => {
+  const caller = imageRouter.createCaller(ctx);
+  return Promise.all(
+    posts.map(async (post) => {
+      const imagesWithSignedUrl = await caller.getSignedPostUrl({
+        postId: post.id,
+      });
+      return { ...post, images: imagesWithSignedUrl };
+    }),
+  );
+};
 
 export const postRouter = router({
   createPost: protectedProcedure([Role.AGENCY, Role.OWNER])
@@ -335,8 +356,14 @@ export const postRouter = router({
           user.id,
           user.isPremium ?? false,
         );
-        if (newPosts.length === 0)
-          return user.postsToBeSeen.sort((p) => (p.certified ? -1 : 1));
+        if (newPosts.length === 0) {
+          const postsToBeSeen = await getImagesWithSignedUrl(
+            ctx,
+            user.postsToBeSeen,
+          );
+          return postsToBeSeen.sort((p) => (p.certified ? -1 : 1));
+        }
+
         const updatedUser = await ctx.prisma.user.update({
           where: { id: user.id },
           data: {
@@ -348,10 +375,20 @@ export const postRouter = router({
             postsToBeSeen: { include: { images: true, attribute: true } },
           },
         });
-        return updatedUser.postsToBeSeen.sort((p) => (p.certified ? -1 : 1));
+
+        const postsToBeSeen = await getImagesWithSignedUrl(
+          ctx,
+          updatedUser.postsToBeSeen,
+        );
+        return postsToBeSeen.sort((p) => (p.certified ? -1 : 1));
       }
+
       // If more than 3 posts, return the list with certified posts first
-      return user.postsToBeSeen.sort((p) => (p.certified ? -1 : 1));
+      const postsToBeSeen = await getImagesWithSignedUrl(
+        ctx,
+        user.postsToBeSeen,
+      );
+      return postsToBeSeen.sort((p) => (p.certified ? -1 : 1));
     }),
   getUsersToBeSeen: protectedProcedure([Role.AGENCY, Role.OWNER])
     .input(z.object({ postId: z.string() }))

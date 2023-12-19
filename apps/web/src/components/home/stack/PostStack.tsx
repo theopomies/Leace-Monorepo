@@ -4,7 +4,10 @@ import { trpc } from "../../../utils/trpc";
 import { useEffect, useState } from "react";
 import { Post, Attribute, Image } from "@prisma/client";
 
-export type PostType = Post & { attribute: Attribute | null; images: Image[] };
+export type PostType = Post & {
+  attribute: Attribute | null;
+  images: (Image & { url: string })[] | null;
+};
 export interface PostStackProps {
   userId: string;
 }

@@ -2,7 +2,6 @@ import { motion, useMotionValue, useTransform, animate } from "framer-motion";
 import { useEffect, useState } from "react";
 import { PostCard } from "../../shared/post/PostCard";
 import { PostType } from "./PostStack";
-import { trpc } from "../../../utils/trpc";
 
 type SwipeCardProps = {
   post: PostType;
@@ -19,10 +18,6 @@ export function SwipeCard({
   onLike,
   onDislike,
 }: SwipeCardProps) {
-  const { data: images } = trpc.image.getSignedPostUrl.useQuery({
-    postId: post.id,
-  });
-
   const x = useMotionValue(0);
   const opacity = useTransform(x, [-200, 0, 200], [0.5, 1, 0.5]);
   const scale = useTransform(x, [-200, 0, 200], [0.8, 1, 0.8]);
@@ -58,7 +53,7 @@ export function SwipeCard({
         setLikeState(null);
       }
     }
-  }, [likeState, setLikeState, x, onLike, onDislike, post, images, isDragging]);
+  }, [likeState, setLikeState, x, onLike, onDislike, post, isDragging]);
 
   return (
     <motion.div
@@ -94,7 +89,7 @@ export function SwipeCard({
         }
       }}
     >
-      <PostCard key={post.id} post={post} images={images} isReduced />
+      <PostCard key={post.id} post={post} images={post.images} isReduced />
       {!!likeState && (
         <div
           className={`absolute top-8 left-8 rounded-lg border-4 p-2 text-[5vh] font-bold ${
