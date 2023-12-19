@@ -27,7 +27,6 @@ export function SwipeCard({
   useEffect(() => {
     if (!isDragging) {
       if (likeState === "like") {
-        x.set(0);
         setLikeState("like");
         animate(x, 200, {
           type: "tween",
@@ -38,7 +37,6 @@ export function SwipeCard({
           },
         });
       } else if (likeState === "dislike") {
-        x.set(0);
         setLikeState("dislike");
         animate(x, -200, {
           type: "tween",
@@ -48,9 +46,8 @@ export function SwipeCard({
             setLikeState(null);
           },
         });
-      } else {
-        x.set(0);
-        setLikeState(null);
+      } else if (likeState === null) {
+        animate(x, 0, { type: "tween", duration: 0 });
       }
     }
   }, [likeState, setLikeState, x, onLike, onDislike, post, isDragging]);
@@ -78,12 +75,10 @@ export function SwipeCard({
         setIsDragging(false);
         if (info.offset.x > 100) {
           // Swiped right
-          animate(x, 0, { type: "tween", duration: 0 });
           setLikeState(null);
           onLike(post);
         } else if (info.offset.x < -100) {
           // Swiped left
-          animate(x, 0, { type: "tween", duration: 0 });
           setLikeState(null);
           onDislike(post);
         }
