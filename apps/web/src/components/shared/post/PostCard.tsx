@@ -28,6 +28,8 @@ import { IconType } from "react-icons";
 import { FaHouseFlag } from "react-icons/fa6";
 import { FaShoppingCart } from "react-icons/fa";
 import { attributesIcons } from "../icons/attributesIcons";
+import { IoIosArrowDropdownCircle } from "react-icons/io";
+import { IoIosArrowDropupCircle } from "react-icons/io";
 
 export interface PostCardProps {
   post: Post & {
@@ -88,6 +90,16 @@ export const PostCard = ({
 }: PostCardProps) => {
   const [isExpanded, setIsExpanded] = React.useState(false);
 
+  React.useEffect(() => {
+    if (isExpanded) {
+      window.scrollTo({
+        top: document.body.scrollHeight,
+        left: 0,
+        behavior: "smooth",
+      });
+    }
+  });
+
   if (!post.attribute) return <h1>Something went wrong</h1>;
 
   const formatValue = (
@@ -145,7 +157,7 @@ export const PostCard = ({
   return (
     <div className="flex h-full w-full flex-col justify-between overflow-auto rounded-lg bg-white p-8 shadow">
       <ImageSelector images={images?.map((image) => image.url) ?? []} />
-      <section onClick={() => isReduced && setIsExpanded(!isExpanded)}>
+      <section>
         <div className="mt-4 flex items-end justify-between">
           <div>
             {post.title && (
@@ -167,7 +179,7 @@ export const PostCard = ({
             </p>
           </div>
         </div>
-        <div className="my-12 w-full border-t border-slate-200" />
+        <div className="my-5 w-full border-t border-slate-200" />
         <div className="flex justify-between px-6">
           <div className="flex items-center gap-4 rounded-lg p-2">
             <div className="rounded-full bg-indigo-400 p-3 text-white shadow">
@@ -220,8 +232,24 @@ export const PostCard = ({
             </div>
           </div>
         </div>
+        {isReduced && (
+          <div
+            className="mt-5 flex cursor-pointer justify-center"
+            onClick={() => setIsExpanded(!isExpanded)}
+          >
+            {!isExpanded ? (
+              <div className="rounded-full bg-indigo-400 p-1 text-white transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-lg">
+                <IoIosArrowDropdownCircle size={30} />
+              </div>
+            ) : (
+              <div className="rounded-full bg-indigo-400 p-1 text-white transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-lg">
+                <IoIosArrowDropupCircle size={30} />
+              </div>
+            )}
+          </div>
+        )}
         {(!isReduced || isExpanded) && (
-          <div className="mt-12 flex flex-col gap-10">
+          <div className={`${!isReduced && "mt-10"} flex flex-col gap-10`}>
             {!!post.desc && (
               <div>
                 <h2 className="py-4 text-3xl font-medium">Description</h2>

@@ -19,7 +19,7 @@ export type StackProps = {
 
 export function Stack({ posts, onLike, onDislike, onRewind }: StackProps) {
   const [likeState, setLikeState] = useState<"dislike" | "like" | null>(null);
-  const [isSelected, setIsSelected] = useState(true);
+  const [isSelected, setIsSelected] = useState(false);
 
   const dislikeHandler = () => {
     if (posts[0]) {
