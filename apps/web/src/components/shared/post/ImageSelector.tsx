@@ -27,7 +27,7 @@ export const ImageSelector = ({ images }: ImageSelectorProps) => {
   }, [selectedImage, images]);
 
   return images.length > 0 ? (
-    <div className="flex h-[44vh] min-w-[114vh] gap-2">
+    <div className="flex h-[44vh] w-full gap-2">
       <div className="flex-grow">
         <img
           alt="post"
@@ -49,8 +49,17 @@ export const ImageSelector = ({ images }: ImageSelectorProps) => {
       </div>
     </div>
   ) : (
-    <div className="flex h-[40vh] w-full items-center justify-center rounded-lg bg-gray-100 text-2xl text-indigo-500">
-      <h1>No images</h1>
+    <div className="flex h-[44vh] w-full gap-2">
+      <div className="flex-grow">
+        <h1 className="flex h-full flex-grow items-center justify-center rounded-lg bg-gray-100 text-2xl text-indigo-500">
+          No images
+        </h1>
+      </div>
+      <div className="flex flex-col gap-2 overflow-y-auto">
+        {["1", "2", "3"].map((image) => (
+          <div key={image} className="h-44 w-[20rem] rounded-lg bg-gray-100" />
+        ))}
+      </div>
     </div>
   );
 };

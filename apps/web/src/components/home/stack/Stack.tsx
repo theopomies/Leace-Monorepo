@@ -19,21 +19,19 @@ export type StackProps = {
 
 export function Stack({ posts, onLike, onDislike, onRewind }: StackProps) {
   const [likeState, setLikeState] = useState<"dislike" | "like" | null>(null);
-  const [isSelected, setIsSelected] = useState(false);
+  const [clickOn, setClickOn] = useState<"like" | "dislike" | null>(null);
 
   const dislikeHandler = () => {
     if (posts[0]) {
-      onDislike(posts[0]);
       setLikeState(null);
-      setIsSelected(false);
+      setClickOn("dislike");
     }
   };
 
   const likeHandler = () => {
     if (posts[0]) {
-      onLike(posts[0]);
       setLikeState(null);
-      setIsSelected(false);
+      setClickOn("like");
     }
   };
 
@@ -42,25 +40,30 @@ export function Stack({ posts, onLike, onDislike, onRewind }: StackProps) {
   }
 
   return (
-    <div className="flex w-full flex-grow items-center justify-center overflow-hidden py-10">
-      <div className="relative flex flex-col">
+    <div className="flex w-full flex-grow items-center justify-center overflow-hidden py-10 px-60">
+      <div className="relative flex flex-grow flex-col">
         <SwipeCard
-          onSwipeLeft={dislikeHandler}
-          onSwipeRight={likeHandler}
           onSwiping={(direction: "like" | "dislike" | null) => {
             setLikeState(direction);
           }}
-          isSelected={isSelected}
+          clickOn={clickOn}
+          setClickOn={setClickOn}
           post={posts[0]}
+          onLike={onLike}
+          onDislike={onDislike}
         />
 
-        <div className="absolute">
+        <div className="absolute w-full">
           {posts.slice(1, 4).map((post, index) => {
             const { data: images } = trpc.image.getSignedPostUrl.useQuery({
               postId: post.id,
             });
             return (
-              <div key={index} style={{ zIndex: 5 - index }}>
+              <div
+                key={index}
+                style={{ zIndex: 5 - index }}
+                className="absolute w-full"
+              >
                 <PostCard post={post} images={images} isReduced />
               </div>
             );
