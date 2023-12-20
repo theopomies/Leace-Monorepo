@@ -37,16 +37,16 @@ export const postModeration = router({
     },
   ),
   certifyPost: protectedProcedure([Role.ADMIN, Role.MODERATOR])
-    .input(z.object({ postId: z.string() }))
+    .input(z.object({ postId: z.string(), certify: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
       const post = await ctx.prisma.post.findFirst({
-        where: { id: input.postId, certified: false },
+        where: { id: input.postId },
       });
       if (!post) throw new TRPCError({ code: "NOT_FOUND" });
 
       await ctx.prisma.post.update({
         where: { id: post.id },
-        data: { certified: true },
+        data: { certified: input.certify },
       });
     }),
 });

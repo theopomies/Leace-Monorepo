@@ -10,6 +10,7 @@ export interface ActionButtons {
   userId: string;
   conversationLink?: string;
   postId?: string;
+  isCertified?: boolean;
 }
 
 export const ActionButtons = ({
@@ -17,6 +18,7 @@ export const ActionButtons = ({
   userId,
   conversationLink,
   postId,
+  isCertified,
 }: ActionButtons) => {
   return (
     <div className="flex h-full flex-col items-center justify-center gap-4 px-2">
@@ -25,7 +27,9 @@ export const ActionButtons = ({
           <Button theme="primary">View conversations</Button>
         </Link>
       )}
-      {postId && <CertifyPostButtons postId={postId} />}
+      {postId && (
+        <CertifyPostButtons postId={postId} isCertified={isCertified} />
+      )}
       {reportId && (
         <div className="flex w-full flex-col gap-2  pt-4">
           <p className="text-center text-xl">Report</p>
