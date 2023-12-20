@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { Button } from "../../shared/button/Button";
 import { Document } from "@prisma/client";
+import { IoCloseCircle } from "react-icons/io5";
 
 export interface DocumentModalProps {
   document: Document & { url: string };
@@ -16,13 +17,13 @@ export const DocumentModal = ({
 }: DocumentModalProps) => {
   return (
     <>
-      <div className="px-auto fixed inset-0 z-50 flex justify-center p-5">
-        <div className="flex flex-grow items-center justify-center rounded-lg bg-slate-50 shadow-lg">
+      <div className="px-auto fixed inset-0 z-50 flex justify-center p-20">
+        <div className="flex flex-grow items-center justify-center rounded-lg bg-slate-50">
           {document.ext === "pdf" ? (
             <object
               data={document.url}
               type="application/pdf"
-              className="mr-10 h-full w-full rounded-tl-lg rounded-bl-lg shadow-xl"
+              className="h-full w-full rounded-lg"
             >
               <p>
                 It appears you don&apos;t have a PDF plugin for this browser. No
@@ -37,25 +38,28 @@ export const DocumentModal = ({
               src={document.url}
               referrerPolicy="no-referrer"
               alt="document"
-              className="mr-10 h-full w-full rounded-tl-lg rounded-bl-lg shadow-xl"
+              className="h-full w-full rounded-lg object-contain"
             />
           )}
-
-          <div className="mr-9 flex items-center justify-center gap-4">
-            <Button onClick={() => setShowModal(false)}>Close</Button>
-            {onValidation && (
-              <Button
-                onClick={() => {
-                  onValidation(document);
-                  setShowModal(false);
-                }}
-                theme={document.valid ? "danger" : "success"}
-              >
-                {document.valid ? "Unverify" : "Verify"}
-              </Button>
-            )}
-          </div>
         </div>
+        <div
+          onClick={() => setShowModal(false)}
+          className="absolute top-5 right-5 rounded-full bg-indigo-400 p-1 text-white transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-lg"
+        >
+          <IoCloseCircle size={50} />
+        </div>
+        {onValidation && (
+          <Button
+            onClick={() => {
+              onValidation(document);
+              setShowModal(false);
+            }}
+            className="right-50 left-50 absolute bottom-5"
+            theme={document.valid ? "danger" : "success"}
+          >
+            {document.valid ? "Unverify" : "Verify"}
+          </Button>
+        )}
       </div>
       <div className="fixed inset-0 z-40 bg-black opacity-25"></div>
     </>
