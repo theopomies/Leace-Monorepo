@@ -72,13 +72,14 @@ export function SwipeCard({
         }
       }}
       onDragEnd={(event, info) => {
-        setIsDragging(false);
         if (info.offset.x > 100) {
           // Swiped right
+          setIsDragging(false);
           setLikeState(null);
           onLike(post);
         } else if (info.offset.x < -100) {
           // Swiped left
+          setIsDragging(false);
           setLikeState(null);
           onDislike(post);
         }
