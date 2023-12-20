@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 
 export const Search = () => {
   const { setUUID, uuid, userList, isLoading, type } = useUUIDSearch();
-  const [showResults, setShowResults] = useState(false);
+  const [showResults, setShowResults] = useState(true);
   const searchRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
