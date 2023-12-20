@@ -50,7 +50,7 @@ export function PostStack({ userId }: PostStackProps) {
   const onRewind = async () => {
     if (lastPost) {
       setPosts((posts) => [lastPost, ...posts]);
-      await rewindHandler({ userId });
+      await rewindHandler({ postId: lastPost.id, userId });
       setLastPost(null);
     }
   };

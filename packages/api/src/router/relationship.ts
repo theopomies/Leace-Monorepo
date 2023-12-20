@@ -278,7 +278,7 @@ export const relationshipRouter = router({
       return { missed: true, message: "You missed a match!" };
     }),
   rewindPostForTenant: protectedProcedure([Role.TENANT])
-    .input(z.object({ userId: z.string() }))
+    .input(z.object({ postId: z.string(), userId: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const userId = getId({ ctx, userId: input.userId });
 
@@ -291,7 +291,7 @@ export const relationshipRouter = router({
       if (user.role != Role.TENANT) throw new TRPCError({ code: "FORBIDDEN" });
 
       const lastPostSeen = await ctx.prisma.post.findFirst({
-        where: { seenBy: { some: { id: userId } } },
+        where: { id: input.postId },
         orderBy: { createdAt: "desc" },
       });
 
