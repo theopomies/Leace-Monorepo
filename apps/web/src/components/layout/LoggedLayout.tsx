@@ -3,7 +3,7 @@ import Head from "next/head";
 import { Role } from "@prisma/client";
 import { trpc } from "../../utils/trpc";
 import { Loader } from "../shared/Loader";
-import { RedirectToSignIn, SignedIn, SignedOut } from "@clerk/nextjs";
+import { RedirectToSignIn, SignedIn, SignedOut, useClerk } from "@clerk/nextjs";
 import { ReactNode } from "react";
 import { useRouter } from "next/router";
 import { BanMessage } from "../moderation/ban/BanMessage";
@@ -56,6 +56,7 @@ const AuthorizedLayout = ({
   roles?: Role[];
   navbar: boolean;
 }) => {
+  const { signOut } = useClerk();
   const { data: session, isLoading } = trpc.auth.getSession.useQuery();
   const { data: onboardingStatus } =
     trpc.onboarding.getUserOnboardingStatus.useQuery(
@@ -64,6 +65,10 @@ const AuthorizedLayout = ({
       },
       {
         enabled: !!session?.userId,
+        retry: false,
+        onError: () => {
+          signOut();
+        },
       },
     );
   const router = useRouter();
