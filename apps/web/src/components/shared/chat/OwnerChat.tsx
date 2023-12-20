@@ -24,7 +24,7 @@ export function OwnerChat({
     {
       conversationId: conversationId ?? "",
     },
-    { enabled: !!conversationId, refetchInterval: 5000 },
+    { enabled: !!conversationId, refetchInterval: 4000 },
   );
   const sendMutation = trpc.conversation.sendMessage.useMutation({
     onSuccess() {
