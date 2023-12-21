@@ -118,6 +118,8 @@ export const UserForm = ({
   const [selectedImage, setSelectedImage] = useState<File>();
   const [imagePreview, setImagePreview] = useState<string | undefined>();
 
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
   useEffect(() => {
     const date = user.birthDate
       ? `${user.birthDate.getUTCFullYear()}-${
@@ -203,6 +205,7 @@ export const UserForm = ({
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
 
     console.log("INCOME " + income);
     const data: UserFormData = {
@@ -326,10 +329,14 @@ export const UserForm = ({
             </button>
           </div>
           <div className="flex gap-4">
-            <Button theme="danger" onClick={onCancel}>
+            <Button theme="grey" onClick={onCancel}>
               Cancel
             </Button>
-            <Button onClick={() => formRef.current?.requestSubmit()}>
+            <Button
+              onClick={() => formRef.current?.requestSubmit()}
+              loading={isSubmitting}
+              className="w-20"
+            >
               Submit
             </Button>
           </div>

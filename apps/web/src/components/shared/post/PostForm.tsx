@@ -97,6 +97,8 @@ export const PostForm = (props: PostFormProps) => {
   const [selectedDocuments, setSelectedDocuments] = useState<File[]>([]);
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   useEffect(() => {
     const date = props.post?.constructionDate
       ? `${props.post?.constructionDate.getUTCFullYear()}-${
@@ -171,6 +173,7 @@ export const PostForm = (props: PostFormProps) => {
     };
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+    setIsSubmitting(true);
     e.preventDefault();
     if (!size || !price || !bedrooms || !bathrooms) return null;
     const data: PostFormData = {
@@ -364,10 +367,10 @@ export const PostForm = (props: PostFormProps) => {
         </div>
       </section>
       <div className="mt-10 flex justify-center gap-4">
-        <Button type="button" theme="danger" onClick={props.onCancel}>
+        <Button type="button" theme="grey" onClick={props.onCancel}>
           Cancel
         </Button>
-        <Button>Submit</Button>
+        <Button loading={isSubmitting}>Submit</Button>
       </div>
     </form>
   );
