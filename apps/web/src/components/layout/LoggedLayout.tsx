@@ -104,8 +104,8 @@ const AuthorizedLayout = ({
 
   let activePage = "Home";
 
-  if (router.pathname.startsWith("/dashboard")) {
-    activePage = "Dashboard";
+  if (router.pathname.startsWith("/metrics")) {
+    activePage = "Metrics";
   } else if (router.pathname.startsWith("/users/[userId]/posts")) {
     activePage = "My Posts";
   } else if (router.pathname.startsWith("/users/[userId]/matches")) {

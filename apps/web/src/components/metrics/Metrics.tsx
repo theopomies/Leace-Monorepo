@@ -59,7 +59,7 @@ const data = [
   },
 ];
 
-export function Dashboard(/*{ user }: DashboardProps*/) {
+export function Metrics(/*{ user }: MetricsProps*/) {
   return (
     <div className="flex w-full flex-col justify-center py-8 px-12">
       <h1 className="text-4xl font-semibold">Welcome, Theo!</h1>
