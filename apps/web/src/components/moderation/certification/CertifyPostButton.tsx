@@ -29,7 +29,11 @@ export const CertifyPostButtons = ({
 
   return (
     <div className="flex w-full items-center justify-center">
-      <Button onClick={handleClick} theme={isCertified ? "danger" : "success"}>
+      <Button
+        onClick={handleClick}
+        theme={isCertified ? "danger" : "success"}
+        className="w-full"
+      >
         {isCertified ? "Decertify" : "Certify"} Post
       </Button>
     </div>

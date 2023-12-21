@@ -20,7 +20,9 @@ export const RejectReports = ({ reportId }: RejectReportProps) => {
 
   return (
     <div className="flex w-full items-center justify-center">
-      <Button onClick={handleClick}>Reject</Button>
+      <Button onClick={handleClick} className="w-full">
+        Reject
+      </Button>
     </div>
   );
 };
