@@ -311,7 +311,7 @@ export const PostCard = ({
         <div className="mt-10 flex justify-center gap-4">
           {updateLink && (
             <Link
-              className="rounded bg-indigo-500 px-4 py-3 font-bold text-white hover:bg-indigo-600 active:bg-indigo-700"
+              className="rounded bg-indigo-500 px-4 py-3 text-white hover:bg-indigo-600 active:bg-indigo-700"
               href={updateLink.replace("[postId]", post.id)}
             >
               Update

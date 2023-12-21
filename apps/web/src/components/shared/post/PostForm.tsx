@@ -370,7 +370,9 @@ export const PostForm = (props: PostFormProps) => {
         <Button type="button" theme="grey" onClick={props.onCancel}>
           Cancel
         </Button>
-        <Button loading={isSubmitting}>Submit</Button>
+        <Button loading={isSubmitting} className="w-20">
+          Submit
+        </Button>
       </div>
     </form>
   );
