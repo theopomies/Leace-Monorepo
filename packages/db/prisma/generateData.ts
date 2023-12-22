@@ -8,6 +8,7 @@ import {
   MaritalStatus,
   EnergyClass,
   RelationType,
+  ReportReason,
 } from "@prisma/client";
 
 import { S3Client } from "@aws-sdk/client-s3";
@@ -35,6 +36,7 @@ import {
   generateRandomPostDescriptions,
   checkExistingConversation,
   checkExistingRelationship,
+  nbReports,
 } from "./utils";
 
 import {
@@ -304,4 +306,50 @@ export const makeImages = async (prisma: PrismaClient, s3Client: S3Client) => {
   }
 
   return images;
+};
+
+export const makeReports = async (prisma: PrismaClient) => {
+  const reports = new Array<Prisma.ReportCreateManyInput>();
+
+  const role = [Role.AGENCY, Role.TENANT, Role.OWNER][getRandomInt(0, 2)];
+  if (!role) return reports;
+
+  const userIds = await getUserIds(role, prisma);
+  const postIds = await getPostIds(prisma);
+
+  for (let n = 0; n < nbReports; n++) {
+    const userId = userIds[n % userIds.length];
+    const createdById = userIds[(n + 1) % userIds.length];
+    const postId = postIds[n % postIds.length];
+
+    if (userId && createdById) {
+      reports.push({
+        createdById,
+        userId,
+        reason: [
+          ReportReason.SCAM,
+          ReportReason.INAPPROPRIATE,
+          ReportReason.SPAM,
+          ReportReason.OTHER,
+        ][getRandomInt(0, 3)],
+        desc: "This is an auto generated report",
+      });
+    }
+
+    if (postId && createdById) {
+      reports.push({
+        createdById,
+        postId,
+        reason: [
+          ReportReason.SCAM,
+          ReportReason.INAPPROPRIATE,
+          ReportReason.SPAM,
+          ReportReason.OTHER,
+        ][getRandomInt(0, 3)],
+        desc: "This is an auto generated report",
+      });
+    }
+  }
+
+  return reports;
 };
