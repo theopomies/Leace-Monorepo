@@ -1,7 +1,7 @@
 import { router, protectedProcedure, AuthenticatedProcedure } from "../trpc";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
-import { Role, UserStatus } from "@prisma/client";
+import { Role, UserStatus, MaritalStatus } from "@prisma/client";
 import { isPossiblePhoneNumber } from "libphonenumber-js";
 import { getId } from "../utils/getId";
 import { filterStrings } from "../utils/filter";
@@ -41,6 +41,11 @@ export const userRouter = router({
     });
 
     if (!newAccount) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+    ctx.mixPanel.track("Signed Up", {
+      distinct_id: ctx.auth.userId,
+      "Signup Type": "Referral",
+    });
   }),
   /** Update a user role with the given id and role. */
   updateUserRoleById: AuthenticatedProcedure.input(
@@ -61,6 +66,12 @@ export const userRouter = router({
     });
 
     if (!updated) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+    ctx.mixPanel.track("Update Role", {
+      distinct_id: ctx.auth.userId,
+      Items: "Referral",
+      role: input.role,
+    });
   }),
   /** Update one user's data with the given id
       Also check for:
@@ -77,11 +88,26 @@ export const userRouter = router({
     .input(
       z.object({
         userId: z.string(),
+        image: z.string().optional(),
         firstName: z.string().optional(),
         lastName: z.string().optional(),
+        country: z.string().optional(),
         phoneNumber: z.string().optional(),
         description: z.string().optional(),
         birthDate: z.date().optional(),
+        job: z.string().optional(),
+        employmentContract: z.string().optional(),
+        income: z.number().optional(),
+        creditScore: z.number().optional(),
+        maritalStatus: z
+          .enum([
+            MaritalStatus.SINGLE,
+            MaritalStatus.MARRIED,
+            MaritalStatus.ONE_CHILD,
+            MaritalStatus.TWO_CHILD,
+            MaritalStatus.OTHER,
+          ])
+          .optional(),
         isPremium: z.boolean().optional(),
       }),
     )
@@ -106,6 +132,7 @@ export const userRouter = router({
         const updated = await ctx.prisma.user.update({
           where: { id: userId },
           data: {
+            image: input.image,
             firstName: input.firstName,
             lastName: input.lastName,
             phoneNumber: input.phoneNumber,
@@ -113,18 +140,34 @@ export const userRouter = router({
             birthDate,
             isPremium: input.isPremium,
             status: UserStatus.ACTIVE,
+            country: input.country,
           },
         });
         if (!updated) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
       }
 
+      if (
+        input.creditScore &&
+        (input.creditScore < 0 || input.creditScore > 1000)
+      )
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "credit score must be between 0 and 1000",
+        });
+
       const updated = await ctx.prisma.user.update({
         where: { id: userId },
         data: {
+          image: input.image,
           firstName: input.firstName,
           lastName: input.lastName,
           phoneNumber: input.phoneNumber,
           description: input.description,
+          job: input.job,
+          employmentContract: input.employmentContract,
+          income: input.income,
+          creditScore: input.creditScore,
+          maritalStatus: input.maritalStatus,
           isPremium: input.isPremium,
         },
       });
@@ -139,6 +182,8 @@ export const userRouter = router({
           input.lastName,
           input.phoneNumber,
           input.description,
+          input.job,
+          input.employmentContract,
         ],
       });
     }),
@@ -167,7 +212,12 @@ export const userRouter = router({
       return user;
     }),
   /** Delete one user with the given id. */
-  deleteUserById: protectedProcedure([Role.TENANT, Role.OWNER, Role.AGENCY])
+  deleteUserById: protectedProcedure([
+    Role.TENANT,
+    Role.OWNER,
+    Role.AGENCY,
+    Role.ADMIN,
+  ])
     .input(z.object({ userId: z.string() }))
     .mutation(async ({ input, ctx }) => {
       const userId = getId({ ctx: ctx, userId: input.userId });

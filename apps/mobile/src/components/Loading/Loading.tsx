@@ -1,15 +1,26 @@
-import { View, Platform, StatusBar, Image } from "react-native";
 import React from "react";
+import { Btn } from "../Btn";
+import { View, Image } from "react-native";
+import { useAuth } from "@clerk/clerk-expo";
 
-export default function Loading() {
+export default function Loading({ signOut }: { signOut?: boolean }) {
+  const { signOut: disconnect } = useAuth();
+
   return (
-    <View
-      className="flex-1 items-center justify-center bg-white"
-      style={{
-        paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-      }}
-    >
-      <Image source={require("../../../assets/logo.png")} alt="leace-logo" />
+    <View className="flex-1 items-center justify-center bg-white">
+      <Image
+        source={require("../../../assets/logo_1024.png")}
+        alt="leace-logo"
+        className="h-52 w-52"
+      />
+      {signOut && (
+        <Btn
+          title="Sign Out"
+          onPress={() => disconnect()}
+          iconName="logout"
+          iconType="material-icons"
+        ></Btn>
+      )}
     </View>
   );
 }

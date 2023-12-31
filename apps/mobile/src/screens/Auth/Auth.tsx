@@ -4,8 +4,12 @@ import { View, SafeAreaView, Text, Image } from "react-native";
 
 export default function Auth() {
   return (
-    <SafeAreaView className="flex-1 items-center justify-center bg-slate-50">
-      <Image source={require("../../../assets/logo.png")} alt="leace" />
+    <SafeAreaView className="flex-1 items-center justify-center bg-white">
+      <Image
+        source={require("../../../assets/logo_1024.png")}
+        alt="leace"
+        className="h-52 w-52"
+      />
       <View className="w-full p-8">
         <View className="mb-4">
           <OAuth

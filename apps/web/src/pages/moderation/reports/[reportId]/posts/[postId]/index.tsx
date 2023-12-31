@@ -17,7 +17,7 @@ export default function ModerationPostView() {
 
   return (
     <LoggedLayout
-      title="User Moderation | Leace"
+      title="Post Moderation | Leace"
       roles={[Role.ADMIN, Role.MODERATOR]}
     >
       <ModeratioPostPage reportId={reportId} postId={postId} />

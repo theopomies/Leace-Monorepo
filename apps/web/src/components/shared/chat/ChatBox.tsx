@@ -1,13 +1,13 @@
 import { ReactNode, useEffect, useRef } from "react";
 import { ChatMessage, MessageWithSender } from "./ChatMessage";
 import { ChatInput } from "./ChatInput";
-import { User } from "@prisma/client";
+import Link from "next/link";
 
 export interface ChatBoxProps {
   userId: string;
   messages: MessageWithSender[];
   onSend?: (content: string) => void;
-  contact?: User;
+  contact?: { name: string; link: string };
   additionnalBarComponent?: ReactNode;
 }
 
@@ -34,9 +34,9 @@ export const ChatBox = ({
     <div className="flex flex-grow flex-col p-6">
       {contact && (
         <div className="flex items-center justify-between rounded-xl bg-white p-4">
-          <div>
-            {contact.firstName} {contact.lastName}
-          </div>
+          <Link href={contact.link} className=" underline">
+            {contact.name}
+          </Link>
           <div>{additionnalBarComponent}</div>
         </div>
       )}

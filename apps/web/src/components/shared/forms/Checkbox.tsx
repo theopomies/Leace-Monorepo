@@ -33,7 +33,7 @@ export function Checkbox({
       {children}
       <input
         type={type}
-        className="pointer-events-none absolute opacity-0"
+        className="pointer-events-none absolute h-0 w-0 opacity-0"
         {...props}
         checked={checked}
         onChange={handleChange}

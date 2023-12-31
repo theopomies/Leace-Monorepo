@@ -1,35 +1,35 @@
-import React, {
-  Dispatch,
-  MouseEventHandler,
-  SetStateAction,
-  useState,
-} from "react";
+import React, { MouseEventHandler } from "react";
 import { Header } from "../shared/Header";
 import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
 import { PostForm, PostFormData } from "../shared/post/PostForm";
 import axios from "axios";
 
-export const CreatePostPage = ({ userId }: { userId: string }) => {
+export const CreatePostPage = () => {
   const router = useRouter();
   const post = trpc.post.createPost.useMutation();
 
   const updatePost = trpc.attribute.updatePostAttributes.useMutation();
 
   const uploadImage = trpc.image.putSignedUrl.useMutation();
-  const [images, setImages] = useState<File[] | undefined>();
 
   const uploadDocument = trpc.document.putSignedUrl.useMutation();
-  const [documents, setDocuments] = useState<File[] | undefined>();
 
   const handleSubmit = async (data: PostFormData) => {
-    const { id: postId } = await post.mutateAsync({
+    const postCreated = await post.mutateAsync({
       title: data.title,
       desc: data.description,
       content: "",
+      constructionDate: new Date(data.constructionDate + "T00:00:00.000Z"),
+      energyClass: data.energyClass,
+      estimatedCosts: data.estimatedCosts,
+      ges: data.ges,
+      internetFiber: data.internetFiber,
+      securityAlarm: data.securityAlarm,
+      nearedShops: data.nearestShops,
     });
     await updatePost.mutateAsync({
-      postId,
+      postId: postCreated.id,
       location: data.location,
       homeType: data.homeType,
       furnished: data.furnished,
@@ -41,11 +41,15 @@ export const CreatePostPage = ({ userId }: { userId: string }) => {
       elevator: data.elevator,
       pool: data.pool,
       disability: data.disability,
-      size: data.size,
       price: data.price,
+      size: data.size,
     });
-    if (images && images.length > 0) {
-      images.map(async (image) => {
+    return postCreated;
+  };
+
+  const handleUploadImages = (files: File[], postId?: string) => {
+    if (files && files.length > 0 && postId) {
+      Array.from(files).map(async (image) => {
         await uploadImage
           .mutateAsync({ postId, fileType: image.type })
           .then(async (url) => {
@@ -55,36 +59,23 @@ export const CreatePostPage = ({ userId }: { userId: string }) => {
           });
       });
     }
-    if (documents && documents.length > 0) {
-      documents.map(async (document) => {
+  };
+
+  const handleUploadDocs = (files: File[], postId?: string) => {
+    if (files && files.length > 0 && postId) {
+      Array.from(files).map(async (document) => {
         await uploadDocument
           .mutateAsync({ postId, fileType: document.type })
           .then(async (url) => {
-            if (url)
+            if (url) {
               await axios.put(url, document, {
                 headers: { "Content-Type": document.type },
               });
+            }
           });
       });
     }
-    router.push(`/users/${userId}/posts/${postId}`);
   };
-
-  const handleImage =
-    (setter: Dispatch<SetStateAction<File[] | undefined>>) =>
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      if (event.target.files && event.target.files[0]) {
-        setter(Array.from(event.target.files));
-      }
-    };
-
-  const handleDocuments =
-    (setter: Dispatch<SetStateAction<File[] | undefined>>) =>
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      if (event.target.files && event.target.files[0]) {
-        setter(Array.from(event.target.files));
-      }
-    };
 
   const handleCancel: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.preventDefault();
@@ -92,15 +83,13 @@ export const CreatePostPage = ({ userId }: { userId: string }) => {
   };
 
   return (
-    <div className="w-full">
+    <div className="flex w-full flex-grow flex-col">
       <Header heading={"Create Post"} />
       <PostForm
-        onSubmit={handleSubmit}
+        onSubmitNew={handleSubmit}
         onCancel={handleCancel}
-        setImages={handleImage(setImages)}
-        setDocuments={handleDocuments(setDocuments)}
-        documents={documents}
-        images={images}
+        onImgsUpload={handleUploadImages}
+        onDocsUpload={handleUploadDocs}
       />
     </div>
   );

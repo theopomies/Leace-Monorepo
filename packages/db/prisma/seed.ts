@@ -1,35 +1,59 @@
 import { PrismaClient } from "@prisma/client";
+//import { S3Client } from "@aws-sdk/client-s3";
+
 import {
-  makeImages,
+  makeUserAttributes,
   makePosts,
-  makeRelationships,
-  makeReports,
   makeUsers,
+  makePostAttributes,
+  makeRelationships,
+  makeConversations,
+  makeMessages,
+  //makeImages,
 } from "./generateData";
 
 const prisma = new PrismaClient();
+// const s3Client = new S3Client({
+//   region: "eu-west-3",
+//   apiVersion: "2006-03-01",
+//   credentials: {
+//     accessKeyId: process.env.AWS_ACCESS_KEY_ID || "",
+//     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || "",
+//   },
+// });
 
 async function main() {
   await prisma.user.createMany({
     data: makeUsers(),
   });
 
-  const posts = await makePosts(prisma);
-
-  const reports = await makeReports(prisma);
-  await prisma.report.createMany({
-    data: reports,
+  await prisma.attribute.createMany({
+    data: await makeUserAttributes(prisma),
   });
 
-  const images = await makeImages(prisma);
-  await prisma.image.createMany({
-    data: images,
+  await prisma.post.createMany({
+    data: await makePosts(prisma),
   });
 
-  //const relationships = await makeRelationships(prisma);
-  //await prisma.relationship.createMany({
-  //  data: relationships,
-  //});
+  await prisma.attribute.createMany({
+    data: await makePostAttributes(prisma),
+  });
+
+  await prisma.relationship.createMany({
+    data: await makeRelationships(prisma),
+  });
+
+  await prisma.conversation.createMany({
+    data: await makeConversations(prisma),
+  });
+
+  await prisma.message.createMany({
+    data: await makeMessages(prisma),
+  });
+
+  // await prisma.image.createMany({
+  //   data: await makeImages(prisma, s3Client),
+  // });
 }
 
 main()

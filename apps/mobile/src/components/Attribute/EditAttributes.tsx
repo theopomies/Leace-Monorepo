@@ -1,9 +1,9 @@
 import { View, Text, TouchableOpacity, TextInput } from "react-native";
 import React, { useState } from "react";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import RNPickerSelect from "react-native-picker-select";
+// import RNPickerSelect from "react-native-picker-select";
 import { Icon } from "react-native-elements";
-//import { IUserAttrs } from "../../types";
+import { IUserAttrs } from "../../types";
 
 interface IAttributeBtn {
   name: string;
@@ -13,8 +13,8 @@ interface IAttributeBtn {
 
 interface ICreateUserAttrs {
   userId: string;
-  attrs: any | undefined;
-  setAttrs: React.Dispatch<React.SetStateAction<any | undefined>>;
+  attrs: IUserAttrs | undefined;
+  setAttrs: React.Dispatch<React.SetStateAction<IUserAttrs | undefined>>;
 }
 
 function AttributeBtn({ name, status, iconName }: IAttributeBtn) {
@@ -23,7 +23,7 @@ function AttributeBtn({ name, status, iconName }: IAttributeBtn) {
       className="flex min-w-[100px] flex-row items-center justify-center space-x-1 rounded-full px-2 py-1"
       style={{
         margin: 2,
-        backgroundColor: "#10316B",
+        backgroundColor: "#0A2472",
         opacity: status ? 1 : 0.5,
       }}
     >
@@ -39,6 +39,7 @@ function AttributeBtn({ name, status, iconName }: IAttributeBtn) {
 }
 
 export default function EditAttributes({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   userId,
   attrs,
   setAttrs,
@@ -81,7 +82,7 @@ export default function EditAttributes({
       </View>
       <View>
         <Text className="text-base font-bold text-[#394867]">Type:</Text>
-        <RNPickerSelect
+        {/*<RNPickerSelect
           placeholder={{}}
           onValueChange={(itemValue) =>
             setAttrs({ ...attrs, homeType: itemValue })
@@ -90,11 +91,11 @@ export default function EditAttributes({
             { label: "HOUSE", value: "HOUSE" },
             { label: "APARTMENT", value: "APARTMENT" },
           ]}
-        />
+        />*/}
       </View>
       <View className="flex flex-row justify-around">
         <View className="min-w-[80px]">
-          <Text className="text-center text-base font-bold text-[#10316B]">
+          <Text className="text-center text-base font-bold text-[#0A2472]">
             Rent start
           </Text>
           <TouchableOpacity onPress={() => setOpen(true)}>
@@ -105,7 +106,7 @@ export default function EditAttributes({
           </TouchableOpacity>
         </View>
         <View className="min-w-[80px]">
-          <Text className="text-center text-base font-bold text-[#10316B]">
+          <Text className="text-center text-base font-bold text-[#0A2472]">
             Rent end
           </Text>
           <TouchableOpacity onPress={() => setOpen1(true)}>
@@ -117,12 +118,11 @@ export default function EditAttributes({
         </View>
       </View>
       <View className="">
-        <Text className="text-base font-bold text-[#10316B]">Budget:</Text>
+        <Text className="text-base font-bold text-[#0A2472]">Budget:</Text>
         <View className="flex flex-row justify-evenly">
-          <View className="flex min-w-[100px] flex-row items-center justify-center rounded-full bg-[#10316B] px-2 py-0.5">
+          <View className="flex min-w-[100px] flex-row items-center justify-center rounded-full bg-[#0A2472] px-2 py-0.5">
             <Text className="font-light text-white">Min: </Text>
             <TextInput
-              // @ts-ignore
               inputMode="numeric"
               placeholder="0"
               className="font-light text-white"
@@ -134,10 +134,9 @@ export default function EditAttributes({
             />
             <Text className="font-light text-white"> €</Text>
           </View>
-          <View className="flex min-w-[100px] flex-row items-center justify-center rounded-full bg-[#10316B] px-2 py-0.5">
+          <View className="flex min-w-[100px] flex-row items-center justify-center rounded-full bg-[#0A2472] px-2 py-0.5">
             <Text className="font-light text-white">Max: </Text>
             <TextInput
-              // @ts-ignore
               inputMode="numeric"
               placeholder="0"
               className="font-light text-white"
@@ -152,12 +151,11 @@ export default function EditAttributes({
         </View>
       </View>
       <View className="">
-        <Text className="text-base font-bold text-[#10316B]">Size:</Text>
+        <Text className="text-base font-bold text-[#0A2472]">Size:</Text>
         <View className="flex flex-row justify-evenly">
-          <View className="flex min-w-[100px] flex-row items-center justify-center rounded-full bg-[#10316B] px-2 py-0.5">
+          <View className="flex min-w-[100px] flex-row items-center justify-center rounded-full bg-[#0A2472] px-2 py-0.5">
             <Text className="font-light text-white">Min: </Text>
             <TextInput
-              // @ts-ignore
               inputMode="numeric"
               placeholder="0"
               className="font-light text-white"
@@ -169,10 +167,9 @@ export default function EditAttributes({
             />
             <Text className="font-light text-white"> m²</Text>
           </View>
-          <View className="flex min-w-[100px] flex-row items-center justify-center rounded-full bg-[#10316B] px-2 py-0.5">
+          <View className="flex min-w-[100px] flex-row items-center justify-center rounded-full bg-[#0A2472] px-2 py-0.5">
             <Text className="font-light text-white">Max: </Text>
             <TextInput
-              // @ts-ignore
               inputMode="numeric"
               placeholder="0"
               className="font-light text-white"
@@ -187,7 +184,7 @@ export default function EditAttributes({
         </View>
       </View>
       <View>
-        <Text className="text-base font-bold text-[#10316B]">Attributes:</Text>
+        <Text className="text-base font-bold text-[#0A2472]">Attributes:</Text>
         <View className="flex flex-row flex-wrap items-center justify-center">
           <TouchableOpacity
             onPress={() => {

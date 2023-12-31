@@ -32,26 +32,14 @@ export const imageModeration = router({
 
         const user = await ctx.prisma.user.findUnique({
           where: { id: userId },
-          include: { images: true },
         });
         if (!user) throw new TRPCError({ code: "NOT_FOUND" });
 
-        if (user.images[0]) {
-          const updated = await ctx.prisma.image.update({
-            where: { id: user.images[0].id },
-            data: { ext: ext },
-          });
-          if (!updated) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
-        } else {
-          const created = await ctx.prisma.image.create({
-            data: { id: id, userId, ext: ext },
-          });
-          if (!created) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
-        }
         const key = `users/${userId}/image/profilePicture.${ext}`;
         const bucketParams = {
           Bucket: "leaceawsbucket",
           Key: key,
+          ContentType: input.fileType,
         };
         const command = new PutObjectCommand(bucketParams);
 
@@ -76,31 +64,6 @@ export const imageModeration = router({
 
         return await getSignedUrl(ctx.s3Client, command);
       }
-    }),
-  getSignedUserUrl: protectedProcedure([Role.ADMIN, Role.MODERATOR])
-    .input(z.object({ userId: z.string() }))
-    .query(async ({ ctx, input }) => {
-      const userId = getId({ ctx: ctx, userId: input.userId });
-
-      const user = await ctx.prisma.user.findUnique({
-        where: { id: userId },
-      });
-      if (!user) throw new TRPCError({ code: "NOT_FOUND" });
-
-      const image = await ctx.prisma.image.findFirst({
-        where: {
-          userId: userId,
-        },
-      });
-      if (!image) return null;
-
-      const bucketParams = {
-        Bucket: "leaceawsbucket",
-        Key: `users/${userId}/image/profilePicture.${image.ext}`,
-      };
-      const command = new GetObjectCommand(bucketParams);
-      const url = await getSignedUrl(ctx.s3Client, command);
-      return { ...image, url };
     }),
   getSignedPostUrl: protectedProcedure([Role.ADMIN, Role.MODERATOR])
     .input(z.object({ postId: z.string() }))
@@ -129,63 +92,54 @@ export const imageModeration = router({
         }),
       );
     }),
-  deleteSignedUrl: protectedProcedure([Role.ADMIN])
+  getSignedUserUrl: protectedProcedure([Role.ADMIN, Role.MODERATOR])
+    .input(z.object({ userId: z.string(), fileType: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const getUser = await ctx.prisma.user.findUnique({
+        where: { id: input.userId },
+      });
+      if (!getUser) throw new TRPCError({ code: "NOT_FOUND" });
+
+      const ext = input.fileType.split("/")[1];
+      if (!ext || (ext != "png" && ext != "jpeg"))
+        throw new TRPCError({ code: "BAD_REQUEST" });
+
+      const bucketParams = {
+        Bucket: "leaceawsbucket",
+        Key: `users/${input.userId}/image/profilePicture.${ext}`,
+      };
+      const command = new GetObjectCommand(bucketParams);
+      return await getSignedUrl(ctx.s3Client, command);
+    }),
+  deleteSignedPostUrl: protectedProcedure([Role.ADMIN])
     .input(
       z.object({
-        userId: z.string().optional(),
-        postId: z.string().optional(),
+        postId: z.string(),
         imageId: z.string(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      if (input.userId) {
-        const userId = getId({ ctx: ctx, userId: input.userId });
+      const getPost = await ctx.prisma.post.findUnique({
+        where: { id: input.postId },
+      });
+      if (!getPost) throw new TRPCError({ code: "NOT_FOUND" });
 
-        const user = await ctx.prisma.user.findUnique({
-          where: { id: userId },
-        });
-        if (!user) throw new TRPCError({ code: "NOT_FOUND" });
+      const image = await ctx.prisma.image.findFirst({
+        where: { id: input.imageId, postId: input.postId },
+      });
+      if (!image) throw new TRPCError({ code: "NOT_FOUND" });
 
-        const image = await ctx.prisma.image.findFirst({
-          where: { id: input.imageId, userId: userId },
-        });
-        if (!image) throw new TRPCError({ code: "NOT_FOUND" });
+      const deleted = await ctx.prisma.image.delete({
+        where: { id: image.id },
+      });
+      if (!deleted) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
 
-        const deleted = await ctx.prisma.image.delete({
-          where: { id: image.id },
-        });
-        if (!deleted) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+      const bucketParams = {
+        Bucket: "leaceawsbucket",
+        Key: `posts/${getPost.id}/images/${image.id}.${image.ext}`,
+      };
+      const command = new DeleteObjectCommand(bucketParams);
 
-        const bucketParams = {
-          Bucket: "leaceawsbucket",
-          Key: `users/${userId}/image/profilePicture.${image.ext}`,
-        };
-        const command = new DeleteObjectCommand(bucketParams);
-
-        return await getSignedUrl(ctx.s3Client, command);
-      } else if (input.postId) {
-        const getPost = await ctx.prisma.post.findUnique({
-          where: { id: input.postId },
-        });
-        if (!getPost) throw new TRPCError({ code: "NOT_FOUND" });
-
-        const image = await ctx.prisma.image.findFirst({
-          where: { id: input.imageId, postId: input.postId },
-        });
-        if (!image) throw new TRPCError({ code: "NOT_FOUND" });
-
-        const deleted = await ctx.prisma.image.delete({
-          where: { id: image.id },
-        });
-        if (!deleted) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
-
-        const bucketParams = {
-          Bucket: "leaceawsbucket",
-          Key: `posts/${getPost.id}/images/${image.id}.${image.ext}`,
-        };
-        const command = new DeleteObjectCommand(bucketParams);
-
-        return await getSignedUrl(ctx.s3Client, command);
-      }
+      return await getSignedUrl(ctx.s3Client, command);
     }),
 });

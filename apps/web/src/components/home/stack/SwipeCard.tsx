@@ -65,7 +65,6 @@ export function SwipeCard({
             return true;
           }
           // Tap Logic
-          console.log("TRUE TAP!");
           setIsSelected(true);
           return true;
         });

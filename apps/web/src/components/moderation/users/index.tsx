@@ -2,8 +2,8 @@
 import { trpc } from "../../../utils/trpc";
 import { Loader } from "../../shared/Loader";
 import { useMemo } from "react";
-import { UserCard } from "../../shared/user/UserCard";
 import { Document, Role } from "@prisma/client";
+import { UserCard } from "../../shared/user/UserCard";
 
 export interface UserProps {
   userId: string;
@@ -16,8 +16,6 @@ export const User = ({ userId }: UserProps) => {
     trpc.moderation.ban.getIsBan.useQuery({ userId });
   const { data: user, isLoading: userLoading } =
     trpc.moderation.user.getUser.useQuery({ userId });
-  const { data: image, isLoading: imageLoading } =
-    trpc.moderation.image.getSignedUserUrl.useQuery({ userId });
   const {
     data: documents,
     isLoading: documentsLoading,
@@ -26,22 +24,11 @@ export const User = ({ userId }: UserProps) => {
 
   const documentValidation =
     trpc.moderation.document.documentValidation.useMutation();
+  const deleteUser = trpc.user.deleteUserById.useMutation();
 
   const isLoading = useMemo(() => {
-    return (
-      sessionLoading ||
-      isBannedLoading ||
-      userLoading ||
-      imageLoading ||
-      documentsLoading
-    );
-  }, [
-    sessionLoading,
-    isBannedLoading,
-    userLoading,
-    imageLoading,
-    documentsLoading,
-  ]);
+    return sessionLoading || isBannedLoading || userLoading || documentsLoading;
+  }, [sessionLoading, isBannedLoading, userLoading, documentsLoading]);
 
   if (isLoading) {
     return <Loader />;
@@ -51,7 +38,9 @@ export const User = ({ userId }: UserProps) => {
     return <div>Not logged in</div>;
   }
 
-  if (!user) return <p>Something went wrong</p>;
+  if (!user) {
+    return <p>Not found</p>;
+  }
 
   const handleDocValidation = async (document: Document & { url: string }) => {
     if (document) {
@@ -63,11 +52,15 @@ export const User = ({ userId }: UserProps) => {
     }
   };
 
+  const handleDeleteUser = async () => {
+    await deleteUser.mutateAsync({ userId });
+  };
+
   return (
     <UserCard
       user={user}
       isBanned={isBanned}
-      image={image}
+      onUserDelete={handleDeleteUser}
       documents={documents}
       onDocValidation={handleDocValidation}
       updateLink={"/administration/users/[userId]/update"}

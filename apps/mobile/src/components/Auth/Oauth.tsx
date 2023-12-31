@@ -25,7 +25,7 @@ const OAuth = ({ provider, title, icon }: OAuthProps) => {
     try {
       const redirectUrl = AuthSession.makeRedirectUri({
         path: "/oauth-native-callback",
-        scheme: "com.azerty123456789.leace",
+        scheme: "com.leaceeip.leace",
       });
       await signIn.create({ strategy: provider, redirectUrl });
       const {
@@ -36,7 +36,7 @@ const OAuth = ({ provider, title, icon }: OAuthProps) => {
       const authResult = await AuthSession.startAsync({
         authUrl: externalVerificationRedirectURL.toString(),
         returnUrl: redirectUrl,
-        projectNameForProxy: "@azerty123456789/leace",
+        projectNameForProxy: "@leace-eip/leace",
       });
       if (authResult.type !== "success") {
         throw "Something went wrong during the OAuth flow. Try again.";

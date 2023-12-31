@@ -4,7 +4,6 @@ import {
   SafeAreaView,
   StyleSheet,
   Platform,
-  StatusBar,
   ScrollView,
   TouchableOpacity,
   TextInput,
@@ -17,7 +16,7 @@ import {
   useRoute,
 } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { TabStackParamList } from "../../navigation/TabNavigator";
+import { TabStackParamList } from "../../navigation/RootNavigator";
 import { trpc } from "../../utils/trpc";
 import { Icon } from "react-native-elements";
 import { IDefaulAttributes } from "../../types";
@@ -50,18 +49,18 @@ export default function EditPost() {
     },
   });
 
-  useFocusEffect(
-    useCallback(() => {
-      const parsed = JSON.parse(data);
-      const { id, desc, title, content, attribute } = parsed;
-      setPostInfo({ postId: id, desc, title, content });
-      setPostAttrs({
-        ...attribute,
-        rentStartDate: new Date(attribute.rentStartDate),
-        rentEndDate: new Date(attribute.rentEndDate),
-      });
-    }, [route]),
-  );
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     const parsed = JSON.parse(data);
+  //     const { id, desc, title, content, attribute } = parsed;
+  //     setPostInfo({ postId: id, desc, title, content });
+  //     setPostAttrs({
+  //       ...attribute,
+  //       rentStartDate: new Date(attribute.rentStartDate),
+  //       rentEndDate: new Date(attribute.rentEndDate),
+  //     });
+  //   }, [route]),
+  // );
 
   function handlePost() {
     if (!postInfo || !postAttrs) return;
@@ -70,6 +69,55 @@ export default function EditPost() {
   }
 
   if (!postInfo || !postAttrs) return null;
+
+  const [titleError, setTitleError] = useState("");
+  const [descriptionError, setDescriptionError] = useState("");
+  const [locationError, setLocationError] = useState("");
+  const [priceError, setPriceError] = useState("");
+  const [sizeError, setSizeError] = useState("");
+
+  const validateAndSetAttrs = () => {
+    let isValid = true;
+
+    if (!postInfo?.title || postInfo?.title.trim() === "") {
+      setTitleError("Title is required");
+      isValid = false;
+    } else {
+      setTitleError("");
+    }
+
+    if (!postAttrs?.location || postAttrs.location.trim() === "") {
+      setDescriptionError("Description is required");
+      isValid = false;
+    } else {
+      setDescriptionError("");
+    }
+
+    if (!postAttrs?.location || postAttrs.location.trim() === "") {
+      setLocationError("Location is required");
+      isValid = false;
+    } else {
+      setLocationError("");
+    }
+
+    if (!postAttrs?.price || postAttrs.price <= 0 || isNaN(postAttrs.price)) {
+      setPriceError("Invalid price");
+      isValid = false;
+    } else {
+      setPriceError("");
+    }
+
+    if (!postAttrs?.size || postAttrs.size <= 0 || isNaN(postAttrs.size)) {
+      setSizeError("Invalid size");
+      isValid = false;
+    } else {
+      setSizeError("");
+    }
+
+    if (isValid) {
+      handlePost();
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -87,70 +135,83 @@ export default function EditPost() {
           >
             <Icon
               name="arrow-back"
-              color="#10316B"
+              color="#0A2472"
               size={30}
               type="material-icons"
             ></Icon>
           </TouchableOpacity>
-          <Text>Edit Post</Text>
         </View>
         <View className="flex-1">
           <ScrollView
+            scrollEnabled={false}
             contentContainerStyle={{ flexGrow: 1 }}
-            style={{ backgroundColor: "white" }} // #F2F7FF
+            style={{ backgroundColor: "white" }}
           >
             <View className="flex-1 space-y-2 p-4">
               <View>
-                <Text className="text-base font-bold text-[#10316B]">
-                  Tittle
+                <Text className="text-sm font-semibold	 text-[#666666]">
+                  Title
                 </Text>
                 <TextInput
-                  className="border-b border-[#D3D3D3] py-1.5 font-light leading-loose focus:border-blue-500"
+                  className={`rounded-xl border border-black
+                   p-${
+                     Platform.OS === "ios" ? 4 : 2
+                   } font-light leading-loose focus:border-[#6466f1]`}
                   placeholder="Enter title..."
-                  defaultValue={postInfo.title}
                   onChangeText={(text) =>
                     setPostInfo({ ...postInfo, title: text })
                   }
                 />
+                {titleError ? (
+                  <Text className="text-xs text-[#D84654]">{titleError}</Text>
+                ) : null}
               </View>
               <View>
-                <Text className="text-base font-bold text-[#10316B]">
+                <Text className="text-sm	font-semibold	 text-[#666666]">
                   Description
                 </Text>
                 <TextInput
                   multiline
-                  numberOfLines={4}
-                  className="border-b border-[#D3D3D3] py-1.5 font-light leading-loose focus:border-blue-500"
+                  className={`rounded-xl border border-black
+                  p-${
+                    Platform.OS === "ios" ? 4 : 2
+                  } font-light leading-loose focus:border-[#6466f1]`}
                   placeholder="Enter description..."
-                  defaultValue={postInfo.desc}
                   onChangeText={(text) =>
                     setPostInfo({ ...postInfo, desc: text })
                   }
                 />
-              </View>
-              <View>
-                <Text className="text-base font-bold text-[#10316B]">
-                  Content
-                </Text>
-                <TextInput
-                  multiline
-                  numberOfLines={4}
-                  defaultValue={postInfo.content}
-                  className="border-b border-[#D3D3D3] py-1.5 font-light leading-loose focus:border-blue-500"
-                  placeholder="Enter content..."
-                  onChangeText={(text) =>
-                    setPostInfo({ ...postInfo, content: text })
-                  }
-                />
+                {descriptionError ? (
+                  <Text className="text-xs text-[#D84654]">
+                    {descriptionError}
+                  </Text>
+                ) : null}
               </View>
               <View className="flex-1">
-                <CreateAttributes attrs={postAttrs} setAttrs={setPostAttrs} />
+                <CreateAttributes
+                  attrs={postAttrs}
+                  setAttrs={setPostAttrs}
+                  locationError={locationError}
+                  priceError={priceError}
+                  sizeError={sizeError}
+                  setLocationError={setLocationError}
+                  setPriceError={setPriceError}
+                  setSizeError={setSizeError}
+                  securityAlarm={false}
+                  internetFiber={false}
+                  setSecurityAlarm={function (bool: boolean): void {
+                    throw new Error("Function not implemented.");
+                  }}
+                  setInternetFiber={function (bool: boolean): void {
+                    throw new Error("Function not implemented.");
+                  }}
+                />{" "}
               </View>
               <View className="pt-2">
                 <Btn
                   title="Update"
                   bgColor="#10316B"
-                  onPress={handlePost}
+                  onPress={validateAndSetAttrs}
                 ></Btn>
               </View>
             </View>
@@ -168,6 +229,5 @@ const styles = StyleSheet.create({
   },
   view: {
     flex: 1,
-    marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
 });

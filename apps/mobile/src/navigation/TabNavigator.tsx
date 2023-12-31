@@ -2,7 +2,7 @@ import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { UserRoles } from "../utils/enum";
 import { trpc } from "../utils/trpc";
-import { Tenant, Provider } from "../components/Navigation";
+//import { Tenant, Provider } from "../components/Navigation";
 import { View, Platform, StatusBar } from "react-native";
 import { useAuth } from "@clerk/clerk-expo";
 import { Lease } from "@leace/db";
@@ -18,17 +18,26 @@ export type TabStackParamList = {
   CreatePost: { userId: string };
 
   Premium: undefined;
-  Likes: undefined;
-  PaymentDetails: { selectedProduct: any; makePayment: boolean };
+
+  Likes: {
+    subscriptionId: string;
+  };
+  PaymentDetails: undefined;
 
   PaymentResults: {
-    loading: boolean;
-    paymentStatus: boolean;
-    response: any;
-    selectedProduct: any;
+    isValidPayment: boolean;
+    amount: number;
+    product: string;
+    subscriptionId: string;
   };
 
   EditProfile: {
+    userId: string;
+    data: string;
+    showAttrs: boolean;
+  };
+  
+  EditProfileRefacto: {
     userId: string;
     data: string;
     showAttrs: boolean;
@@ -107,11 +116,11 @@ const TabNavigator = () => {
     );
   }
 
-  if (role === UserRoles.TENANT)
+  /* if (role === UserRoles.TENANT)
     return <Tenant userId={session.userId} isPremium={isPremium} />;
   else if (role === UserRoles.OWNER)
     return <Provider userId={session.userId} isPremium={isPremium} />;
-  return <Role />;
+  return <Role />; */
 };
 
 export default TabNavigator;

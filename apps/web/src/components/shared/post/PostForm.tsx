@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 import React, {
-  ChangeEventHandler,
   Dispatch,
   FormEventHandler,
   MouseEventHandler,
@@ -11,12 +10,17 @@ import React, {
 import { Button } from "../button/Button";
 import { Input } from "../forms/Input";
 import { TextArea } from "../forms/TextArea";
-import { FileInput } from "../forms/FileInput";
 import { HomeType } from "../../../types/homeType";
 import { DocumentList } from "../document/DocumentList";
 import { ImageList } from "./ImageList";
-import { Post, Attribute, Image, Document } from "@prisma/client";
+import { Post, Attribute, Image, Document, EnergyClass } from "@prisma/client";
 import { PostAttributesForm } from "../../attributes/PostAttributesForm";
+import { TextInput } from "../forms/TextInput";
+import { NumberInput } from "../forms/NumberInput";
+import { FileUploadSection } from "../button/FileUploadSection";
+import { ToastDescription, ToastTitle } from "@radix-ui/react-toast";
+import { useRouter } from "next/router";
+import { useToast } from "../toast/Toast";
 
 export type PostFormData = {
   title: string;
@@ -34,25 +38,31 @@ export type PostFormData = {
   parking: boolean;
   elevator: boolean;
   pool: boolean;
+  energyClass?: EnergyClass;
+  ges?: EnergyClass;
+  constructionDate?: string;
+  estimatedCosts?: number;
+  nearestShops?: number;
+  securityAlarm?: boolean;
+  internetFiber?: boolean;
 };
 
 export interface PostFormProps {
   post?: (Post & { attribute: Attribute | null }) | undefined;
-  images?: File[] | undefined;
-  setImages?: ChangeEventHandler;
-  onImgsUpload?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onImgsUpload: (file: File[], postId?: string) => void;
   onImgDelete?: (imageId: string) => Promise<void>;
-  imagesGet?: (Image & { url: string })[] | null | undefined;
-  documents?: File[] | undefined;
-  setDocuments?: ChangeEventHandler;
-  onDocsUpload?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  images?: (Image & { url: string })[] | null | undefined;
+  onDocsUpload: (files: File[], postId?: string) => void;
   onDocDelete?: (documentId: string) => Promise<void>;
-  documentsGet?: (Document & { url: string })[] | null | undefined;
-  onSubmit: (data: PostFormData) => Promise<void>;
+  documents?: (Document & { url: string })[] | null | undefined;
+  onSubmit?: (data: PostFormData) => Promise<void>;
+  onSubmitNew?: (data: PostFormData) => Promise<Post>;
   onCancel: MouseEventHandler<HTMLButtonElement>;
 }
 
 export const PostForm = (props: PostFormProps) => {
+  const router = useRouter();
+  const { renderToast } = useToast();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
@@ -67,10 +77,33 @@ export const PostForm = (props: PostFormProps) => {
   const [elevator, setElevator] = useState(false);
   const [disability, setDisability] = useState(false);
   const [pool, setPool] = useState(false);
+  const [securityAlarm, setSecurityAlarm] = useState(false);
+  const [internetFiber, setInternetFiber] = useState(false);
   const [size, setSize] = useState(0);
   const [price, setPrice] = useState(0);
+  const [energyClass, setEnergyClass] = useState<EnergyClass | undefined>(
+    undefined,
+  );
+  const [ges, setGes] = useState<EnergyClass | undefined>(undefined);
+  const [constructionDate, setConstructionDate] = useState<string>("");
+  const [estimatedCosts, setEstimatedCosts] = useState<number>(0);
+  const [nearestShops, setNearestShops] = useState<number>(0);
+
+  const [selectedDocuments, setSelectedDocuments] = useState<File[]>([]);
+  const [selectedImages, setSelectedImages] = useState<File[]>([]);
 
   useEffect(() => {
+    const date = props.post?.constructionDate
+      ? `${props.post?.constructionDate.getUTCFullYear()}-${
+          props.post?.constructionDate.getUTCMonth() + 1 > 9
+            ? props.post?.constructionDate.getUTCMonth() + 1
+            : "0" + (props.post?.constructionDate.getUTCMonth() + 1)
+        }-${
+          props.post?.constructionDate.getUTCDate() > 9
+            ? props.post?.constructionDate.getUTCDate()
+            : "0" + props.post?.constructionDate.getUTCDate()
+        }`
+      : "";
     if (props.post) {
       setTitle(props.post.title ?? "");
       setDescription(props.post.desc ?? "");
@@ -87,11 +120,22 @@ export const PostForm = (props: PostFormProps) => {
       setElevator(props.post.attribute?.elevator ?? false);
       setPool(props.post.attribute?.pool ?? false);
       setDisability(props.post.attribute?.disability ?? false);
+      setEnergyClass(props.post.energyClass ?? undefined);
+      setGes(props.post.ges ?? undefined);
+      setConstructionDate(date);
+      setEstimatedCosts(props.post.estimatedCosts ?? 0);
+      setNearestShops(props.post.nearestShops ?? 0);
+      setSecurityAlarm(props.post.securityAlarm ?? false);
+      setInternetFiber(props.post.internetFiber ?? false);
     }
   }, [props.post]);
 
   const handleChange =
-    (setter: Dispatch<SetStateAction<string>>) =>
+    (
+      setter:
+        | Dispatch<SetStateAction<string | undefined>>
+        | Dispatch<SetStateAction<string>>,
+    ) =>
     (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       setter(event.target.value);
     };
@@ -114,6 +158,12 @@ export const PostForm = (props: PostFormProps) => {
       setter(event.target.value as HomeType);
     };
 
+  const handleEnergyClassChange =
+    (setter: Dispatch<SetStateAction<EnergyClass | undefined>>) =>
+    (event: React.ChangeEvent<HTMLSelectElement>) => {
+      setter(event.target.value as EnergyClass);
+    };
+
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
     const data: PostFormData = {
@@ -132,8 +182,31 @@ export const PostForm = (props: PostFormProps) => {
       parking,
       elevator,
       pool,
+      energyClass,
+      ges,
+      constructionDate,
+      estimatedCosts,
+      nearestShops,
+      securityAlarm,
+      internetFiber,
     };
-    props.onSubmit(data);
+    if (props.onSubmitNew) {
+      props.onSubmitNew(data).then((post) => {
+        props.onImgsUpload(selectedImages, post.id);
+        props.onDocsUpload(selectedDocuments, post.id);
+        router.push(`/users/${post.createdById}/posts/${post.id}`);
+        renderToast(
+          <>
+            <ToastTitle>Success</ToastTitle>
+            <ToastDescription>Your property is now posted ✅</ToastDescription>
+          </>,
+        );
+      });
+    } else if (props.onSubmit) {
+      props.onSubmit(data);
+      props.onImgsUpload(selectedImages);
+      props.onDocsUpload(selectedDocuments);
+    }
   };
 
   const attributesStates = {
@@ -163,11 +236,15 @@ export const PostForm = (props: PostFormProps) => {
     handleElevatorChange: handleBooleanChange(setElevator),
     pool,
     handlePoolChange: handleBooleanChange(setPool),
+    securityAlarm,
+    handleSecurityAlarmChange: handleBooleanChange(setSecurityAlarm),
+    internetFiber,
+    handleInternetFiberChange: handleBooleanChange(setInternetFiber),
   };
 
   return (
     <form
-      className="m-auto my-5 flex w-fit flex-col justify-center rounded-lg bg-white p-12 shadow"
+      className="m-auto my-5 flex w-fit flex-grow flex-col overflow-auto rounded-lg bg-white p-12 shadow"
       onSubmit={handleSubmit}
     >
       <div className="pb-5">
@@ -191,34 +268,93 @@ export const PostForm = (props: PostFormProps) => {
             className="w-full"
           />
         </div>
+        <h2 className="pb-2 pt-4 text-xl font-bold text-gray-700">
+          Additional informations
+        </h2>
+        <ul className="flex flex-wrap gap-4 pt-4">
+          <li className="flex-grow pr-8">
+            <h3 className="text-x2 font-medium">Energy class</h3>
+            <select
+              placeholder="A"
+              onChange={handleEnergyClassChange(setEnergyClass)}
+              value={energyClass}
+              className="w-full rounded-lg border-2 border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-600 focus:outline-none"
+            >
+              <option value="A">A</option>
+              <option value="B">B</option>
+              <option value="C">C</option>
+              <option value="D">D</option>
+            </select>
+          </li>
+          <li className="flex-grow">
+            <h3 className="text-x2 font-medium">GES</h3>
+            <select
+              placeholder="A"
+              onChange={handleEnergyClassChange(setGes)}
+              value={ges}
+              className="w-full rounded-lg border-2 border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-600 focus:outline-none"
+            >
+              <option value="A">A</option>
+              <option value="B">B</option>
+              <option value="C">C</option>
+              <option value="D">D</option>
+            </select>
+          </li>
+        </ul>
+
+        <ul className="flex flex-wrap gap-4 pt-4">
+          <li className="flex-grow pr-8">
+            <h3 className="text-x2 font-medium">Construction date</h3>
+            <TextInput
+              placeholder="2001"
+              onChange={handleChange(setConstructionDate)}
+              value={constructionDate}
+              className="w-full"
+            />
+          </li>
+          <li className="flex-grow pr-8">
+            <h3 className="text-x2 font-medium">Estimated fee costs</h3>
+            <NumberInput
+              placeholder="120"
+              onChange={handleNumberChange(setEstimatedCosts)}
+              value={estimatedCosts}
+              className="w-full"
+              unit="$"
+            />
+          </li>
+        </ul>
+        <ul className="flex flex-wrap gap-4 pt-4">
+          <li className="flex-grow pr-8">
+            <h3 className="text-x2 font-medium">Nearest store</h3>
+            <NumberInput
+              required
+              placeholder="2"
+              onChange={handleNumberChange(setNearestShops)}
+              value={nearestShops}
+              className="w-full"
+              unit="km"
+            />
+          </li>
+        </ul>
       </div>
       <PostAttributesForm {...attributesStates} />
-      <ImageList images={props.imagesGet} onDelete={props.onImgDelete} />
-      <div className="mt-2 mb-5 flex flex-wrap justify-center gap-4">
-        <FileInput multiple onChange={props.setImages || props.onImgsUpload}>
-          Upload Image
-        </FileInput>
-        {props.images?.map((image, index) => (
-          <p key={index}>{image.name}</p>
-        ))}
-      </div>
+      <ImageList images={props.images} onDelete={props.onImgDelete} />
+      <p className="bold pt-4 text-xl">Upload Images</p>
+      <FileUploadSection
+        selectedFiles={selectedImages}
+        setSelectedFiles={setSelectedImages}
+      />
       <DocumentList
-        documents={props.documentsGet}
+        documents={props.documents}
         onDelete={props.onDocDelete}
         isLoggedInOrAdmin
       />
-      <div className="mt-2 flex flex-wrap justify-center gap-4">
-        <FileInput
-          multiple
-          onChange={props.setDocuments || props.onDocsUpload}
-          accept=".pdf"
-        >
-          Upload Document
-        </FileInput>
-        {props.documents?.map((document, index) => (
-          <p key={index}>{document.name}</p>
-        ))}
-      </div>
+      <p className="bold pt-4 text-xl">Upload Documents</p>
+      <FileUploadSection
+        selectedFiles={selectedDocuments}
+        setSelectedFiles={setSelectedDocuments}
+        accept=".pdf"
+      />
       <div className="mt-10 flex justify-center gap-4">
         <Button type="button" theme="danger" onClick={props.onCancel}>
           Cancel

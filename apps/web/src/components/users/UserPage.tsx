@@ -1,9 +1,8 @@
-/* eslint-disable @next/next/no-img-element */
 import { trpc } from "../../utils/trpc";
 import { Loader } from "../shared/Loader";
 import { useClerk } from "@clerk/nextjs";
-import { UserCard } from "../shared/user/UserCard";
 import { useMemo } from "react";
+import { UserCard } from "../shared/user/UserCard";
 
 export interface UserPageProps {
   userId: string;
@@ -18,28 +17,14 @@ export const UserPage = ({ userId }: UserPageProps) => {
   const { data: user, isLoading: userLoading } = trpc.user.getUserById.useQuery(
     { userId },
   );
-  const { data: image, isLoading: imageLoading } =
-    trpc.image.getSignedUserUrl.useQuery({ userId });
   const { data: documents, isLoading: documentsLoading } =
     trpc.document.getSignedUrl.useQuery({ userId });
 
   const deleteUser = trpc.user.deleteUserById.useMutation();
 
   const isLoading = useMemo(() => {
-    return (
-      sessionLoading ||
-      isBannedLoading ||
-      userLoading ||
-      imageLoading ||
-      documentsLoading
-    );
-  }, [
-    sessionLoading,
-    isBannedLoading,
-    userLoading,
-    imageLoading,
-    documentsLoading,
-  ]);
+    return sessionLoading || isBannedLoading || userLoading || documentsLoading;
+  }, [sessionLoading, isBannedLoading, userLoading, documentsLoading]);
 
   if (isLoading) {
     return <Loader />;
@@ -59,15 +44,14 @@ export const UserPage = ({ userId }: UserPageProps) => {
   };
 
   return (
-    <div className="m-auto w-1/2 py-5">
+    <div className="flex w-full flex-grow flex-col overflow-hidden p-20">
       <UserCard
         user={user}
         isBanned={isBanned}
         onUserDelete={handleDeleteUser}
-        image={image}
         documents={documents}
-        updateLink="/users/[userId]/update"
-        isLoggedIn={userId === session.userId}
+        updateLink={`/users/[userId]/update`}
+        isLoggedUser={userId === session.userId}
       />
     </div>
   );

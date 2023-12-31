@@ -45,8 +45,24 @@ enum Role {
 }
 
 enum PostType {
+  HIDE
   RENTED
   TO_BE_RENTED
+}
+
+enum MaritalStatus {
+  SINGLE
+  MARRIED
+  ONE_CHILD
+  TWO_CHILD
+  OTHER
+}
+
+enum EnergyClass {
+  A
+  B
+  C
+  D
 }
 
 enum HomeType {
@@ -58,17 +74,24 @@ model User {
   id   String @id @default(cuid())
   role Role?
 
-  email         String?     @unique
-  emailVerified DateTime?
-  image         String?     @db.Text
-  firstName     String?
-  lastName      String?
-  phoneNumber   String?     @unique
-  country       String?
-  description   String?     @db.Text
-  birthDate     DateTime?
-  status        UserStatus? @default(INACTIVE)
-  isPremium     Boolean?    @default(false)
+  email              String?        @unique
+  emailVerified      DateTime?
+  image              String?        @db.Text
+  firstName          String?
+  lastName           String?
+  phoneNumber        String?        @unique
+  country            String?
+  description        String?        @db.Text
+  birthDate          DateTime?
+  job                String?
+  employmentContract String?
+  income             Int?
+  creditScore        Int?
+  maritalStatus      MaritalStatus?
+  status             UserStatus?    @default(INACTIVE)
+  isPremium          Boolean?       @default(false)
+
+  lastLogin DateTime @default(now())
 
   attribute Attribute?
 
@@ -77,10 +100,6 @@ model User {
   postsSeen     Post[] @relation("posts_seen")
   postsToBeSeen Post[] @relation("posts_to_be_seen")
 
-  seenBy     Post[] @relation("users_seen")
-  toBeSeenBy Post[] @relation("users_to_be_seen")
-
-  images        Image[]
   documents     Document[]
   relationships Relationship[]
   messages      Message[]
@@ -96,10 +115,13 @@ model User {
   supportedBy SupportRelationship[] @relation("supportedBy")
   supporting  SupportRelationship[] @relation("supporting")
 
+  stripe    Stripe?
+  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@map("users")
+
 }
 
 model Post {
@@ -108,18 +130,24 @@ model Post {
   createdBy   User   @relation(fields: [createdById], references: [id], "posts_created", onDelete: Cascade)
   createdById String
 
-  title   String?
-  content String?
-  desc    String?   @db.Text
-  type    PostType? @default(TO_BE_RENTED)
+  certified Boolean @default(false)
+
+  title            String?
+  content          String?
+  desc             String?      @db.Text
+  type             PostType?    @default(TO_BE_RENTED)
+  energyClass      EnergyClass?
+  ges              EnergyClass?
+  constructionDate DateTime?
+  estimatedCosts   Int?
+  nearestShops     Int?
+  securityAlarm    Boolean?
+  internetFiber    Boolean?
 
   attribute Attribute?
 
   seenBy     User[] @relation("posts_seen")
   toBeSeenBy User[] @relation("posts_to_be_seen")
-
-  usersSeen     User[] @relation("users_seen")
-  usersToBeSeen User[] @relation("users_to_be_seen")
 
   images    Image[]
   documents Document[]
@@ -249,6 +277,7 @@ model Document {
 
   valid Boolean @default(false)
   ext   String
+  name  String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -264,16 +293,12 @@ model Image {
 
   ext String
 
-  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId String?
-
   post   Post?   @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([userId])
   @@index([postId])
   @@map("pictures")
 }
@@ -377,4 +402,12 @@ model Lease {
 
   @@index([relationshipId])
   @@index([createdById])
+}
+
+model Stripe {
+  id             String @id @default(cuid())
+  subscriptionId String
+
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String? @unique
 }

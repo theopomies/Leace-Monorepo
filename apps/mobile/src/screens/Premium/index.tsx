@@ -1,7 +1,6 @@
-import OffersList from "./OffersList";
+import TenantOffers from "./TenantOffers";
 import OwnerLikes from "./OwnerLikes";
 import Result from "./Result";
 import TenantLikes from "./TenantLikes";
-import Details from "./Details";
 
-export { OffersList, OwnerLikes, TenantLikes, Result, Details };
+export { TenantOffers, OwnerLikes, TenantLikes, Result };

@@ -5,6 +5,7 @@ type Enum<T extends string> = Record<T, T>;
 export const Type: Enum<PostType> = {
   RENTED: "RENTED",
   TO_BE_RENTED: "TO_BE_RENTED",
+  HIDE: "HIDE",
 };
 
 export type Type = PostType;
