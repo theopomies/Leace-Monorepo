@@ -25,6 +25,7 @@ export default function Btn({
         iconName && iconType ? "space-x-2" : ""
       } rounded-lg p-2.5 ${className}`}
       onPress={onPress}
+      disabled={!onPress}
       style={{ backgroundColor: bgColor }}
     >
       {iconName && iconType && (
