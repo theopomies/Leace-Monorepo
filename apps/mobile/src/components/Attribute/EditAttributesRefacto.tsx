@@ -278,7 +278,6 @@ export default function EditAttributesRefacto({
                     setAttrs({ ...attrs, minSize: parseInt(text) ?? 0 });
                   }}
                   defaultValue={attrs.minSize ?? ""}
-
                 />
 
               </View>
