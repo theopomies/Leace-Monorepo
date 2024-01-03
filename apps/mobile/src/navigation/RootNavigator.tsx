@@ -123,9 +123,8 @@ function NavigationRoutes({
                       ? require("../../assets/navbar/home-hover.png")
                       : require("../../assets/navbar/home.png")
                   }
-                  className={` ${
-                    Platform.OS === "ios" ? "mt-5" : "mt-2"
-                  } h-6 w-6`}
+                  className={` ${Platform.OS === "ios" ? "mt-5" : "mt-2"
+                    } h-6 w-6`}
                 />
               ),
               tabBarLabel: "",
@@ -148,9 +147,8 @@ function NavigationRoutes({
                       ? require("../../assets/navbar/home-hover.png")
                       : require("../../assets/navbar/home.png")
                   }
-                  className={` ${
-                    Platform.OS === "ios" ? "mt-5" : "mt-2"
-                  } h-6 w-6`}
+                  className={` ${Platform.OS === "ios" ? "mt-5" : "mt-2"
+                    } h-6 w-6`}
                 />
               ),
               tabBarLabel: "",
@@ -201,9 +199,8 @@ function NavigationRoutes({
                     ? require("../../assets/navbar/write-hover.png")
                     : require("../../assets/navbar/write.png")
                 }
-                className={` ${
-                  Platform.OS === "ios" ? "mt-5" : "mt-2"
-                } h-6 w-6`}
+                className={` ${Platform.OS === "ios" ? "mt-5" : "mt-2"
+                  } h-6 w-6`}
               />
             ),
             tabBarLabel: "",
@@ -224,9 +221,8 @@ function NavigationRoutes({
                     ? require("../../assets/navbar/crown-hover.png")
                     : require("../../assets/navbar/crown.png")
                 }
-                className={` ${
-                  Platform.OS === "ios" ? "mt-5" : "mt-2"
-                } h-6 w-6`}
+                className={` ${Platform.OS === "ios" ? "mt-5" : "mt-2"
+                  } h-6 w-6`}
               />
             ),
             tabBarLabel: "",
@@ -337,16 +333,16 @@ function NavigationRoutes({
           tabBarStyle: { display: "none" },
           tabBarButton: () => null,
           headerShown: true,
-          headerTitleStyle: { color: "#0A2472" },
+          headerTitleStyle: { color: "#6C47FF" },
           title: "Post",
           headerLeft: () => (
             <TouchableOpacity
               className="ml-4"
-              onPress={() => navigation.navigate("MyPosts", { userId })}
+              onPress={() => navigation.navigate("Stack", { userId })}
             >
               <Icon
                 name="arrow-back"
-                color="#0A2472"
+                color="#6C47FF"
                 size={30}
                 type="material-icons"
               ></Icon>
