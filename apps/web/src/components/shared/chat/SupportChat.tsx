@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { trpc } from "../../../utils/trpc";
 import { Loader } from "../Loader";
 import { Chat } from "./Chat";
@@ -16,16 +15,11 @@ export function SupportChat({
   const { data: supportRelationships, isLoading: supportRelationshipsLoading } =
     trpc.moderation.support.getRelationships.useQuery({ userId });
 
-  const {
-    data: conversation,
-    isLoading: conversationIsLoading,
-    refetch: refetchConversation,
-  } = trpc.moderation.support.getConversation.useQuery(
-    { conversationId },
-    {
-      retry: false,
-    },
-  );
+  const { data: conversation, refetch: refetchConversation } =
+    trpc.moderation.support.getConversation.useQuery(
+      { conversationId },
+      { enabled: !!conversationId, refetchInterval: 4000 },
+    );
 
   const sendMutation = trpc.moderation.support.sendMessage.useMutation({
     onSuccess() {
@@ -40,12 +34,7 @@ export function SupportChat({
     sendMutation.mutate({ conversationId, content });
   };
 
-  const isLoading = useMemo(
-    () => conversationIsLoading || supportRelationshipsLoading,
-    [conversationIsLoading, supportRelationshipsLoading],
-  );
-
-  if (isLoading) {
+  if (supportRelationshipsLoading) {
     return <Loader />;
   }
 

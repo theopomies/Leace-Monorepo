@@ -34,6 +34,8 @@ export function AdminPostPage({ postId }: { postId: string }) {
           <div className="fixed flex h-screen items-center">
             <ActionButtons
               userId={post.data.createdById}
+              isCertified={post.data.certified}
+              postId={postId}
               conversationLink={`/administration/users/${post.data.createdById}/conversations`}
             />
           </div>

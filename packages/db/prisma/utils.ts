@@ -1,8 +1,9 @@
 import { PrismaClient, RelationType, Role } from "@prisma/client";
 
-export const nbUsers = 300;
-export const nbPostsPerAgency = 1;
+export const nbUsers = 50;
+export const nbPostsPerAgency = 3;
 export const nbRelationshipsPerUser = 5;
+export const nbReports = 10;
 
 export const attributeLocation = "33000 Bordeaux, France";
 export const lat = 44.840549713;

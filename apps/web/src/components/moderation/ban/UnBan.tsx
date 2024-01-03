@@ -19,7 +19,9 @@ export const UnBan = ({ userId }: UnBanProps) => {
 
   return (
     <div className="flex w-full items-center justify-center">
-      <Button onClick={handleClick}>UnBan user</Button>
+      <Button onClick={handleClick} className="w-full">
+        UnBan user
+      </Button>
     </div>
   );
 };

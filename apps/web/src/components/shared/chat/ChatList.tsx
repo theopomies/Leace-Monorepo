@@ -175,14 +175,15 @@ export const ChatList = ({
           ))}
         </div>
       </div>
-      {supportRelationships === undefined ||
-        (supportRelationships.length === 0 && (
+      {(supportRelationships === undefined ||
+        supportRelationships.length === 0) &&
+        role !== Role.ADMIN && (
           <SupportButton
             userId={userId}
             role={role}
             conversationLink={conversationLink}
           />
-        ))}
+        )}
     </div>
   );
 };

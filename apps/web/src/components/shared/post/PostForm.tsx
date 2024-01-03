@@ -97,6 +97,8 @@ export const PostForm = (props: PostFormProps) => {
   const [selectedDocuments, setSelectedDocuments] = useState<File[]>([]);
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   useEffect(() => {
     const date = props.post?.constructionDate
       ? `${props.post?.constructionDate.getUTCFullYear()}-${
@@ -171,6 +173,7 @@ export const PostForm = (props: PostFormProps) => {
     };
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+    setIsSubmitting(true);
     e.preventDefault();
     if (!size || !price || !bedrooms || !bathrooms) return null;
     const data: PostFormData = {
@@ -338,28 +341,38 @@ export const PostForm = (props: PostFormProps) => {
         </ul>
       </div>
       <PostAttributesForm {...attributesStates} />
-      <ImageList images={props.images} onDelete={props.onImgDelete} />
-      <p className="bold pt-4 text-xl">Upload Images</p>
-      <FileUploadSection
-        selectedFiles={selectedImages}
-        setSelectedFiles={setSelectedImages}
-      />
-      <DocumentList
-        documents={props.documents}
-        onDelete={props.onDocDelete}
-        isLoggedInOrAdmin
-      />
-      <p className="bold pt-4 text-xl">Upload Documents</p>
-      <FileUploadSection
-        selectedFiles={selectedDocuments}
-        setSelectedFiles={setSelectedDocuments}
-        accept=".pdf"
-      />
+      <section className="flex flex-col gap-4">
+        <div>
+          <h2 className="border-t py-5 text-3xl font-medium">Images</h2>
+          <ImageList images={props.images} onDelete={props.onImgDelete} />
+          <FileUploadSection
+            selectedFiles={selectedImages}
+            setSelectedFiles={setSelectedImages}
+            title="Upload Images"
+          />
+        </div>
+        <div>
+          <h2 className="py-5 text-3xl font-medium">Documents</h2>
+          <DocumentList
+            documents={props.documents}
+            onDelete={props.onDocDelete}
+            isLoggedInOrAdmin
+          />
+          <FileUploadSection
+            selectedFiles={selectedDocuments}
+            setSelectedFiles={setSelectedDocuments}
+            accept=".pdf"
+            title="Upload Documents"
+          />
+        </div>
+      </section>
       <div className="mt-10 flex justify-center gap-4">
-        <Button type="button" theme="danger" onClick={props.onCancel}>
+        <Button type="button" theme="grey" onClick={props.onCancel}>
           Cancel
         </Button>
-        <Button>Submit</Button>
+        <Button loading={isSubmitting} className="w-20">
+          Submit
+        </Button>
       </div>
     </form>
   );

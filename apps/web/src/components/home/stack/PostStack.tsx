@@ -3,8 +3,12 @@ import { Stack } from "./Stack";
 import { trpc } from "../../../utils/trpc";
 import { useEffect, useState } from "react";
 import { Post, Attribute, Image } from "@prisma/client";
+import { Loader } from "../../shared/Loader";
 
-export type PostType = Post & { attribute: Attribute | null; images: Image[] };
+export type PostType = Post & {
+  attribute: Attribute | null;
+  images: (Image & { url: string })[] | null;
+};
 export interface PostStackProps {
   userId: string;
 }
@@ -13,7 +17,7 @@ export function PostStack({ userId }: PostStackProps) {
   const router = useRouter();
   const [posts, setPosts] = useState([] as PostType[]);
   const [lastPost, setLastPost] = useState<PostType | null>();
-  const { data, status } = trpc.post.getPostsToBeSeen.useQuery(
+  const { data, status, isLoading } = trpc.post.getPostsToBeSeen.useQuery(
     { userId },
     { enabled: posts.length <= 3, retry: false },
   );
@@ -47,7 +51,7 @@ export function PostStack({ userId }: PostStackProps) {
   const onRewind = async () => {
     if (lastPost) {
       setPosts((posts) => [lastPost, ...posts]);
-      await rewindHandler({ userId });
+      await rewindHandler({ postId: lastPost.id, userId });
       setLastPost(null);
     }
   };
@@ -57,6 +61,10 @@ export function PostStack({ userId }: PostStackProps) {
       setPosts(data);
     }
   }, [data, status]);
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   if (posts && posts.length > 0) {
     return (

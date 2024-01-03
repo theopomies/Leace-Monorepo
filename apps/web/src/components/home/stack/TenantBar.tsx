@@ -35,7 +35,7 @@ export function TenantBar({ postId, tenant }: TenantBarProps) {
 
   return (
     <div
-      className={`flex h-36 w-full cursor-pointer items-center overflow-hidden rounded-xl bg-white shadow ${
+      className={`mb-5 flex h-36 w-full cursor-pointer items-center overflow-hidden rounded-xl bg-white shadow ${
         tenant.isPremium ? "border-2 border-yellow-300" : ""
       }`}
     >
@@ -60,8 +60,12 @@ export function TenantBar({ postId, tenant }: TenantBarProps) {
             {tenant.birthDate && (
               <p className="text-gray-500">{calcAge(tenant.birthDate)} ans</p>
             )}
-            <span className="mx-2">•</span>
-            <p className="text-gray-500">{tenant.job}</p>
+            {tenant.job && (
+              <p className="text-gray-500">
+                <span className="mx-2">•</span>
+                {tenant.job}
+              </p>
+            )}
           </div>
           <p className="mt-4 text-gray-500">Click to view profile</p>
         </div>
@@ -74,7 +78,7 @@ export function TenantBar({ postId, tenant }: TenantBarProps) {
           loading={dislikeIsLoading}
           onClick={() => onDislike(tenant.id)}
           overrideStyles
-          className="rounded-md border-2 border-indigo-500 bg-white px-4 py-3 font-bold text-indigo-500 hover:border-gray-100 hover:bg-gray-500 hover:text-white"
+          className="rounded-md border-2 border-indigo-500 bg-white px-4 py-2 font-bold text-indigo-500 hover:border-gray-100 hover:bg-gray-500 hover:text-white"
         >
           Decline
         </Button>
