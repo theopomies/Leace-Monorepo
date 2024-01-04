@@ -5,48 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a05cecb8-778a-4a51-a055-921331174174" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/apps/mobile/assets/logo_1024.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/mobile/assets/splash_rounded.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/mobile/src/components/Modal/DocumentModal.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/mobile/src/components/Modal/ZoomImageModal.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/mobile/src/components/Modal/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/mobile/app.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile/app.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile/assets/icon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile/assets/logo.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile/assets/splash.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/mobile/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile/src/_app.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile/src/_app.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile/src/components/Attribute/EditAttributes.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile/src/components/Attribute/EditAttributes.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile/src/components/Attribute/ShowAttributes.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile/src/components/Attribute/ShowAttributes.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile/src/components/Auth/MagicLink.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile/src/components/Auth/MagicLink.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile/src/components/Btn/Btn.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile/src/components/Btn/Btn.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile/src/components/Header/Header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile/src/components/Header/Header.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile/src/components/Loading/Loading.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile/src/components/Loading/Loading.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile/src/components/Navigation/index.tsx" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/mobile/src/components/Post/PostCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile/src/components/Post/PostCard.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile/src/components/Premium/PaymentResult.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile/src/components/Premium/PaymentResult.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile/src/components/Report/Report.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile/src/components/Report/Report.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile/src/components/Separator/Separator.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile/src/components/Separator/Separator.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile/src/components/UserProfile/EditInfo.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile/src/components/UserProfile/EditInfo.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile/src/components/UserProfile/UserProfile.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile/src/components/UserProfile/UserProfile.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile/src/navigation/RootNavigator.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile/src/navigation/RootNavigator.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile/src/navigation/TabNavigator.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile/src/navigation/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile/src/navigation/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile/src/screens/Auth/Auth.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile/src/screens/Auth/Auth.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile/src/screens/Chat/TenantChat.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile/src/screens/Chat/TenantChat.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile/src/screens/Documents/Documents.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile/src/screens/Documents/Documents.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile/src/navigation/TabNavigator.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile/src/navigation/TabNavigator.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/mobile/src/screens/Matches/TenantMatches.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile/src/screens/Matches/TenantMatches.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/mobile/src/screens/Post/CreatePost.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile/src/screens/Post/CreatePost.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile/src/screens/Post/EditPost.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile/src/screens/Post/EditPost.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/mobile/src/screens/Post/PostStack.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile/src/screens/Post/PostStack.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/mobile/src/screens/Post/ShowPost.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile/src/screens/Post/ShowPost.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile/src/screens/Premium/TenantOffers.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile/src/screens/Premium/TenantOffers.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile/src/screens/Profile/EditProfile.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile/src/screens/Profile/EditProfile.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile/src/screens/Profile/ShowProfile.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile/src/screens/Profile/ShowProfile.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile/src/screens/Role/Role.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile/src/screens/Role/Role.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile/src/screens/Role/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile/src/screens/Role/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile/src/screens/Stack/TenantStack.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile/src/screens/Stack/TenantStack.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile/tailwind.config.cjs" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile/tailwind.config.cjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile/src/types/index.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile/src/types/index.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eas.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pnpm-lock.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -63,26 +32,26 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 1
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1
+}</component>
   <component name="ProjectId" id="2Y7BLTFLdLfhcePRJir9yvZw0v9" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.cidr.known.project.marker": "true",
-    "cf.first.check.clang-format": "false",
-    "cidr.known.project.marker": "true",
-    "git-widget-placeholder": "Merging mobile-main",
-    "last_opened_file_path": "/Users/dak/Work/Epitech/Leace-Monorepo",
-    "settings.editor.selected.configurable": "AndroidSdkUpdater"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;mobile-main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/dak/Work/Epitech/Leace-Monorepo&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;AndroidSdkUpdater&quot;
   }
-}]]></component>
+}</component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
