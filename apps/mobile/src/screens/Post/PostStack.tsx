@@ -91,6 +91,7 @@ export default function PostStack() {
               style={{ borderBottomColor: "#d3d3d3", borderBottomWidth: 0.2 }}
             >
               <Picker
+                mode="dropdown"
                 selectedValue={selectedType}
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 onValueChange={(itemValue, itemIndex) =>

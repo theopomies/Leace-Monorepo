@@ -22,11 +22,6 @@ export default function PostCard({ data, userId }: IPostCard) {
     <TouchableOpacity
       className="bg-indigo mt-3 flex min-h-[100px] flex-row rounded-md p-2"
       onPress={() => {
-        /*navigation.push("PostInfo", {
-          userId,
-          postId: data.id,
-          editable: true,
-        });*/
         navigation.navigate("PostInfo", {
           userId,
           postId: data.id,
@@ -63,7 +58,7 @@ export default function PostCard({ data, userId }: IPostCard) {
                 data.type === "TO_BE_RENTED" ? "text-red-500" : "text-green-500"
               }`}
             >
-              {data.type}
+              {data.type === "TO_BE_RENTED" ? "Available" : "Rented"}
             </Text>
           </Text>
         </View>

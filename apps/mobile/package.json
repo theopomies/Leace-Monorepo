@@ -30,6 +30,7 @@
     "expo-auth-session": "^4.0.3",
     "expo-constants": "^14.4.2",
     "expo-crypto": "~12.4.1",
+    "expo-dev-client": "~2.4.12",
     "expo-document-picker": "~11.5.4",
     "expo-file-system": "~15.4.4",
     "expo-media-library": "~15.4.1",

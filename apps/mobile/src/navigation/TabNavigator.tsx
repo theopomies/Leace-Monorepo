@@ -36,7 +36,7 @@ export type TabStackParamList = {
     data: string;
     showAttrs: boolean;
   };
-  
+
   EditProfileRefacto: {
     userId: string;
     data: string;

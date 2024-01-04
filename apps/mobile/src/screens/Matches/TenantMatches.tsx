@@ -46,7 +46,7 @@ function MatchCard({
 
   return (
     <TouchableOpacity
-      className="relative mt-3 flex min-h-[100px] flex-row rounded-md bg-[#0A2472] p-2"
+      className="bg-indigo relative mt-3 flex min-h-[100px] flex-row rounded-md p-2"
       onPress={() =>
         navigation.navigate("ChatTenant", {
           relationshipId: data.id,
@@ -77,6 +77,7 @@ function MatchCard({
       />
       <View className="flex-1 justify-between pl-2">
         <Text className="font-bold text-white">{data.post.title}</Text>
+        <Text className="font-bold text-white">{data.post.desc}</Text>
         <View>
           {role === "TENANT" ? (
             <Text className="font-light text-white">
@@ -95,13 +96,13 @@ function MatchCard({
           <Text className="font-light text-white">
             Status:{" "}
             <Text
-              className={`font-light ${
+              className={`font-bold ${
                 data.post.type === "TO_BE_RENTED"
                   ? "text-red-500"
                   : "text-green-500"
               }`}
             >
-              {data.post.type}
+              {data.post.type === "TO_BE_RENTED" ? "Available" : "Rented"}
             </Text>
           </Text>
         </View>

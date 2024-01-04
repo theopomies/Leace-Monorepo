@@ -11,7 +11,7 @@ export interface IDefaultPost {
   internetFiber?: boolean;
 }
 
-export interface IDefaulAttributes {
+export interface IDefaultAttributes {
   postId: string;
   location?: string;
   price?: number;

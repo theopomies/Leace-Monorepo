@@ -10,7 +10,7 @@ import {
 import React, { useState } from "react";
 import Header from "../../components/Header";
 import { trpc } from "../../utils/trpc";
-import { IDefaulAttributes } from "../../types";
+import { IDefaultAttributes } from "../../types";
 import { CreateAttributes } from "../../components/Attribute";
 import { Btn } from "../../components/Btn";
 import { LocalStorage } from "../../utils/cache";
@@ -36,7 +36,7 @@ export default function CreatePost() {
     internetFiber: false,
   });
 
-  const [postAttrs, setPostAttrs] = useState<IDefaulAttributes | undefined>({
+  const [postAttrs, setPostAttrs] = useState<IDefaultAttributes | undefined>({
     postId: "",
     location: "",
     price: 0,
@@ -71,7 +71,7 @@ export default function CreatePost() {
       setTitleError("");
     }
 
-    if (!postAttrs?.location || postAttrs.location.trim() === "") {
+    if (!postInfo?.desc || postInfo.desc.trim() === "") {
       setDescriptionError("Please enter a valid description");
       isValid = false;
     } else {

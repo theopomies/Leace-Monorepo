@@ -227,7 +227,7 @@ export default function ShowPost() {
                   bgColor="#F2F7FF"
                   textColor="#0A2472"
                   onPress={() => {
-                    navigation.push("EditPost", {
+                    navigation.navigate("EditPost", {
                       userId,
                       data: JSON.stringify(post),
                     });
