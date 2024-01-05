@@ -29,8 +29,8 @@ export default function Welcome({ setStep, setProgress }: IStep) {
           <Btn
             title="Perfect, lets create my account"
             onPress={() => {
-              setProgress(50);
-              setStep("SELECT");
+              setProgress(25);
+              setStep("ROLE_SELECTION");
               createUser.mutate();
             }}
           />

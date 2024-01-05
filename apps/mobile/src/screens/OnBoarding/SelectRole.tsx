@@ -85,8 +85,8 @@ export default function SelectRole({
             key={key}
             callback={() => {
               userRole.mutateAsync({ userId, role: role.role }).then(() => {
-                setProgress(75);
-                setStep("PROFILE");
+                setProgress(50);
+                setStep("IDENTITY_COMPLETION");
                 setSelectedRole(role.role);
               });
             }}

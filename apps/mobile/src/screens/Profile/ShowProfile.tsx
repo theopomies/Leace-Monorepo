@@ -144,7 +144,7 @@ export default function ShowProfile() {
           showLogout={true}
         />
         {/* TODO: Move at the end of User Profile ? */}
-        <View>
+        <View className="h-20">
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}

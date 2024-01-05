@@ -8,7 +8,6 @@ import { Platform, TouchableOpacity, Image } from "react-native";
 import { trpc } from "../utils/trpc";
 import { Icon } from "react-native-elements";
 import { ShowProfile, EditProfile } from "../screens/Profile";
-import ChooseRole from "../screens/Role";
 import { Role, Lease } from "@leace/db";
 import { PostStack, CreatePost, ShowPost, EditPost } from "../screens/Post";
 import {
@@ -86,29 +85,11 @@ export type TabStackParamList = {
   UsersReviews: undefined;
 };
 
-function NavigationRoutes({
-  userId,
-  role,
-}: {
-  userId: string;
-  role: Role | null;
-}) {
+function NavigationRoutes({ userId, role }: { userId: string; role?: Role }) {
   const navigation =
     useNavigation<NativeStackNavigationProp<TabStackParamList>>();
   return (
     <Tab.Navigator initialRouteName="Role">
-      {!role && (
-        <Tab.Screen
-          name="Role"
-          component={ChooseRole}
-          options={{
-            tabBarStyle: { display: "none" },
-            tabBarButton: () => null,
-            headerShown: false,
-          }}
-        />
-      )}
-
       {role === "TENANT" && (
         <>
           <Tab.Screen
@@ -437,20 +418,20 @@ function NavigationRoutes({
 }
 const RootNavigator = () => {
   const { data: session, isLoading } = trpc.auth.getSession.useQuery();
-  const { data: user, isLoading: userLoading } = trpc.user.getUserById.useQuery(
-    { userId: session?.userId as string },
-    { enabled: !!session?.userId },
-  );
+  const { data: onboarding, isLoading: onboardingLoading } =
+    trpc.onboarding.getUserOnboardingStatus.useQuery(
+      { userId: session?.userId as string },
+      { enabled: !!session?.userId },
+    );
   if (isLoading) return <Loading />;
   if (!session) return <Loading signOut={true} />;
-  if (userLoading) return <Loading />;
-  if (!user) return <OnBoarding />;
-
+  if (onboardingLoading) return <Loading />;
+  if (onboarding !== "COMPLETE") return <OnBoarding apiStep={onboarding} />;
   return (
     <>
       <NavigationContainer>
         <ClerkLoaded>
-          <NavigationRoutes userId={user.id} role={user.role} />
+          <NavigationRoutes userId={session.userId} role={session.role} />
         </ClerkLoaded>
       </NavigationContainer>
       <Toast />

@@ -1,7 +1,7 @@
 import { View, Text } from "react-native";
 import React from "react";
 import { Attribute } from "@prisma/client";
-import { Divider, Icon } from "react-native-elements";
+import { Icon } from "react-native-elements";
 
 interface IShowAttributes {
   attribute: Attribute;

@@ -1,17 +1,25 @@
 import { View, SafeAreaView } from "react-native";
 import React, { useState } from "react";
 import Welcome from "./Welcome";
-import { Role, Step } from "../../types/onboarding";
+import { Role } from "../../types/onboarding";
 import SelectRole from "./SelectRole";
 import CreateProfile from "./CreateProfile";
 import Toast from "react-native-toast-message";
 import ChooseAttributes from "./ChooseAttributes";
 import { trpc } from "../../utils/trpc";
+import { OnboardingStatus } from "@leace/api/src/utils/types";
+import UploadDocuments from "./UploadDocuments";
 
-export default function OnBoarding() {
-  const [step, setStep] = useState<Step>("WELCOME");
+export default function OnBoarding({
+  apiStep,
+}: {
+  apiStep?: OnboardingStatus;
+}) {
+  const [step, setStep] = useState<OnboardingStatus | "WELCOME">(
+    apiStep ? apiStep : "WELCOME",
+  );
   const [selectedRole, setSelectedRole] = useState<Role>("TENANT");
-  const [process, setProgress] = useState(25);
+  const [process, setProgress] = useState(0);
   const utils = trpc.useContext();
   const data = utils.auth.getSession.getData();
   const userId = data?.userId || "";
@@ -32,7 +40,7 @@ export default function OnBoarding() {
             userId={userId}
           />
         )}
-        {step === "SELECT" && (
+        {step === "ROLE_SELECTION" && (
           <SelectRole
             setStep={setStep}
             setProgress={setProgress}
@@ -41,7 +49,7 @@ export default function OnBoarding() {
             setSelectedRole={setSelectedRole}
           />
         )}
-        {step === "PROFILE" && (
+        {step === "IDENTITY_COMPLETION" && (
           <CreateProfile
             setStep={setStep}
             setProgress={setProgress}
@@ -49,13 +57,14 @@ export default function OnBoarding() {
             selectedRole={selectedRole}
           />
         )}
-        {step === "ATTRIBUTES" && (
+        {step === "PREFERENCES_COMPLETION" && (
           <ChooseAttributes
             setStep={setStep}
             setProgress={setProgress}
             userId={userId}
           />
         )}
+        {step === "DOCUMENTS_COMPLETION" && <UploadDocuments userId={userId} />}
       </SafeAreaView>
       <Toast />
     </>

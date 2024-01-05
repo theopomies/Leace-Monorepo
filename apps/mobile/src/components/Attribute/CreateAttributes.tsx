@@ -7,11 +7,13 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { Icon } from "react-native-elements";
-import { IDefaulAttributes } from "../../types";
+import { IDefaultAttributes } from "../../types";
 
 interface ICreateAttributes {
-  attrs: IDefaulAttributes | undefined;
-  setAttrs: React.Dispatch<React.SetStateAction<IDefaulAttributes | undefined>>;
+  attrs: IDefaultAttributes | undefined;
+  setAttrs: React.Dispatch<
+    React.SetStateAction<IDefaultAttributes | undefined>
+  >;
   locationError: string;
   priceError: string;
   sizeError: string;

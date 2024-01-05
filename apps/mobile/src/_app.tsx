@@ -13,7 +13,6 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 LogBox.ignoreAllLogs();
 
 Logs.disableExpoCliLogging();
-LogBox.ignoreAllLogs();
 
 export const App = () => {
   return (

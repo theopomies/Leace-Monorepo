@@ -223,7 +223,7 @@ export default function Documents() {
               </TouchableOpacity>
               <View className="flex flex-row items-center gap-1 pt-2">
                 <View className="flex-1">
-                  <Text>{doc.name}</Text>
+                  <Text>{"doc.name"}</Text>
                 </View>
                 <View className="flex flex-row space-x-1">
                   <View>

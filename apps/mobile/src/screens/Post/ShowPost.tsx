@@ -231,10 +231,6 @@ export default function ShowPost() {
                       userId,
                       data: JSON.stringify(post),
                     });
-                    /*navigation.navigate("EditPost", {
-                      userId,
-                      data: JSON.stringify(post),
-                    });*/
                   }}
                 ></Btn>
               </View>

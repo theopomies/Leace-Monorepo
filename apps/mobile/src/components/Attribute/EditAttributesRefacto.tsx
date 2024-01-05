@@ -1,10 +1,9 @@
 import { View, Text, TouchableOpacity, TextInput } from "react-native";
 import React, { useState } from "react";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import RNPickerSelect from "react-native-picker-select";
 import { Divider, Icon } from "react-native-elements";
 import { StyleSheet } from "react-native";
-//import { IUserAttrs } from "../../types";
+import { IUserAttrs } from "../../types";
 
 interface IAttributeBtn {
   name: string;
@@ -15,8 +14,8 @@ interface IAttributeBtn {
 
 interface ICreateUserAttrs {
   userId: string;
-  attrs: any | undefined;
-  setAttrs: React.Dispatch<React.SetStateAction<any | undefined>>;
+  attrs: IUserAttrs | undefined;
+  setAttrs: React.Dispatch<React.SetStateAction<IUserAttrs | undefined>>;
   onBoarding?: boolean;
 }
 
@@ -26,7 +25,7 @@ function AttributeBtn({ name, status, iconName }: IAttributeBtn) {
       className="flex min-h-[50px] min-w-[150px] flex-row items-center justify-center space-x-1 rounded-lg px-2 py-1"
       style={{
         margin: 6,
-        backgroundColor: "#6C47FF",
+        backgroundColor: "#6366f1",
         opacity: status ? 1 : 0.5,
       }}
     >
@@ -47,7 +46,7 @@ function HouseTypeBtn({ name, iconName, disabled }: IAttributeBtn) {
       className="flex min-h-[50px] min-w-[150px] flex-row items-center justify-center space-x-1 rounded-lg px-2 py-1"
       style={{
         margin: 6,
-        backgroundColor: !disabled ? "gray" : "#6C47FF",
+        backgroundColor: !disabled ? "gray" : "#6366f1",
         opacity: disabled ? 1 : 0.5,
       }}
     >
@@ -89,10 +88,8 @@ export default function EditAttributesRefacto({
     },
   });
 
-  function displayField(v: string) {}
-
   return (
-    <View className="mx-5 flex">
+    <View className={`flex ${onBoarding ? "" : "mx-5"}`}>
       <View>
         <DateTimePickerModal
           isVisible={open}
@@ -290,7 +287,7 @@ export default function EditAttributesRefacto({
 
       <View className="pb-4 pt-9">
         <Text className="mb-3 text-xl font-bold text-black">Attributes:</Text>
-        <View className="flex flex-row flex-wrap items-center justify-center">
+        <View className="flex flex-row flex-wrap justify-center gap-2">
           <TouchableOpacity
             onPress={() => {
               setAttrs({ ...attrs, furnished: !attrs.furnished ?? true });

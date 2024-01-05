@@ -33,14 +33,14 @@ export default function CreateProfile({
   const [phoneNumber, setPhoneNumber] = useState("");
   const [description, setDescription] = useState("");
   const [profile, setProfile] = useState<DocumentPickerAsset>();
-  const utils = trpc.useContext();
   const userProfile = trpc.user.updateUserById.useMutation({
     onSuccess() {
       if (selectedRole === "TENANT") {
-        setProgress(75);
-        setStep("ATTRIBUTES");
+        setProgress(66);
+        setStep("PREFERENCES_COMPLETION");
       } else {
-        utils.user.getUserById.invalidate();
+        setProgress(75);
+        setStep("DOCUMENTS_COMPLETION");
       }
     },
   });
@@ -213,13 +213,11 @@ export default function CreateProfile({
             title="Back"
             onPress={() => {
               setProgress(25);
-              setStep("SELECT");
+              setStep("ROLE_SELECTION");
             }}
           />
           <Btn
-            title={`${
-              selectedRole === "TENANT" ? "Next" : "Finish setting me up"
-            }`}
+            title={`${selectedRole === "TENANT" ? "Next" : "Upload documents"}`}
             onPress={validate}
           />
         </View>

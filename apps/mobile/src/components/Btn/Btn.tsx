@@ -18,6 +18,7 @@ export default function Btn({
   iconType?: string;
   bgColor?: string;
   className?: string;
+  disabled?: boolean;
 }) {
   return (
     <TouchableOpacity

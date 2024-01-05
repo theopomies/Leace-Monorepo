@@ -1,7 +1,6 @@
 import { View, Text, TouchableOpacity, TextInput } from "react-native";
 import React, { useState } from "react";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-// import RNPickerSelect from "react-native-picker-select";
 import { Icon } from "react-native-elements";
 import { IUserAttrs } from "../../types";
 

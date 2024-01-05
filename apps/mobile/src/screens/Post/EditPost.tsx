@@ -8,18 +8,13 @@ import {
   TouchableOpacity,
   TextInput,
 } from "react-native";
-import React, { useCallback, useState } from "react";
-import {
-  RouteProp,
-  useFocusEffect,
-  useNavigation,
-  useRoute,
-} from "@react-navigation/native";
+import React, { useState } from "react";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { TabStackParamList } from "../../navigation/RootNavigator";
 import { trpc } from "../../utils/trpc";
 import { Icon } from "react-native-elements";
-import { IDefaulAttributes } from "../../types";
+import { IDefaultAttributes } from "../../types";
 import { CreateAttributes } from "../../components/Attribute";
 import { Btn } from "../../components/Btn";
 import { LocalStorage } from "../../utils/cache";
@@ -28,14 +23,14 @@ export default function EditPost() {
   const navigation =
     useNavigation<NativeStackNavigationProp<TabStackParamList>>();
   const route = useRoute<RouteProp<TabStackParamList, "EditProfile">>();
-  const { data, userId } = route.params;
+  const { userId } = route.params;
   const [postInfo, setPostInfo] = useState<{
     postId: string;
     title: string;
     content: string;
     desc: string;
   }>();
-  const [postAttrs, setPostAttrs] = useState<IDefaulAttributes>();
+  const [postAttrs, setPostAttrs] = useState<IDefaultAttributes>();
   const editPost = trpc.post.updatePostById.useMutation();
   const editAttrs = trpc.attribute.updatePostAttributes.useMutation({
     onSuccess() {
@@ -205,7 +200,7 @@ export default function EditPost() {
                   setInternetFiber={function (bool: boolean): void {
                     throw new Error("Function not implemented.");
                   }}
-                />{" "}
+                />
               </View>
               <View className="pt-2">
                 <Btn
