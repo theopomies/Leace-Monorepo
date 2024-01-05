@@ -17,6 +17,10 @@ export const attributesRouter = router({
         minPrice: z.number().optional(),
         maxSize: z.number().optional(),
         minSize: z.number().optional(),
+        maxBedrooms: z.number().optional(),
+        minBedrooms: z.number().optional(),
+        maxBathrooms: z.number().optional(),
+        minBathrooms: z.number().optional(),
         rentStartDate: z.date().optional(),
         rentEndDate: z.date().optional(),
         furnished: z.boolean().optional(),
@@ -29,6 +33,8 @@ export const attributesRouter = router({
         parking: z.boolean().optional(),
         elevator: z.boolean().optional(),
         pool: z.boolean().optional(),
+        internetFiber: z.boolean().optional(),
+        securityAlarm: z.boolean().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -84,6 +90,10 @@ export const attributesRouter = router({
         minPrice: input.minPrice ?? null,
         maxSize: input.maxSize ?? null,
         minSize: input.minSize ?? null,
+        maxBedrooms: input.maxBedrooms ?? null,
+        minBedrooms: input.minBedrooms ?? null,
+        maxBathrooms: input.maxBathrooms ?? null,
+        minBathrooms: input.minBathrooms ?? null,
         rentStartDate: input.rentStartDate ?? null,
         rentEndDate: input.rentEndDate ?? null,
         furnished: input.furnished ?? null,
@@ -96,6 +106,8 @@ export const attributesRouter = router({
         parking: input.parking ?? null,
         elevator: input.elevator ?? null,
         pool: input.pool ?? null,
+        internetFiber: input.internetFiber ?? null,
+        securityAlarm: input.securityAlarm ?? null,
       } as const;
 
       if (!attribute) {
@@ -129,6 +141,8 @@ export const attributesRouter = router({
         location: z.string().optional(),
         price: z.number().optional(),
         size: z.number().optional(),
+        bedrooms: z.number().optional(),
+        bathrooms: z.number().optional(),
         rentStartDate: z.date().optional(),
         rentEndDate: z.date().optional(),
         furnished: z.boolean().optional(),
@@ -141,6 +155,8 @@ export const attributesRouter = router({
         parking: z.boolean().optional(),
         elevator: z.boolean().optional(),
         pool: z.boolean().optional(),
+        internetFiber: z.boolean().optional(),
+        securityAlarm: z.boolean().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -153,7 +169,8 @@ export const attributesRouter = router({
       if (
         post.createdById != ctx.auth.userId &&
         ctx.role != Role.ADMIN &&
-        ctx.role != Role.MODERATOR
+        ctx.role != Role.MODERATOR &&
+        ctx.auth.userId != post.managedById
       )
         throw new TRPCError({
           code: "FORBIDDEN",
@@ -204,6 +221,8 @@ export const attributesRouter = router({
             lng: lng,
             price: input.price,
             size: input.size,
+            bedrooms: input.bedrooms,
+            bathrooms: input.bathrooms,
             rentStartDate: input.rentStartDate,
             rentEndDate: input.rentEndDate,
             furnished: input.furnished,
@@ -216,6 +235,8 @@ export const attributesRouter = router({
             parking: input.parking,
             elevator: input.elevator,
             pool: input.pool,
+            internetFiber: input.internetFiber,
+            securityAlarm: input.securityAlarm,
           },
         });
         if (!created) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
@@ -230,6 +251,8 @@ export const attributesRouter = router({
           lng: lng,
           price: input.price,
           size: input.size,
+          bedrooms: input.bedrooms,
+          bathrooms: input.bathrooms,
           rentStartDate: input.rentStartDate,
           rentEndDate: input.rentEndDate,
           furnished: input.furnished,
@@ -242,6 +265,8 @@ export const attributesRouter = router({
           parking: input.parking,
           elevator: input.elevator,
           pool: input.pool,
+          internetFiber: input.internetFiber,
+          securityAlarm: input.securityAlarm,
         },
       });
 

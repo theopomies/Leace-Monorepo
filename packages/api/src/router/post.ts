@@ -3,13 +3,34 @@ import { EnergyClass, PostType, RelationType, Role } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";
-import { getPostsWithAttribute, shuffle } from "../utils/algorithm";
+import { getPostsWithAttribute } from "../utils/algorithm";
 import { filterStrings } from "../utils/filter";
 import { getId } from "../utils/getId";
+import { imageRouter } from "./image";
+import { Context } from "../context";
+import { Attribute, Image, Post } from "@prisma/client";
 
 interface UserLike extends User {
   relationshipCreated: Date;
 }
+
+const getImagesWithSignedUrl = async (
+  ctx: Context,
+  posts: (Post & {
+    attribute: Attribute | null;
+    images: Image[];
+  })[],
+) => {
+  const caller = imageRouter.createCaller(ctx);
+  return Promise.all(
+    posts.map(async (post) => {
+      const imagesWithSignedUrl = await caller.getSignedPostUrl({
+        postId: post.id,
+      });
+      return { ...post, images: imagesWithSignedUrl };
+    }),
+  );
+};
 
 export const postRouter = router({
   createPost: protectedProcedure([Role.AGENCY, Role.OWNER])
@@ -21,14 +42,10 @@ export const postRouter = router({
         energyClass: z
           .enum([EnergyClass.A, EnergyClass.B, EnergyClass.C, EnergyClass.D])
           .optional(),
-        ges: z
-          .enum([EnergyClass.A, EnergyClass.B, EnergyClass.C, EnergyClass.D])
-          .optional(),
         constructionDate: z.date().optional().nullable(),
         estimatedCosts: z.number().optional(),
         nearedShops: z.number().optional(),
-        securityAlarm: z.boolean().optional(),
-        internetFiber: z.boolean().optional(),
+        managedBy: z.string().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -44,6 +61,26 @@ export const postRouter = router({
           message: "User provided is cannot create post",
         });
 
+      if (input.managedBy) {
+        const managedBy = await ctx.prisma.user.findUnique({
+          where: { id: input.managedBy },
+        });
+
+        if (!managedBy) throw new TRPCError({ code: "NOT_FOUND" });
+
+        if (managedBy.role != Role.AGENCY)
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "User provided is can't manage a post",
+          });
+
+        if (userId == managedBy.id)
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Same manager and creator",
+          });
+      }
+
       const post = await ctx.prisma.post.create({
         data: {
           createdById: userId,
@@ -54,8 +91,7 @@ export const postRouter = router({
           constructionDate: input.constructionDate,
           estimatedCosts: input.estimatedCosts,
           nearestShops: input.nearedShops,
-          securityAlarm: input.securityAlarm,
-          internetFiber: input.internetFiber,
+          managedById: input.managedBy,
         },
       });
 
@@ -79,20 +115,18 @@ export const postRouter = router({
         energyClass: z
           .enum([EnergyClass.A, EnergyClass.B, EnergyClass.C, EnergyClass.D])
           .optional(),
-        ges: z
-          .enum([EnergyClass.A, EnergyClass.B, EnergyClass.C, EnergyClass.D])
-          .optional(),
-        constructionDate: z.date().optional(),
+        constructionDate: z.date().optional().nullable(),
         estimatedCosts: z.number().optional(),
         nearedShops: z.number().optional(),
-        securityAlarm: z.boolean().optional(),
-        internetFiber: z.boolean().optional(),
         type: z
           .enum([PostType.RENTED, PostType.TO_BE_RENTED, PostType.HIDE])
           .optional(),
+        managedBy: z.string().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      const userId = ctx.auth.userId;
+
       const post = await ctx.prisma.post.findUnique({
         where: { id: input.postId },
       });
@@ -100,14 +134,36 @@ export const postRouter = router({
       if (!post) throw new TRPCError({ code: "NOT_FOUND" });
 
       if (
-        post.createdById != ctx.auth.userId &&
+        post.createdById != userId &&
+        userId != post.managedById &&
         ctx.role != Role.ADMIN &&
         ctx.role != Role.MODERATOR
-      )
+      ) {
         throw new TRPCError({
           code: "FORBIDDEN",
-          message: "This is not a post from this user",
+          message: "This is not a post from or managed by this user",
         });
+      }
+
+      if (input.managedBy) {
+        const managedBy = await ctx.prisma.user.findUnique({
+          where: { id: input.managedBy },
+        });
+
+        if (!managedBy) throw new TRPCError({ code: "NOT_FOUND" });
+
+        if (managedBy.role != Role.AGENCY)
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "User provided is can't manage a post",
+          });
+
+        if (userId == managedBy.id)
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Same manager and creator",
+          });
+      }
 
       const updated = await ctx.prisma.post.update({
         where: { id: input.postId },
@@ -119,10 +175,8 @@ export const postRouter = router({
           constructionDate: input.constructionDate,
           estimatedCosts: input.estimatedCosts,
           nearestShops: input.nearedShops,
-          securityAlarm: input.securityAlarm,
-          internetFiber: input.internetFiber,
-          ges: input.ges,
           energyClass: input.energyClass,
+          managedById: input.managedBy,
         },
       });
 
@@ -137,20 +191,25 @@ export const postRouter = router({
   deletePostById: protectedProcedure([Role.AGENCY, Role.OWNER, Role.ADMIN])
     .input(z.object({ postId: z.string() }))
     .mutation(async ({ input, ctx }) => {
+      const userId = ctx.auth.userId;
+
       const post = await ctx.prisma.post.findUnique({
         where: { id: input.postId },
       });
 
       if (!post) throw new TRPCError({ code: "NOT_FOUND" });
+
       if (
-        post.createdById != ctx.auth.userId &&
+        post.createdById != userId &&
+        userId != post.managedById &&
         ctx.role != Role.ADMIN &&
         ctx.role != Role.MODERATOR
-      )
+      ) {
         throw new TRPCError({
           code: "FORBIDDEN",
-          message: "This is not a post from this user",
+          message: "This is not a post from or managed by this user",
         });
+      }
 
       const deleted = await ctx.prisma.post.delete({
         where: { id: input.postId },
@@ -257,6 +316,24 @@ export const postRouter = router({
         },
       });
 
+      const totalPosts = await ctx.prisma.post.count();
+
+      const signedLeasesCount = await ctx.prisma.post.count({
+        where: {
+          relationships: {
+            some: {
+              lease: {
+                isSigned: true,
+              },
+            },
+          },
+        },
+      });
+
+      const unsignedLeasesCount = totalPosts - signedLeasesCount;
+
+      const location_rate = (signedLeasesCount / totalPosts) * 100;
+
       if (!leases) throw new TRPCError({ code: "NOT_FOUND" });
 
       let income = 0;
@@ -266,7 +343,14 @@ export const postRouter = router({
         expense += lease.utilitiesCost;
       });
 
-      return { income, expense };
+      return {
+        totalPosts,
+        signedLeasesCount,
+        unsignedLeasesCount,
+        location_rate,
+        income,
+        expense,
+      };
     }),
   getPostsToBeSeen: protectedProcedure([Role.TENANT])
     .input(z.object({ userId: z.string() }))
@@ -289,8 +373,18 @@ export const postRouter = router({
 
       // If less or equal than 3 posts, add more
       if (user.postsToBeSeen.length <= 3) {
-        const newPosts = await getPostsWithAttribute(user.id);
-        if (newPosts.length === 0) return user.postsToBeSeen;
+        const newPosts = await getPostsWithAttribute(
+          user.id,
+          user.isPremium ?? false,
+        );
+        if (newPosts.length === 0) {
+          const postsToBeSeen = await getImagesWithSignedUrl(
+            ctx,
+            user.postsToBeSeen,
+          );
+          return postsToBeSeen.sort((p) => (p.certified ? -1 : 1));
+        }
+
         const updatedUser = await ctx.prisma.user.update({
           where: { id: user.id },
           data: {
@@ -302,12 +396,20 @@ export const postRouter = router({
             postsToBeSeen: { include: { images: true, attribute: true } },
           },
         });
-        shuffle(updatedUser.postsToBeSeen);
-        return updatedUser.postsToBeSeen;
+
+        const postsToBeSeen = await getImagesWithSignedUrl(
+          ctx,
+          updatedUser.postsToBeSeen,
+        );
+        return postsToBeSeen.sort((p) => (p.certified ? -1 : 1));
       }
-      // If more than 3 posts, return the list
-      shuffle(user.postsToBeSeen);
-      return user.postsToBeSeen;
+
+      // If more than 3 posts, return the list with certified posts first
+      const postsToBeSeen = await getImagesWithSignedUrl(
+        ctx,
+        user.postsToBeSeen,
+      );
+      return postsToBeSeen.sort((p) => (p.certified ? -1 : 1));
     }),
   getUsersToBeSeen: protectedProcedure([Role.AGENCY, Role.OWNER])
     .input(z.object({ postId: z.string() }))

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { trpc } from "../../../utils/trpc";
 import React from "react";
+import { TextInput } from "./TextInput";
 
 interface GeocodeResult {
   id: number;
@@ -10,6 +11,7 @@ interface GeocodeResult {
 export interface AddressAutocompleteProps {
   location: string;
   handleLocationChange: React.ChangeEventHandler<HTMLInputElement>;
+  required?: boolean;
 }
 
 export const AddressAutocomplete = (props: AddressAutocompleteProps) => {
@@ -56,53 +58,38 @@ export const AddressAutocomplete = (props: AddressAutocompleteProps) => {
   }, []);
 
   useEffect(() => {
-    if (status === "success") {
+    if (status === "success" && data) {
       setSearchResults(data);
     }
     const timeout = setTimeout(() => {
-      if (status === "loading") {
+      if (status === "loading" && props.location) {
         refetch();
       }
-    }, 1000);
+    }, 500);
     return () => clearTimeout(timeout);
   }, [data, refetch, status, props.location]);
 
   return (
-    <div className="relative">
-      <div className="sticky flex w-full items-center justify-between rounded-full bg-white p-2 shadow">
-        <input
-          ref={inputRef}
-          className="focus:shadow-outline ml-2 w-full rounded-full bg-gray-100 py-4 pl-4 text-xs font-bold leading-tight text-gray-700 focus:outline-none lg:text-sm"
-          type="text"
-          placeholder="Search"
-          name="location"
-          autoComplete="off"
-          onChange={(event) => {
-            props.handleLocationChange(event);
-            setShowList(true);
-          }}
-          value={props.location}
-        />
-        <div className="mx-2 cursor-pointer rounded-full bg-gray-600 p-2 hover:bg-blue-400">
-          <svg
-            className="h-6 w-6 text-white"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fillRule="evenodd"
-              d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-              clipRule="evenodd"
-            />
-          </svg>
-        </div>
-      </div>
+    <div className="relative flex-grow">
+      <TextInput
+        className="w-full"
+        required={props.required}
+        inputRef={inputRef}
+        placeholder="Search an address and select in the options"
+        name="location"
+        autoComplete="off"
+        onChange={(event) => {
+          props.handleLocationChange(event);
+          setShowList(true);
+        }}
+        value={props.location}
+      />
       {searchResults.length > 0 && showList && (
         <div className="absolute z-10 mt-3 flex w-full items-center justify-between rounded-lg bg-white p-2 text-left shadow">
           <ul className="w-full" ref={listRef}>
-            {searchResults.map((result) => (
+            {searchResults.map((result, index) => (
               <li
-                key={result.id}
+                key={`${result.id}_${index}`}
                 className="w-full cursor-pointer px-2 py-1 hover:rounded-lg hover:bg-gray-100"
                 onClick={onSelectHandler}
               >

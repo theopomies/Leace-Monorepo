@@ -8,6 +8,8 @@ import { NumberInput } from "../shared/forms/NumberInput";
 interface UserAttributesFormProps {
   location?: string;
   handleLocationChange: ChangeEventHandler<HTMLInputElement>;
+  range?: number;
+  handleRangeChange: ChangeEventHandler<HTMLInputElement>;
   maxPrice?: number;
   handleMaxPriceChange: ChangeEventHandler<HTMLInputElement>;
   minPrice?: number;
@@ -16,6 +18,14 @@ interface UserAttributesFormProps {
   handleMaxSizeChange: ChangeEventHandler<HTMLInputElement>;
   minSize?: number;
   handleMinSizeChange: ChangeEventHandler<HTMLInputElement>;
+  maxBedrooms?: number;
+  handleMaxBedroomsChange: ChangeEventHandler<HTMLInputElement>;
+  minBedrooms?: number;
+  handleMinBedroomsChange: ChangeEventHandler<HTMLInputElement>;
+  maxBathrooms?: number;
+  handleMaxBathroomsChange: ChangeEventHandler<HTMLInputElement>;
+  minBathrooms?: number;
+  handleMinBathroomsChange: ChangeEventHandler<HTMLInputElement>;
   furnished?: boolean;
   handleFurnishedChange: Dispatch<SetStateAction<boolean | undefined>>;
   homeType?: HomeType;
@@ -36,6 +46,10 @@ interface UserAttributesFormProps {
   handleElevatorChange: Dispatch<SetStateAction<boolean | undefined>>;
   pool?: boolean;
   handlePoolChange: Dispatch<SetStateAction<boolean | undefined>>;
+  securityAlarm?: boolean;
+  handleSecurityAlarmChange: Dispatch<SetStateAction<boolean | undefined>>;
+  internetFiber?: boolean;
+  handleInternetFiberChange: Dispatch<SetStateAction<boolean | undefined>>;
 }
 
 export function UserAttributesForm({ ...attributes }: UserAttributesFormProps) {
@@ -89,15 +103,41 @@ export function UserAttributesForm({ ...attributes }: UserAttributesFormProps) {
       label: "Pool",
       handleChange: attributes.handlePoolChange,
     },
+    {
+      name: "securityAlarm",
+      label: "Security alarm",
+      handleChange: attributes.handleSecurityAlarmChange,
+    },
+    {
+      name: "internetFiber",
+      label: "Internet fiber",
+      handleChange: attributes.handleInternetFiberChange,
+    },
   ];
 
   return (
     <div className="flex justify-center">
-      <div className="h-auto w-full border-t py-5 text-center">
-        <AddressAutocomplete
-          location={attributes.location ?? ""}
-          handleLocationChange={attributes.handleLocationChange}
-        />
+      <div className="h-auto w-full pb-5 text-center">
+        <ul className="flex flex-wrap gap-4">
+          <li className="flex-grow pr-8">
+            <h3 className="text-left text-xl">Location</h3>
+            <AddressAutocomplete
+              location={attributes.location ?? ""}
+              handleLocationChange={attributes.handleLocationChange}
+            />
+          </li>
+          <li>
+            <h3 className="text-left text-xl">Range</h3>
+            <NumberInput
+              placeholder="50 by default"
+              aria-describedby="amount-prefix"
+              name="range"
+              onChange={attributes.handleRangeChange}
+              value={attributes.range || ""}
+              unit="km"
+            />
+          </li>
+        </ul>
         <div className="mt-5 px-16">
           <h2 className="pb-2 pt-4 text-xl font-bold text-gray-700">
             What are you looking for ?
@@ -177,9 +217,9 @@ export function UserAttributesForm({ ...attributes }: UserAttributesFormProps) {
             <NumberInput
               placeholder="500"
               aria-describedby="amount-prefix"
-              name="size"
+              name="price"
               onChange={attributes.handleMinPriceChange}
-              value={attributes.minPrice}
+              value={attributes.minPrice || ""}
               unit="$"
             />
           </label>
@@ -188,9 +228,9 @@ export function UserAttributesForm({ ...attributes }: UserAttributesFormProps) {
             <NumberInput
               placeholder="2000"
               aria-describedby="amount-prefix"
-              name="size"
+              name="price"
               onChange={attributes.handleMaxPriceChange}
-              value={attributes.maxPrice}
+              value={attributes.maxPrice || ""}
               unit="$"
             />
           </label>
@@ -203,7 +243,7 @@ export function UserAttributesForm({ ...attributes }: UserAttributesFormProps) {
               aria-describedby="amount-prefix"
               name="size"
               onChange={attributes.handleMinSizeChange}
-              value={attributes.minSize}
+              value={attributes.minSize || ""}
               unit="m²"
             />
           </label>
@@ -214,8 +254,52 @@ export function UserAttributesForm({ ...attributes }: UserAttributesFormProps) {
               aria-describedby="amount-prefix"
               name="size"
               onChange={attributes.handleMaxSizeChange}
-              value={attributes.maxSize}
+              value={attributes.maxSize || ""}
               unit="m²"
+            />
+          </label>
+        </div>
+        <div className="mt-6 flex flex-wrap justify-around gap-4">
+          <label>
+            <div>Min bedrooms</div>
+            <NumberInput
+              placeholder="2"
+              aria-describedby="amount-prefix"
+              name="bedrooms"
+              onChange={attributes.handleMinBedroomsChange}
+              value={attributes.minBedrooms || ""}
+            />
+          </label>
+          <label>
+            <div>Max bedrooms</div>
+            <NumberInput
+              placeholder="5"
+              aria-describedby="amount-prefix"
+              name="bedrooms"
+              onChange={attributes.handleMaxBedroomsChange}
+              value={attributes.maxBedrooms || ""}
+            />
+          </label>
+        </div>
+        <div className="mt-6 flex flex-wrap justify-around gap-4">
+          <label>
+            <div>Min bathrooms</div>
+            <NumberInput
+              placeholder="1"
+              aria-describedby="amount-prefix"
+              name="bathrooms"
+              onChange={attributes.handleMinBathroomsChange}
+              value={attributes.minBathrooms || ""}
+            />
+          </label>
+          <label>
+            <div>Max bathrooms</div>
+            <NumberInput
+              placeholder="3"
+              aria-describedby="amount-prefix"
+              name="bahtrooms"
+              onChange={attributes.handleMaxBathroomsChange}
+              value={attributes.maxBathrooms || ""}
             />
           </label>
         </div>

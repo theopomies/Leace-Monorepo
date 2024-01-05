@@ -1,10 +1,11 @@
+import { Role } from "@prisma/client";
+import { useRouter } from "next/router";
 import { useMemo } from "react";
 import { trpc } from "../../../utils/trpc";
 import { Loader } from "../Loader";
 import { Chat } from "./Chat";
-import { Role } from "@prisma/client";
+import { MatchActions } from "./MatchActions";
 import { TenantContractPopover } from "./contracts/TenantContractPopover";
-import { ReportDialog } from "./ReportDialog";
 
 export function TenantChat({
   userId,
@@ -15,17 +16,11 @@ export function TenantChat({
   conversationId?: string;
   role: Role;
 }) {
+  const router = useRouter();
   const utils = trpc.useContext();
-  const { data: conversation, isLoading: conversationIsLoadingOrNotEnabled } =
-    trpc.conversation.getConversation.useQuery(
-      {
-        conversationId: conversationId ?? "",
-      },
-      { enabled: !!conversationId, refetchOnWindowFocus: true },
-    );
-  const conversationIsLoading = useMemo(
-    () => conversationIsLoadingOrNotEnabled && !!conversationId,
-    [conversationIsLoadingOrNotEnabled, conversationId],
+  const { data: conversation } = trpc.conversation.getConversation.useQuery(
+    { conversationId: conversationId ?? "" },
+    { enabled: !!conversationId, refetchInterval: 4000 },
   );
   const sendMutation = trpc.conversation.sendMessage.useMutation({
     onSuccess() {
@@ -45,13 +40,12 @@ export function TenantChat({
   };
 
   const report = trpc.report.reportPostById.useMutation();
+  const deleteRelationship =
+    trpc.relationship.deleteRelationForTenant.useMutation();
 
   const isLoading = useMemo(
-    () =>
-      conversationIsLoading ||
-      relationshipsLoading ||
-      supportRelationshipsLoading,
-    [conversationIsLoading, relationshipsLoading, supportRelationshipsLoading],
+    () => relationshipsLoading || supportRelationshipsLoading,
+    [relationshipsLoading, supportRelationshipsLoading],
   );
 
   const relationship = useMemo(() => {
@@ -77,6 +71,11 @@ export function TenantChat({
       }
     : undefined;
 
+  const onDelete = async (relationshipId: string) => {
+    await deleteRelationship.mutateAsync({ userId, relationshipId });
+    router.push(`/users/${userId}/matches`);
+  };
+
   return (
     <Chat
       userId={userId}
@@ -89,9 +88,13 @@ export function TenantChat({
       contact={contact}
       additionnalBarComponent={
         <div className="flex items-center gap-8">
+          <TenantContractPopover relationship={relationship} />
           {relationship && (
-            <ReportDialog
-              title={relationship.post.title ?? "title"}
+            <MatchActions
+              fullName={
+                `${relationship.post.createdBy.firstName} ${relationship.post.createdBy.lastName}` ??
+                "User"
+              }
               onReport={({ reason, description }) =>
                 report.mutate({
                   postId: relationship.post.id,
@@ -99,9 +102,9 @@ export function TenantChat({
                   desc: description,
                 })
               }
+              onDelete={() => onDelete(relationship.id)}
             />
           )}
-          <TenantContractPopover relationship={relationship} />
         </div>
       }
     />

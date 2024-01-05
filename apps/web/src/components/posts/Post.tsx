@@ -3,7 +3,6 @@ import { Loader } from "../shared/Loader";
 import { useMemo } from "react";
 import { PostCard } from "../shared/post/PostCard";
 import { useRouter } from "next/router";
-import { deleteCacheId } from "../../utils/useCache";
 import { PostType } from "@prisma/client";
 
 export interface PostProps {
@@ -21,7 +20,7 @@ export const Post = ({ postId, authorId, updateLink }: PostProps) => {
   const { data: images, isLoading: imagesLoading } =
     trpc.image.getSignedPostUrl.useQuery({ postId });
   const { data: documents, isLoading: documentLoading } =
-    trpc.document.getSignedUrl.useQuery({ postId });
+    trpc.document.getSignedUrl.useQuery({ postId }, { retry: false });
   const utils = trpc.useContext();
 
   const deletePost = trpc.post.deletePostById.useMutation({
@@ -48,7 +47,6 @@ export const Post = ({ postId, authorId, updateLink }: PostProps) => {
   if (!post) return <p>Something went wrong</p>;
 
   const handleDeletePost = async () => {
-    deleteCacheId("lastSelectedPostId");
     await deletePost.mutateAsync({ postId });
     router.push(`/users/${authorId}/posts`);
   };

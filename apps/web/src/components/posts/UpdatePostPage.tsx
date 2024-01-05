@@ -36,9 +36,6 @@ export const UpdatePostPage = ({ postId }: UpdatePostProps) => {
       constructionDate: new Date(data.constructionDate + "T00:00:00.000Z"),
       energyClass: data.energyClass,
       estimatedCosts: data.estimatedCosts,
-      ges: data.ges,
-      internetFiber: data.internetFiber,
-      securityAlarm: data.securityAlarm,
       nearedShops: data.nearestShops,
     });
     await updatePostAttributes.mutateAsync({
@@ -54,15 +51,19 @@ export const UpdatePostPage = ({ postId }: UpdatePostProps) => {
       elevator: data.elevator,
       pool: data.pool,
       disability: data.disability,
+      internetFiber: data.internetFiber,
+      securityAlarm: data.securityAlarm,
       price: data.price,
       size: data.size,
+      bedrooms: data.bedrooms,
+      bathrooms: data.bathrooms,
     });
     router.push(`/users/${post?.createdById}/posts/${postId}`);
   };
 
   const handleCancel: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.preventDefault();
-    router.back();
+    router.push(`/users/${post?.createdById}/posts/${postId}`);
   };
 
   const handleUploadImages = (files: File[]) => {

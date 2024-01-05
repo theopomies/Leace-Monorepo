@@ -13,5 +13,9 @@ export function SupportPage() {
     return <div>Not logged in</div>;
   }
 
-  return <SupportChat userId={session.userId} role={session.role} />;
+  return (
+    <div className="flex h-screen w-full justify-center p-4">
+      <SupportChat userId={session.userId} role={session.role} />
+    </div>
+  );
 }

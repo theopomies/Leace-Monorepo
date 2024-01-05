@@ -11,13 +11,25 @@ import {
 import Link from "next/link";
 import { DialogButton } from "../button/DialogButton";
 import { ImageSelector } from "./ImageSelector";
+import { displayDate } from "../../../utils/displayDate";
+import { Button } from "../button/Button";
+import React from "react";
 import { SewingPinIcon } from "@radix-ui/react-icons";
 import { IoPricetagsOutline } from "react-icons/io5";
 import { RxDimensions } from "react-icons/rx";
 import { LiaCouchSolid } from "react-icons/lia";
-import { MdOutlineShower, MdOutlineBed } from "react-icons/md";
-import { displayDate } from "../../../utils/displayDate";
-import { Button } from "../button/Button";
+import {
+  MdOutlineShower,
+  MdOutlineBed,
+  MdConstruction,
+  MdEuroSymbol,
+} from "react-icons/md";
+import { IconType } from "react-icons";
+import { FaHouseFlag } from "react-icons/fa6";
+import { FaShoppingCart } from "react-icons/fa";
+import { attributesIcons } from "../icons/attributesIcons";
+import { IoIosArrowDropdownCircle } from "react-icons/io";
+import { IoIosArrowDropupCircle } from "react-icons/io";
 
 export interface PostCardProps {
   post: Post & {
@@ -26,14 +38,29 @@ export interface PostCardProps {
   };
   onPostDelete?: () => Promise<void>;
   images: (Image & { url: string })[] | null | undefined;
-  documents: (Document & { url: string })[] | null | undefined;
+  documents?: (Document & { url: string })[] | null | undefined;
   onDocValidation?: (document: Document & { url: string }) => Promise<void>;
   updateLink?: string;
   isLoggedIn?: boolean;
   isAdmin?: boolean;
   onPause?: () => Promise<void>;
   onUnpause?: () => Promise<void>;
+  isReduced?: boolean;
 }
+
+const details = {
+  energyClass: "Energy class",
+  constructionDate: "Built in",
+  estimatedCosts: "Charge fees",
+  nearestShops: "Nearest Shops",
+} as const as Record<keyof Post, string>;
+
+const detailsIcons = {
+  energyClass: FaHouseFlag,
+  constructionDate: MdConstruction,
+  estimatedCosts: MdEuroSymbol,
+  nearestShops: FaShoppingCart,
+} as const as Record<keyof Post, IconType>;
 
 const attributes = {
   terrace: "Terrace",
@@ -44,6 +71,8 @@ const attributes = {
   parking: "Parking",
   elevator: "Elevator",
   pool: "Pool",
+  securityAlarm: "Alarm / security",
+  internetFiber: "Internet",
 } as const as Record<keyof Attribute, string>;
 
 export const PostCard = ({
@@ -57,25 +86,86 @@ export const PostCard = ({
   isAdmin,
   onPause,
   onUnpause,
+  isReduced,
 }: PostCardProps) => {
+  const [isExpanded, setIsExpanded] = React.useState(false);
+
+  React.useEffect(() => {
+    if (isExpanded) {
+      window.scrollTo({
+        top: document.body.scrollHeight,
+        left: 0,
+        behavior: "smooth",
+      });
+    }
+  });
+
   if (!post.attribute) return <h1>Something went wrong</h1>;
+
+  const formatValue = (
+    key: keyof Post,
+    value: string | number | boolean | Date | null,
+  ): React.ReactNode => {
+    if (value instanceof Date) {
+      return value.getFullYear();
+    }
+    if (key === "estimatedCosts" && value === 0) {
+      return "included";
+    }
+    const unit = getUnit(key);
+    return `${value}${unit}`;
+  };
+
+  const getUnit = (key: keyof Post): string => {
+    switch (key) {
+      case "nearestShops":
+        return "km";
+      case "estimatedCosts":
+        return "€";
+      default:
+        return "";
+    }
+  };
+
+  const filterDetails = () => {
+    return Object.entries(details)
+      .map(([key, label]) => {
+        const value = post[key as keyof Post] as
+          | string
+          | number
+          | boolean
+          | Date
+          | null;
+
+        return (
+          (!!value || value === 0) && (
+            <li className="flex flex-grow items-center gap-2" key={key}>
+              {React.createElement(detailsIcons[key as keyof Post])}
+              <h3 className="text-lg">
+                {label}{" "}
+                {formatValue(key as keyof Post, post[key as keyof Post])}
+              </h3>
+            </li>
+          )
+        );
+      })
+      .filter(Boolean);
+  };
+
+  const detailsList = filterDetails();
 
   return (
     <div className="flex h-full w-full flex-col justify-between overflow-auto rounded-lg bg-white p-8 shadow">
+      <ImageSelector images={images?.map((image) => image.url) ?? []} />
       <section>
-        {images && images.length > 0 && (
-          <div className="h-[40vh]">
-            <ImageSelector images={images?.map((image) => image.url) ?? []} />
-          </div>
-        )}
-        <div className="flex items-end justify-between">
+        <div className="mt-4 flex items-end justify-between">
           <div>
             {post.title && (
-              <p className="py-2 text-xl font-semibold">{post.title} </p>
+              <h2 className="py-2 text-2xl font-medium">{post.title}</h2>
             )}
             <div className="flex items-center text-slate-400">
-              <SewingPinIcon height={30} width={30} />
               <p className="text-lg font-medium">{post.attribute.location}</p>
+              <SewingPinIcon height={30} width={30} />
             </div>
           </div>
           <div className="flex gap-2">
@@ -89,7 +179,7 @@ export const PostCard = ({
             </p>
           </div>
         </div>
-        <div className="my-12 w-full border-t border-slate-200" />
+        <div className="my-5 w-full border-t border-slate-200" />
         <div className="flex justify-between px-6">
           <div className="flex items-center gap-4 rounded-lg p-2">
             <div className="rounded-full bg-indigo-400 p-3 text-white shadow">
@@ -118,7 +208,7 @@ export const PostCard = ({
             </div>
             <div>
               <p className="text-slate-500">Bedrooms</p>
-              <p className="text-lg font-medium">3</p>
+              <p className="text-lg font-medium">{post.attribute.bedrooms}</p>
             </div>
           </div>
           <div className="flex items-center gap-4 rounded-lg p-2">
@@ -127,7 +217,7 @@ export const PostCard = ({
             </div>
             <div>
               <p className="text-slate-500">Bathrooms</p>
-              <p className="text-lg font-medium">2</p>
+              <p className="text-lg font-medium">{post.attribute.bathrooms}</p>
             </div>
           </div>
           <div className="flex items-center gap-4 rounded-lg p-2">
@@ -142,97 +232,86 @@ export const PostCard = ({
             </div>
           </div>
         </div>
-        <div className="mt-12 flex flex-col gap-4">
-          <h2 className="pb-2 text-xl font-medium">Property details</h2>
-          {!!post.desc && (
-            <p className="rounded-lg border border-dashed border-slate-300 p-4">
-              {post.desc}
-            </p>
-          )}
-          <ul className="gap-4 sm:flex sm:flex-wrap md:grid md:grid-cols-3">
-            <li className="mr-8 flex-grow border-b border-indigo-300 pb-2">
-              <h3 className="text-xl font-medium">Energy class</h3>
-              {post.energyClass ? post.energyClass : "Not specified"}
-            </li>
-            <li className="mr-8 flex-grow border-b border-indigo-300 pb-2">
-              <h3 className="text-xl font-medium">GES</h3>
-              {post.ges ? post.ges : "Not specified"}
-            </li>
-            <li className="mr-8 flex-grow border-b border-indigo-300 pb-2">
-              <h3 className="text-xl font-medium">Construction date</h3>
-              {post.constructionDate?.toDateString()
-                ? post.constructionDate?.toDateString()
-                : "Not specified"}
-            </li>
-          </ul>
-          <ul className="gap-4 sm:flex sm:flex-wrap md:grid md:grid-cols-3">
-            <li className="mr-8 flex-grow border-b border-indigo-300 pb-2">
-              <h3 className="text-xl font-medium">Estimated fees costs</h3>
-              {post.estimatedCosts
-                ? post.estimatedCosts + " $"
-                : "Not specified"}
-            </li>
-            <li className="mr-8 flex-grow border-b border-indigo-300 pb-2">
-              <h3 className="text-xl font-medium">Nearest shops</h3>
-              {post.nearestShops ? post.nearestShops + " km" : "Not specified"}
-            </li>
-          </ul>
-          <ul className="mt-6 gap-4 sm:flex sm:flex-wrap md:grid md:grid-cols-3">
-            {Object.entries(attributes).map(([key, value]) => {
-              const postAttributes = post.attribute;
-              if (!postAttributes) return null;
+        {isReduced && (
+          <div
+            className="mt-5 flex cursor-pointer justify-center"
+            onClick={() => setIsExpanded(!isExpanded)}
+          >
+            {!isExpanded ? (
+              <div className="rounded-full bg-indigo-400 p-1 text-white transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-lg">
+                <IoIosArrowDropdownCircle size={30} />
+              </div>
+            ) : (
+              <div className="rounded-full bg-indigo-400 p-1 text-white transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-lg">
+                <IoIosArrowDropupCircle size={30} />
+              </div>
+            )}
+          </div>
+        )}
+        {(!isReduced || isExpanded) && (
+          <div className={`${!isReduced && "mt-10"} flex flex-col gap-10`}>
+            {!!post.desc && (
+              <div>
+                <h2 className="py-4 text-3xl font-medium">Description</h2>
+                <p className="rounded-lg border border-dashed border-slate-300 p-4">
+                  {post.desc}
+                </p>
+              </div>
+            )}
+            <div>
+              <h2 className="pt-4 text-3xl font-medium">Property details</h2>
+              {detailsList.length > 0 && (
+                <ul className="flex gap-4 border-b py-6 sm:flex sm:flex-wrap md:grid md:grid-cols-4">
+                  {detailsList}
+                </ul>
+              )}
+              <ul className="gap-4 py-6 sm:flex sm:flex-wrap md:grid md:grid-cols-4">
+                {Object.entries(attributes).map(([key, value]) => {
+                  if (!post.attribute) return null;
 
-              const attribute = postAttributes[key as keyof Attribute];
+                  const attribute = post.attribute[key as keyof Attribute];
 
-              return (
-                <li
-                  className="mr-8 flex flex-grow gap-4 border-b border-indigo-300 py-2"
-                  key={key}
-                >
-                  <h3 className="text-xl font-medium">{value}</h3>
-                  {postAttributes && (
-                    <p className={attribute !== null ? "" : " text-indigo-600"}>
-                      {typeof attribute === "boolean"
-                        ? attribute
-                          ? "✅"
-                          : "❌"
-                        : typeof attribute === "number"
-                        ? attribute
-                        : typeof attribute === "string"
-                        ? attribute
-                        : typeof attribute === "object" && attribute !== null
-                        ? displayDate(attribute)
-                        : "Whatever"}{" "}
-                      {value.toLowerCase().includes("price")
-                        ? "€"
-                        : value.toLowerCase().includes("surface")
-                        ? "m²"
-                        : ""}
-                    </p>
-                  )}
-                </li>
-              );
-            })}
-          </ul>
-          <ul className="gap-4 sm:flex sm:flex-wrap md:grid md:grid-cols-3">
-            <li className="mr-8 flex-grow border-b border-indigo-300 pb-2">
-              <h3 className="text-xl font-medium">Alarm / security</h3>
-              {post.securityAlarm ? "✅" : "❌"}
-            </li>
-            <li className="mr-8 flex-grow border-b border-indigo-300 pb-2">
-              <h3 className="text-xl font-medium">Internet</h3>
-              {post.internetFiber ? "✅" : "❌"}
-            </li>
-          </ul>
-        </div>
-        <DocumentList documents={documents} onValidation={onDocValidation} />
+                  return (
+                    <li className="flex flex-grow items-center gap-2" key={key}>
+                      {React.createElement(
+                        attributesIcons[key as keyof Attribute],
+                      )}
+                      <h3
+                        className={`text-lg ${!attribute && " line-through"} `}
+                      >
+                        {value}
+                      </h3>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          </div>
+        )}
+        {(isLoggedIn || isAdmin) && (
+          <section>
+            <h2 className="py-4 text-3xl font-medium">Documents</h2>
+            {documents && documents.length > 0 ? (
+              <DocumentList
+                documents={documents}
+                onValidation={onDocValidation}
+              />
+            ) : (
+              <p className="text-indigo-600">
+                No document available
+                {isLoggedIn &&
+                  ", please add any necessary documents by updating your profile"}
+              </p>
+            )}
+          </section>
+        )}
         <DisplayReports reports={post.reports} />
       </section>
       {(isLoggedIn || isAdmin) && (
         <div className="mt-10 flex justify-center gap-4">
           {updateLink && (
             <Link
-              className="rounded bg-indigo-500 px-4 py-3 font-bold text-white hover:bg-indigo-600 active:bg-indigo-700"
+              className="rounded bg-indigo-500 px-4 py-3 text-white hover:bg-indigo-600 active:bg-indigo-700"
               href={updateLink.replace("[postId]", post.id)}
             >
               Update

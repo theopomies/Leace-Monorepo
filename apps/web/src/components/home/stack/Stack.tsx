@@ -1,160 +1,86 @@
-import { useSession } from "@clerk/nextjs";
 import { motion } from "framer-motion";
-import { useRouter } from "next/router";
 import { useState } from "react";
-import { CrossSvg } from "../../shared/icons/CrossSvg";
-import { LikeSvg } from "../../shared/icons/LikeSvg";
-import { RewindSvg } from "../../shared/icons/RewindSvg";
-import Overlay from "./Overlay";
-import { ReportModal } from "./ReportModal";
 import { StackButton } from "./StackButton";
-import { StackElement, StackElementProps } from "./StackElement";
 import { SwipeCard } from "./SwipeCard";
+import { PostType } from "./PostStack";
+import LikeSvg from "../../../../public/iconsButton/like.svg";
+import RewindSvg from "../../../../public/iconsButton/rewind.svg";
+import DislikeSvg from "../../../../public/iconsButton/dislike.svg";
+import Image from "next/image";
+import { PostCard } from "../../shared/post/PostCard";
 
 export type StackProps = {
-  posts: StackElementProps[];
-  onLike: (post: StackElementProps) => void;
-  onDislike: (post: StackElementProps) => void;
+  posts: PostType[];
+  onLike: (post: PostType) => void;
+  onDislike: (post: PostType) => void;
   onRewind: () => void;
 };
 
 export function Stack({ posts, onLike, onDislike, onRewind }: StackProps) {
-  const [likeState, setLikeState] = useState<"dislike" | "like" | null>(null);
-  const [isSelected, setIsSelected] = useState(false);
-  const [reporting, setReporting] = useState(false);
-  const { session } = useSession();
-  const userId = session?.user?.id;
+  const [likeState, setLikeState] = useState<"like" | "dislike" | null>(null);
 
-  const router = useRouter();
-
-  const redirectToProfile = () => {
-    router.push(`/users/${userId}/update`);
-  };
-
-  const dislikeHander = () => {
-    onDislike(posts[0] as StackElementProps);
-    setLikeState(null);
-    setIsSelected(false);
-  };
-  const likeHandler = () => {
-    onLike(posts[0] as StackElementProps);
-    setLikeState(null);
-    setIsSelected(false);
-  };
+  if (!posts[0] || !posts[0].attribute) {
+    return null;
+  }
 
   return (
-    <>
-      {posts.length > 0 ? (
-        <>
-          {isSelected && (
-            <Overlay
-              isSelected={isSelected}
-              onClose={() => setIsSelected(false)}
-            />
-          )}
-          <ReportModal isOpen={reporting} setIsOpen={setReporting} />
-          <div className="relative">
-            <div className="relative z-10">
-              <SwipeCard
-                onSwipeLeft={dislikeHander}
-                onSwipeRight={likeHandler}
-                onSwiping={(direction: "like" | "dislike" | null) => {
-                  setLikeState(direction);
-                }}
-                isSelected={isSelected}
-                setIsSelected={setIsSelected}
-                {...(posts[0] as StackElementProps)}
-                onReport={() => setReporting(true)}
-              />
-              <motion.div
-                layout
-                className={
-                  "relative flex justify-center " +
-                  (isSelected ? "w-[90%]" : "w-full")
-                }
-              >
-                <motion.div
-                  layout
-                  className={
-                    "absolute z-10 mt-16 flex w-full max-w-sm justify-around " +
-                    (isSelected ? "-top-36" : "")
-                  }
-                >
-                  <StackButton onClick={dislikeHander}>
-                    <motion.div
-                      layout
-                      className={
-                        "transition-colors hover:stroke-red-600 " +
-                        (likeState == "dislike"
-                          ? "stroke-red-600"
-                          : "stroke-red-200")
-                      }
-                    >
-                      <CrossSvg />
-                    </motion.div>
-                  </StackButton>
-                  <StackButton onClick={onRewind}>
-                    <motion.div
-                      layout
-                      className="fill-blue-200 transition-colors hover:fill-blue-600"
-                    >
-                      <RewindSvg />
-                    </motion.div>
-                  </StackButton>
-                  <StackButton onClick={likeHandler}>
-                    <motion.div
-                      layout
-                      className={
-                        "transition-colors hover:fill-green-600 " +
-                        (likeState == "like"
-                          ? "fill-green-600"
-                          : "fill-green-200")
-                      }
-                    >
-                      <LikeSvg />
-                    </motion.div>
-                  </StackButton>
-                </motion.div>
-              </motion.div>
-            </div>
-            {!isSelected &&
-              posts.slice(1, 4).map((post, index) => (
-                <div
-                  className="absolute"
-                  style={{
-                    top: `${(index + 1) * 15}px`,
-                    zIndex: 5 - index,
-                    transform: `scale(${1 - ((index + 1) * 4) / 100})`,
-                  }}
-                  key={index}
-                >
-                  <StackElement {...post} />
-                </div>
-              ))}
-          </div>
-        </>
-      ) : (
-        <div className="flex flex-col items-center justify-center">
-          <h1 className="text-2xl font-bold text-gray-700">No results :(</h1>
+    <div className="flex w-full flex-grow items-center justify-center overflow-hidden py-10 px-60">
+      <div className="relative flex flex-grow flex-col">
+        <SwipeCard
+          post={posts[0]}
+          likeState={likeState}
+          setLikeState={setLikeState}
+          onLike={onLike}
+          onDislike={onDislike}
+        />
 
-          <div className="mt-4 flex flex-col items-center justify-center">
-            <p className="text-gray-500">
-              It seems that no one matches your current criterias ...
-            </p>
-            <p className="text-gray-500">
-              Try to{" "}
-              <a
-                className="font-bold text-blue-500"
-                onClick={redirectToProfile}
-                href="#"
+        <div className="absolute w-full">
+          {posts.slice(1, 4).map((post, index) => {
+            return (
+              <div
+                key={index}
+                style={{ zIndex: 5 - index }}
+                className="absolute w-full"
               >
-                modify
-              </a>{" "}
-              them or come back later !
-            </p>
-          </div>
+                <PostCard post={post} images={post.images} isReduced />
+              </div>
+            );
+          })}
         </div>
-      )}
-    </>
+        <motion.div
+          layout
+          className="mt-10 flex w-full flex-grow items-center justify-center gap-20"
+        >
+          <StackButton
+            onClick={() => setLikeState("dislike")}
+            className={`hover:drop-shadow-dislike transform border-[#FF6A4F] transition-all duration-300 ease-in-out hover:scale-105 ${
+              likeState == "dislike" && "drop-shadow-dislike scale-105"
+            }`}
+          >
+            <Image
+              src={DislikeSvg}
+              alt="Dislike"
+              width="50"
+              height="50"
+              className="p-1"
+            />
+          </StackButton>
+          <StackButton
+            onClick={onRewind}
+            className="hover:drop-shadow-rewind flex h-fit transform border-[#F7D332] transition-all duration-300 ease-in-out hover:scale-105"
+          >
+            <Image src={RewindSvg} alt="Rewind" width="40" height="40" />
+          </StackButton>
+          <StackButton
+            onClick={() => setLikeState("like")}
+            className={`hover:drop-shadow-like transform border-[#63DE9A] transition-all duration-300 ease-in-out hover:scale-105 ${
+              likeState == "like" && "drop-shadow-like scale-105"
+            }`}
+          >
+            <Image src={LikeSvg} alt="Like" width="50" height="50" />
+          </StackButton>
+        </motion.div>
+      </div>
+    </div>
   );
 }

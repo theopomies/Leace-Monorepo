@@ -8,10 +8,14 @@ import { NumberInput } from "../shared/forms/NumberInput";
 interface PostAttributesFormProps {
   location: string;
   handleLocationChange: ChangeEventHandler<HTMLInputElement>;
-  price: number;
+  price: number | undefined;
   handlePriceChange: ChangeEventHandler<HTMLInputElement>;
-  size: number;
+  size: number | undefined;
   handleSizeChange: ChangeEventHandler<HTMLInputElement>;
+  bedrooms: number | undefined;
+  handleBedroomsChange: ChangeEventHandler<HTMLInputElement>;
+  bathrooms: number | undefined;
+  handleBathroomsChange: ChangeEventHandler<HTMLInputElement>;
   furnished: boolean;
   handleFurnishedChange: ChangeEventHandler<HTMLInputElement>;
   homeType: HomeType | undefined;
@@ -156,6 +160,7 @@ export function PostAttributesForm({ ...attributes }: PostAttributesFormProps) {
               onChange={attributes.handleSizeChange}
               value={attributes.size}
               unit="m²"
+              required
             />
           </label>
           <label>
@@ -167,6 +172,27 @@ export function PostAttributesForm({ ...attributes }: PostAttributesFormProps) {
               onChange={attributes.handlePriceChange}
               value={attributes.price}
               unit="€"
+              required
+            />
+          </label>
+          <label>
+            <div>Bedrooms</div>
+            <NumberInput
+              placeholder="2"
+              onChange={attributes.handleBedroomsChange}
+              value={attributes.bedrooms}
+              className="inline-block w-full"
+              required
+            />
+          </label>
+          <label>
+            <div>Bathrooms</div>
+            <NumberInput
+              placeholder="1"
+              onChange={attributes.handleBathroomsChange}
+              value={attributes.bathrooms}
+              className="w-full"
+              required
             />
           </label>
         </div>

@@ -23,9 +23,6 @@ export const CreatePostPage = () => {
       constructionDate: new Date(data.constructionDate + "T00:00:00.000Z"),
       energyClass: data.energyClass,
       estimatedCosts: data.estimatedCosts,
-      ges: data.ges,
-      internetFiber: data.internetFiber,
-      securityAlarm: data.securityAlarm,
       nearedShops: data.nearestShops,
     });
     await updatePost.mutateAsync({
@@ -41,8 +38,12 @@ export const CreatePostPage = () => {
       elevator: data.elevator,
       pool: data.pool,
       disability: data.disability,
+      internetFiber: data.internetFiber,
+      securityAlarm: data.securityAlarm,
       price: data.price,
       size: data.size,
+      bedrooms: data.bedrooms,
+      bathrooms: data.bathrooms,
     });
     return postCreated;
   };
@@ -79,7 +80,7 @@ export const CreatePostPage = () => {
 
   const handleCancel: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.preventDefault();
-    router.back();
+    router.push(router.asPath.replace(/\/[^/]+$/, ""));
   };
 
   return (

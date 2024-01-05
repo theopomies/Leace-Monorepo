@@ -1,9 +1,8 @@
-import { Role, Post } from "@prisma/client";
-import { ChatBox } from "./ChatBox";
-import { Relationships, SupportRelationships } from "./ChatList";
-import { ChatList } from "./ChatList";
-import { MessageWithSender } from "./ChatMessage";
+import { Post, Role } from "@prisma/client";
 import { ReactNode } from "react";
+import { ChatBox } from "./ChatBox";
+import { ChatList, Relationships, SupportRelationships } from "./ChatList";
+import { MessageWithSender } from "./ChatMessage";
 
 export type ChatProps = {
   userId: string;
@@ -44,7 +43,7 @@ export const Chat = ({
           )}
           {messages === undefined && (
             <div className="flex h-full w-full flex-col items-center justify-center">
-              <div className="text-2xl font-bold">Select a conversation</div>
+              <p className="text-2xl">Select a conversation</p>
             </div>
           )}
         </div>

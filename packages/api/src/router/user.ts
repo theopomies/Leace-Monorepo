@@ -1,17 +1,18 @@
-import { router, protectedProcedure, AuthenticatedProcedure } from "../trpc";
+import {
+  router,
+  protectedProcedure,
+  AuthenticatedProcedure,
+  publicProcedure,
+} from "../trpc";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { Role, UserStatus, MaritalStatus } from "@prisma/client";
 import { isPossiblePhoneNumber } from "libphonenumber-js";
 import { getId } from "../utils/getId";
 import { filterStrings } from "../utils/filter";
+import { checkCertificationLevel } from "../utils/certification";
 
 export const userRouter = router({
-  /** Create a new user only for yourself,
-      Invalid if:
-        - You have followed a ambiguous signUp/signIn flow.
-        - Your user doesn't exist on clerk authentication database.
-  */
   createUser: AuthenticatedProcedure.mutation(async ({ ctx }) => {
     const user = await ctx.prisma.user.findUnique({
       where: { id: ctx.auth.userId },
@@ -73,12 +74,6 @@ export const userRouter = router({
       role: input.role,
     });
   }),
-  /** Update one user's data with the given id
-      Also check for:
-        - a valid phone number
-        - a valid birthdate
-      An account turn active after the first update.
-  */
   updateUserById: protectedProcedure([
     Role.TENANT,
     Role.OWNER,
@@ -165,14 +160,16 @@ export const userRouter = router({
           description: input.description,
           job: input.job,
           employmentContract: input.employmentContract,
-          income: input.income,
-          creditScore: input.creditScore,
+          income: input.income ?? null,
+          creditScore: input.creditScore ?? null,
           maritalStatus: input.maritalStatus,
           isPremium: input.isPremium,
         },
       });
 
       if (!updated) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+      await checkCertificationLevel({ ctx, userId });
 
       filterStrings({
         ctx,
@@ -187,21 +184,12 @@ export const userRouter = router({
         ],
       });
     }),
-  /**  Retrieve one user's data with the given id, based on your authorizations. */
-  getUserById: protectedProcedure([
-    Role.TENANT,
-    Role.OWNER,
-    Role.AGENCY,
-    Role.ADMIN,
-    Role.MODERATOR,
-  ])
+  getUserById: publicProcedure
     .input(z.object({ userId: z.string() }))
     .query(async ({ ctx, input }) => {
-      const userId = input.userId;
-
       const user = await ctx.prisma.user.findUnique({
         where: {
-          id: userId,
+          id: input.userId,
         },
         include: {
           attribute: true,

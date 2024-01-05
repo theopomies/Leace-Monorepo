@@ -1,11 +1,19 @@
 type StackButtonProps = {
-  children: React.ReactNode;
   onClick: () => void;
+  className?: string;
+  children: React.ReactNode;
 };
 
-export function StackButton({ onClick, children }: StackButtonProps) {
+export function StackButton({
+  onClick,
+  className,
+  children,
+}: StackButtonProps) {
   return (
-    <button className="rounded-full bg-white p-2 shadow-md" onClick={onClick}>
+    <button
+      className={`rounded-full border-4 bg-white p-3 shadow ${className}`}
+      onClick={onClick}
+    >
       {children}
     </button>
   );

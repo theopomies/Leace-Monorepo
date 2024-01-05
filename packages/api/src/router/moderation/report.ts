@@ -7,7 +7,7 @@ export const reportModeration = router({
   getReport: protectedProcedure([Role.ADMIN, Role.MODERATOR]).query(
     ({ ctx }) => {
       return ctx.prisma.report.findFirst({
-        orderBy: { createdAt: "desc" },
+        orderBy: { createdAt: "asc" },
         where: { status: ReportStatus.PENDING },
       });
     },

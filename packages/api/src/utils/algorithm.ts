@@ -1,8 +1,9 @@
 import { PostType, PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
+const PREMIUM_DAYS_ADVANTAGE = 1;
 
-export async function movePostToSeen(userId: string, postId: string) {
+export async function moveToPostsSeen(userId: string, postId: string) {
   // move the specified post from postsTobeSeen to postsSeen in the user's profile
   await prisma.user.update({
     where: { id: userId },
@@ -17,11 +18,29 @@ export async function movePostToSeen(userId: string, postId: string) {
   });
 }
 
+export async function moveToPostsToBeSeen(userId: string, postId: string) {
+  // move the specified post from postsSeen to postsTobeSeen in the user's profile
+  await prisma.user.update({
+    where: { id: userId },
+    data: {
+      postsToBeSeen: {
+        connect: { id: postId },
+      },
+      postsSeen: {
+        disconnect: { id: postId },
+      },
+    },
+  });
+}
+
 const deg2rad = (deg: number) => deg * (Math.PI / 180);
 const rad2deg = (rad: number) => rad * (180 / Math.PI);
 const earthRadius = 6371;
 
-export async function getPostsWithAttribute(userId: string) {
+export async function getPostsWithAttribute(
+  userId: string,
+  isPremium: boolean,
+) {
   const userAtt = await prisma.attribute.findUniqueOrThrow({
     where: { userId: userId },
   });
@@ -41,8 +60,19 @@ export async function getPostsWithAttribute(userId: string) {
     userAtt.lng -
     rad2deg(userAtt.range / earthRadius / Math.cos(deg2rad(userAtt.lat)));
 
+  let maxDate = new Date(); // Today
+  if (!isPremium) {
+    // 1 less day if not premium
+    maxDate = new Date(
+      maxDate.getTime() - 1000 * 60 * 60 * 24 * PREMIUM_DAYS_ADVANTAGE,
+    );
+  }
+
   const posts = await prisma.post.findMany({
     where: {
+      createdAt: {
+        lte: maxDate,
+      },
       type: PostType.TO_BE_RENTED,
       attribute: {
         AND: [
@@ -56,6 +86,18 @@ export async function getPostsWithAttribute(userId: string) {
             size: {
               gte: userAtt.minSize ?? undefined,
               lte: userAtt.maxSize ?? undefined,
+            },
+          },
+          {
+            bedrooms: {
+              gte: userAtt.minBedrooms ?? undefined,
+              lte: userAtt.maxBedrooms ?? undefined,
+            },
+          },
+          {
+            bathrooms: {
+              gte: userAtt.minBathrooms ?? undefined,
+              lte: userAtt.maxBathrooms ?? undefined,
             },
           },
           { furnished: userAtt.furnished ?? undefined },

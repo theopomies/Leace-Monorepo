@@ -11,7 +11,7 @@ export function UserLayout({
 }: UserLayoutProps) {
   return (
     <div
-      className={`flex-grow overflow-auto rounded-lg bg-white px-12 py-20 ${className}`}
+      className={`flex-grow overflow-auto rounded-lg bg-white px-12 py-20 shadow ${className}`}
     >
       <div className="flex gap-12">
         <div className="flex flex-col items-center gap-12 px-16">

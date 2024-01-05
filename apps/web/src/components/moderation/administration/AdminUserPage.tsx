@@ -13,23 +13,22 @@ export function AdminUserPage({ userId }: { userId: string }) {
   if (user && user.data && !user.error) {
     return (
       <div className="flex w-full flex-grow overflow-auto pl-10">
-        <div className="flex w-5/6 flex-grow flex-col py-10">
+        <div className="flex w-5/6 flex-grow flex-col gap-5 py-5">
           <Search />
           {user.data.posts[0] && (
-            <Link
-              href={`/administration/posts/${user.data.posts[0].id}`}
-              className="pt-10 pb-5"
-            >
+            <Link href={`/administration/posts/${user.data.posts[0].id}`}>
               <Button className="w-full">View posts</Button>
             </Link>
           )}
           <User userId={userId} />
         </div>
-        <div className="h-full w-1/6">
-          <ActionButtons
-            userId={userId}
-            conversationLink={`/administration/users/${userId}/conversations`}
-          />
+        <div className="flex w-1/6 flex-grow justify-center">
+          <div className="fixed flex h-screen items-center">
+            <ActionButtons
+              userId={userId}
+              conversationLink={`/administration/users/${userId}/conversations`}
+            />
+          </div>
         </div>
       </div>
     );

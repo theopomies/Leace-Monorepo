@@ -1,4 +1,4 @@
-import { Document, Role, RelationType } from "@prisma/client";
+import { Document, Role, RelationType, DocType } from "@prisma/client";
 import { protectedProcedure, router } from "../trpc";
 import { z } from "zod";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
@@ -19,6 +19,36 @@ export const documentRouter = router({
         leaseId: z.string().optional(),
         fileName: z.string().optional(),
         fileType: z.string(),
+        docType: z
+          .enum([
+            DocType.IDENTITY_CARD,
+            DocType.PASSPORT,
+            DocType.DRIVER_LICENSE,
+            DocType.RESIDENCE_PERMIT,
+
+            DocType.RENT_RECEIPT,
+            DocType.SWORN_STATEMENT,
+            DocType.DOMICILE_ACCEPTANCE,
+            DocType.TAX_ASSESSMENT,
+
+            DocType.EMPLOYMENT_CONTRACT,
+            DocType.STUDENT_CARD,
+            DocType.BUSINESS_CARD,
+            DocType.INSEE_CERTIFICATE,
+
+            DocType.D1_EXTRAIT,
+            DocType.K_EXTRAIT,
+            DocType.OTHERS,
+
+            DocType.SALARY_PROOF,
+            DocType.COMPENSATION,
+            DocType.ACCOUNTING_BALANCE,
+            DocType.PROPERTY_TITLE,
+            DocType.SCHOLARSHIP,
+            DocType.FINANCIAL_CONTRIBUTION,
+            DocType.TAX_NOTICES,
+          ])
+          .optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -39,7 +69,7 @@ export const documentRouter = router({
             id: id,
             userId: ctx.auth.userId,
             ext: ext,
-            name: input.fileName ?? id,
+            type: input.docType,
           },
         });
         if (!created) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
@@ -60,12 +90,7 @@ export const documentRouter = router({
         if (!getPost) throw new TRPCError({ code: "NOT_FOUND" });
 
         const created = await ctx.prisma.document.create({
-          data: {
-            id: id,
-            postId: getPost.id,
-            ext: ext,
-            name: input.fileName ?? id,
-          },
+          data: { id: id, postId: getPost.id, ext: ext, type: input.docType },
         });
         if (!created) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
         const key = `posts/${getPost.id}/documents/${id}.${ext}`;
@@ -82,12 +107,7 @@ export const documentRouter = router({
         });
         if (!getLease) throw new TRPCError({ code: "NOT_FOUND" });
         const created = await ctx.prisma.document.create({
-          data: {
-            id: id,
-            leaseId: getLease.id,
-            ext: ext,
-            name: input.fileName ?? id,
-          },
+          data: { id: id, leaseId: getLease.id, ext: ext, type: input.docType },
         });
         if (!created) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
         const key = `leases/${getLease.id}/documents/${id}.${ext}`;
@@ -136,7 +156,7 @@ export const documentRouter = router({
         const documents = await ctx.prisma.document.findMany({
           where: { userId: getUser.id },
         });
-        if (!documents) return null;
+        if (!documents) return;
 
         return await Promise.all(
           documents.map(async (document: Document) => {
@@ -149,6 +169,7 @@ export const documentRouter = router({
             return {
               ...document,
               url: await getSignedUrl(ctx.s3Client, command),
+              type: document.type,
             };
           }),
         );
@@ -158,7 +179,10 @@ export const documentRouter = router({
         });
         if (!getPost) throw new TRPCError({ code: "NOT_FOUND" });
 
-        if (getPost.createdById !== ctx.auth.userId) {
+        if (
+          getPost.createdById !== ctx.auth.userId &&
+          ctx.auth.userId != getPost.managedById
+        ) {
           const relationShip = await ctx.prisma.relationship.findFirst({
             where: { userId: ctx.auth.userId, postId: getPost.id },
           });
@@ -182,7 +206,7 @@ export const documentRouter = router({
             };
             const command = new GetObjectCommand(bucketParams);
             const url = await getSignedUrl(ctx.s3Client, command);
-            return { ...document, url };
+            return { ...document, url, type: document.type };
           }),
         );
       } else if (input.leaseId) {
@@ -206,6 +230,7 @@ export const documentRouter = router({
             return {
               ...document,
               url: await getSignedUrl(ctx.s3Client, command),
+              type: document.type,
             };
           }),
         );

@@ -1,10 +1,11 @@
+import { Role } from "@prisma/client";
+import { useRouter } from "next/router";
 import { useMemo } from "react";
 import { trpc } from "../../../utils/trpc";
 import { Loader } from "../Loader";
 import { Chat } from "./Chat";
-import { Role } from "@prisma/client";
+import { MatchActions } from "./MatchActions";
 import { OwnerContractPopover } from "./contracts/OwnerContractPopover";
-import { ReportDialog } from "./ReportDialog";
 
 export function OwnerChat({
   userId,
@@ -17,17 +18,13 @@ export function OwnerChat({
   role: Role;
   postId?: string;
 }) {
+  const router = useRouter();
   const utils = trpc.useContext();
-  const { data: conversation, isLoading: conversationIsLoadingOrNotEnabled } =
-    trpc.conversation.getConversation.useQuery(
-      {
-        conversationId: conversationId ?? "",
-      },
-      { enabled: !!conversationId, refetchOnWindowFocus: true },
-    );
-  const conversationIsLoading = useMemo(
-    () => conversationIsLoadingOrNotEnabled && !!conversationId,
-    [conversationIsLoadingOrNotEnabled, conversationId],
+  const { data: conversation } = trpc.conversation.getConversation.useQuery(
+    {
+      conversationId: conversationId ?? "",
+    },
+    { enabled: !!conversationId, refetchInterval: 4000 },
   );
   const sendMutation = trpc.conversation.sendMessage.useMutation({
     onSuccess() {
@@ -61,19 +58,12 @@ export function OwnerChat({
   }, [relationships, conversation?.relationId, postId]);
 
   const report = trpc.report.reportUserById.useMutation();
+  const deleteRelationship =
+    trpc.relationship.deleteRelationForOwner.useMutation();
 
   const isLoading = useMemo(
-    () =>
-      conversationIsLoading ||
-      relationshipsLoading ||
-      postsLoading ||
-      supportRelationshipsLoading,
-    [
-      conversationIsLoading,
-      relationshipsLoading,
-      supportRelationshipsLoading,
-      postsLoading,
-    ],
+    () => relationshipsLoading || postsLoading || supportRelationshipsLoading,
+    [relationshipsLoading, supportRelationshipsLoading, postsLoading],
   );
 
   const relationship = useMemo(() => {
@@ -95,6 +85,11 @@ export function OwnerChat({
       }
     : undefined;
 
+  const onDeleteMatch = async (relationshipId: string) => {
+    await deleteRelationship.mutateAsync({ userId, relationshipId });
+    router.push(`/users/${userId}/matches`);
+  };
+
   return (
     <Chat
       userId={userId}
@@ -109,9 +104,13 @@ export function OwnerChat({
       postId={postId}
       additionnalBarComponent={
         <div className="flex items-center gap-8">
+          <OwnerContractPopover relationship={relationship} />
           {relationship && (
-            <ReportDialog
-              title={relationship.user.firstName ?? "User"}
+            <MatchActions
+              fullName={
+                `${relationship.user.firstName} ${relationship.user.lastName}` ??
+                "User"
+              }
               onReport={({ reason, description }) =>
                 report.mutate({
                   userId: relationship.user.id,
@@ -119,9 +118,9 @@ export function OwnerChat({
                   desc: description,
                 })
               }
+              onDelete={() => onDeleteMatch(relationship.id)}
             />
           )}
-          <OwnerContractPopover relationship={relationship} />
         </div>
       }
     />
