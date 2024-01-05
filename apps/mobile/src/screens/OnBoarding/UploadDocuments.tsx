@@ -2,14 +2,21 @@ import { View, Text, ScrollView, Modal } from "react-native";
 import React, { useState } from "react";
 import { Btn } from "../../components/Btn";
 import * as DocumentPicker from "expo-document-picker";
-import { DocType } from "@leace/db";
+import { DocType, Role } from "@leace/db";
 import { Picker } from "@react-native-picker/picker";
 import { trpc } from "../../utils/trpc";
 import * as FileSystem from "expo-file-system";
 import axios from "axios";
 import { Buffer } from "buffer";
+import Toast from "react-native-toast-message";
 
-export default function UploadDocuments({ userId }: { userId: string }) {
+export default function UploadDocuments({
+  userId,
+  selectedRole,
+}: {
+  userId: string;
+  selectedRole: Role;
+}) {
   const utils = trpc.useContext();
 
   const [documents, setDocuments] = useState<
@@ -64,11 +71,32 @@ export default function UploadDocuments({ userId }: { userId: string }) {
 
   function getDocument(id: number): { name: string; docType: DocType } {
     const [doc] = documents.filter((a) => a.id === id);
-    if (!doc) return { name: "Not found", docType: "IDENTITY_CARD" };
+    if (!doc) {
+      if (idx === 0) return { name: "Not found", docType: "IDENTITY_CARD" };
+      if (idx === 1) return { name: "Not found", docType: "RENT_RECEIPT" };
+      if (idx === 2)
+        return { name: "Not found", docType: "EMPLOYMENT_CONTRACT" };
+      return { name: "Not found", docType: "SALARY_PROOF" };
+    }
     return { name: doc.file.name, docType: doc.docType };
   }
 
   function finishOnboarding() {
+    if (documents.length === 0) {
+      Toast.show({
+        type: "error",
+        text1: "Documents required",
+      });
+      return;
+    }
+    const [identity] = documents.filter((a) => a.id === 1);
+    if (!identity) {
+      Toast.show({
+        type: "error",
+        text1: "Identity document is required",
+      });
+      return;
+    }
     setLoading(() => ({ status: true, message: "Uploading files..." }));
     Promise.all(
       documents.map((a) =>
@@ -103,6 +131,81 @@ export default function UploadDocuments({ userId }: { userId: string }) {
       .catch((e) => console.error(e));
   }
 
+  function getItems() {
+    if (idx === 0)
+      return (
+        <Picker
+          mode="dropdown"
+          selectedValue={selectedDoc.docType}
+          onValueChange={(item) =>
+            setSelectedDoc((a) => ({ ...a, docType: item }))
+          }
+        >
+          <Picker.Item label="Identity Card" value="IDENTITY_CARD" />
+          <Picker.Item label="Passport" value="PASSPORT" />
+          <Picker.Item label="Driver License" value="DRIVER_LICENSE" />
+          <Picker.Item label="Residence Permit" value="RESIDENCE_PERMIT" />
+        </Picker>
+      );
+    if (idx === 1)
+      return (
+        <Picker
+          mode="dropdown"
+          selectedValue={selectedDoc.docType}
+          onValueChange={(item) =>
+            setSelectedDoc((a) => ({ ...a, docType: item }))
+          }
+        >
+          <Picker.Item label="Rent Receipt" value="RENT_RECEIPT" />
+          <Picker.Item label="Sworn Statement" value="SWORN_STATEMENT" />
+          <Picker.Item
+            label="Domicile Acceptance"
+            value="DOMICILE_ACCEPTANCE"
+          />
+          <Picker.Item label="Tax Assessment" value="TAX_ASSESSMENT" />
+          <Picker.Item label="Tax notices" value="TAX_NOTICES" />
+        </Picker>
+      );
+    if (idx === 2)
+      return (
+        <Picker
+          mode="dropdown"
+          selectedValue={selectedDoc.docType}
+          onValueChange={(item) =>
+            setSelectedDoc((a) => ({ ...a, docType: item }))
+          }
+        >
+          <Picker.Item
+            label="Employment Contract"
+            value="EMPLOYMENT_CONTRACT"
+          />
+          <Picker.Item label="Student Card" value="STUDENT_CARD" />
+          <Picker.Item label="Business Card" value="BUSINESS_CARD" />
+          <Picker.Item label="Insee Certificate" value="INSEE_CERTIFICATE" />
+        </Picker>
+      );
+    return (
+      <Picker
+        mode="dropdown"
+        selectedValue={selectedDoc.docType}
+        onValueChange={(item) =>
+          setSelectedDoc((a) => ({ ...a, docType: item }))
+        }
+      >
+        <Picker.Item label="Salary Proof" value="SALARY_PROOF" />
+        <Picker.Item label="Compensation" value="COMPENSATION" />
+        <Picker.Item label="Accounting Balance" value="ACCOUNTING_BALANCE" />
+        <Picker.Item label="Property Title" value="PROPERTY_TITLE" />
+        <Picker.Item label="Scholarship" value="SCHOLARSHIP" />
+        <Picker.Item
+          label="Financial Contribution"
+          value="FINANCIAL_CONTRIBUTION"
+        />
+        <Picker.Item label="Tax notices" value="TAX_NOTICES" />
+      </Picker>
+    );
+  }
+
   return (
     <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
       <Modal
@@ -126,18 +229,7 @@ export default function UploadDocuments({ userId }: { userId: string }) {
             }}
           >
             <Text className="font-bold">Document type</Text>
-            <Picker
-              mode="dropdown"
-              selectedValue={selectedDoc.docType}
-              onValueChange={(item) =>
-                setSelectedDoc((a) => ({ ...a, docType: item }))
-              }
-            >
-              <Picker.Item label="Identity Card" value="IDENTITY_CARD" />
-              <Picker.Item label="Passport" value="PASSPORT" />
-              <Picker.Item label="Driver License" value="DRIVER_LICENSE" />
-              <Picker.Item label="Residence Permit" value="RESIDENCE_PERMIT" />
-            </Picker>
+            {getItems()}
             <View className="h-10">
               <Text className="font-bold">Document name</Text>
               <Text>{selectedDoc.name}</Text>
@@ -192,6 +284,38 @@ export default function UploadDocuments({ userId }: { userId: string }) {
             ></Btn>
           </View>
         </View>
+        {selectedRole === "TENANT" && (
+          <View className="flex flex-col">
+            <Text className="font-bold">Proof of professional situation</Text>
+            <View className="flex flex-row items-center justify-between">
+              <Text>{getDocument(2).name}</Text>
+              <Btn
+                title="Add"
+                onPress={() => {
+                  setIdx(2);
+                  setSelectedDoc(getDocument(2));
+                  setOpen(true);
+                }}
+              ></Btn>
+            </View>
+          </View>
+        )}
+        {selectedRole === "TENANT" && (
+          <View className="flex flex-col">
+            <Text className="font-bold">Proof of financial situation</Text>
+            <View className="flex flex-row items-center justify-between">
+              <Text>{getDocument(3).name}</Text>
+              <Btn
+                title="Add"
+                onPress={() => {
+                  setIdx(3);
+                  setSelectedDoc(getDocument(3));
+                  setOpen(true);
+                }}
+              ></Btn>
+            </View>
+          </View>
+        )}
       </View>
       <View className="px-8 pb-4">
         <Btn

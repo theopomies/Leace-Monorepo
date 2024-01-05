@@ -1,13 +1,5 @@
 import { OnboardingStatus } from "@leace/api/src/utils/types";
-
-/*export type Step =
-  | "WELCOME"
-  | "SELECT"
-  | "PROFILE"
-  | "ATTRIBUTES"
-  | "DOCUMENTS";*/
-
-export type Role = "TENANT" | "OWNER" | "AGENCY";
+import { Role } from "@leace/db";
 
 export interface IStep {
   setStep: React.Dispatch<React.SetStateAction<OnboardingStatus | "WELCOME">>;

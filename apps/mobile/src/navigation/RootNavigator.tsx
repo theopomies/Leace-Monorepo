@@ -426,7 +426,8 @@ const RootNavigator = () => {
   if (isLoading) return <Loading />;
   if (!session) return <Loading signOut={true} />;
   if (onboardingLoading) return <Loading />;
-  if (onboarding !== "COMPLETE") return <OnBoarding apiStep={onboarding} />;
+  if (onboarding !== "COMPLETE")
+    return <OnBoarding apiStep={onboarding} role={session.role} />;
   return (
     <>
       <NavigationContainer>

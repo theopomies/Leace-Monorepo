@@ -1,7 +1,7 @@
 import { View, SafeAreaView } from "react-native";
 import React, { useState } from "react";
 import Welcome from "./Welcome";
-import { Role } from "../../types/onboarding";
+// import { Role } from "../../types/onboarding";
 import SelectRole from "./SelectRole";
 import CreateProfile from "./CreateProfile";
 import Toast from "react-native-toast-message";
@@ -9,16 +9,19 @@ import ChooseAttributes from "./ChooseAttributes";
 import { trpc } from "../../utils/trpc";
 import { OnboardingStatus } from "@leace/api/src/utils/types";
 import UploadDocuments from "./UploadDocuments";
+import { Role } from "@leace/db";
 
 export default function OnBoarding({
   apiStep,
+  role,
 }: {
   apiStep?: OnboardingStatus;
+  role?: Role;
 }) {
   const [step, setStep] = useState<OnboardingStatus | "WELCOME">(
     apiStep ? apiStep : "WELCOME",
   );
-  const [selectedRole, setSelectedRole] = useState<Role>("TENANT");
+  const [selectedRole, setSelectedRole] = useState<Role>(role ?? "TENANT");
   const [process, setProgress] = useState(0);
   const utils = trpc.useContext();
   const data = utils.auth.getSession.getData();
@@ -64,7 +67,9 @@ export default function OnBoarding({
             userId={userId}
           />
         )}
-        {step === "DOCUMENTS_COMPLETION" && <UploadDocuments userId={userId} />}
+        {step === "DOCUMENTS_COMPLETION" && (
+          <UploadDocuments userId={userId} selectedRole={selectedRole} />
+        )}
       </SafeAreaView>
       <Toast />
     </>
