@@ -89,7 +89,7 @@ export default function UploadDocuments({
       });
       return;
     }
-    const [identity] = documents.filter((a) => a.id === 1);
+    const [identity] = documents.filter((a) => a.id === 0);
     if (!identity) {
       Toast.show({
         type: "error",
