@@ -5,6 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { TabStackParamList } from "../../navigation/RootNavigator";
+import { trpc } from "../../utils/trpc";
 
 interface IPostCard {
   data: Post & {
@@ -18,9 +19,15 @@ export default function PostCard({ data, userId }: IPostCard) {
   const navigation =
     useNavigation<NativeStackNavigationProp<TabStackParamList>>();
 
+  const { data: images, isLoading } = trpc.image.getSignedPostUrl.useQuery({
+    postId: data.id,
+  });
+
+  if (isLoading) return null;
+
   return (
     <TouchableOpacity
-      className="bg-indigo mt-3 flex min-h-[100px] flex-row rounded-md p-2"
+      className="border-indigo mt-3 flex min-h-[100px] flex-row rounded-md border p-2"
       onPress={() => {
         navigation.navigate("PostInfo", {
           userId,
@@ -29,33 +36,34 @@ export default function PostCard({ data, userId }: IPostCard) {
         });
       }}
     >
-      <View>
-        <RNIMage
-          className="h-24 w-24 rounded-full"
-          style={{ borderWidth: 2, borderColor: "white" }}
-          source={{
-            uri:
-              data.images[0]?.ext ??
-              "https://montverde.org/wp-content/themes/eikra/assets/img/noimage-420x273.jpg",
-          }}
-        />
-      </View>
-      <View className="flex-1 justify-between pl-2">
-        <Text className="font-bold text-white">{data.title}</Text>
-        <Text className="font-bold text-white">{data.desc}</Text>
+      {images && (
         <View>
-          <Text className="font-light text-white">
-            Price: {data.attribute?.price} €
-          </Text>
-          <Text className="font-light text-white">
+          <RNIMage
+            className="h-24 w-24 rounded-full"
+            style={{ borderWidth: 2, borderColor: "white" }}
+            source={{
+              uri:
+                images.length > 0
+                  ? images[0]?.url
+                  : "https://montverde.org/wp-content/themes/eikra/assets/img/noimage-420x273.jpg",
+            }}
+          />
+        </View>
+      )}
+      <View className="flex-1 justify-between pl-2">
+        <Text className="font-bold">{data.title}</Text>
+        <Text className="font-bold">{data.desc}</Text>
+        <View>
+          <Text className="font-light">Price: {data.attribute?.price} €</Text>
+          <Text className="font-light">
             Type:{" "}
             {data.attribute?.homeType === "APARTMENT" ? "Apartment" : "House"}
           </Text>
-          <Text className="font-light text-white">
+          <Text className="font-light">
             Status:{" "}
             <Text
               className={`font-bold ${
-                data.type === "TO_BE_RENTED" ? "text-red-500" : "text-green-500"
+                data.type === "TO_BE_RENTED" ? "text-green-500" : "text-red-500"
               }`}
             >
               {data.type === "TO_BE_RENTED" ? "Available" : "Rented"}

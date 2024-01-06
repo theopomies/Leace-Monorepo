@@ -95,23 +95,6 @@ export default function Documents() {
         throw new Error("Invalid document");
       setTmpDocument(document);
       setOpen2(true);
-      /*await uploadDocument
-        .mutateAsync({ userId, fileType: document.mimeType })
-        .then(async (url) => {
-          if (!url) return;
-          const fileContent = await FileSystem.readAsStringAsync(document.uri, {
-            encoding: FileSystem.EncodingType.Base64,
-          });
-          const buffer = Buffer.from(fileContent, "base64");
-          await axios({
-            method: "PUT",
-            url: url,
-            data: buffer,
-            headers: { "Content-Type": document.mimeType },
-          })
-            .then(() => refetch())
-            .catch((e) => console.error(e));
-        });*/
     } catch (e) {
       console.error(e);
     }

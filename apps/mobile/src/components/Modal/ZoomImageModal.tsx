@@ -14,12 +14,14 @@ import { Btn } from "../Btn";
 export default function ZoomImageModal({
   image,
   callback,
+  delCallback,
 }: {
   image: {
     id: string;
     url: string;
   };
   callback: () => void;
+  delCallback?: () => void;
 }) {
   const pinchRef = createRef();
   const panRef = createRef();
@@ -45,12 +47,19 @@ export default function ZoomImageModal({
   return (
     <Modal animationType="fade" onRequestClose={callback}>
       <View
-        className="flex flex-row items-center justify-between px-3 py-0.5"
+        className="flex flex-row items-center justify-between px-3 py-1"
         style={{ borderBottomColor: "#d3d3d3", borderBottomWidth: 0.2 }}
       >
         <Text>{image.id}</Text>
-        <View>
-          <Btn title="Close" onPress={callback}></Btn>
+        <View className="flex flex-row space-x-2">
+          {delCallback && (
+            <View>
+              <Btn title="Delete" onPress={delCallback} bgColor="#ef4444"></Btn>
+            </View>
+          )}
+          <View>
+            <Btn title="Close" onPress={callback}></Btn>
+          </View>
         </View>
       </View>
       <View className=" overflow-hidden">

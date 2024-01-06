@@ -6,6 +6,8 @@ import {
   TextInput,
   ScrollView,
   Platform,
+  Image,
+  TouchableOpacity,
 } from "react-native";
 import React, { useState } from "react";
 import Header from "../../components/Header";
@@ -17,6 +19,13 @@ import { LocalStorage } from "../../utils/cache";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { TabStackParamList } from "../../navigation/RootNavigator";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import * as DocumentPicker from "expo-document-picker";
+import { ZoomImageModal } from "../../components/Modal";
+import { Icon } from "react-native-elements";
+import * as FileSystem from "expo-file-system";
+import axios from "axios";
+import { Buffer } from "buffer";
+import Toast from "react-native-toast-message";
 
 export default function CreatePost() {
   const navigation =
@@ -61,6 +70,12 @@ export default function CreatePost() {
   const [priceError, setPriceError] = useState("");
   const [sizeError, setSizeError] = useState("");
 
+  const [images, setImages] = useState<
+    { file: DocumentPicker.DocumentPickerAsset; id: string }[]
+  >([]);
+  const [open, setOpen] = useState(false);
+  const [selected, setSelected] = useState({ id: "", url: "" });
+
   const validateAndSetAttrs = () => {
     let isValid = true;
 
@@ -104,23 +119,91 @@ export default function CreatePost() {
     }
   };
 
-  const post = trpc.post.createPost.useMutation({});
+  const uploadDocument = trpc.image.putSignedUrl.useMutation();
 
-  const attributes = trpc.attribute.updatePostAttributes.useMutation({
-    onSuccess() {
-      LocalStorage.setItem("refreshPosts", true);
-      navigation.navigate("MyPosts", { userId });
-    },
+  const [loading, setLoading] = useState({
+    status: false,
+    message: "Submit",
   });
 
+  const post = trpc.post.createPost.useMutation({});
+
+  const attributes = trpc.attribute.updatePostAttributes.useMutation();
+
   async function createPost() {
+    setLoading(() => ({ status: true, message: "Uploading files..." }));
     const response = await post.mutateAsync(postInfo);
-    attributes.mutate({ ...postAttrs, postId: response.id });
+    await attributes.mutateAsync({ ...postAttrs, postId: response.id });
+    Promise.all(
+      images.map((a) =>
+        uploadDocument
+          .mutateAsync({
+            postId: response.id,
+            fileType: a.file.mimeType as string,
+          })
+          .then(async (url) => {
+            if (!url) return;
+            const fileContent = await FileSystem.readAsStringAsync(a.file.uri, {
+              encoding: FileSystem.EncodingType.Base64,
+            });
+            const buffer = Buffer.from(fileContent, "base64");
+            await axios({
+              method: "PUT",
+              url: url,
+              data: buffer,
+              headers: { "Content-Type": a.file.mimeType },
+            });
+          }),
+      ),
+    )
+      .then(() => {
+        setLoading(() => ({ status: true, message: "Submit" }));
+        LocalStorage.setItem("refreshPosts", true);
+        navigation.navigate("MyPosts", { userId });
+      })
+      .catch((e) => {
+        console.error(e);
+        Toast.show({ type: "error", text1: "Could not create post" });
+        setLoading(() => ({ status: true, message: "Submit" }));
+      });
+  }
+
+  async function pickDocument() {
+    try {
+      const picked: {
+        assets: DocumentPicker.DocumentPickerAsset[];
+        canceled: boolean;
+      } = (await DocumentPicker.getDocumentAsync({
+        type: ["image/*", "application/pdf"],
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      })) as any;
+      if (picked.canceled) throw new Error("Document picker canceled");
+      const [document] = picked.assets;
+      if (!document) throw new Error("Document picker failed");
+      if (!document.mimeType || !document.uri)
+        throw new Error("Invalid document");
+      setImages((a) => [
+        ...a,
+        { file: document, id: (Math.random() * 10000).toFixed(0) },
+      ]);
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   return (
     <ScrollView>
       <SafeAreaView style={styles.container}>
+        {open && (
+          <ZoomImageModal
+            image={selected}
+            callback={() => setOpen(false)}
+            delCallback={() => {
+              setImages((a) => a.filter((b) => b.id !== selected.id));
+              setOpen(false);
+            }}
+          />
+        )}
         <View style={styles.view}>
           <Header />
           <ScrollView
@@ -150,8 +233,49 @@ export default function CreatePost() {
                   }}
                 />
                 {titleError ? (
-                  <Text className="text-lg text-[#D84654]">{titleError}</Text>
+                  <Text className="text-xs text-[#D84654]">{titleError}</Text>
                 ) : null}
+              </View>
+              <Text className="text-lg font-semibold text-[#666666]">
+                Images
+              </Text>
+              <View className="flex h-20 flex-row overflow-hidden rounded-md border">
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    paddingLeft: 8,
+                  }}
+                >
+                  {images.map((a, key) => (
+                    <TouchableOpacity
+                      key={key}
+                      onPress={() => {
+                        setSelected({ id: a.id, url: a.file.uri });
+                        setOpen(true);
+                      }}
+                    >
+                      <Image
+                        source={{ uri: a.file.uri }}
+                        className={"mr-2 h-16 w-16 rounded-md"}
+                      />
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
+                <View className="justify-center border-l-[1px] bg-[#6466f1]">
+                  <TouchableOpacity
+                    className="flex h-10 w-10 items-center justify-center"
+                    onPress={pickDocument}
+                  >
+                    <Icon
+                      name="add-circle-outline"
+                      type="material-icons"
+                      color={"white"}
+                    ></Icon>
+                  </TouchableOpacity>
+                </View>
               </View>
               <View>
                 <Text className="mb-1 text-lg	font-semibold	 text-[#666666]">
@@ -209,7 +333,7 @@ export default function CreatePost() {
                   className="w-full"
                   title="Submit"
                   bgColor="#6466f1"
-                  onPress={validateAndSetAttrs}
+                  onPress={!loading.status ? validateAndSetAttrs : undefined}
                 ></Btn>
               </View>
             </View>
