@@ -84,7 +84,7 @@ export default function PostStack() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.view}>
-        <Header />
+        <Header callback={refetch} />
         {fetchedPosts && fetchedPosts.length > 0 ? (
           <View className={`flex-1`}>
             <View

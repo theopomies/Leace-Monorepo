@@ -158,7 +158,7 @@ export default function TenantMatches() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.view}>
-        <Header />
+        <Header callback={refetch} />
         <View className="flex-1 bg-white">
           {data.length > 0 ? (
             <ScrollView

@@ -119,9 +119,7 @@ export default function TenantStack() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.view}>
-        <GestureRecognizer onSwipeDown={() => refetch()}>
-          <Header />
-        </GestureRecognizer>
+        <Header callback={refetch} />
         <View style={styles.box}>
           {post && (
             <>

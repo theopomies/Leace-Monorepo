@@ -135,7 +135,7 @@ export default function ShowProfile() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.view}>
-        <Header />
+        <Header callback={refetch} />
         <UserProfile
           userId={userId}
           data={data}
