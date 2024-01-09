@@ -14,10 +14,10 @@ export function getLinks(userId: string): {
       icon: "/home",
     },
     {
-      href: `/dashboard`,
-      label: "Dashboard",
+      href: `/metrics`,
+      label: "Metrics",
       roles: [Role.AGENCY, Role.OWNER],
-      icon: "/dashboard",
+      icon: "/metrics",
     },
     {
       href: `/users/${userId}/matches`,

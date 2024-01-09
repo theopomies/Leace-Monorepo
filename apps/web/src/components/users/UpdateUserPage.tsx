@@ -55,10 +55,15 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
       await updateAttributes.mutateAsync({
         userId,
         location: data.location,
+        range: data.range,
         maxPrice: data.maxPrice,
         minPrice: data.minPrice,
         maxSize: data.maxSize,
         minSize: data.minSize,
+        maxBedrooms: data.maxBedrooms,
+        minBedrooms: data.minBedrooms,
+        maxBathrooms: data.maxBathrooms,
+        minBathrooms: data.minBathrooms,
         furnished: data.furnished,
         homeType: data.homeType,
         terrace: data.terrace,
@@ -69,6 +74,8 @@ export function UpdateUserPage({ userId }: UpdateUserPageProps) {
         parking: data.parking,
         elevator: data.elevator,
         pool: data.pool,
+        securityAlarm: data.securityAlarm,
+        internetFiber: data.internetFiber,
       });
     }
     router.push(`/users/${userId}`);

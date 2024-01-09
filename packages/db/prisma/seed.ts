@@ -9,6 +9,7 @@ import {
   makeRelationships,
   makeConversations,
   makeMessages,
+  makeReports,
   //makeImages,
 } from "./generateData";
 
@@ -54,6 +55,10 @@ async function main() {
   // await prisma.image.createMany({
   //   data: await makeImages(prisma, s3Client),
   // });
+
+  await prisma.report.createMany({
+    data: await makeReports(prisma),
+  });
 }
 
 main()

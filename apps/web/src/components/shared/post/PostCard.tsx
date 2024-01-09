@@ -21,21 +21,15 @@ import { LiaCouchSolid } from "react-icons/lia";
 import {
   MdOutlineShower,
   MdOutlineBed,
-  MdPets,
-  MdPool,
-  MdSecurity,
-  MdOutlineWifi,
-  MdPark,
-  MdDeck,
   MdConstruction,
   MdEuroSymbol,
 } from "react-icons/md";
 import { IconType } from "react-icons";
-import { TbDisabled } from "react-icons/tb";
-import { LuCigarette, LuParkingCircle } from "react-icons/lu";
-import { PiElevator } from "react-icons/pi";
 import { FaHouseFlag } from "react-icons/fa6";
 import { FaShoppingCart } from "react-icons/fa";
+import { attributesIcons } from "../icons/attributesIcons";
+import { IoIosArrowDropdownCircle } from "react-icons/io";
+import { IoIosArrowDropupCircle } from "react-icons/io";
 
 export interface PostCardProps {
   post: Post & {
@@ -51,6 +45,7 @@ export interface PostCardProps {
   isAdmin?: boolean;
   onPause?: () => Promise<void>;
   onUnpause?: () => Promise<void>;
+  isReduced?: boolean;
 }
 
 const details = {
@@ -80,19 +75,6 @@ const attributes = {
   internetFiber: "Internet",
 } as const as Record<keyof Attribute, string>;
 
-const iconMappings = {
-  terrace: MdDeck,
-  pets: MdPets,
-  smoker: LuCigarette,
-  disability: TbDisabled,
-  garden: MdPark,
-  parking: LuParkingCircle,
-  elevator: PiElevator,
-  pool: MdPool,
-  securityAlarm: MdSecurity,
-  internetFiber: MdOutlineWifi,
-} as const as Record<keyof Attribute, IconType>;
-
 export const PostCard = ({
   post,
   onPostDelete,
@@ -104,7 +86,20 @@ export const PostCard = ({
   isAdmin,
   onPause,
   onUnpause,
+  isReduced,
 }: PostCardProps) => {
+  const [isExpanded, setIsExpanded] = React.useState(false);
+
+  React.useEffect(() => {
+    if (isExpanded) {
+      window.scrollTo({
+        top: document.body.scrollHeight,
+        left: 0,
+        behavior: "smooth",
+      });
+    }
+  });
+
   if (!post.attribute) return <h1>Something went wrong</h1>;
 
   const formatValue = (
@@ -161,20 +156,16 @@ export const PostCard = ({
 
   return (
     <div className="flex h-full w-full flex-col justify-between overflow-auto rounded-lg bg-white p-8 shadow">
+      <ImageSelector images={images?.map((image) => image.url) ?? []} />
       <section>
-        {images && images.length > 0 && (
-          <div className="h-[40vh]">
-            <ImageSelector images={images?.map((image) => image.url) ?? []} />
-          </div>
-        )}
-        <div className="flex items-end justify-between">
+        <div className="mt-4 flex items-end justify-between">
           <div>
             {post.title && (
-              <p className="py-2 text-xl font-semibold">{post.title} </p>
+              <h2 className="py-2 text-2xl font-medium">{post.title}</h2>
             )}
             <div className="flex items-center text-slate-400">
-              <SewingPinIcon height={30} width={30} />
               <p className="text-lg font-medium">{post.attribute.location}</p>
+              <SewingPinIcon height={30} width={30} />
             </div>
           </div>
           <div className="flex gap-2">
@@ -188,7 +179,7 @@ export const PostCard = ({
             </p>
           </div>
         </div>
-        <div className="my-12 w-full border-t border-slate-200" />
+        <div className="my-5 w-full border-t border-slate-200" />
         <div className="flex justify-between px-6">
           <div className="flex items-center gap-4 rounded-lg p-2">
             <div className="rounded-full bg-indigo-400 p-3 text-white shadow">
@@ -241,48 +232,86 @@ export const PostCard = ({
             </div>
           </div>
         </div>
-        <div className="mt-12 flex flex-col gap-10">
-          {!!post.desc && (
-            <div>
-              <h2 className="pb-2 text-xl font-bold">Description</h2>
-              <p className="rounded-lg border border-dashed border-slate-300 p-4">
-                {post.desc}
-              </p>
-            </div>
-          )}
-          <div>
-            <h2 className="text-xl font-bold">Property details</h2>
-            {detailsList.length > 0 && (
-              <ul className="col flex gap-4 border-b border-slate-200 py-6 sm:flex sm:flex-wrap md:grid md:grid-cols-4">
-                {detailsList}
-              </ul>
+        {isReduced && (
+          <div
+            className="mt-5 flex cursor-pointer justify-center"
+            onClick={() => setIsExpanded(!isExpanded)}
+          >
+            {!isExpanded ? (
+              <div className="rounded-full bg-indigo-400 p-1 text-white transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-lg">
+                <IoIosArrowDropdownCircle size={30} />
+              </div>
+            ) : (
+              <div className="rounded-full bg-indigo-400 p-1 text-white transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-lg">
+                <IoIosArrowDropupCircle size={30} />
+              </div>
             )}
-            <ul className="gap-4 py-6 sm:flex sm:flex-wrap md:grid md:grid-cols-4">
-              {Object.entries(attributes).map(([key, value]) => {
-                if (!post.attribute) return null;
-
-                const attribute = post.attribute[key as keyof Attribute];
-
-                return (
-                  <li className="flex flex-grow items-center gap-2" key={key}>
-                    {React.createElement(iconMappings[key as keyof Attribute])}
-                    <h3 className={`text-lg ${!attribute && " line-through"} `}>
-                      {value}
-                    </h3>
-                  </li>
-                );
-              })}
-            </ul>
           </div>
-        </div>
-        <DocumentList documents={documents} onValidation={onDocValidation} />
+        )}
+        {(!isReduced || isExpanded) && (
+          <div className={`${!isReduced && "mt-10"} flex flex-col gap-10`}>
+            {!!post.desc && (
+              <div>
+                <h2 className="py-4 text-3xl font-medium">Description</h2>
+                <p className="rounded-lg border border-dashed border-slate-300 p-4">
+                  {post.desc}
+                </p>
+              </div>
+            )}
+            <div>
+              <h2 className="pt-4 text-3xl font-medium">Property details</h2>
+              {detailsList.length > 0 && (
+                <ul className="flex gap-4 border-b py-6 sm:flex sm:flex-wrap md:grid md:grid-cols-4">
+                  {detailsList}
+                </ul>
+              )}
+              <ul className="gap-4 py-6 sm:flex sm:flex-wrap md:grid md:grid-cols-4">
+                {Object.entries(attributes).map(([key, value]) => {
+                  if (!post.attribute) return null;
+
+                  const attribute = post.attribute[key as keyof Attribute];
+
+                  return (
+                    <li className="flex flex-grow items-center gap-2" key={key}>
+                      {React.createElement(
+                        attributesIcons[key as keyof Attribute],
+                      )}
+                      <h3
+                        className={`text-lg ${!attribute && " line-through"} `}
+                      >
+                        {value}
+                      </h3>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          </div>
+        )}
+        {(isLoggedIn || isAdmin) && (
+          <section>
+            <h2 className="py-4 text-3xl font-medium">Documents</h2>
+            {documents && documents.length > 0 ? (
+              <DocumentList
+                documents={documents}
+                onValidation={onDocValidation}
+              />
+            ) : (
+              <p className="text-indigo-600">
+                No document available
+                {isLoggedIn &&
+                  ", please add any necessary documents by updating your profile"}
+              </p>
+            )}
+          </section>
+        )}
         <DisplayReports reports={post.reports} />
       </section>
       {(isLoggedIn || isAdmin) && (
         <div className="mt-10 flex justify-center gap-4">
           {updateLink && (
             <Link
-              className="rounded bg-indigo-500 px-4 py-3 font-bold text-white hover:bg-indigo-600 active:bg-indigo-700"
+              className="rounded bg-indigo-500 px-4 py-3 text-white hover:bg-indigo-600 active:bg-indigo-700"
               href={updateLink.replace("[postId]", post.id)}
             >
               Update

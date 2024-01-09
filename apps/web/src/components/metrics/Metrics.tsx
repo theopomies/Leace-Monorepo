@@ -60,11 +60,11 @@ const data = [
   },
 ];
 
-export interface DashboardProps {
+export interface MetricsProps {
   userId: string;
 }
 
-export function Dashboard({ userId }: DashboardProps) {
+export function Metrics({ userId }: MetricsProps) {
   const { data: metrics } = trpc.dashboard.metricsByUserId.useQuery({ userId });
 
   const { data: rented } = trpc.dashboard.getRented.useQuery({

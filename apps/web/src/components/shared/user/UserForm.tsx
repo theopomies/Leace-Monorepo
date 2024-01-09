@@ -29,10 +29,15 @@ export type UserFormData = {
   country?: string;
   description: string;
   location?: string;
+  range?: number;
   maxPrice?: number;
   minPrice?: number;
   maxSize?: number;
   minSize?: number;
+  maxBedrooms?: number;
+  minBedrooms?: number;
+  maxBathrooms?: number;
+  minBathrooms?: number;
   furnished?: boolean;
   homeType?: HomeType;
   terrace?: boolean;
@@ -43,6 +48,8 @@ export type UserFormData = {
   parking?: boolean;
   elevator?: boolean;
   pool?: boolean;
+  securityAlarm?: boolean;
+  internetFiber?: boolean;
 
   job?: string;
   employmentContract?: string;
@@ -77,10 +84,15 @@ export const UserForm = ({
   const [description, setDescription] = useState<string>("");
 
   const [location, setLocation] = useState<string | undefined>();
+  const [range, setRange] = useState<number | undefined>();
   const [maxPrice, setMaxPrice] = useState<number | undefined>();
   const [minPrice, setMinPrice] = useState<number | undefined>();
   const [maxSize, setMaxSize] = useState<number | undefined>();
   const [minSize, setMinSize] = useState<number | undefined>();
+  const [maxBedrooms, setMaxBedrooms] = useState<number | undefined>();
+  const [minBedrooms, setMinBedrooms] = useState<number | undefined>();
+  const [maxBathrooms, setMaxBathrooms] = useState<number | undefined>();
+  const [minBathrooms, setMinBathrooms] = useState<number | undefined>();
   const [furnished, setFurnished] = useState<boolean | undefined>();
   const [homeType, setHomeType] = useState<HomeType | undefined>();
   const [terrace, setTerrace] = useState<boolean | undefined>();
@@ -91,6 +103,8 @@ export const UserForm = ({
   const [parking, setParking] = useState<boolean | undefined>();
   const [elevator, setElevator] = useState<boolean | undefined>();
   const [pool, setPool] = useState<boolean | undefined>();
+  const [securityAlarm, setSecurityAlarm] = useState<boolean | undefined>();
+  const [internetFiber, setInternetFiber] = useState<boolean | undefined>();
 
   const [job, setJob] = useState<string>("");
   const [employmentContract, setEmploymentContract] = useState<string>("");
@@ -103,6 +117,8 @@ export const UserForm = ({
   const [selectedDocuments, setSelectedDocuments] = useState<File[]>([]);
   const [selectedImage, setSelectedImage] = useState<File>();
   const [imagePreview, setImagePreview] = useState<string | undefined>();
+
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   useEffect(() => {
     const date = user.birthDate
@@ -124,11 +140,16 @@ export const UserForm = ({
 
     if (user.role === Role.TENANT) {
       setLocation(user.attribute?.location ?? undefined);
+      setRange(user.attribute?.range ?? undefined);
       setHomeType(user.attribute?.homeType ?? undefined);
       setMaxPrice(user.attribute?.maxPrice ?? undefined);
       setMinPrice(user.attribute?.minPrice ?? undefined);
       setMaxSize(user.attribute?.maxSize ?? undefined);
       setMinSize(user.attribute?.minSize ?? undefined);
+      setMaxBedrooms(user.attribute?.maxBedrooms ?? undefined);
+      setMinBedrooms(user.attribute?.minBedrooms ?? undefined);
+      setMaxBathrooms(user.attribute?.maxBathrooms ?? undefined);
+      setMinBathrooms(user.attribute?.minBathrooms ?? undefined);
       setFurnished(user.attribute?.furnished ?? undefined);
       setTerrace(user.attribute?.terrace ?? undefined);
       setPets(user.attribute?.pets ?? undefined);
@@ -138,6 +159,8 @@ export const UserForm = ({
       setParking(user.attribute?.parking ?? undefined);
       setElevator(user.attribute?.elevator ?? undefined);
       setPool(user.attribute?.pool ?? undefined);
+      setSecurityAlarm(user.attribute?.securityAlarm ?? undefined);
+      setInternetFiber(user.attribute?.internetFiber ?? undefined);
 
       setJob(user.job ?? "");
       setEmploymentContract(user.employmentContract ?? "");
@@ -160,6 +183,7 @@ export const UserForm = ({
   const handleNumberChange =
     (setter: Dispatch<SetStateAction<number | undefined>>) =>
     (event: React.ChangeEvent<HTMLInputElement>) => {
+      console.log(event.target.valueAsNumber);
       setter(
         isNaN(event.target.valueAsNumber)
           ? undefined
@@ -181,17 +205,24 @@ export const UserForm = ({
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
 
+    console.log("INCOME " + income);
     const data: UserFormData = {
       birthDate,
       firstName,
       lastName,
       description,
       location,
+      range,
       maxPrice,
       minPrice,
       maxSize,
       minSize,
+      maxBedrooms,
+      minBedrooms,
+      maxBathrooms,
+      minBathrooms,
       furnished,
       homeType,
       terrace,
@@ -202,6 +233,8 @@ export const UserForm = ({
       parking,
       elevator,
       pool,
+      securityAlarm,
+      internetFiber,
       country,
       job,
       employmentContract,
@@ -218,6 +251,8 @@ export const UserForm = ({
   const attributesStates = {
     location,
     handleLocationChange: handleChange(setLocation),
+    range,
+    handleRangeChange: handleNumberChange(setRange),
     maxPrice,
     handleMaxPriceChange: handleNumberChange(setMaxPrice),
     minPrice,
@@ -226,6 +261,14 @@ export const UserForm = ({
     handleMaxSizeChange: handleNumberChange(setMaxSize),
     minSize,
     handleMinSizeChange: handleNumberChange(setMinSize),
+    maxBedrooms,
+    handleMaxBedroomsChange: handleNumberChange(setMaxBedrooms),
+    minBedrooms,
+    handleMinBedroomsChange: handleNumberChange(setMinBedrooms),
+    maxBathrooms,
+    handleMaxBathroomsChange: handleNumberChange(setMaxBathrooms),
+    minBathrooms,
+    handleMinBathroomsChange: handleNumberChange(setMinBathrooms),
     furnished,
     handleFurnishedChange: setFurnished,
     homeType,
@@ -246,6 +289,10 @@ export const UserForm = ({
     handleElevatorChange: setElevator,
     pool,
     handlePoolChange: setPool,
+    securityAlarm,
+    handleSecurityAlarmChange: setSecurityAlarm,
+    internetFiber,
+    handleInternetFiberChange: setInternetFiber,
   };
 
   const handleFile = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -282,10 +329,14 @@ export const UserForm = ({
             </button>
           </div>
           <div className="flex gap-4">
-            <Button theme="danger" onClick={onCancel}>
+            <Button theme="grey" onClick={onCancel}>
               Cancel
             </Button>
-            <Button onClick={() => formRef.current?.requestSubmit()}>
+            <Button
+              onClick={() => formRef.current?.requestSubmit()}
+              loading={isSubmitting}
+              className="w-20"
+            >
               Submit
             </Button>
           </div>
@@ -391,7 +442,7 @@ export const UserForm = ({
                   <NumberInput
                     placeholder="60000"
                     onChange={handleNumberChange(setIncome)}
-                    value={income?.toString() ?? ""}
+                    value={income ?? ""}
                     className="w-full"
                     unit="$"
                   />
@@ -426,12 +477,12 @@ export const UserForm = ({
               </ul>
             </section>
           )}
+          <h2 className="py-4 text-3xl font-medium">Documents</h2>
           <DocumentList
             documents={documents}
             onDelete={onDocDelete}
             isLoggedInOrAdmin
           />
-          <p className="bold pt-4 text-xl">Upload Documents</p>
           <FileUploadSection
             selectedFiles={selectedDocuments}
             setSelectedFiles={setSelectedDocuments}

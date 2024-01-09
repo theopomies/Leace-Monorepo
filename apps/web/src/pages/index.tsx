@@ -8,7 +8,7 @@ import { trpc } from "../utils/trpc";
 
 const Index = () => {
   const { data: session, isLoading: sessionIsLoading } =
-    trpc.auth.getSession.useQuery();
+    trpc.auth.getSession.useQuery(undefined, { retry: false });
   const router = useRouter();
 
   useEffect(() => {

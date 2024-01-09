@@ -46,7 +46,6 @@ enum DocType {
   TAX_NOTICES
 }
 
-
 enum ReportReason {
   SPAM
   INAPPROPRIATE
@@ -120,14 +119,13 @@ model User {
   maritalStatus      MaritalStatus?
   status             UserStatus?    @default(INACTIVE)
   isPremium          Boolean?       @default(false)
-  certified Boolean @default(false)
-
+  certified          Boolean        @default(false)
 
   lastLogin DateTime @default(now())
 
   attribute Attribute?
 
-  posts Post[] @relation("posts_created")
+  posts         Post[] @relation("posts_created")
   posts_managed Post[] @relation("posts_managed")
 
   postsSeen     Post[] @relation("posts_seen")
@@ -213,17 +211,23 @@ model Attribute {
   maxSize Int?
   minSize Int?
 
-  range Int @default(100)
+  maxBedrooms Int?
+  minBedrooms Int?
+
+  maxBathrooms Int?
+  minBathrooms Int?
+
+  range Int @default(50)
 
   // Only Owner and Agency
-  price Int?
-  size  Int?
+  price     Int?
+  size      Int?
+  bedrooms  Int?
+  bathrooms Int?
 
   rentStartDate DateTime?
   rentEndDate   DateTime?
 
-  bedrooms      Int?
-  bathrooms     Int?
   furnished     Boolean?
   homeType      HomeType?
   terrace       Boolean?
@@ -298,7 +302,6 @@ model Report {
   @@map("reports")
 }
 
-
 model Document {
   id String @id @default(cuid())
 
@@ -311,9 +314,9 @@ model Document {
   post   Post?   @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId String?
 
-  valid Boolean @default(false)
+  valid Boolean  @default(false)
   ext   String
-  type DocType?
+  type  DocType?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

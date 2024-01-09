@@ -12,11 +12,13 @@ export type ButtonProps = {
 >;
 
 const themeStyles = {
-  primary: "bg-indigo-500 hover:bg-indigo-600 active:bg-indigo-700",
-  danger: "bg-red-500 hover:bg-red-600 active:bg-red-700",
-  success: "bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700",
-  white: "bg-white text-black shadow-sm hover:bg-gray-50",
-  grey: "bg-gray-500 hover:bg-gray-600 active:bg-gray-700",
+  primary:
+    "bg-indigo-500 hover:bg-indigo-600 active:bg-indigo-700 disabled:bg-indigo-300",
+  danger: "bg-red-500 hover:bg-red-600 active:bg-red-700 disabled:bg-red-300",
+  success:
+    "bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700 disabled:bg-emerald-300",
+  white: "bg-white text-black shadow-sm hover:bg-gray-50 disabled:bg-gray-300",
+  grey: "bg-gray-500 hover:bg-gray-600 active:bg-gray-700 disabled:bg-gray-300",
 };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -35,7 +37,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         className={
           overrideStyles
             ? className
-            : `rounded-md font-bold ${themeStyles[theme]} px-4 py-3 text-white ` +
+            : `rounded-md font-medium ${themeStyles[theme]} px-4 py-2 text-white ` +
               className
         }
         ref={ref}

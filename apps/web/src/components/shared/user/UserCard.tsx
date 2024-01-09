@@ -7,6 +7,18 @@ import { displayDate } from "../../../utils/displayDate";
 import { UserLayout } from "./UserLayout";
 import { DisplayReports } from "../../moderation/report/DisplayReports";
 import { UserImage } from "./UserImage";
+import React from "react";
+import { attributesIcons } from "../icons/attributesIcons";
+import { IconType } from "react-icons";
+import { IoBed } from "react-icons/io5";
+import {
+  MdShower,
+  MdEuroSymbol,
+  MdOutlineLocationSearching,
+  MdHomeWork,
+} from "react-icons/md";
+import { FaLocationDot } from "react-icons/fa6";
+import { IoMdResize } from "react-icons/io";
 
 export interface UserCardProps {
   user: User & {
@@ -22,15 +34,32 @@ export interface UserCardProps {
   isAdmin?: boolean;
 }
 
-const attributes = {
+const details = {
   location: "Location",
-  maxPrice: "Max price",
-  minPrice: "Min price",
-  maxSize: "Max surface",
-  minSize: "Min surface",
   range: "Range",
+  minPrice: "Min price",
+  maxPrice: "Max price",
+  minSize: "Min surface",
+  maxSize: "Max surface",
+  minBedrooms: "Min bedrooms",
+  maxBedrooms: "Max bedrooms",
+  minBathrooms: "Min bathrooms",
+  maxBathrooms: "Max bathrooms",
+  homeType: "House type",
+} as const as Record<keyof Attribute, string>;
+
+export const detailsIcons = {
+  location: FaLocationDot,
+  range: MdOutlineLocationSearching,
+  minPrice: MdEuroSymbol,
+  minSize: IoMdResize,
+  minBedrooms: IoBed,
+  minBathrooms: MdShower,
+  homeType: MdHomeWork,
+} as const as Record<keyof Attribute, IconType>;
+
+const attributes = {
   furnished: "Furnished",
-  homeType: "Housing type",
   terrace: "Terrace",
   pets: "Pet friendly",
   smoker: "Smoker friendly",
@@ -40,6 +69,14 @@ const attributes = {
   elevator: "Elevator",
   pool: "Pool",
 } as const as Record<keyof Attribute, string>;
+
+const userSituation = {
+  job: "Job",
+  employmentContract: "Type of contract",
+  income: "Annual salary",
+  creditScore: "Credit score",
+  maritalStatus: "Family situation",
+} as const as Record<keyof User, string>;
 
 export function UserCard({
   user,
@@ -94,7 +131,7 @@ export function UserCard({
         </>
       }
       mainPanel={
-        <div className="flex flex-grow flex-col gap-5">
+        <div className="flex flex-grow flex-col gap-8">
           <div className="flex items-end justify-between">
             <h1 className="text-4xl font-semibold">
               {isLoggedUser
@@ -159,91 +196,54 @@ export function UserCard({
             </ul>
           </section>
           {(isLoggedUser || isAdmin) && (
-            <>
-              <section>
-                <h2 className="py-4 text-3xl font-medium">
-                  Contact Informations
-                </h2>
-                <ul className="flex flex-wrap gap-4">
-                  <li className="flex-grow pr-8">
-                    <div className="flex gap-2">
-                      <h3 className="text-xl font-medium">Email</h3>
-                      <p
-                        className={
-                          "text-xs " +
-                          (user.emailVerified
-                            ? "text-green-400"
-                            : "text-red-600")
-                        }
-                      >
-                        {user.emailVerified ? "verified" : "Not Verified"}
-                      </p>
-                    </div>
-                    <p>{user.email}</p>
-                  </li>
-                  <li className="flex-grow">
-                    <h3 className="text-xl font-medium">Phone</h3>
-                    <p className={user.phoneNumber ? "" : " text-indigo-600"}>
-                      {user.phoneNumber ??
-                        "Please add a phone number by updating your profile"}
+            <section>
+              <h2 className="py-4 text-3xl font-medium">
+                Contact Informations
+              </h2>
+              <ul className="flex flex-wrap gap-4">
+                <li className="flex-grow pr-8">
+                  <div className="flex gap-2">
+                    <h3 className="text-xl font-medium">Email</h3>
+                    <p
+                      className={
+                        "text-xs " +
+                        (user.emailVerified ? "text-green-400" : "text-red-600")
+                      }
+                    >
+                      {user.emailVerified ? "verified" : "Not Verified"}
                     </p>
-                  </li>
-                </ul>
-              </section>
-              <section>
-                <h2 className="py-4 text-3xl font-medium">Documents</h2>
-                {documents && documents.length > 0 ? (
-                  <DocumentList
-                    documents={documents}
-                    onValidation={onDocValidation}
-                  />
-                ) : (
-                  <p className="text-indigo-600">
-                    No document available, please add any necessary documents by
-                    updating your profile
+                  </div>
+                  <p>{user.email}</p>
+                </li>
+                <li className="flex-grow">
+                  <h3 className="text-xl font-medium">Phone</h3>
+                  <p className={user.phoneNumber ? "" : " text-indigo-600"}>
+                    {user.phoneNumber ??
+                      "Please add a phone number by updating your profile"}
                   </p>
-                )}
-              </section>
-            </>
+                </li>
+              </ul>
+            </section>
           )}
           {user.role === Role.TENANT && user.attribute && (
             <section>
-              <h2 className="py-4 text-3xl font-medium">Preferences</h2>
-              <ul className="gap-4 sm:flex sm:flex-wrap md:grid md:grid-cols-3">
-                {Object.entries(attributes).map(([key, value]) => {
-                  const userAttributes = user.attribute;
-                  if (!userAttributes) return null;
-
-                  const attribute = userAttributes[key as keyof Attribute];
+              <h2 className="pt-4 text-3xl font-medium">Situation</h2>
+              <ul className="gap-4 py-4 sm:flex sm:flex-wrap md:grid md:grid-cols-3">
+                {Object.entries(userSituation).map(([key, value]) => {
+                  const attribute = user[key as keyof User];
 
                   return (
-                    <li
-                      className="mr-8 flex-grow border-b border-indigo-300 pb-2"
-                      key={key}
-                    >
-                      <h3 className="text-xl font-medium">{value}</h3>
+                    <li className="flex-grow items-center gap-2" key={key}>
+                      <h3 className="text-lg">{value}</h3>
                       {user.attribute && (
-                        <p
-                          className={
-                            attribute !== null ? "" : " text-indigo-600"
-                          }
-                        >
-                          {typeof attribute === "boolean"
-                            ? attribute
-                              ? "✅"
-                              : "❌"
-                            : typeof attribute === "number"
-                            ? attribute
-                            : typeof attribute === "string"
-                            ? attribute
-                            : typeof attribute === "object" &&
-                              attribute !== null
-                            ? displayDate(attribute)
-                            : "Whatever"}{" "}
-                          {value.toLowerCase().includes("price")
+                        <p className={`${!attribute && "text-indigo-500"}`}>
+                          {attribute
+                            ? (attribute as string | number)
+                            : isLoggedUser
+                            ? "Please add your job by updating your profile"
+                            : "Not specified"}
+                          {value.toLowerCase().includes("salary") && attribute
                             ? "€"
-                            : value.toLowerCase().includes("surface")
-                            ? "m²"
                             : ""}
                         </p>
                       )}
@@ -251,68 +251,93 @@ export function UserCard({
                   );
                 })}
               </ul>
-              <ul className="gap-4 sm:flex sm:flex-wrap md:grid md:grid-cols-3">
-                <li className="mr-8 flex-grow border-b border-indigo-300 pb-2">
-                  <h3 className="text-xl font-medium">Job</h3>
-                  <p className={user.job ? "" : " text-indigo-600"}>
-                    {user.job ??
-                      (isLoggedUser
-                        ? "Please add your job by updating your profile"
-                        : "Not specified")}
-                  </p>
-                </li>
-                <li className="mr-8 flex-grow border-b border-indigo-300 pb-2">
-                  <h3 className="text-xl font-medium">Type of contract</h3>
-                  <p
-                    className={
-                      user.employmentContract ? "" : " text-indigo-600"
-                    }
-                  >
-                    {user.employmentContract ??
-                      (isLoggedUser
-                        ? "Please add your type of contract by updating your profile"
-                        : "Not specified")}
-                  </p>
-                </li>
-                <li className="mr-8 flex-grow border-b border-indigo-300 pb-2">
-                  <h3 className="text-xl font-medium">Annual salary</h3>
-                  <p className={user.income ? "" : " text-indigo-600"}>
-                    {user.income + " $" ??
-                      (isLoggedUser
-                        ? "Please add your annual income by updating your profile"
-                        : "Not specified")}
-                  </p>
-                </li>
+            </section>
+          )}
+          {user.role === Role.TENANT && user.attribute && (
+            <section>
+              <h2 className="pt-4 text-3xl font-medium">Preferences</h2>
+              <ul className="gap-4 py-4 sm:flex sm:flex-wrap md:grid md:grid-cols-3">
+                {Object.entries(details).map(([key, value]) => {
+                  const userAttributes = user.attribute;
+                  if (!userAttributes || key.startsWith("max")) return null;
+
+                  const attribute = userAttributes[key as keyof Attribute];
+
+                  let displayValue = attribute as string | number;
+
+                  let cleanValue = value;
+
+                  if (key.startsWith("min")) {
+                    const maxKey = key.replace("min", "max") as keyof Attribute;
+                    const minValue = attribute ?? 0;
+                    const maxValue = userAttributes[maxKey] ?? "∞";
+
+                    cleanValue = key.replace(/^(min|max)/, "");
+                    displayValue = `${minValue} - ${maxValue}`;
+                  }
+
+                  return (
+                    <li className="flex flex-grow items-center gap-2" key={key}>
+                      {React.createElement(
+                        detailsIcons[key as keyof Attribute],
+                      )}
+                      <h3 className="text-lg">{cleanValue}</h3>
+                      <span>•</span>
+                      {user.attribute && (
+                        <p className="text-lg">
+                          {displayValue ?? "Whatever"}
+                          {cleanValue.toLowerCase().includes("price")
+                            ? "€"
+                            : cleanValue.toLowerCase().includes("size")
+                            ? "m²"
+                            : cleanValue.toLowerCase().includes("range") &&
+                              "km"}
+                        </p>
+                      )}
+                    </li>
+                  );
+                })}
               </ul>
-              <ul className="gap-4 sm:flex sm:flex-wrap md:grid md:grid-cols-3">
-                <li className="mr-8 flex-grow border-b border-indigo-300 pb-2">
-                  <h3 className="text-xl font-medium">Credit score</h3>
-                  <p className={user.creditScore ? "" : " text-indigo-600"}>
-                    {user.creditScore ??
-                      (isLoggedUser
-                        ? "Please add your credit score by updating your profile"
-                        : "Not specified")}
-                  </p>
-                </li>
-                {/* <li className="mr-8 flex-grow border-b border-indigo-300 pb-2">
-                  <h3 className="text-xl font-medium">Desired rental period</h3>
-                  <p className={"2 years" ? "" : " text-indigo-600"}>
-                    {"2 years" ??
-                      (isLoggedUser
-                        ? "Please add your desired rental period by updating your profile"
-                        : "Not specified")}
-                  </p>
-                </li> */}
-                <li className="mr-8 flex-grow border-b border-indigo-300 pb-2">
-                  <h3 className="text-xl font-medium">Family situation</h3>
-                  <p className={user.maritalStatus ? "" : " text-indigo-600"}>
-                    {user.maritalStatus ??
-                      (isLoggedUser
-                        ? "Please add your family situation by updating your profile"
-                        : "Not specified")}
-                  </p>
-                </li>
+              <ul className="gap-4 border-t py-4 sm:flex sm:flex-wrap md:grid md:grid-cols-4">
+                {Object.entries(attributes).map(([key, value]) => {
+                  const userAttributes = user.attribute;
+                  if (!userAttributes) return null;
+
+                  const attribute = userAttributes[key as keyof Attribute];
+
+                  if (attribute == null) return null;
+
+                  return (
+                    <li className="flex flex-grow items-center gap-2" key={key}>
+                      {React.createElement(
+                        attributesIcons[key as keyof Attribute],
+                      )}
+                      <h3
+                        className={`text-lg ${!attribute && " line-through"} `}
+                      >
+                        {value}
+                      </h3>
+                    </li>
+                  );
+                })}
               </ul>
+            </section>
+          )}
+          {(isLoggedUser || isAdmin) && (
+            <section>
+              <h2 className="py-4 text-3xl font-medium">Documents</h2>
+              {documents && documents.length > 0 ? (
+                <DocumentList
+                  documents={documents}
+                  onValidation={onDocValidation}
+                />
+              ) : (
+                <p className="text-indigo-600">
+                  No document available
+                  {isLoggedUser &&
+                    ", please add any necessary documents by updating your profile"}
+                </p>
+              )}
             </section>
           )}
           <DisplayReports reports={user.reports} />

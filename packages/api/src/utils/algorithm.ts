@@ -88,6 +88,18 @@ export async function getPostsWithAttribute(
               lte: userAtt.maxSize ?? undefined,
             },
           },
+          {
+            bedrooms: {
+              gte: userAtt.minBedrooms ?? undefined,
+              lte: userAtt.maxBedrooms ?? undefined,
+            },
+          },
+          {
+            bathrooms: {
+              gte: userAtt.minBathrooms ?? undefined,
+              lte: userAtt.maxBathrooms ?? undefined,
+            },
+          },
           { furnished: userAtt.furnished ?? undefined },
           { homeType: userAtt.homeType ?? undefined },
           { terrace: userAtt.terrace ?? undefined },

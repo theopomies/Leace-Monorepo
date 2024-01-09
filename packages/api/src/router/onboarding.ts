@@ -2,7 +2,12 @@ import { z } from "zod";
 import { AuthenticatedProcedure, router } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { Role } from "@prisma/client";
-import { OnboardingStatus } from "../utils/types";
+import {
+  OnboardingStatus,
+  administrativeDocumentTypes,
+  identityDocumentTypes,
+} from "../utils/types";
+import { Document } from "@prisma/client";
 
 export const onboardingRouter = router({
   getUserOnboardingStatus: AuthenticatedProcedure.input(
@@ -26,6 +31,7 @@ export const onboardingRouter = router({
       },
       include: {
         attribute: true,
+        documents: true,
       },
     });
 
@@ -44,8 +50,12 @@ export const onboardingRouter = router({
     ) {
       return OnboardingStatus.IDENTITY_COMPLETION as OnboardingStatus;
     }
+    const hasDocuments = hasMinimumDocuments(user.documents, user.role);
 
     if (user.role !== Role.TENANT) {
+      if (!hasDocuments) {
+        return OnboardingStatus.DOCUMENTS_COMPLETION as OnboardingStatus;
+      }
       return OnboardingStatus.COMPLETE as OnboardingStatus;
     }
 
@@ -53,6 +63,27 @@ export const onboardingRouter = router({
       return OnboardingStatus.PREFERENCES_COMPLETION as OnboardingStatus;
     }
 
+    if (!hasDocuments) {
+      return OnboardingStatus.DOCUMENTS_COMPLETION as OnboardingStatus;
+    }
+
     return OnboardingStatus.COMPLETE as OnboardingStatus;
   }),
 });
+
+function hasMinimumDocuments(documents: Document[], role?: Role): boolean {
+  const hasIdentityDocument = identityDocumentTypes.some((type) =>
+    documents.some((document) => document.type === type),
+  );
+
+  if (role === Role.TENANT || role === Role.OWNER) {
+    return hasIdentityDocument;
+  }
+  if (role === Role.AGENCY) {
+    return administrativeDocumentTypes.some((type) =>
+      documents.some((document) => document.type === type),
+    );
+  }
+
+  return true;
+}

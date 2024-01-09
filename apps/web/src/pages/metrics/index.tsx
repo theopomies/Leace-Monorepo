@@ -5,9 +5,9 @@ import { Loader } from "../../components/shared/Loader";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import mixpanel from "../../utils/mixpanel";
-import { DashboardPage } from "../../components/dashboard/DashboardPage";
+import { MetricsPage } from "../../components/metrics/MetricsPage";
 
-export default function DashboardIndex() {
+export default function MetricsIndex() {
   const router = useRouter();
   const { data: session, isLoading: sessionIsLoading } =
     trpc.auth.getSession.useQuery();
@@ -16,7 +16,7 @@ export default function DashboardIndex() {
     if (session && !sessionIsLoading) {
       mixpanel.track("Page View", {
         path: router.asPath,
-        title: "Dashboard Page",
+        title: "Metrics Page",
         userId: session?.userId,
       });
     }
@@ -27,8 +27,8 @@ export default function DashboardIndex() {
   if (!session) return <div>Not logged in</div>;
 
   return (
-    <LoggedLayout title="Dashboard | Leace" roles={[Role.AGENCY, Role.OWNER]}>
-      <DashboardPage userId={session.userId} />
+    <LoggedLayout title="Metrics | Leace" roles={[Role.AGENCY, Role.OWNER]}>
+      <MetricsPage userId={session.userId} />
     </LoggedLayout>
   );
 }
