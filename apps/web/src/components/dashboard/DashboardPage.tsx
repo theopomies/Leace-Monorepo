@@ -5,5 +5,5 @@ export interface DashboardPageProps {
 }
 
 export function DashboardPage({ userId }: DashboardPageProps) {
-  return <Dashboard />;
+  return <Dashboard userId={userId} />;
 }
