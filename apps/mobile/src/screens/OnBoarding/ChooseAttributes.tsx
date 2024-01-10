@@ -12,10 +12,10 @@ export default function ChooseAttributes({
   setProgress,
 }: IStep) {
   const [attrs, setAttrs] = useState<IUserAttrs | undefined>({ userId });
-  const utils = trpc.useContext();
   const userAttributes = trpc.attribute.updateUserAttributes.useMutation({
     onSuccess() {
-      utils.user.getUserById.invalidate();
+      setProgress(82);
+      setStep("DOCUMENTS_COMPLETION");
     },
   });
 

@@ -16,8 +16,9 @@ import {
 } from "expo-document-picker";
 import Toast from "react-native-toast-message";
 import { Icon } from "react-native-elements";
-import { IStep, Role } from "../../types/onboarding";
+import { IStep } from "../../types/onboarding";
 import { trpc } from "../../utils/trpc";
+import { Role } from "@leace/db";
 
 export default function CreateProfile({
   userId,
@@ -73,7 +74,7 @@ export default function CreateProfile({
 
   function validate() {
     if (!(firstName && lastName && phoneNumber)) return setShow(true);
-    if (!isAdult) return setShow(true);
+    if (!isAdult()) return setShow(true);
     userProfile.mutate({
       userId,
       firstName,
