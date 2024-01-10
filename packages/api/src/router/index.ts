@@ -14,7 +14,7 @@ import { supportRouter } from "./support";
 import { geocoderRouter } from "./geocoder";
 import { cronRouter } from "./cron";
 import { onboardingRouter } from "./onboarding";
-import { dashboardRouter } from "./dashboard";
+import { metricsRouter } from "./metrics";
 
 export const appRouter = router({
   auth: authRouter,
@@ -32,7 +32,7 @@ export const appRouter = router({
   geocoder: geocoderRouter,
   cron: cronRouter,
   onboarding: onboardingRouter,
-  dashboard: dashboardRouter,
+  metrics: metricsRouter,
 });
 
 // export type definition of API

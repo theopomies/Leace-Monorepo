@@ -65,13 +65,13 @@ export interface MetricsProps {
 }
 
 export function Metrics({ userId }: MetricsProps) {
-  const { data: metrics } = trpc.dashboard.metricsByUserId.useQuery({ userId });
+  const { data: metrics } = trpc.metrics.graphsByUserId.useQuery({ userId });
 
-  const { data: rented } = trpc.dashboard.getRented.useQuery({
+  const { data: rented } = trpc.metrics.getRented.useQuery({
     userId,
   });
 
-  const { data: toRent } = trpc.dashboard.getPending.useQuery({ userId });
+  const { data: toRent } = trpc.metrics.getPending.useQuery({ userId });
 
   return (
     <div className="flex w-full flex-col justify-center py-8 px-12">

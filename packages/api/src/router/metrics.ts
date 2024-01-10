@@ -28,8 +28,8 @@ function initializeMonthlyData(): MonthlyData[] {
   return monthNames.map((monthName) => ({ month: monthName, count: 0 }));
 }
 
-export const dashboardRouter = router({
-  metricsByUserId: protectedProcedure([Role.OWNER, Role.AGENCY])
+export const metricsRouter = router({
+  graphsByUserId: protectedProcedure([Role.OWNER, Role.AGENCY])
     .input(z.object({ userId: z.string() }))
     .query(async ({ input, ctx }) => {
       const userId = getId({ ctx: ctx, userId: input.userId });
