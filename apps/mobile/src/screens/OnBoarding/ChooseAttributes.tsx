@@ -40,8 +40,8 @@ export default function ChooseAttributes({
             title="Back"
             bgColor="#6C47FF"
             onPress={() => {
-              setProgress(82);
-              setStep("DOCUMENTS_COMPLETION");
+              setProgress(50);
+              setStep("IDENTITY_COMPLETION");
             }}
           />
           <Btn
