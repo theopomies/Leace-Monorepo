@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "main": "index.ts",
   "scripts": {
-    "start": "expo start",
+    "start": "expo start --dev-client",
     "dev": "expo start",
     "clean": "rm -rf .expo .turbo node_modules",
     "android": "expo run:android",

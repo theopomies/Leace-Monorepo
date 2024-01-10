@@ -6,16 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="a05cecb8-778a-4a51-a055-921331174174" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile/app.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile/app.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile/src/components/Post/PostCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile/src/components/Post/PostCard.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile/src/navigation/TabNavigator.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile/src/navigation/TabNavigator.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile/src/screens/Matches/TenantMatches.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile/src/screens/Matches/TenantMatches.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile/src/screens/Post/CreatePost.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile/src/screens/Post/CreatePost.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile/src/screens/Post/PostStack.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile/src/screens/Post/PostStack.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile/src/screens/Post/ShowPost.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile/src/screens/Post/ShowPost.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile/src/types/index.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile/src/types/index.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eas.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pnpm-lock.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
