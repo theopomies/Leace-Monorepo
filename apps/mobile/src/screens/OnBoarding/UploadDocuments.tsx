@@ -23,11 +23,12 @@ export default function UploadDocuments({
     { file: DocumentPicker.DocumentPickerAsset; docType: DocType; id: number }[]
   >([]);
   const [open, setOpen] = useState(false);
-  const [idx, setIdx] = useState(0);
   const [selectedDoc, setSelectedDoc] = useState<{
     name: string;
     docType: DocType;
+    id: number;
   }>({
+    id: 0,
     name: "",
     docType: "IDENTITY_CARD",
   });
@@ -51,12 +52,12 @@ export default function UploadDocuments({
       if (!document) throw new Error("Document picker failed");
       if (!document.mimeType || !document.uri)
         throw new Error("Invalid document");
-      const [exist] = documents.filter((a) => a.id === idx);
+      const [exist] = documents.filter((a) => a.id === selectedDoc.id);
       setSelectedDoc((a) => ({ ...a, name: document.name }));
       if (!exist)
         setDocuments((docs) => [
           ...docs,
-          { file: document, docType: selectedDoc.docType, id: idx },
+          { file: document, docType: selectedDoc.docType, id: selectedDoc.id },
         ]);
       else
         setDocuments((docs) =>
@@ -69,16 +70,34 @@ export default function UploadDocuments({
     }
   }
 
-  function getDocument(id: number): { name: string; docType: DocType } {
+  function getDocument(id: number): {
+    id: number;
+    name: string;
+    docType: DocType;
+  } {
     const [doc] = documents.filter((a) => a.id === id);
     if (!doc) {
-      if (idx === 0) return { name: "Not found", docType: "IDENTITY_CARD" };
-      if (idx === 1) return { name: "Not found", docType: "RENT_RECEIPT" };
-      if (idx === 2)
-        return { name: "Not found", docType: "EMPLOYMENT_CONTRACT" };
-      return { name: "Not found", docType: "SALARY_PROOF" };
+      if (id === 0)
+        return {
+          id: id,
+          name: "Not found",
+          docType: "IDENTITY_CARD",
+        };
+      if (id === 1)
+        return {
+          id: id,
+          name: "Not found",
+          docType: "RENT_RECEIPT",
+        };
+      if (id === 2)
+        return {
+          id: id,
+          name: "Not found",
+          docType: "EMPLOYMENT_CONTRACT",
+        };
+      return { id: id, name: "Not found", docType: "SALARY_PROOF" };
     }
-    return { name: doc.file.name, docType: doc.docType };
+    return { id: id, name: doc.file.name, docType: doc.docType };
   }
 
   function finishOnboarding() {
@@ -132,7 +151,7 @@ export default function UploadDocuments({
   }
 
   function getItems() {
-    if (idx === 0)
+    if (selectedDoc.id === 0)
       return (
         <Picker
           mode="dropdown"
@@ -147,7 +166,7 @@ export default function UploadDocuments({
           <Picker.Item label="Residence Permit" value="RESIDENCE_PERMIT" />
         </Picker>
       );
-    if (idx === 1)
+    if (selectedDoc.id === 1)
       return (
         <Picker
           mode="dropdown"
@@ -166,7 +185,7 @@ export default function UploadDocuments({
           <Picker.Item label="Tax notices" value="TAX_NOTICES" />
         </Picker>
       );
-    if (idx === 2)
+    if (selectedDoc.id === 2)
       return (
         <Picker
           mode="dropdown"
@@ -263,8 +282,7 @@ export default function UploadDocuments({
             <Btn
               title="Add"
               onPress={() => {
-                setIdx(0);
-                setSelectedDoc(getDocument(0));
+                setSelectedDoc(() => getDocument(0));
                 setOpen(true);
               }}
             ></Btn>
@@ -277,8 +295,7 @@ export default function UploadDocuments({
             <Btn
               title="Add"
               onPress={() => {
-                setIdx(1);
-                setSelectedDoc(getDocument(1));
+                setSelectedDoc(() => getDocument(1));
                 setOpen(true);
               }}
             ></Btn>
@@ -292,8 +309,7 @@ export default function UploadDocuments({
               <Btn
                 title="Add"
                 onPress={() => {
-                  setIdx(2);
-                  setSelectedDoc(getDocument(2));
+                  setSelectedDoc(() => getDocument(2));
                   setOpen(true);
                 }}
               ></Btn>
@@ -308,8 +324,7 @@ export default function UploadDocuments({
               <Btn
                 title="Add"
                 onPress={() => {
-                  setIdx(3);
-                  setSelectedDoc(getDocument(3));
+                  setSelectedDoc(() => getDocument(3));
                   setOpen(true);
                 }}
               ></Btn>

@@ -104,8 +104,9 @@ function NavigationRoutes({ userId, role }: { userId: string; role?: Role }) {
                       ? require("../../assets/navbar/home-hover.png")
                       : require("../../assets/navbar/home.png")
                   }
-                  className={` ${Platform.OS === "ios" ? "mt-5" : "mt-2"
-                    } h-6 w-6`}
+                  className={` ${
+                    Platform.OS === "ios" ? "mt-5" : "mt-2"
+                  } h-6 w-6`}
                 />
               ),
               tabBarLabel: "",
@@ -128,8 +129,9 @@ function NavigationRoutes({ userId, role }: { userId: string; role?: Role }) {
                       ? require("../../assets/navbar/home-hover.png")
                       : require("../../assets/navbar/home.png")
                   }
-                  className={` ${Platform.OS === "ios" ? "mt-5" : "mt-2"
-                    } h-6 w-6`}
+                  className={` ${
+                    Platform.OS === "ios" ? "mt-5" : "mt-2"
+                  } h-6 w-6`}
                 />
               ),
               tabBarLabel: "",
@@ -180,8 +182,9 @@ function NavigationRoutes({ userId, role }: { userId: string; role?: Role }) {
                     ? require("../../assets/navbar/write-hover.png")
                     : require("../../assets/navbar/write.png")
                 }
-                className={` ${Platform.OS === "ios" ? "mt-5" : "mt-2"
-                  } h-6 w-6`}
+                className={` ${
+                  Platform.OS === "ios" ? "mt-5" : "mt-2"
+                } h-6 w-6`}
               />
             ),
             tabBarLabel: "",
@@ -202,8 +205,9 @@ function NavigationRoutes({ userId, role }: { userId: string; role?: Role }) {
                     ? require("../../assets/navbar/crown-hover.png")
                     : require("../../assets/navbar/crown.png")
                 }
-                className={` ${Platform.OS === "ios" ? "mt-5" : "mt-2"
-                  } h-6 w-6`}
+                className={` ${
+                  Platform.OS === "ios" ? "mt-5" : "mt-2"
+                } h-6 w-6`}
               />
             ),
             tabBarLabel: "",
@@ -319,7 +323,7 @@ function NavigationRoutes({ userId, role }: { userId: string; role?: Role }) {
           headerLeft: () => (
             <TouchableOpacity
               className="ml-4"
-              onPress={() => navigation.navigate("Stack", { userId })}
+              onPress={() => navigation.navigate("MyPosts", { userId })}
             >
               <Icon
                 name="arrow-back"
