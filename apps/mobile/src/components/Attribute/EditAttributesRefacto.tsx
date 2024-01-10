@@ -17,6 +17,11 @@ interface ICreateUserAttrs {
   attrs: IUserAttrs | undefined;
   setAttrs: React.Dispatch<React.SetStateAction<IUserAttrs | undefined>>;
   onBoarding?: boolean;
+  showErrorCallback?: boolean;
+  showMinPriceErrorCallback?: boolean;
+  showMaxPriceErrorCallback?: boolean;
+  showMinSizeErrorCallback?: boolean;
+  showMaxSizeErrorCallback?: boolean;
 }
 
 function AttributeBtn({ name, status, iconName }: IAttributeBtn) {
@@ -66,6 +71,11 @@ export default function EditAttributesRefacto({
   attrs,
   setAttrs,
   onBoarding,
+  showErrorCallback,
+  showMinPriceErrorCallback,
+  showMaxPriceErrorCallback,
+  showMinSizeErrorCallback,
+  showMaxSizeErrorCallback,
 }: ICreateUserAttrs) {
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(false);
@@ -115,13 +125,18 @@ export default function EditAttributesRefacto({
       <Text className="text-xl font-bold text-[#111827]">Location:</Text>
       <View>
         <TextInput
-          className="mb-9 h-full w-full text-lg font-light"
+          className={`${
+            attrs.location ? "mb-9" : ""
+          } h-full w-full text-lg font-light `}
           style={styles.input}
           multiline={true}
           placeholder="Paris"
           defaultValue={attrs.location ?? ""}
           onChangeText={(text) => setAttrs({ ...attrs, location: text })}
         />
+        {!attrs.location && showErrorCallback && (
+          <Text className="mb-9 text-red-500">{"Location"}</Text>
+        )}
       </View>
       {!onBoarding && (
         <Divider width={1.5} color="black" className="mb-6"></Divider>
@@ -212,6 +227,10 @@ export default function EditAttributesRefacto({
                   }}
                   defaultValue={attrs.minPrice ?? ""}
                 />
+                {isNaN(attrs.minPrice as number) &&
+                  showMinPriceErrorCallback && (
+                    <Text className="text-red-500">{"Min Price"}</Text>
+                  )}
               </View>
               {/* <Text className="font-light text-black"> €</Text> */}
             </View>
@@ -233,6 +252,10 @@ export default function EditAttributesRefacto({
                   }}
                   defaultValue={attrs.maxPrice ?? ""}
                 />
+                {isNaN(attrs.maxPrice as number) &&
+                  showMaxPriceErrorCallback && (
+                    <Text className="text-red-500">{"Max Price"}</Text>
+                  )}
               </View>
             </View>
           </View>
@@ -259,6 +282,9 @@ export default function EditAttributesRefacto({
                   }}
                   defaultValue={attrs.minSize ?? ""}
                 />
+                {isNaN(attrs.minSize as number) && showMinSizeErrorCallback && (
+                  <Text className="text-red-500">{"Min Size"}</Text>
+                )}
               </View>
             </View>
           </View>
@@ -279,6 +305,9 @@ export default function EditAttributesRefacto({
                   }}
                   defaultValue={attrs.maxSize ?? ""}
                 />
+                {isNaN(attrs.maxSize as number) && showMaxSizeErrorCallback && (
+                  <Text className="text-red-500">{"Max Size"}</Text>
+                )}
               </View>
             </View>
           </View>
