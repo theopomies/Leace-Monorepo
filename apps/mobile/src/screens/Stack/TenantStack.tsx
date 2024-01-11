@@ -63,7 +63,7 @@ function AttributeCard({
 }: IAttributeCard) {
   return (
     <View
-      className="flex min-w-[105px] h-14 flex-row items-center justify-center space-x-0.5 rounded-lg my-8"
+      className="flex min-w-[95px] h-14 flex-row items-center justify-center space-x-0.5 rounded-lg my-8"
       style={{
         backgroundColor: "#6C47FF",
         opacity: status ? 1 : 0.5,
@@ -190,7 +190,7 @@ export default function TenantStack() {
                       postId={post.id}
                     />
                   </View>
-                  <View style={{ flex: 1 }} className="mx-6 mt-6">
+                  <View style={{ flex: 1 }} className="mx-5 mt-6">
                     <Text className="text-2xl font-bold text-black">
                       {post.title}
                     </Text>
