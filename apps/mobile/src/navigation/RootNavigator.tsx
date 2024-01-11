@@ -24,6 +24,7 @@ import { Loading } from "../components/Loading";
 import Toast from "react-native-toast-message";
 import { PostsReviews, UsersReviews } from "../screens/Reviews";
 import { OnBoarding } from "../screens/OnBoarding";
+import OwnerDashboard from "../screens/Dashboard/OwnerDashboard";
 
 const Tab = createBottomTabNavigator();
 
@@ -83,6 +84,10 @@ export type TabStackParamList = {
   Settings: undefined;
   PostReviews: undefined;
   UsersReviews: undefined;
+
+  OwnerDashboard: {
+    userId: string;
+  };
 };
 
 function NavigationRoutes({ userId, role }: { userId: string; role?: Role }) {
@@ -118,6 +123,27 @@ function NavigationRoutes({ userId, role }: { userId: string; role?: Role }) {
       {role !== "TENANT" && (
         <>
           <Tab.Screen
+            name="OwnerDashboard"
+            component={OwnerDashboard}
+            initialParams={{ userId }}
+            options={{
+              tabBarIcon: ({ focused }) => (
+                <Image
+                  source={
+                    focused
+                      ? require("../../assets/navbar/dashboard-hover.png")
+                      : require("../../assets/navbar/dashboard.png")
+                  }
+                  className={` ${
+                    Platform.OS === "ios" ? "mt-5" : "mt-2"
+                  } h-6 w-6`}
+                />
+              ),
+              tabBarLabel: "",
+              headerShown: false,
+            }}
+          />
+          <Tab.Screen
             name="MyPosts"
             component={PostStack}
             initialParams={{ userId }}
@@ -150,25 +176,6 @@ function NavigationRoutes({ userId, role }: { userId: string; role?: Role }) {
           />
         </>
       )}
-      <Tab.Screen
-        name="MatchTenant"
-        component={TenantMatches}
-        initialParams={{ userId, role: role === "TENANT" ? "TENANT" : "OWNER" }}
-        options={{
-          tabBarIcon: ({ focused }) => (
-            <Image
-              source={
-                focused
-                  ? require("../../assets/navbar/chat-hover.png")
-                  : require("../../assets/navbar/chat.png")
-              }
-              className={` ${Platform.OS === "ios" ? "mt-5" : "mt-2"} h-6 w-6`}
-            />
-          ),
-          tabBarLabel: "",
-          headerShown: false,
-        }}
-      />
       {role !== "TENANT" && (
         <Tab.Screen
           name="CreatePost"
@@ -192,6 +199,25 @@ function NavigationRoutes({ userId, role }: { userId: string; role?: Role }) {
           }}
         />
       )}
+      <Tab.Screen
+        name="MatchTenant"
+        component={TenantMatches}
+        initialParams={{ userId, role: role === "TENANT" ? "TENANT" : "OWNER" }}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <Image
+              source={
+                focused
+                  ? require("../../assets/navbar/chat-hover.png")
+                  : require("../../assets/navbar/chat.png")
+              }
+              className={` ${Platform.OS === "ios" ? "mt-5" : "mt-2"} h-6 w-6`}
+            />
+          ),
+          tabBarLabel: "",
+          headerShown: false,
+        }}
+      />
       {role === "TENANT" && (
         <Tab.Screen
           name="Premium"

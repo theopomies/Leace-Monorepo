@@ -46,7 +46,7 @@ function MatchCard({
 
   return (
     <TouchableOpacity
-      className="bg-indigo relative mt-3 flex min-h-[100px] flex-row rounded-md p-2"
+      className="border-indigo relative mt-3 flex min-h-[100px] flex-row rounded-md border p-2"
       onPress={() =>
         navigation.navigate("ChatTenant", {
           relationshipId: data.id,
@@ -76,30 +76,30 @@ function MatchCard({
         }}
       />
       <View className="flex-1 justify-between pl-2">
-        <Text className="font-bold text-white">{data.post.title}</Text>
-        <Text className="font-bold text-white">{data.post.desc}</Text>
+        <Text className="font-bold">{data.post.title}</Text>
+        {/*<Text className="font-bold">{data.post.desc}</Text>*/}
         <View>
           {role === "TENANT" ? (
-            <Text className="font-light text-white">
+            <Text className="font-light">
               Owner: {data.post.createdBy.firstName}{" "}
               {data.post.createdBy.lastName}
             </Text>
           ) : (
-            <Text className="font-light text-white">
+            <Text className="font-light">
               Tenant: {data.user.firstName} {data.user.lastName}
             </Text>
           )}
-          <Text className="font-light text-white">
+          {/*<Text className="font-light">
             Email:{" "}
             {role === "TENANT" ? data.post.createdBy.email : data.user.email}
-          </Text>
-          <Text className="font-light text-white">
+          </Text>*/}
+          <Text className="font-light">
             Status:{" "}
             <Text
               className={`font-bold ${
                 data.post.type === "TO_BE_RENTED"
-                  ? "text-red-500"
-                  : "text-green-500"
+                  ? "text-green-500"
+                  : "text-red-500"
               }`}
             >
               {data.post.type === "TO_BE_RENTED" ? "Available" : "Rented"}

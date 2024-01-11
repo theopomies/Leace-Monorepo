@@ -15,6 +15,7 @@ import { geocoderRouter } from "./geocoder";
 import { cronRouter } from "./cron";
 import { onboardingRouter } from "./onboarding";
 import { stripeRouter } from "./stripe";
+import { metricsRouter } from "./metrics";
 
 export const appRouter = router({
   auth: authRouter,
@@ -33,6 +34,7 @@ export const appRouter = router({
   cron: cronRouter,
   onboarding: onboardingRouter,
   stripe: stripeRouter,
+  metrics: metricsRouter,
 });
 
 // export type definition of API
