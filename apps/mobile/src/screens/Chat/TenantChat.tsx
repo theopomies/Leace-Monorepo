@@ -10,7 +10,7 @@ import {
   Alert,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { useRoute, RouteProp } from "@react-navigation/native";
+import { useRoute, RouteProp, useNavigation } from "@react-navigation/native";
 import { TabStackParamList } from "../../navigation/RootNavigator";
 import { trpc } from "../../utils/trpc";
 import { Loading } from "../../components/Loading";
@@ -18,6 +18,7 @@ import { Message, User, Lease } from "@prisma/client";
 import { Btn } from "../../components/Btn";
 import { Report } from "../../components/Report";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 interface IMessageCard {
   data: Message & {
@@ -29,24 +30,28 @@ interface IMessageCard {
 function MessageCard({ data, userId }: IMessageCard) {
   return (
     <View
-      className={`flex h-fit ${userId !== data.senderId ? "items-start" : "items-end"
-        } pt-1`}
+      className={`flex h-fit ${
+        userId !== data.senderId ? "items-start" : "items-end"
+      } pt-1`}
     >
       <View
-        className={`flex ${userId !== data.senderId
-          ? "items-start bg-[#ececec]"
-          : "items-end bg-[#10316B]"
-          } rounded-2xl`}
+        className={`flex ${
+          userId !== data.senderId
+            ? "items-start bg-[#ececec]"
+            : "items-end bg-[#10316B]"
+        } rounded-2xl`}
       >
         <Text
-          className={`max-w-[90%] p-2 pb-0 ${userId !== data.senderId ? "" : "text-white"
-            }`}
+          className={`max-w-[90%] p-2 pb-0 ${
+            userId !== data.senderId ? "" : "text-white"
+          }`}
         >
           {data.content}
         </Text>
         <Text
-          className={`px-2 pb-2 ${userId !== data.senderId ? "pl-2" : "pr-2 text-white"
-            } pt-1 text-xs font-light italic `}
+          className={`px-2 pb-2 ${
+            userId !== data.senderId ? "pl-2" : "pr-2 text-white"
+          } pt-1 text-xs font-light italic `}
         >
           {data.createdAt.toLocaleDateString()} - {data.createdAt.getHours()}:
           {data.createdAt.getMinutes()}
@@ -57,10 +62,12 @@ function MessageCard({ data, userId }: IMessageCard) {
 }
 
 export default function TenantChat() {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<TabStackParamList>>();
+
   const [show, setShow] = useState(false);
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(false);
-
 
   const route = useRoute<RouteProp<TabStackParamList, "ChatTenant">>();
   const {
@@ -113,14 +120,34 @@ export default function TenantChat() {
 
   const canSignContract = () => {
     if (role === "TENANT" && lease.id !== "") {
-      setShow(true)
+      setShow(true);
     } else {
       Alert.alert(
         "No lease created yet",
-        "Please wait for the owner to create the lease."
+        "Please wait for the owner to create the lease.",
       );
     }
-  }
+  };
+  useEffect(() => {
+    const yourFunction = () => {
+      if (refetch) {
+        refetch();
+      }
+    };
+    const intervalId = setInterval(yourFunction, 1000);
+    const unsubscribeFocus = navigation.addListener("focus", () => {
+      console.log("Screen focused");
+    });
+    const unsubscribeBlur = navigation.addListener("blur", () => {
+      clearInterval(intervalId);
+    });
+    return () => {
+      console.log("Component unmounted, clearing interval");
+      clearInterval(intervalId);
+      unsubscribeFocus();
+      unsubscribeBlur();
+    };
+  }, [navigation]);
 
   useEffect(() => {
     setLease({
@@ -352,12 +379,12 @@ export default function TenantChat() {
             bgColor="#0A2472"
             className="rounded-full"
             onPress={() => {
-              canSignContract()
+              canSignContract();
             }}
           ></Btn>
         </View>
       </View>
-    </SafeAreaView >
+    </SafeAreaView>
   );
 }
 
