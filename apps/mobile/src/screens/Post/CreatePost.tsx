@@ -157,14 +157,14 @@ export default function CreatePost() {
       ),
     )
       .then(() => {
-        setLoading(() => ({ status: true, message: "Submit" }));
+        setLoading(() => ({ status: false, message: "Submit" }));
         LocalStorage.setItem("refreshPosts", true);
         navigation.navigate("MyPosts", { userId });
       })
       .catch((e) => {
         console.error(e);
         Toast.show({ type: "error", text1: "Could not create post" });
-        setLoading(() => ({ status: true, message: "Submit" }));
+        setLoading(() => ({ status: false, message: "Submit" }));
       });
   }
 

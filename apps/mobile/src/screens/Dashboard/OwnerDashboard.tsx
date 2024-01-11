@@ -9,8 +9,7 @@ import {
 import React, { useState } from "react";
 import Header from "../../components/Header";
 import { trpc } from "../../utils/trpc";
-import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useRoute, RouteProp } from "@react-navigation/native";
 import { TabStackParamList } from "../../navigation/RootNavigator";
 
 import { BarChart } from "react-native-chart-kit";
@@ -31,8 +30,6 @@ const chartConfig = {
 };
 
 export default function OwnerDashboard() {
-  const navigation =
-    useNavigation<NativeStackNavigationProp<TabStackParamList>>();
   const utils = trpc.useContext();
 
   const route = useRoute<RouteProp<TabStackParamList, "MyPosts">>();
@@ -64,19 +61,18 @@ export default function OwnerDashboard() {
 
   const { data: metrics } = trpc.metrics.graphsByUserId.useQuery({ userId });
 
-  const { data: rented } = trpc.metrics.getRented.useQuery({
+  /*const { data: rented } = trpc.metrics.getRented.useQuery({
     userId,
   });
 
   const { data: toRent } = trpc.metrics.getPending.useQuery({ userId });
-
+  */
   const signedLeases = leases?.filter((lease) => lease.isSigned);
 
-  const { data: tenants, isLoading: tenantsIsLoading } =
-    trpc.post.getUsersToBeSeen.useQuery(
-      { postId: selectedPost?.id ?? "" },
-      { retry: false, enabled: !!selectedPost?.id },
-    );
+  const { data: tenants } = trpc.post.getUsersToBeSeen.useQuery(
+    { postId: selectedPost?.id ?? "" },
+    { retry: false, enabled: !!selectedPost?.id },
+  );
 
   function getYO(birthDate: Date) {
     const today = new Date();
@@ -86,13 +82,13 @@ export default function OwnerDashboard() {
     return age;
   }
 
-  const { mutateAsync: likeHandler, isLoading: likeIsLoading } =
+  const { mutateAsync: likeHandler } =
     trpc.relationship.likeTenantForPost.useMutation({
       onSuccess() {
         utils.post.getUsersToBeSeen.invalidate();
       },
     });
-  const { mutateAsync: dislikeHandler, isLoading: dislikeIsLoading } =
+  const { mutateAsync: dislikeHandler } =
     trpc.relationship.dislikeTenantForPost.useMutation({
       onSuccess() {
         utils.post.getUsersToBeSeen.invalidate();
@@ -158,7 +154,7 @@ export default function OwnerDashboard() {
             ))}
           </Picker>
           <View>
-            {tenants?.length > 0 ? (
+            {tenants && tenants?.length > 0 ? (
               // eslint-disable-next-line @typescript-eslint/ban-ts-comment
               // @ts-ignore
               <Carousel

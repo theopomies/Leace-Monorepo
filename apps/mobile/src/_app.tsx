@@ -1,3 +1,5 @@
+import "react-native-gesture-handler";
+
 import React from "react";
 import { Logs } from "expo";
 import { Auth } from "./screens/Auth";
