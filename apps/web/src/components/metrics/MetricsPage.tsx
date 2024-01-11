@@ -5,5 +5,5 @@ export interface MetricsPageProps {
 }
 
 export function MetricsPage({ userId }: MetricsPageProps) {
-  return <Metrics />;
+  return <Metrics userId={userId} />;
 }
