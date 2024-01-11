@@ -95,18 +95,20 @@ export default function UserProfile({
             </TouchableOpacity>
           </View>
         )}
-        <View className="absolute left-0 top-5 pl-1">
-          <TouchableOpacity
-            onPress={() => navigation.navigate("Documents", { userId })}
-          >
-            <Icon
-              name="description"
-              color="white"
-              size={38}
-              type="material-icons"
-            ></Icon>
-          </TouchableOpacity>
-        </View>
+        {editable && (
+          <View className="absolute left-0 top-5 pl-1">
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Documents", { userId })}
+            >
+              <Icon
+                name="description"
+                color="white"
+                size={38}
+                type="material-icons"
+              ></Icon>
+            </TouchableOpacity>
+          </View>
+        )}
         <Text className="text-xl font-bold text-white">
           {data.isPremium ? "Premium " + data.role : "Not premium " + data.role}
         </Text>

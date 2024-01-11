@@ -174,7 +174,7 @@ export default function TenantStack() {
                     editable: false,
                   })
                 }}>
-                  <View className="h-80">
+                  <View className="h-72">
                     <RCImage
                       className="rounded-t-2xl"
                       source={{
@@ -185,7 +185,7 @@ export default function TenantStack() {
                       style={{ flex: 1, resizeMode: "cover" }}
                     ></RCImage>
                     <Report
-                      className="absolute bottom-0 right-4 bottom-4 flex flex-row items-center space-x-2 rounded-br-md rounded-tl-md bg-red-500 p-2.5"
+                      className="absolute bottom-0 right-0 bottom-0 flex flex-row items-center space-x-2 rounded-tl-md bg-red-500 p-2.5"
                       type="POST"
                       postId={post.id}
                     />

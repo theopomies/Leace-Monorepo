@@ -226,7 +226,7 @@ export default function ShowPost() {
             )}
             {!editable && (
               <Report
-                className="absolute bottom-0 right-4 flex flex-row items-center space-x-2 rounded-br-md rounded-tl-md bg-red-500 p-2.5"
+                className="absolute bottom-0 right-0 flex flex-row items-center space-x-2 rounded-tl-md bg-red-500 p-2.5"
                 type="POST"
                 postId={post.id}
               />
@@ -342,6 +342,12 @@ export default function ShowPost() {
                       title="View Profile"
                       bgColor="#6C47FF"
                       textColor="#F2F7FF"
+                      onPress={() => {
+                        navigation.navigate("ViewProfile", {
+                          userId: post.createdBy.id,
+                          editable: false,
+                        });
+                      }}
                     ></Btn>
                   </View>
                 </View>

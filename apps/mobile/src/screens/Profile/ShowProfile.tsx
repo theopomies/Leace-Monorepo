@@ -27,7 +27,7 @@ export default function ShowProfile() {
   const navigation =
     useNavigation<NativeStackNavigationProp<TabStackParamList>>();
   const route = useRoute<RouteProp<TabStackParamList, "Profile">>();
-  const { userId } = route.params;
+  const { userId, editable } = route.params;
   const { data, isLoading, refetch } = trpc.user.getUserById.useQuery({
     userId,
   });
@@ -135,11 +135,13 @@ export default function ShowProfile() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.view}>
-        <Header callback={refetch} />
+        {editable && (
+          <Header callback={refetch} />
+        )}
         <UserProfile
           userId={userId}
           data={data}
-          editable={true}
+          editable={editable}
           showAttrs={data.role === "TENANT" ? true : false}
           showLogout={true}
         />

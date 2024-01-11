@@ -29,7 +29,8 @@ import OwnerDashboard from "../screens/Dashboard/OwnerDashboard";
 const Tab = createBottomTabNavigator();
 
 export type TabStackParamList = {
-  Profile: { userId: string };
+  Profile: { userId: string, editable?: boolean };
+  ViewProfile: { userId: string, editable?: boolean };
   Stack: { userId: string };
   MatchTenant: { userId: string; role: "TENANT" | "OWNER" | "AGENCY" };
 
@@ -109,9 +110,8 @@ function NavigationRoutes({ userId, role }: { userId: string; role?: Role }) {
                       ? require("../../assets/navbar/home-hover.png")
                       : require("../../assets/navbar/home.png")
                   }
-                  className={` ${
-                    Platform.OS === "ios" ? "mt-5" : "mt-2"
-                  } h-6 w-6`}
+                  className={` ${Platform.OS === "ios" ? "mt-5" : "mt-2"
+                    } h-6 w-6`}
                 />
               ),
               tabBarLabel: "",
@@ -134,9 +134,8 @@ function NavigationRoutes({ userId, role }: { userId: string; role?: Role }) {
                       ? require("../../assets/navbar/dashboard-hover.png")
                       : require("../../assets/navbar/dashboard.png")
                   }
-                  className={` ${
-                    Platform.OS === "ios" ? "mt-5" : "mt-2"
-                  } h-6 w-6`}
+                  className={` ${Platform.OS === "ios" ? "mt-5" : "mt-2"
+                    } h-6 w-6`}
                 />
               ),
               tabBarLabel: "",
@@ -155,9 +154,8 @@ function NavigationRoutes({ userId, role }: { userId: string; role?: Role }) {
                       ? require("../../assets/navbar/home-hover.png")
                       : require("../../assets/navbar/home.png")
                   }
-                  className={` ${
-                    Platform.OS === "ios" ? "mt-5" : "mt-2"
-                  } h-6 w-6`}
+                  className={` ${Platform.OS === "ios" ? "mt-5" : "mt-2"
+                    } h-6 w-6`}
                 />
               ),
               tabBarLabel: "",
@@ -189,9 +187,8 @@ function NavigationRoutes({ userId, role }: { userId: string; role?: Role }) {
                     ? require("../../assets/navbar/write-hover.png")
                     : require("../../assets/navbar/write.png")
                 }
-                className={` ${
-                  Platform.OS === "ios" ? "mt-5" : "mt-2"
-                } h-6 w-6`}
+                className={` ${Platform.OS === "ios" ? "mt-5" : "mt-2"
+                  } h-6 w-6`}
               />
             ),
             tabBarLabel: "",
@@ -231,9 +228,8 @@ function NavigationRoutes({ userId, role }: { userId: string; role?: Role }) {
                     ? require("../../assets/navbar/crown-hover.png")
                     : require("../../assets/navbar/crown.png")
                 }
-                className={` ${
-                  Platform.OS === "ios" ? "mt-5" : "mt-2"
-                } h-6 w-6`}
+                className={` ${Platform.OS === "ios" ? "mt-5" : "mt-2"
+                  } h-6 w-6`}
               />
             ),
             tabBarLabel: "",
@@ -349,7 +345,7 @@ function NavigationRoutes({ userId, role }: { userId: string; role?: Role }) {
           headerLeft: () => (
             <TouchableOpacity
               className="ml-4"
-              onPress={() => navigation.navigate("MyPosts", { userId })}
+              onPress={() => navigation.navigate("Stack", { userId })}
             >
               <Icon
                 name="arrow-back"
@@ -398,7 +394,7 @@ function NavigationRoutes({ userId, role }: { userId: string; role?: Role }) {
       <Tab.Screen
         name="Profile"
         component={ShowProfile}
-        initialParams={{ userId }}
+        initialParams={{ userId, editable: true }}
         options={{
           tabBarIcon: ({ focused }) => (
             <Image
@@ -414,7 +410,36 @@ function NavigationRoutes({ userId, role }: { userId: string; role?: Role }) {
           headerShown: false,
         }}
       />
+
+
       <Tab.Screen
+        name="ViewProfile"
+        initialParams={{ userId, editable: false }}
+        component={ShowProfile}
+        options={{
+          tabBarStyle: { display: "none" },
+          tabBarButton: () => null,
+          headerShown: true,
+          headerTitleStyle: { color: "#6C47FF" },
+          title: "View Profile",
+          headerLeft: () => (
+            <TouchableOpacity
+              className="ml-4"
+              onPress={() => navigation.goBack()}
+            >
+              <Icon
+                name="arrow-back"
+                color="#6C47FF"
+                size={30}
+                type="material-icons"
+              ></Icon>
+            </TouchableOpacity>
+          ),
+        }}
+      />
+
+
+      < Tab.Screen
         name="EditProfile"
         initialParams={{ userId }}
         component={EditProfile}
@@ -439,7 +464,7 @@ function NavigationRoutes({ userId, role }: { userId: string; role?: Role }) {
           ),
         }}
       />
-    </Tab.Navigator>
+    </Tab.Navigator >
   );
 }
 const RootNavigator = () => {
