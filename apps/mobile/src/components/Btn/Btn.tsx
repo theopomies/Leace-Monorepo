@@ -1,6 +1,12 @@
 import { Icon } from "react-native-elements";
 import React from "react";
-import { GestureResponderEvent, TouchableOpacity, Text } from "react-native";
+import {
+  GestureResponderEvent,
+  TouchableOpacity,
+  Text,
+  ActivityIndicator,
+  View,
+} from "react-native";
 
 export default function Btn({
   title,
@@ -10,6 +16,7 @@ export default function Btn({
   iconType,
   bgColor = "#6366f1",
   className,
+  spinner,
 }: {
   title?: string;
   onPress?: ((event: GestureResponderEvent) => void) | undefined;
@@ -19,6 +26,7 @@ export default function Btn({
   bgColor?: string;
   className?: string;
   disabled?: boolean;
+  spinner?: boolean;
 }) {
   return (
     <TouchableOpacity
@@ -31,6 +39,11 @@ export default function Btn({
     >
       {iconName && iconType && (
         <Icon size={20} name={iconName} type={iconType} color={"white"}></Icon>
+      )}
+      {spinner && (
+        <View className="mr-2">
+          <ActivityIndicator color={"white"} />
+        </View>
       )}
       {title && (
         <Text className="font-bold" style={{ color: textColor }}>

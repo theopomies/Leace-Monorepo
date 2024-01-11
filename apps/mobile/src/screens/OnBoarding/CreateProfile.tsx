@@ -73,7 +73,8 @@ export default function CreateProfile({
   }
 
   function validate() {
-    if (!(firstName && lastName && phoneNumber)) return setShow(true);
+    if (!(firstName && lastName && phoneNumber && description))
+      return setShow(true);
     if (!isAdult()) return setShow(true);
     userProfile.mutate({
       userId,
@@ -206,6 +207,14 @@ export default function CreateProfile({
                 value={description}
                 onChangeText={(text) => setDescription(text)}
               ></TextInput>
+              {!description && show && (
+                <Text
+                  className="text-light-red absolute -bottom-3"
+                  style={{ fontSize: 10 }}
+                >
+                  Required field.
+                </Text>
+              )}
             </View>
           </View>
         </View>
