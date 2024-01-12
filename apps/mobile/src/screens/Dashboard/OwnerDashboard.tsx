@@ -9,7 +9,7 @@ import {
 import React, { useState } from "react";
 import Header from "../../components/Header";
 import { trpc } from "../../utils/trpc";
-import { useRoute, RouteProp } from "@react-navigation/native";
+import { useRoute, RouteProp, useNavigation } from "@react-navigation/native";
 import { TabStackParamList } from "../../navigation/RootNavigator";
 
 import { BarChart } from "react-native-chart-kit";
@@ -19,6 +19,8 @@ import { Picker } from "@react-native-picker/picker";
 import { Post, Attribute, Image } from "@leace/db";
 import Carousel from "react-native-snap-carousel";
 import { Btn } from "../../components/Btn";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 const chartConfig = {
   backgroundGradientFrom: "#FFFFFF",
@@ -31,7 +33,8 @@ const chartConfig = {
 
 export default function OwnerDashboard() {
   const utils = trpc.useContext();
-
+  const navigation =
+    useNavigation<NativeStackNavigationProp<TabStackParamList>>();
   const route = useRoute<RouteProp<TabStackParamList, "MyPosts">>();
   const { userId } = route.params;
 
@@ -135,84 +138,105 @@ export default function OwnerDashboard() {
         </View>
 
         <View className="px-3">
-          <Text className="text-base font-bold">
-            Here are your potential tenants:
-          </Text>
-          <Picker
-            selectedValue={selectedPost?.title}
-            onValueChange={(item) => {
-              if (!posts) return;
-              const [tmp] = posts.filter(
-                (a) => a.title?.toLowerCase() === item?.toLowerCase(),
-              );
-              if (!tmp) return;
-              setSelectedPost(() => tmp);
-            }}
-          >
-            {posts?.map((a, key) => (
-              <Picker.Item label={a.title ?? ""} value={a.title} key={key} />
-            ))}
-          </Picker>
-          <View>
-            {tenants && tenants?.length > 0 ? (
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
-              <Carousel
-                layout={"default"}
-                data={tenants}
-                sliderWidth={Dimensions.get("window").width - 20}
-                itemWidth={Dimensions.get("window").width - 20}
-                renderItem={({ item }) => {
-                  return (
-                    <View
-                      className={`${
-                        item.isPremium ? "border-yellow-300" : "border-indigo"
-                      } flex h-32 flex-col items-center justify-around rounded-md border`}
-                    >
-                      <View className="flex flex-row items-center space-x-2">
-                        <View className="h-16 w-16">
-                          <RNImage
-                            className={"mr-4 h-16 w-16 rounded-full"}
-                            source={{ uri: item.image ?? "" }}
-                          ></RNImage>
-                        </View>
-                        <View className="flex flex-col">
-                          <Text className="font-bold">
-                            {item.firstName} {item.lastName}
-                          </Text>
-                          <Text className="text-xs text-gray-400">
-                            {getYO(item.birthDate ?? new Date())} years old
-                          </Text>
-                        </View>
-                      </View>
-                      <View className="flex w-full flex-row justify-around">
-                        <Btn
-                          title="Accept"
-                          onPress={() => onLike(item.id)}
-                        ></Btn>
-                        <Btn
-                          title="Decline"
-                          className="border-indigo border-2"
-                          bgColor="#FFFFFF"
-                          textColor="#6366f1"
-                          onPress={() => onDislike(item.id)}
-                        ></Btn>
-                      </View>
-                    </View>
+          {posts && posts.length > 0 ? (
+            <>
+              <Text className="text-base font-bold">
+                Here are your potential tenants:
+              </Text>
+              <Picker
+                selectedValue={selectedPost?.title}
+                onValueChange={(item) => {
+                  if (!posts) return;
+                  const [tmp] = posts.filter(
+                    (a) => a.title?.toLowerCase() === item?.toLowerCase(),
                   );
+                  if (!tmp) return;
+                  setSelectedPost(() => tmp);
                 }}
-              ></Carousel>
-            ) : (
-              <View className="py-4">
-                <Text className="text-center text-base font-bold">
-                  No result :(
-                </Text>
-                <Text className="text-center text-xs text-gray-400">
-                  It seems like nobody has liked your post yet...
-                </Text>
+              >
+                {posts?.map((a, key) => (
+                  <Picker.Item
+                    label={a.title ?? ""}
+                    value={a.title}
+                    key={key}
+                  />
+                ))}
+              </Picker>
+              <View>
+                {tenants && tenants?.length > 0 ? (
+                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                  // @ts-ignore
+                  <Carousel
+                    layout={"default"}
+                    data={tenants}
+                    sliderWidth={Dimensions.get("window").width - 20}
+                    itemWidth={Dimensions.get("window").width - 20}
+                    renderItem={({ item }) => {
+                      return (
+                        <View
+                          className={`${
+                            item.isPremium
+                              ? "border-yellow-300"
+                              : "border-indigo"
+                          } flex h-32 flex-col items-center justify-around rounded-md border`}
+                        >
+                          <View className="flex flex-row items-center space-x-2">
+                            <View className="h-16 w-16">
+                              <RNImage
+                                className={"mr-4 h-16 w-16 rounded-full"}
+                                source={{ uri: item.image ?? "" }}
+                              ></RNImage>
+                            </View>
+                            <View className="flex flex-col">
+                              <Text className="font-bold">
+                                {item.firstName} {item.lastName}
+                              </Text>
+                              <Text className="text-xs text-gray-400">
+                                {getYO(item.birthDate ?? new Date())} years old
+                              </Text>
+                            </View>
+                          </View>
+                          <View className="flex w-full flex-row justify-around">
+                            <Btn
+                              title="Accept"
+                              onPress={() => onLike(item.id)}
+                            ></Btn>
+                            <Btn
+                              title="Decline"
+                              className="border-indigo border-2"
+                              bgColor="#FFFFFF"
+                              textColor="#6366f1"
+                              onPress={() => onDislike(item.id)}
+                            ></Btn>
+                          </View>
+                        </View>
+                      );
+                    }}
+                  ></Carousel>
+                ) : (
+                  <View className="py-4">
+                    <Text className="text-center text-base font-bold">
+                      No result :(
+                    </Text>
+                    <Text className="text-center text-xs text-gray-400">
+                      It seems like nobody has liked your post yet...
+                    </Text>
+                  </View>
+                )}
               </View>
-            )}
-          </View>
+            </>
+          ) : (
+            <>
+              <TouchableOpacity
+                className="border-indigo bg-indigo rounded-md border py-2"
+                onPress={() => navigation.navigate("CreatePost", { userId })}
+              >
+                <Text className="text-center text-base font-bold text-white">
+                  Take the first step by creating a post !
+                </Text>
+              </TouchableOpacity>
+            </>
+          )}
         </View>
 
         <View className="h-[250px]">
@@ -227,11 +251,6 @@ export default function OwnerDashboard() {
                       .map((a) => a.count)
                       .reduce((a, b) => a + b, 0)}
                   </Text>
-                  <Icon
-                    name="unfold-more-horizontal"
-                    size={20}
-                    type="material-community"
-                  />
                 </View>
               </View>
               <BarChart
@@ -259,11 +278,6 @@ export default function OwnerDashboard() {
                       .map((a) => a.count)
                       .reduce((a, b) => a + b, 0)}
                   </Text>
-                  <Icon
-                    name="unfold-more-horizontal"
-                    size={20}
-                    type="material-community"
-                  />
                 </View>
               </View>
               <BarChart
@@ -290,11 +304,6 @@ export default function OwnerDashboard() {
                       .map((a) => a.count)
                       .reduce((a, b) => a + b, 0)}
                   </Text>
-                  <Icon
-                    name="unfold-more-horizontal"
-                    size={20}
-                    type="material-community"
-                  />
                 </View>
               </View>
               <BarChart

@@ -337,7 +337,7 @@ export default function UploadDocuments({
           title={loading.message}
           bgColor="#6C47FF"
           onPress={!loading.status ? finishOnboarding : undefined}
-          spinner
+          spinner={loading.status}
         />
       </View>
     </ScrollView>

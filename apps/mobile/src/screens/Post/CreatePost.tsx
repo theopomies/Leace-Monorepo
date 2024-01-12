@@ -131,7 +131,7 @@ export default function CreatePost() {
   const attributes = trpc.attribute.updatePostAttributes.useMutation();
 
   async function createPost() {
-    setLoading(() => ({ status: true, message: "Uploading files..." }));
+    setLoading(() => ({ status: true, message: "Creating post..." }));
     const response = await post.mutateAsync(postInfo);
     await attributes.mutateAsync({ ...postAttrs, postId: response.id });
     Promise.all(
@@ -331,8 +331,9 @@ export default function CreatePost() {
               >
                 <Btn
                   className="w-full"
-                  title="Submit"
+                  title={loading.message}
                   bgColor="#6466f1"
+                  spinner={loading.status}
                   onPress={!loading.status ? validateAndSetAttrs : undefined}
                 ></Btn>
               </View>
