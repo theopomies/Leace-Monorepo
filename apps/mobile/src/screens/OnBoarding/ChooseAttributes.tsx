@@ -12,60 +12,111 @@ export default function ChooseAttributes({
   setProgress,
 }: IStep) {
   const [attrs, setAttrs] = useState<IUserAttrs | undefined>({ userId });
-  const userAttributes = trpc.attribute.updateUserAttributes.useMutation({
-    onSuccess() {
-      setProgress(82);
-      setStep("DOCUMENTS_COMPLETION");
-    },
-  });
+  const userAttributes = trpc.attribute.updateUserAttributes.useMutation();
 
   const [showLocationError, setShowLocationError] = useState(false);
   const [showMinPriceError, setShowMinPriceError] = useState(false);
   const [showMaxPriceError, setShowMaxPriceError] = useState(false);
   const [showMinSizeError, setShowMinSizeError] = useState(false);
   const [showMaxSizeError, setShowMaxSizeError] = useState(false);
+  const [showSizeError, setShowSizeError] = useState(false);
+  const [showPriceError, setShowPriceError] = useState(false);
+  const [showRentDateError, setShowRentDateError] = useState(false);
 
-  const handleFinishSettingUp = () => {
-    // Check for all errors and set the corresponding state variables
+  const handleFinishSettingUp = async () => {
+    let isValid = true;
+
     if (!attrs?.location) {
+      isValid = false;
       setShowLocationError(true);
     } else {
       setShowLocationError(false);
     }
 
-    if (isNaN(attrs?.minPrice as number) || attrs?.minPrice === undefined) {
+    if (
+      attrs?.minPrice === undefined ||
+      isNaN(attrs?.minPrice as number) ||
+      attrs.minPrice <= 0
+    ) {
+      isValid = false;
       setShowMinPriceError(true);
     } else {
       setShowMinPriceError(false);
     }
 
-    if (isNaN(attrs?.maxPrice as number) || attrs?.maxPrice === undefined) {
+    if (
+      attrs?.maxPrice === undefined ||
+      isNaN(attrs?.maxPrice as number) ||
+      attrs.maxPrice <= 0
+    ) {
+      isValid = false;
       setShowMaxPriceError(true);
     } else {
       setShowMaxPriceError(false);
     }
 
-    if (isNaN(attrs?.minSize as number) || attrs?.minSize === undefined) {
+    if (
+      attrs?.minSize === undefined ||
+      isNaN(attrs.minSize as number) ||
+      attrs.minSize <= 0
+    ) {
+      isValid = false;
       setShowMinSizeError(true);
     } else {
       setShowMinSizeError(false);
     }
 
-    if (isNaN(attrs?.maxSize as number) || attrs?.maxSize === undefined) {
+    if (
+      attrs?.maxSize === undefined ||
+      isNaN(attrs.maxSize as number) ||
+      attrs.maxSize <= 0
+    ) {
+      isValid = false;
       setShowMaxSizeError(true);
     } else {
       setShowMaxSizeError(false);
     }
 
-    // If no errors, proceed with mutation
     if (
-      !showLocationError &&
-      !showMinPriceError &&
-      !showMaxPriceError &&
-      !showMinSizeError &&
-      !showMaxSizeError
+      attrs?.rentStartDate === undefined ||
+      attrs?.rentEndDate === undefined ||
+      (attrs?.rentStartDate &&
+        attrs?.rentEndDate &&
+        attrs.rentStartDate.getTime() >= attrs.rentEndDate.getTime())
     ) {
+      isValid = false;
+      setShowRentDateError(true);
+    } else {
+      setShowRentDateError(false);
+    }
+
+    if (
+      attrs?.minPrice !== undefined &&
+      attrs?.maxPrice !== undefined &&
+      attrs.minPrice >= attrs.maxPrice
+    ) {
+      isValid = false;
+      setShowPriceError(true);
+    } else {
+      setShowPriceError(false);
+    }
+
+    if (
+      attrs?.minSize !== undefined &&
+      attrs?.maxSize !== undefined &&
+      attrs.minSize >= attrs.maxSize
+    ) {
+      isValid = false;
+      setShowSizeError(true);
+    } else {
+      setShowSizeError(false);
+    }
+
+    if (isValid) {
       userAttributes.mutate({ userId, ...attrs });
+
+      setProgress(82);
+      setStep("DOCUMENTS_COMPLETION");
     }
   };
 
@@ -88,6 +139,9 @@ export default function ChooseAttributes({
             showMaxPriceErrorCallback={showMaxPriceError}
             showMinSizeErrorCallback={showMinSizeError}
             showMaxSizeErrorCallback={showMaxSizeError}
+            showPriceErrorCallback={showPriceError}
+            showRentDateErrorCallback={showRentDateError}
+            showSizeErrorCallback={showSizeError}
           />
         </View>
         <View className="flex flex-row justify-between px-8 pb-4">

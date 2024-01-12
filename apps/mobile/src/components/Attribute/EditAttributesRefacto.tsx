@@ -22,6 +22,9 @@ interface ICreateUserAttrs {
   showMaxPriceErrorCallback?: boolean;
   showMinSizeErrorCallback?: boolean;
   showMaxSizeErrorCallback?: boolean;
+  showPriceErrorCallback?: boolean;
+  showSizeErrorCallback?: boolean;
+  showRentDateErrorCallback?: boolean;
 }
 
 function AttributeBtn({ name, status, iconName }: IAttributeBtn) {
@@ -76,6 +79,9 @@ export default function EditAttributesRefacto({
   showMaxPriceErrorCallback,
   showMinSizeErrorCallback,
   showMaxSizeErrorCallback,
+  showPriceErrorCallback,
+  showSizeErrorCallback,
+  showRentDateErrorCallback,
 }: ICreateUserAttrs) {
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(false);
@@ -135,7 +141,9 @@ export default function EditAttributesRefacto({
           onChangeText={(text) => setAttrs({ ...attrs, location: text })}
         />
         {!attrs.location && showErrorCallback && (
-          <Text className="mb-9 text-red-500">{"Location"}</Text>
+          <Text className="mb-9 text-red-500">
+            {"Please select a valid location"}
+          </Text>
         )}
       </View>
       {!onBoarding && (
@@ -189,6 +197,9 @@ export default function EditAttributesRefacto({
               </Text>
             </View>
           </TouchableOpacity>
+          {showRentDateErrorCallback && (
+            <Text className="text-red-500">{"Invalid rent dates"}</Text>
+          )}
         </View>
         <View className="flex h-16 w-1/2 flex-col items-start rounded-xl">
           <Text className="ml-1 text-base font-bold text-black">Rent end</Text>
@@ -229,8 +240,15 @@ export default function EditAttributesRefacto({
                 />
                 {isNaN(attrs.minPrice as number) &&
                   showMinPriceErrorCallback && (
-                    <Text className="text-red-500">{"Min Price"}</Text>
+                    <Text className="text-red-500">
+                      {"Min price is required"}
+                    </Text>
                   )}
+                {showPriceErrorCallback && (
+                  <Text className=" text-red-500">
+                    {"Min price can't be higher than max price"}
+                  </Text>
+                )}
               </View>
               {/* <Text className="font-light text-black"> €</Text> */}
             </View>
@@ -254,7 +272,9 @@ export default function EditAttributesRefacto({
                 />
                 {isNaN(attrs.maxPrice as number) &&
                   showMaxPriceErrorCallback && (
-                    <Text className="text-red-500">{"Max Price"}</Text>
+                    <Text className="text-red-500">
+                      {"Max price is required"}
+                    </Text>
                   )}
               </View>
             </View>
@@ -283,7 +303,12 @@ export default function EditAttributesRefacto({
                   defaultValue={attrs.minSize ?? ""}
                 />
                 {isNaN(attrs.minSize as number) && showMinSizeErrorCallback && (
-                  <Text className="text-red-500">{"Min Size"}</Text>
+                  <Text className="text-red-500">{"Min size is required"}</Text>
+                )}
+                {showSizeErrorCallback && (
+                  <Text className="text-red-500">
+                    {"Min size can't be higher than max size"}
+                  </Text>
                 )}
               </View>
             </View>
@@ -306,7 +331,7 @@ export default function EditAttributesRefacto({
                   defaultValue={attrs.maxSize ?? ""}
                 />
                 {isNaN(attrs.maxSize as number) && showMaxSizeErrorCallback && (
-                  <Text className="text-red-500">{"Max Size"}</Text>
+                  <Text className="text-red-500">{"Max size is required"}</Text>
                 )}
               </View>
             </View>

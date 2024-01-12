@@ -120,11 +120,126 @@ export default function EditProfile() {
     }, [route]),
   );
 
+  const [showFirstNameError, setShowFirstNameError] = useState(false);
+  const [showLastNameError, setShowLastNameError] = useState(false);
+  const [showLocationError, setShowLocationError] = useState(false);
+  const [showMinPriceError, setShowMinPriceError] = useState(false);
+  const [showMaxPriceError, setShowMaxPriceError] = useState(false);
+  const [showMinSizeError, setShowMinSizeError] = useState(false);
+  const [showMaxSizeError, setShowMaxSizeError] = useState(false);
+  const [showSizeError, setShowSizeError] = useState(false);
+  const [showPriceError, setShowPriceError] = useState(false);
+  const [showRentDateError, setShowRentDateError] = useState(false);
+
   function updateUser() {
     if (!user) return;
-    userMutation.mutate({ ...user });
-    if (showAttrs && attrs) {
-      attributesMutation.mutate(attrs);
+
+    let isValid = true;
+
+    if (!user.firstName || /\d/.test(user.firstName)) {
+      isValid = false;
+      setShowFirstNameError(true);
+    } else {
+      setShowFirstNameError(false);
+    }
+
+    if (!user.lastName || /\d/.test(user.lastName)) {
+      isValid = false;
+      setShowLastNameError(true);
+    } else {
+      setShowLastNameError(false);
+    }
+
+    if (!attrs?.location) {
+      isValid = false;
+      setShowLocationError(true);
+    } else {
+      setShowLocationError(false);
+    }
+
+    if (
+      attrs?.minPrice === undefined ||
+      isNaN(attrs?.minPrice as number) ||
+      attrs.minPrice <= 0
+    ) {
+      isValid = false;
+      setShowMinPriceError(true);
+    } else {
+      setShowMinPriceError(false);
+    }
+
+    if (
+      attrs?.maxPrice === undefined ||
+      isNaN(attrs?.maxPrice as number) ||
+      attrs.maxPrice <= 0
+    ) {
+      isValid = false;
+      setShowMaxPriceError(true);
+    } else {
+      setShowMaxPriceError(false);
+    }
+
+    if (
+      attrs?.minSize === undefined ||
+      isNaN(attrs.minSize as number) ||
+      attrs.minSize <= 0
+    ) {
+      isValid = false;
+      setShowMinSizeError(true);
+    } else {
+      setShowMinSizeError(false);
+    }
+
+    if (
+      attrs?.maxSize === undefined ||
+      isNaN(attrs.maxSize as number) ||
+      attrs.maxSize <= 0
+    ) {
+      isValid = false;
+      setShowMaxSizeError(true);
+    } else {
+      setShowMaxSizeError(false);
+    }
+
+    if (
+      attrs?.rentStartDate &&
+      attrs?.rentEndDate &&
+      attrs.rentStartDate.getTime() >= attrs.rentEndDate.getTime()
+    ) {
+      isValid = false;
+      setShowRentDateError(true);
+    } else {
+      setShowRentDateError(false);
+    }
+
+    if (
+      attrs?.minPrice !== undefined &&
+      attrs?.maxPrice !== undefined &&
+      attrs.minPrice >= attrs.maxPrice
+    ) {
+      isValid = false;
+      setShowPriceError(true);
+    } else {
+      setShowPriceError(false);
+    }
+
+    if (
+      attrs?.minSize !== undefined &&
+      attrs?.maxSize !== undefined &&
+      attrs.minSize >= attrs.maxSize
+    ) {
+      isValid = false;
+      setShowSizeError(true);
+    } else {
+      setShowSizeError(false);
+    }
+
+    if (isValid) {
+      userMutation.mutate({ ...user });
+      if (showAttrs && attrs) {
+        attributesMutation.mutate(attrs);
+      }
+      navigation.navigate("Profile", { userId });
     }
   }
 
@@ -198,9 +313,7 @@ export default function EditProfile() {
               style={{ borderWidth: 1.5, borderColor: "#111827" }}
             />
 
-
-            <View className="flex flex-col w-full items-center justify-center  space-y-2 py-2">
-
+            <View className="flex w-full flex-col items-center justify-center  space-y-2 py-2">
               <TextInput
                 className="w-1/2 text-3xl font-bold text-black"
                 placeholder="First Name"
@@ -209,18 +322,27 @@ export default function EditProfile() {
                 style={{ borderBottomWidth: 1 }}
                 onChangeText={(text) => setUser({ ...user, firstName: text })}
               />
+              {showFirstNameError && (
+                <Text className="text-red-500">
+                  {"Enter a valid first name"}
+                </Text>
+              )}
               <TextInput
                 className="w-1/2 text-3xl text-black"
                 placeholder="Last Name"
                 placeholderTextColor={"black"}
                 defaultValue={user.lastName ?? ""}
-                style={{  borderBottomWidth: 1 }}
+                style={{ borderBottomWidth: 1 }}
                 onChangeText={(text) => setUser({ ...user, lastName: text })}
               />
+              {showLastNameError && (
+                <Text className="text-red-500">
+                  {"Enter a valid last name"}
+                </Text>
+              )}
               <View className="w-full bg-[#6C47FF] py-6">
-
                 <TouchableOpacity
-                  className="flex flex-row items-center justify-center space-x-1 rounded-md px-2 py-2 border mx-32 bg-[#F1F5F9]"
+                  className="mx-32 flex flex-row items-center justify-center space-x-1 rounded-md border bg-[#F1F5F9] px-2 py-2"
                   style={{ borderColor: "black" }}
                   onPress={updateUser}
                 >
@@ -232,11 +354,8 @@ export default function EditProfile() {
                   ></Icon>
                   <Text className=" text-lg font-bold text-black">Save</Text>
                 </TouchableOpacity>
-
               </View>
             </View>
-
-
           </View>
           <View style={{ flex: 1 }}>
             <EditInfoRefacto user={user} setUser={setUser} />
@@ -249,6 +368,14 @@ export default function EditProfile() {
                   userId={userId}
                   attrs={attrs}
                   setAttrs={setAttrs}
+                  showErrorCallback={showLocationError}
+                  showMinPriceErrorCallback={showMinPriceError}
+                  showMaxPriceErrorCallback={showMaxPriceError}
+                  showMinSizeErrorCallback={showMinSizeError}
+                  showMaxSizeErrorCallback={showMaxSizeError}
+                  showPriceErrorCallback={showPriceError}
+                  showRentDateErrorCallback={showRentDateError}
+                  showSizeErrorCallback={showSizeError}
                 />
               </View>
             )}
