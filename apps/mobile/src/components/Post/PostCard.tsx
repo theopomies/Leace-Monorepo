@@ -19,15 +19,13 @@ export default function PostCard({ data, userId }: IPostCard) {
   const navigation =
     useNavigation<NativeStackNavigationProp<TabStackParamList>>();
 
-  const { data: images, isLoading } = trpc.image.getSignedPostUrl.useQuery({
+  const { data: images } = trpc.image.getSignedPostUrl.useQuery({
     postId: data.id,
   });
 
-  if (isLoading) return null;
-
   return (
     <TouchableOpacity
-      className="border-indigo mt-3 flex min-h-[100px] flex-row rounded-md border p-2"
+      className="border-indigo mt-3 flex min-h-[100px] animate-pulse flex-row rounded-md border p-2"
       onPress={() => {
         navigation.navigate("PostInfo", {
           userId,
@@ -52,7 +50,6 @@ export default function PostCard({ data, userId }: IPostCard) {
       )}
       <View className="flex-1 justify-between pl-2">
         <Text className="font-bold">{data.title}</Text>
-        <Text className="font-bold">{data.desc}</Text>
         <View>
           <Text className="font-light">Price: {data.attribute?.price} €</Text>
           <Text className="font-light">
