@@ -1,7 +1,6 @@
 import { View, SafeAreaView } from "react-native";
 import React, { useState } from "react";
 import Welcome from "./Welcome";
-// import { Role } from "../../types/onboarding";
 import SelectRole from "./SelectRole";
 import CreateProfile from "./CreateProfile";
 import Toast from "react-native-toast-message";

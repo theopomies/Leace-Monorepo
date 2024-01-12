@@ -19,6 +19,9 @@ import { Icon } from "react-native-elements";
 import { IStep } from "../../types/onboarding";
 import { trpc } from "../../utils/trpc";
 import { Role } from "@leace/db";
+import * as FileSystem from "expo-file-system";
+import axios from "axios";
+import { Buffer } from "buffer";
 
 export default function CreateProfile({
   userId,
@@ -34,8 +37,16 @@ export default function CreateProfile({
   const [phoneNumber, setPhoneNumber] = useState("");
   const [description, setDescription] = useState("");
   const [profile, setProfile] = useState<DocumentPickerAsset>();
+  const [loading, setLoading] = useState({
+    status: false,
+    message: "Next",
+  });
   const userProfile = trpc.user.updateUserById.useMutation({
     onSuccess() {
+      setLoading({
+        status: false,
+        message: "Next",
+      });
       if (selectedRole === "TENANT") {
         setProgress(66);
         setStep("PREFERENCES_COMPLETION");
@@ -45,6 +56,15 @@ export default function CreateProfile({
       }
     },
   });
+
+  const imageMutation = trpc.image.putSignedUrl.useMutation();
+  const { refetch: refetchPicture } = trpc.image.getSignedUserUrl.useQuery(
+    {
+      userId,
+      fileType: profile?.mimeType ?? "",
+    },
+    { enabled: false },
+  );
 
   async function pickImage() {
     try {
@@ -76,14 +96,49 @@ export default function CreateProfile({
     if (!(firstName && lastName && phoneNumber && description))
       return setShow(true);
     if (!isAdult()) return setShow(true);
-    userProfile.mutate({
-      userId,
-      firstName,
-      lastName,
-      phoneNumber,
-      description,
-      birthDate,
+    setLoading({
+      status: true,
+      message: "Creating account...",
     });
+    if (!profile) {
+      userProfile.mutate({
+        userId,
+        firstName,
+        lastName,
+        phoneNumber,
+        description,
+        birthDate,
+      });
+      return;
+    }
+    imageMutation
+      .mutateAsync({ userId, fileType: profile?.mimeType ?? "" })
+      .then(async (url) => {
+        if (!url || !profile) return;
+        const imageContent = await FileSystem.readAsStringAsync(profile.uri, {
+          encoding: FileSystem.EncodingType.Base64,
+        });
+        const buffer = Buffer.from(imageContent, "base64");
+        await axios({
+          method: "PUT",
+          url: url,
+          data: buffer,
+          headers: { "Content-Type": profile.mimeType },
+        })
+          .then(async () => {
+            const { data: res } = await refetchPicture();
+            await userProfile.mutateAsync({
+              image: res,
+              userId,
+              firstName,
+              lastName,
+              phoneNumber,
+              description,
+              birthDate,
+            });
+          })
+          .catch((e) => console.error(e));
+      });
   }
 
   return (
@@ -227,8 +282,9 @@ export default function CreateProfile({
             }}
           />
           <Btn
-            title={`${selectedRole === "TENANT" ? "Next" : "Upload documents"}`}
-            onPress={validate}
+            title={loading.message}
+            onPress={!loading.status ? validate : undefined}
+            spinner={loading.status}
           />
         </View>
       </ScrollView>
