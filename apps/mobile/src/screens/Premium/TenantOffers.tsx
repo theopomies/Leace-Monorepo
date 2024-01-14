@@ -168,7 +168,7 @@ const TenantOffers = () => {
         publishableKey="pk_test_51NNNqUKqsAbQAwatETMGlUoLBiwWN5ZP27fCOs3YQbC76Sk5FNHN3xpdyrdD2gGIfTFFho7F5a8x8RCw8rWJXYb800BBEbzKLo"
         merchantIdentifier="merchant.identifier"
       >
-        <SafeAreaView>
+        <SafeAreaView className="bg-white">
           <View className={`h-full rounded-xl bg-white`}>
             <View className="h-2/6 items-center rounded-xl ">
               <Image

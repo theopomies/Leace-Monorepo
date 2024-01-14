@@ -1,4 +1,3 @@
-import { Platform, View } from "react-native";
 import React from "react";
 import { PaymentResult } from "../../components/Premium";
 import { trpc } from "../../../../web/src/utils/trpc";
@@ -38,18 +37,16 @@ const Result = () => {
   };
 
   return (
-    <View className={`${Platform.OS === "ios" ? "mt-20" : ""}`}>
-      <PaymentResult
-        isValidPayment={isValidPayment}
-        email={user?.email}
-        amount={route.params.amount}
-        product={route.params.product}
-        firstName={user?.firstName}
-        lastName={user?.lastName}
-        userId={""}
-        updateStatus={updateStatus}
-      />
-    </View>
+    <PaymentResult
+      isValidPayment={isValidPayment}
+      email={user?.email}
+      amount={route.params.amount}
+      product={route.params.product}
+      firstName={user?.firstName}
+      lastName={user?.lastName}
+      userId={""}
+      updateStatus={updateStatus}
+    />
   );
 };
 
