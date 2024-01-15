@@ -2,20 +2,20 @@ import { View, Text, ScrollView, Modal } from "react-native";
 import React, { useState } from "react";
 import { Btn } from "../../components/Btn";
 import * as DocumentPicker from "expo-document-picker";
-import { DocType, Role } from "@leace/db";
+import { DocType } from "@leace/db";
 import { Picker } from "@react-native-picker/picker";
 import { trpc } from "../../utils/trpc";
 import * as FileSystem from "expo-file-system";
 import axios from "axios";
 import { Buffer } from "buffer";
 import Toast from "react-native-toast-message";
+import { IAccountState } from "../../types/onboarding";
 
 export default function UploadDocuments({
   userId,
-  selectedRole,
-}: {
+  account,
+}: IAccountState & {
   userId: string;
-  selectedRole: Role;
 }) {
   const utils = trpc.useContext();
 
@@ -301,7 +301,7 @@ export default function UploadDocuments({
             ></Btn>
           </View>
         </View>
-        {selectedRole === "TENANT" && (
+        {account.role === "TENANT" && (
           <View className="flex flex-col">
             <Text className="font-bold">Proof of professional situation</Text>
             <View className="flex flex-row items-center justify-between">
@@ -316,7 +316,7 @@ export default function UploadDocuments({
             </View>
           </View>
         )}
-        {selectedRole === "TENANT" && (
+        {account.role === "TENANT" && (
           <View className="flex flex-col">
             <Text className="font-bold">Proof of financial situation</Text>
             <View className="flex flex-row items-center justify-between">

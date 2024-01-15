@@ -1,6 +1,6 @@
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import React from "react";
-import { IRoleState, IStep } from "../../types/onboarding";
+import { IAccountState, IStep } from "../../types/onboarding";
 import { trpc } from "../../utils/trpc";
 
 interface IRole {
@@ -68,8 +68,8 @@ export default function SelectRole({
   setStep,
   setProgress,
   userId,
-  setSelectedRole,
-}: IStep & IRoleState) {
+  setAccount,
+}: IStep & IAccountState) {
   const userRole = trpc.user.updateUserRoleById.useMutation();
 
   return (
@@ -87,7 +87,8 @@ export default function SelectRole({
               userRole.mutateAsync({ userId, role: role.role }).then(() => {
                 setProgress(50);
                 setStep("IDENTITY_COMPLETION");
-                setSelectedRole(role.role);
+                // setSelectedRole(role.role);
+                setAccount((a) => ({ ...a, role: role.role }));
               });
             }}
           />

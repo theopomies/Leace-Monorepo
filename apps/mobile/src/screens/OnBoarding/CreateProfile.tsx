@@ -16,9 +16,8 @@ import {
 } from "expo-document-picker";
 import Toast from "react-native-toast-message";
 import { Icon } from "react-native-elements";
-import { IStep } from "../../types/onboarding";
+import { IAccountState, IStep } from "../../types/onboarding";
 import { trpc } from "../../utils/trpc";
-import { Role } from "@leace/db";
 import * as FileSystem from "expo-file-system";
 import axios from "axios";
 import { Buffer } from "buffer";
@@ -27,15 +26,11 @@ export default function CreateProfile({
   userId,
   setStep,
   setProgress,
-  selectedRole,
-}: IStep & { selectedRole: Role }) {
+  account,
+  setAccount,
+}: IStep & IAccountState) {
   const [show, setShow] = useState(false);
   const [open, setOpen] = useState(false);
-  const [birthDate, setBirthDate] = useState(new Date());
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [description, setDescription] = useState("");
   const [profile, setProfile] = useState<DocumentPickerAsset>();
   const [loading, setLoading] = useState({
     status: false,
@@ -47,13 +42,21 @@ export default function CreateProfile({
         status: false,
         message: "Next",
       });
-      if (selectedRole === "TENANT") {
+      if (account.role === "TENANT") {
         setProgress(66);
         setStep("PREFERENCES_COMPLETION");
       } else {
         setProgress(75);
         setStep("DOCUMENTS_COMPLETION");
       }
+    },
+    onError() {
+      Toast.show({
+        type: "error",
+        text1: "This phone number is already in use.",
+        text2: "Please choose a different number",
+      });
+      setLoading({ status: false, message: "Next" });
     },
   });
 
@@ -89,11 +92,18 @@ export default function CreateProfile({
     const eighteenYearsAgo = new Date();
     const currentDate = new Date();
     eighteenYearsAgo.setFullYear(currentDate.getFullYear() - 18);
-    return birthDate < eighteenYearsAgo;
+    return account.birthDate < eighteenYearsAgo;
   }
 
   function validate() {
-    if (!(firstName && lastName && phoneNumber && description))
+    if (
+      !(
+        account.firstName &&
+        account.lastName &&
+        account.phoneNumber &&
+        account.description
+      )
+    )
       return setShow(true);
     if (!isAdult()) return setShow(true);
     setLoading({
@@ -103,11 +113,11 @@ export default function CreateProfile({
     if (!profile) {
       userProfile.mutate({
         userId,
-        firstName,
-        lastName,
-        phoneNumber,
-        description,
-        birthDate,
+        firstName: account.firstName,
+        lastName: account.lastName,
+        phoneNumber: account.phoneNumber,
+        description: account.description,
+        birthDate: account.birthDate,
       });
       return;
     }
@@ -130,11 +140,11 @@ export default function CreateProfile({
             await userProfile.mutateAsync({
               image: res,
               userId,
-              firstName,
-              lastName,
-              phoneNumber,
-              description,
-              birthDate,
+              firstName: account.firstName,
+              lastName: account.lastName,
+              phoneNumber: account.phoneNumber,
+              description: account.description,
+              birthDate: account.birthDate,
             });
           })
           .catch((e) => console.error(e));
@@ -145,11 +155,11 @@ export default function CreateProfile({
     <>
       <DateTimePickerModal
         isVisible={open}
-        date={birthDate}
+        date={account.birthDate}
         mode={"date"}
         onConfirm={(date) => {
           setOpen(false);
-          setBirthDate(date);
+          setAccount((a) => ({ ...a, birthDate: date }));
         }}
         onCancel={() => setOpen(false)}
       />
@@ -168,13 +178,24 @@ export default function CreateProfile({
                 }}
               />
             ) : (
-              <View className="flex h-full items-center justify-center rounded-full border border-[#6366f1]">
-                <Icon
-                  name="add-a-photo"
-                  type="material-icons"
-                  color="#6366f1"
-                />
-              </View>
+              <>
+                {account.image ? (
+                  <Image
+                    className="h-full w-full rounded-full object-cover"
+                    source={{
+                      uri: account.image,
+                    }}
+                  />
+                ) : (
+                  <View className="flex h-full items-center justify-center rounded-full border border-[#6366f1]">
+                    <Icon
+                      name="add-a-photo"
+                      type="material-icons"
+                      color="#6366f1"
+                    />
+                  </View>
+                )}
+              </>
             )}
           </TouchableOpacity>
         </View>
@@ -185,10 +206,12 @@ export default function CreateProfile({
               <View className="relative">
                 <TextInput
                   className="border-indigo h-9 rounded-lg border pl-2"
-                  value={firstName}
-                  onChangeText={(text) => setFirstName(text)}
+                  value={account.firstName}
+                  onChangeText={(text) =>
+                    setAccount((a) => ({ ...a, firstName: text }))
+                  }
                 ></TextInput>
-                {!firstName && show && (
+                {!account.firstName && show && (
                   <Text
                     className="text-light-red absolute -bottom-3"
                     style={{ fontSize: 10 }}
@@ -203,10 +226,12 @@ export default function CreateProfile({
               <View className="relative">
                 <TextInput
                   className="border-indigo h-9 rounded-lg border pl-2"
-                  value={lastName}
-                  onChangeText={(text) => setLastName(text)}
+                  value={account.lastName}
+                  onChangeText={(text) =>
+                    setAccount((a) => ({ ...a, lastName: text }))
+                  }
                 ></TextInput>
-                {!lastName && show && (
+                {!account.lastName && show && (
                   <Text
                     className="text-light-red absolute -bottom-3"
                     style={{ fontSize: 10 }}
@@ -221,7 +246,7 @@ export default function CreateProfile({
               <View className="relative">
                 <TouchableOpacity onPress={() => setOpen(true)}>
                   <Text className="border-indigo h-9 rounded-lg border pl-2 leading-9">
-                    {birthDate.toLocaleDateString()}
+                    {account.birthDate.toLocaleDateString()}
                   </Text>
                   {!isAdult() && show && (
                     <Text
@@ -239,11 +264,13 @@ export default function CreateProfile({
               <View className="relative">
                 <TextInput
                   className="border-indigo h-9 rounded-lg border pl-2"
-                  value={phoneNumber}
+                  value={account.phoneNumber}
                   inputMode="tel"
-                  onChangeText={(text) => setPhoneNumber(text)}
+                  onChangeText={(text) =>
+                    setAccount((a) => ({ ...a, phoneNumber: text }))
+                  }
                 ></TextInput>
-                {!phoneNumber && show && (
+                {!account.phoneNumber && show && (
                   <Text
                     className="text-light-red absolute -bottom-3"
                     style={{ fontSize: 10 }}
@@ -259,10 +286,12 @@ export default function CreateProfile({
                 className="border-indigo rounded-lg border pl-2"
                 multiline
                 numberOfLines={4}
-                value={description}
-                onChangeText={(text) => setDescription(text)}
+                value={account.description}
+                onChangeText={(text) =>
+                  setAccount((a) => ({ ...a, description: text }))
+                }
               ></TextInput>
-              {!description && show && (
+              {!account.description && show && (
                 <Text
                   className="text-light-red absolute -bottom-3"
                   style={{ fontSize: 10 }}

@@ -7,7 +7,17 @@ export interface IStep {
   userId: string;
 }
 
-export interface IRoleState {
-  selectedRole: Role;
-  setSelectedRole: React.Dispatch<React.SetStateAction<Role>>;
+interface IOnboardingAccount {
+  role: Role;
+  firstName: string;
+  lastName: string;
+  image: string;
+  phoneNumber: string;
+  description: string;
+  birthDate: Date;
+}
+
+export interface IAccountState {
+  account: IOnboardingAccount;
+  setAccount: React.Dispatch<React.SetStateAction<IOnboardingAccount>>;
 }
