@@ -31,11 +31,6 @@ export default function CreateProfile({
 }: IStep & IAccountState) {
   const [show, setShow] = useState(false);
   const [open, setOpen] = useState(false);
-  // const [birthDate, setBirthDate] = useState(new Date());
-  // const [firstName, setFirstName] = useState("");
-  // const [lastName, setLastName] = useState("");
-  // const [phoneNumber, setPhoneNumber] = useState("");
-  // const [description, setDescription] = useState("");
   const [profile, setProfile] = useState<DocumentPickerAsset>();
   const [loading, setLoading] = useState({
     status: false,
@@ -54,6 +49,14 @@ export default function CreateProfile({
         setProgress(75);
         setStep("DOCUMENTS_COMPLETION");
       }
+    },
+    onError() {
+      Toast.show({
+        type: "error",
+        text1: "This phone number is already in use.",
+        text2: "Please choose a different number",
+      });
+      setLoading({ status: false, message: "Next" });
     },
   });
 
@@ -147,13 +150,7 @@ export default function CreateProfile({
           .catch((e) => console.error(e));
       });
   }
-  /*<View className="flex h-full items-center justify-center rounded-full border border-[#6366f1]">
-                <Icon
-                  name="add-a-photo"
-                  type="material-icons"
-                  color="#6366f1"
-                />
-              </View>*/
+
   return (
     <>
       <DateTimePickerModal
