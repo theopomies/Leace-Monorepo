@@ -1,13 +1,7 @@
 import React, { useEffect } from "react";
-import {
-  Animated,
-  View,
-  TouchableOpacity,
-  Image,
-  Text,
-  Platform,
-} from "react-native";
+import { Animated, View, TouchableOpacity, Image, Text } from "react-native";
 import { Icon } from "react-native-elements";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const PaymentResult = ({
   isValidPayment,
@@ -40,127 +34,73 @@ const PaymentResult = ({
     if (isValidPayment) {
       const delay = setTimeout(() => {
         updateStatus();
-      }, 10000);
+      }, 50000);
 
       return () => clearTimeout(delay);
     }
   }, [isValidPayment]);
 
   return (
-    <View className="">
-      <View className="h items-center justify-center bg-white">
+    <SafeAreaView className="flex-1 bg-white">
+      <View className="flex-1 items-center justify-center overflow-hidden bg-white">
         <Image
           source={require("../../../assets/logo_1024.png")}
-          className="h-52 w-52"
+          className="h-28 w-28"
         />
       </View>
       <View className={"items-center justify-center"}>
-        {isValidPayment ? (
-          <View className=" h-full w-full max-w-md rounded bg-white p-6 shadow-lg">
-            <View className={"items-center justify-center"}>
-              <View
-                className={`h-16 w-16 items-center justify-center rounded-full ${
-                  isValidPayment ? "bg-green-500" : "bg-red-500"
-                }`}
-              >
-                {isValidPayment ? (
-                  <Icon name="check" type="material" color="white" size={30} />
-                ) : (
-                  <Icon name="close" type="material" color="white" size={30} />
-                )}
+        <View className=" w-full rounded bg-white p-6 ">
+          <View className={"items-center justify-center"}>
+            <View
+              className={`h-16 w-16 items-center justify-center rounded-full ${
+                isValidPayment ? "bg-green-500" : "bg-red-500"
+              }`}
+            >
+              <Icon name="check" type="material" color="white" size={30} />
+            </View>
+            <Text
+              className={`mt-2 text-center text-xl font-bold ${
+                isValidPayment ? "text-green-500" : "text-red-500"
+              }`}
+            >
+              {isValidPayment ? "Payment successful!" : "Payment failed!"}
+            </Text>
+            <View className="my-20 w-full space-y-5">
+              <View className="mx-8 flex-row justify-between">
+                <Text className={"text-base font-bold"}>Name</Text>
+                <Text className={"text-base"}>
+                  {firstName} {lastName}
+                </Text>
               </View>
-              <Text
-                className={`mt-2 text-center text-xl font-bold ${
-                  isValidPayment ? "text-green-500" : "text-red-500"
-                }`}
-              >
-                {isValidPayment ? "Payment successful!" : "Payment failed!"}
-              </Text>
-              <View className="my-20 w-full space-y-5">
-                <View className="mx-8 flex-row justify-between">
-                  <Text className={"text-base font-bold"}>Name</Text>
-                  <Text className={"text-base"}>
-                    {firstName} {lastName}
-                  </Text>
-                </View>
-                <View className="mx-8 flex-row justify-between">
-                  <Text className={"text-base font-bold"}>Email</Text>
-                  <Text className={"text-base"}>{email}</Text>
-                </View>
-                <View className="mx-8 flex-row justify-between">
-                  <Text className={"text-base font-bold"}>Product</Text>
-                  <Text className={"text-base"}>{product}</Text>
-                </View>
-                <View className="mx-8 flex-row justify-between">
-                  <Text className={"text-base font-bold"}>Amount paid</Text>
-                  <Text className={"text-base"}>{amount}€</Text>
-                </View>
+              <View className="mx-8 flex-row justify-between">
+                <Text className={"text-base font-bold"}>Email</Text>
+                <Text className={"text-base"}>{email}</Text>
               </View>
-              <View className="mt-4 flex-row space-x-2">
-                <TouchableOpacity
-                  className={"w-24 rounded bg-blue-400 p-2"}
-                  onPress={() => {
-                    updateStatus();
-                  }}
-                >
-                  <Text
-                    className={"text-center text-base font-bold text-white"}
-                  >
-                    Close
-                  </Text>
-                </TouchableOpacity>
+              <View className="mx-8 flex-row justify-between">
+                <Text className={"text-base font-bold"}>Product</Text>
+                <Text className={"text-base"}>{product}</Text>
+              </View>
+              <View className="mx-8 flex-row justify-between">
+                <Text className={"text-base font-bold"}>Amount paid</Text>
+                <Text className={"text-base"}>{amount}€</Text>
               </View>
             </View>
-          </View>
-        ) : (
-          <View className="my-4 w-full max-w-md rounded bg-white p-6 shadow-lg">
-            <View className={"items-center justify-center"}>
-              <View
-                className={`h-16 w-16 items-center justify-center rounded-full bg-red-500`}
+            <View className="mt-4 flex-row space-x-2">
+              <TouchableOpacity
+                className={"bg-indigo w-24 rounded p-2"}
+                onPress={() => {
+                  updateStatus();
+                }}
               >
-                <Icon name="close" type="material" color="white" size={30} />
-              </View>
-              <Text
-                className={`mt-2 text-center text-xl font-bold text-red-500`}
-              >
-                Payment failed!
-              </Text>
-              <View className="my-8 text-center">
-                <Text className="text-base font-bold">
-                  Oops! Something went wrong.
+                <Text className={"text-center text-base font-bold text-white"}>
+                  Close
                 </Text>
-                <Text className="mt-5 text-base">
-                  We're sorry, but the payment could not be processed at this
-                  time.
-                </Text>
-                <Text className="mt-2 text-base">
-                  Possible reasons for failure:
-                </Text>
-                <Text className="text-base">
-                  - Insufficient funds on the card
-                </Text>
-                <Text className="text-base">
-                  - Expired or invalid card details
-                </Text>
-              </View>
-              <View
-                className={`${
-                  Platform.OS === "ios" ? "mt-4" : ""
-                } flex-row space-x-20`}
-              >
-                <TouchableOpacity className={"w-24 rounded bg-blue-400 p-2"}>
-                  <Text
-                    className={"text-center text-base font-bold text-white"}
-                  >
-                    Close
-                  </Text>
-                </TouchableOpacity>
-              </View>
+              </TouchableOpacity>
             </View>
           </View>
-        )}
+        </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

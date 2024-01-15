@@ -102,24 +102,7 @@ function TenantPremiumScreens() {
         component={Result}
         initialParams={{ userId }}
         options={{
-          title: "Go Back",
-          headerLeftContainerStyle: {
-            paddingLeft: 10,
-          },
-          headerLeft: (props) => (
-            <TouchableOpacity
-              onPress={() => {
-                if (props.onPress) props.onPress();
-              }}
-            >
-              <Icon
-                name="arrow-back"
-                color="#0A2472"
-                size={30}
-                type="material-icons"
-              ></Icon>
-            </TouchableOpacity>
-          ),
+          headerShown: false,
         }}
       ></Stack.Screen>
     </Stack.Navigator>
