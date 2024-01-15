@@ -38,7 +38,7 @@ function MessageCard({ data, userId }: IMessageCard) {
         className={`flex ${
           userId !== data.senderId
             ? "items-start bg-[#ececec]"
-            : "items-end bg-[#10316B]"
+            : "bg-indigo items-end"
         } rounded-2xl`}
       >
         <Text
@@ -128,6 +128,7 @@ export default function TenantChat() {
       );
     }
   };
+
   useEffect(() => {
     const yourFunction = () => {
       if (refetch) {
@@ -376,7 +377,7 @@ export default function TenantChat() {
           <Btn
             iconName="description"
             iconType="material"
-            bgColor="#0A2472"
+            bgColor="#6366f1"
             className="rounded-full"
             onPress={() => {
               canSignContract();

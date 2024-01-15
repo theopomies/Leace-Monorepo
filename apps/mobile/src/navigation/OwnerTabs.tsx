@@ -48,7 +48,30 @@ export function OwnerChatScreens() {
           headerShown: false,
         }}
       ></Stack.Screen>
-      <Stack.Screen name="ChatTenant" component={TenantChat}></Stack.Screen>
+      <Stack.Screen
+        name="ChatTenant"
+        component={TenantChat}
+        options={{
+          title: "Go Back",
+          headerLeftContainerStyle: {
+            paddingLeft: 10,
+          },
+          headerLeft: (props) => (
+            <TouchableOpacity
+              onPress={() => {
+                if (props.onPress) props.onPress();
+              }}
+            >
+              <Icon
+                name="arrow-back"
+                color="#6366f1"
+                size={30}
+                type="material-icons"
+              ></Icon>
+            </TouchableOpacity>
+          ),
+        }}
+      ></Stack.Screen>
     </Stack.Navigator>
   );
 }
@@ -84,7 +107,7 @@ function OwnerStackScreens() {
             >
               <Icon
                 name="arrow-back"
-                color="#0A2472"
+                color="#6366f1"
                 size={30}
                 type="material-icons"
               ></Icon>
@@ -108,7 +131,7 @@ function OwnerStackScreens() {
             >
               <Icon
                 name="arrow-back"
-                color="#0A2472"
+                color="#6366f1"
                 size={30}
                 type="material-icons"
               ></Icon>
@@ -133,7 +156,7 @@ function OwnerStackScreens() {
             >
               <Icon
                 name="arrow-back"
-                color="#0A2472"
+                color="#6366f1"
                 size={30}
                 type="material-icons"
               ></Icon>
@@ -176,7 +199,7 @@ export function OwnerProfileScreens() {
             >
               <Icon
                 name="arrow-back"
-                color="#0A2472"
+                color="#6366f1"
                 size={30}
                 type="material-icons"
               ></Icon>
@@ -201,7 +224,7 @@ export function OwnerProfileScreens() {
             >
               <Icon
                 name="arrow-back"
-                color="#0A2472"
+                color="#6366f1"
                 size={30}
                 type="material-icons"
               ></Icon>
@@ -225,7 +248,7 @@ export function OwnerProfileScreens() {
             >
               <Icon
                 name="arrow-back"
-                color="#0A2472"
+                color="#6366f1"
                 size={30}
                 type="material-icons"
               ></Icon>

@@ -179,9 +179,15 @@ export default function TenantMatches() {
             </ScrollView>
           ) : (
             <View className={`flex-1 items-center justify-center px-3`}>
-              <Text className="text-center font-bold">
-                No one has matched with your apartment lease listing, yet.
-              </Text>
+              {role === "TENANT" ? (
+                <Text className="text-center font-bold">
+                  No one has matched with you, yet.
+                </Text>
+              ) : (
+                <Text className="text-center font-bold">
+                  No one has matched with your apartment lease listing, yet.
+                </Text>
+              )}
             </View>
           )}
         </View>
