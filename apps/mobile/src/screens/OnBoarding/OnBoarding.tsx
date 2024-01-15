@@ -20,11 +20,44 @@ export default function OnBoarding({
   const [step, setStep] = useState<OnboardingStatus | "WELCOME">(
     apiStep ? apiStep : "WELCOME",
   );
-  const [selectedRole, setSelectedRole] = useState<Role>(role ?? "TENANT");
   const [process, setProgress] = useState(0);
   const utils = trpc.useContext();
   const data = utils.auth.getSession.getData();
   const userId = data?.userId || "";
+  const [account, setAccount] = useState<{
+    role: Role;
+    firstName: string;
+    lastName: string;
+    image: string;
+    phoneNumber: string;
+    description: string;
+    birthDate: Date;
+  }>({
+    role: role ?? "TENANT",
+    firstName: "",
+    lastName: "",
+    image: "",
+    phoneNumber: "",
+    description: "",
+    birthDate: new Date(),
+  });
+  const { refetch } = trpc.user.getUserById.useQuery(
+    { userId },
+    {
+      enabled: !!userId,
+      onSuccess(data) {
+        setAccount({
+          role: data.role ?? "TENANT",
+          firstName: data.firstName ?? "",
+          lastName: data.lastName ?? "",
+          image: data.image ?? "",
+          phoneNumber: data.phoneNumber ?? "",
+          description: data.description ?? "",
+          birthDate: data.birthDate ?? new Date(),
+        });
+      },
+    },
+  );
 
   return (
     <>
@@ -40,6 +73,7 @@ export default function OnBoarding({
             setStep={setStep}
             setProgress={setProgress}
             userId={userId}
+            callback={refetch}
           />
         )}
         {step === "ROLE_SELECTION" && (
@@ -47,8 +81,8 @@ export default function OnBoarding({
             setStep={setStep}
             setProgress={setProgress}
             userId={userId}
-            selectedRole={selectedRole}
-            setSelectedRole={setSelectedRole}
+            account={account}
+            setAccount={setAccount}
           />
         )}
         {step === "IDENTITY_COMPLETION" && (
@@ -56,7 +90,8 @@ export default function OnBoarding({
             setStep={setStep}
             setProgress={setProgress}
             userId={userId}
-            selectedRole={selectedRole}
+            account={account}
+            setAccount={setAccount}
           />
         )}
         {step === "PREFERENCES_COMPLETION" && (
@@ -67,7 +102,11 @@ export default function OnBoarding({
           />
         )}
         {step === "DOCUMENTS_COMPLETION" && (
-          <UploadDocuments userId={userId} selectedRole={selectedRole} />
+          <UploadDocuments
+            userId={userId}
+            account={account}
+            setAccount={setAccount}
+          />
         )}
       </SafeAreaView>
       <Toast />

@@ -4,8 +4,16 @@ import { Btn } from "../../components/Btn";
 import { IStep } from "../../types/onboarding";
 import { trpc } from "../../utils/trpc";
 
-export default function Welcome({ setStep, setProgress }: IStep) {
-  const createUser = trpc.user.createUser.useMutation();
+export default function Welcome({
+  setStep,
+  setProgress,
+  callback,
+}: IStep & { callback: () => void }) {
+  const createUser = trpc.user.createUser.useMutation({
+    onSuccess() {
+      callback();
+    },
+  });
 
   return (
     <>

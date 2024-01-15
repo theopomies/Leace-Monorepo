@@ -12,13 +12,9 @@ export default function Header({ callback }: { callback?: () => void }) {
         callback();
       }}
     >
-      <View
-        className={`h-12 ${
-          Platform.OS === "android" ? "w-12" : "w-18"
-        } items-center justify-center overflow-hidden`}
-      >
+      <View className="h-12 w-12 items-center justify-center overflow-hidden bg-red-500">
         <Image
-          className="block h-14 w-14"
+          className="h-full w-full"
           source={require("../../../assets/logo_1024.png")}
         ></Image>
       </View>
