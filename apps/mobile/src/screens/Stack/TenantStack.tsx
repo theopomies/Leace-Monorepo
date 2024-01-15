@@ -13,7 +13,6 @@ import { Icon } from "react-native-elements";
 import GestureRecognizer from "react-native-swipe-gestures";
 import { trpc } from "../../utils/trpc";
 import { Loading } from "../../components/Loading";
-import { Btn } from "../../components/Btn";
 import Separator from "../../components/Separator";
 import { Report } from "../../components/Report";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
@@ -143,11 +142,17 @@ export default function TenantStack() {
       setPost(data[0]);
       return;
     }
-    if (move === "LEFT") dislikePost.mutate({ userId, postId: post.id });
+    if (move === "LEFT") {
+      dislikePost.mutate({ userId, postId: post.id });
+    }
     else likePost.mutate({ userId, postId: post.id });
     if (idx < data.length - 1) {
       setPost(data[idx + 1]);
       setIdx(() => idx + 1);
+    }
+    else {
+      setPost(undefined);
+      setIdx(-1);
     }
   }
 
@@ -160,12 +165,20 @@ export default function TenantStack() {
       <View style={styles.view}>
         <Header callback={refetch} />
         <View style={styles.box}>
+          {post === undefined && <>
+            <View className=" h-full justify-center mx-16">
+              <Text className="text-center text-2xl text-black">
+                No more posts available for now
+              </Text>
+            </View>
+          </>}
           {post && (
             <>
               <GestureRecognizer
                 className="flex flex-1 rounded-2xl bg-white shadow shadow-sm shadow-gray-400 mb-2"
                 onSwipeLeft={() => swipeHandler("LEFT")}
                 onSwipeRight={() => swipeHandler("RIGHT")}
+              /* onSwipeDown={() => swipeHandler("REFRESH")} */
               >
                 <TouchableOpacity className="flex flex-1" onPress={() => {
                   navigation.navigate("PostInfo", {
@@ -312,9 +325,10 @@ export default function TenantStack() {
               </View>
             </>
           )}
+
         </View>
       </View>
-    </SafeAreaView>
+    </SafeAreaView >
   );
 }
 
