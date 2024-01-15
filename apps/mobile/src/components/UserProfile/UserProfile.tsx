@@ -35,7 +35,19 @@ export default function UserProfile({
     <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
       <View className="flex flex-col px-3 py-2">
         <View className="relative flex items-center">
-          {showLogout && (
+          {/* {showLogout && (
+            <View className="absolute right-0 top-0">
+              <TouchableOpacity onPress={() => signOut()}>
+                <Icon
+                  name="logout"
+                  color="#6C47FF"
+                  size={35}
+                  type="material-icons"
+                ></Icon>
+              </TouchableOpacity>
+            </View>
+          )} */}
+          {editable && (
             <View className="absolute right-0 top-0">
               <TouchableOpacity onPress={() => signOut()}>
                 <Icon
