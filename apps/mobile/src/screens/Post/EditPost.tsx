@@ -5,7 +5,6 @@ import {
   StyleSheet,
   Platform,
   ScrollView,
-  TouchableOpacity,
   TextInput,
 } from "react-native";
 import React, { useCallback, useState } from "react";
@@ -36,8 +35,18 @@ export default function EditPost() {
   }>();
   const [postAttrs, setPostAttrs] = useState<IDefaultAttributes>();
   const editPost = trpc.post.updatePostById.useMutation();
+
+  const [loading, setLoading] = useState({
+    status: false,
+    message: "Update",
+  });
+
   const editAttrs = trpc.attribute.updatePostAttributes.useMutation({
     onSuccess() {
+      setLoading({
+        status: false,
+        message: "Update",
+      });
       LocalStorage.setItem("refreshPosts", true);
       LocalStorage.setItem("refreshPost", true);
       navigation.navigate("PostInfo", {
@@ -189,9 +198,10 @@ export default function EditPost() {
             </View>
             <View className="pt-2">
               <Btn
-                title="Update"
+                title={loading.message}
                 bgColor="#6466f1"
-                onPress={validateAndSetAttrs}
+                onPress={!loading.status ? validateAndSetAttrs : undefined}
+                spinner={loading.status}
               ></Btn>
             </View>
           </View>

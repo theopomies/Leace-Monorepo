@@ -194,7 +194,6 @@ export default function CreateAttributes({
           style={{
             alignItems: "center",
             justifyContent: "center",
-            marginTop: 30,
           }}
         >
           <Text className="text-base font-bold text-slate-500">Criteria</Text>
@@ -398,7 +397,9 @@ export default function CreateAttributes({
                 } font-light leading-loose focus:border-[#6466f1]`}
                 inputMode="numeric"
                 placeholder="0 €"
+                defaultValue={attrs.price?.toString() ?? ""}
                 onChangeText={(text) => {
+                  if (isNaN(parseInt(text))) return;
                   setAttrs({ ...attrs, price: parseInt(text) });
                   setPriceError("");
                 }}
@@ -424,7 +425,9 @@ export default function CreateAttributes({
                 } font-light leading-loose focus:border-[#6466f1]`}
                 inputMode="numeric"
                 placeholder="0 m²"
+                defaultValue={attrs.size?.toString() ?? ""}
                 onChangeText={(text) => {
+                  if (isNaN(parseInt(text))) return;
                   setAttrs({ ...attrs, size: parseInt(text) });
                   setSizeError("");
                 }}

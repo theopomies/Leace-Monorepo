@@ -266,7 +266,7 @@ export default function OwnerTabs({
         }}
       />
       <Tab.Screen
-        name="MyPosts"
+        name="OwnerStackScreens"
         component={OwnerStackScreens}
         initialParams={{ userId }}
         options={{
