@@ -7,8 +7,8 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-import React from "react";
-import { RouteProp, useRoute, useNavigation } from "@react-navigation/native";
+import React, { useCallback } from "react";
+import { RouteProp, useRoute, useNavigation, useFocusEffect } from "@react-navigation/native";
 import Header from "../../components/Header";
 import { trpc } from "../../utils/trpc";
 import { Loading } from "../../components/Loading";
@@ -16,6 +16,7 @@ import { Relationship, User, Post, Lease, Conversation } from "@prisma/client";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { TabStackParamList } from "../../navigation/RootNavigator";
 import { Btn } from "../../components/Btn";
+import { LocalStorage } from "../../utils/cache";
 
 interface IMatchCard {
   data: Relationship & {
@@ -96,11 +97,10 @@ function MatchCard({
           <Text className="font-light">
             Status:{" "}
             <Text
-              className={`font-bold ${
-                data.post.type === "TO_BE_RENTED"
+              className={`font-bold ${data.post.type === "TO_BE_RENTED"
                   ? "text-green-500"
                   : "text-red-500"
-              }`}
+                }`}
             >
               {data.post.type === "TO_BE_RENTED" ? "Available" : "Rented"}
             </Text>
@@ -130,6 +130,15 @@ export default function TenantMatches() {
       .then(() => refetch());
   }
 
+  useFocusEffect(
+    useCallback(() => {
+      const check = LocalStorage.getItem("refreshMatches");
+      if (!check) return;
+      LocalStorage.setItem("refreshMatches", false);
+      refetch();
+    }, [userId]),
+  );
+
   if (isLoading)
     return (
       <View style={styles.container}>
@@ -148,12 +157,6 @@ export default function TenantMatches() {
         </View>
       </SafeAreaView>
     );
-
-  /*useFocusEffect(
-    React.useCallback(() => {
-      if (data) refetch();
-    }, [userId]),
-  );*/
 
   return (
     <SafeAreaView style={styles.container}>

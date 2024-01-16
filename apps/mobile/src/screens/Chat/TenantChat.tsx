@@ -19,6 +19,7 @@ import { Btn } from "../../components/Btn";
 import { Report } from "../../components/Report";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { LocalStorage } from "../../utils/cache";
 
 interface IMessageCard {
   data: Message & {
@@ -30,28 +31,24 @@ interface IMessageCard {
 function MessageCard({ data, userId }: IMessageCard) {
   return (
     <View
-      className={`flex h-fit ${
-        userId !== data.senderId ? "items-start" : "items-end"
-      } pt-1`}
+      className={`flex h-fit ${userId !== data.senderId ? "items-start" : "items-end"
+        } pt-1`}
     >
       <View
-        className={`flex ${
-          userId !== data.senderId
-            ? "items-start bg-[#ececec]"
-            : "items-end bg-[#10316B]"
-        } rounded-2xl`}
+        className={`flex ${userId !== data.senderId
+          ? "items-start bg-[#ececec]"
+          : "items-end bg-[#10316B]"
+          } rounded-2xl`}
       >
         <Text
-          className={`max-w-[90%] p-2 pb-0 ${
-            userId !== data.senderId ? "" : "text-white"
-          }`}
+          className={`max-w-[90%] p-2 pb-0 ${userId !== data.senderId ? "" : "text-white"
+            }`}
         >
           {data.content}
         </Text>
         <Text
-          className={`px-2 pb-2 ${
-            userId !== data.senderId ? "pl-2" : "pr-2 text-white"
-          } pt-1 text-xs font-light italic `}
+          className={`px-2 pb-2 ${userId !== data.senderId ? "pl-2" : "pr-2 text-white"
+            } pt-1 text-xs font-light italic `}
         >
           {data.createdAt.toLocaleDateString()} - {data.createdAt.getHours()}:
           {data.createdAt.getMinutes()}
@@ -81,15 +78,16 @@ export default function TenantChat() {
   } = route.params;
 
   const [lease, setLease] = useState<Lease>({
-    id: oldLease?.id ?? "",
-    relationshipId,
-    isSigned: oldLease?.isSigned ?? false,
-    rentCost: oldLease?.rentCost ?? 0,
-    utilitiesCost: oldLease?.utilitiesCost ?? 0,
-    startDate: oldLease?.startDate ?? new Date(),
-    endDate: oldLease?.endDate ?? new Date(),
-    createdById: oldLease?.createdById ?? "",
+    id: "",
+    relationshipId: '',
+    isSigned: false,
+    rentCost: 0,
+    utilitiesCost: 0,
+    startDate: new Date(),
+    endDate: new Date(),
+    createdById: "",
   });
+
   const [msg, setMsg] = useState("");
 
   const { data, isLoading, refetch } =
@@ -97,43 +95,64 @@ export default function TenantChat() {
       conversationId,
     });
 
+  const { refetch: leaseRefetch } =
+    trpc.lease.getLeaseById.useQuery({ leaseId: oldLease?.id ?? "" }, {
+      enabled: false, onSuccess(data) {
+        setLease(data);
+      }
+    }); // !!oldLease?.id ??""
+
   const message = trpc.conversation.sendMessage.useMutation({
     onSuccess() {
       refetch();
     },
   });
   const createLease = trpc.lease.createLease.useMutation({
-    onSuccess() {
+    onSuccess(data) {
+      LocalStorage.setItem("refreshMatches", true);
+      setLease(() => ({ ...data }));
       setShow(false);
     },
   });
   const updateLease = trpc.lease.updateLeaseById.useMutation({
     onSuccess() {
+      LocalStorage.setItem("refreshMatches", true);
+
       setShow(false);
     },
   });
   const signLease = trpc.lease.signLeaseById.useMutation({
     onSuccess() {
+
       setShow(false);
     },
   });
 
   const canSignContract = () => {
-    if (role === "TENANT" && lease.id !== "") {
+
+    if (role === "TENANT" && lease?.id !== "") {
       setShow(true);
     } else {
-      Alert.alert(
-        "No lease created yet",
-        "Please wait for the owner to create the lease.",
-      );
+      if (role === "TENANT") {
+
+        Alert.alert(
+          "No lease created yet",
+          "Please wait for the owner to create the lease.",
+        );
+      }
+      else {
+        setShow(true);
+      }
     }
   };
+
   useEffect(() => {
     const yourFunction = () => {
       if (refetch) {
         refetch();
       }
     };
+    leaseRefetch();
     const intervalId = setInterval(yourFunction, 1000);
     const unsubscribeFocus = navigation.addListener("focus", () => {
       console.log("Screen focused");
@@ -148,19 +167,6 @@ export default function TenantChat() {
       unsubscribeBlur();
     };
   }, [navigation]);
-
-  useEffect(() => {
-    setLease({
-      id: oldLease?.id ?? "",
-      relationshipId,
-      isSigned: oldLease?.isSigned ?? false,
-      rentCost: oldLease?.rentCost ?? 0,
-      utilitiesCost: oldLease?.utilitiesCost ?? 0,
-      startDate: oldLease?.startDate ?? new Date(),
-      endDate: oldLease?.endDate ?? new Date(),
-      createdById: oldLease?.createdById ?? "",
-    });
-  }, [oldLease]);
 
   if (isLoading)
     return (
@@ -186,14 +192,14 @@ export default function TenantChat() {
     setMsg("");
   }
 
-  function handleLease() {
-    if (role === "TENANT") {
+  async function handleLease() {
+    if (role === "TENANT" && lease && !lease.isSigned) {
       console.log(lease);
       signLease.mutate({ leaseId: lease.id });
       setLease({ ...lease, isSigned: true });
       return;
     }
-    if (!oldLease)
+    if (!lease.id) {
       createLease.mutate({
         relationshipId,
         rentCost: lease.rentCost,
@@ -201,6 +207,7 @@ export default function TenantChat() {
         startDate: lease.startDate,
         endDate: lease.endDate,
       });
+    }
     else
       updateLease.mutate({
         leaseId: lease.id,
@@ -212,30 +219,30 @@ export default function TenantChat() {
   }
 
   return (
+    <><DateTimePickerModal
+    isVisible={open}
+    date={lease.startDate}
+    mode={"date"}
+    onConfirm={(date) => {
+      setOpen(false);
+      setLease({ ...lease, startDate: date });
+    }}
+    onCancel={() => setOpen(false)}
+  />
+    <DateTimePickerModal
+      isVisible={open1}
+      date={lease.endDate}
+      mode={"date"}
+      onConfirm={(date) => {
+        setOpen1(false);
+        setLease({ ...lease, endDate: date });
+      }}
+      onCancel={() => setOpen1(false)}
+    />
     <SafeAreaView
       className="flex-1 bg-white pb-1"
       style={{ borderTopWidth: 1, borderColor: "#D3D3D3" }}
     >
-      <DateTimePickerModal
-        isVisible={open}
-        date={lease.startDate}
-        mode={"date"}
-        onConfirm={(date) => {
-          setOpen(false);
-          setLease({ ...lease, startDate: date });
-        }}
-        onCancel={() => setOpen(false)}
-      />
-      <DateTimePickerModal
-        isVisible={open1}
-        date={lease.endDate}
-        mode={"date"}
-        onConfirm={(date) => {
-          setOpen1(false);
-          setLease({ ...lease, endDate: date });
-        }}
-        onCancel={() => setOpen1(false)}
-      />
       <Modal
         animationType="slide"
         transparent={true}
@@ -315,10 +322,10 @@ export default function TenantChat() {
                 </TouchableOpacity>
               </View>
               <View className="mt-3 flex space-y-1">
-                {role !== "TENANT" && !lease.isSigned && (
+                {role !== "TENANT" && (
                   <View>
                     <Btn
-                      title="Update lease"
+                      title={!lease.id ? "Create lease" : "Update Lease"}
                       bgColor="#38a169"
                       onPress={handleLease}
                     ></Btn>
@@ -385,6 +392,7 @@ export default function TenantChat() {
         </View>
       </View>
     </SafeAreaView>
+    </>
   );
 }
 
