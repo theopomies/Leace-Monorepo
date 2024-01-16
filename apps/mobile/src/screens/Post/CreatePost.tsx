@@ -218,7 +218,7 @@ export default function CreatePost() {
   }
 
   return (
-    <ScrollView>
+    <ScrollView automaticallyAdjustKeyboardInsets={true}>
       <SafeAreaView style={styles.container}>
         {open && (
           <ZoomImageModal
