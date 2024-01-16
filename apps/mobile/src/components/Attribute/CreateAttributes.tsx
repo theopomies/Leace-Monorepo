@@ -17,14 +17,11 @@ interface ICreateAttributes {
   locationError: string;
   priceError: string;
   sizeError: string;
-  securityAlarm: boolean;
-  internetFiber: boolean;
   setLocationError: (error: string) => void;
   setPriceError: (error: string) => void;
   setSizeError: (error: string) => void;
-  setSecurityAlarm: (bool: boolean) => void;
-  setInternetFiber: (bool: boolean) => void;
 }
+
 interface IAttributeBtn {
   name: string;
   status: boolean | undefined;
@@ -74,24 +71,11 @@ export default function CreateAttributes({
   locationError,
   priceError,
   sizeError,
-  securityAlarm,
-  internetFiber,
   setLocationError,
   setPriceError,
   setSizeError,
-  setSecurityAlarm,
-  setInternetFiber,
 }: ICreateAttributes) {
-  const [reason, setReason] = useState<"HOUSE" | "APARTMENT">("HOUSE");
-
   if (!attrs) return null;
-
-  function handlePicker(itemValue: "HOUSE" | "APARTMENT") {
-    if (!attrs) return;
-    setReason(itemValue);
-    setAttrs({ ...attrs, homeType: itemValue });
-  }
-
   return (
     <View className={`flex space-y-${Platform.OS === "android" ? 20 : 10}`}>
       <View>
@@ -140,7 +124,8 @@ export default function CreateAttributes({
         >
           <TouchableOpacity
             style={{
-              backgroundColor: reason === "HOUSE" ? "#6466f1" : "#c7d2fe",
+              backgroundColor:
+                attrs.homeType === "HOUSE" ? "#6466f1" : "#c7d2fe",
               padding: 10,
               marginRight: 10,
               width: 150,
@@ -150,7 +135,7 @@ export default function CreateAttributes({
               alignItems: "center",
             }}
             onPress={() => {
-              handlePicker("HOUSE");
+              setAttrs((a) => ({ ...a, homeType: "HOUSE" }));
             }}
           >
             <Text
@@ -165,7 +150,8 @@ export default function CreateAttributes({
           </TouchableOpacity>
           <TouchableOpacity
             style={{
-              backgroundColor: reason === "APARTMENT" ? "#6466f1" : "#c7d2fe",
+              backgroundColor:
+                attrs.homeType === "APARTMENT" ? "#6466f1" : "#c7d2fe",
               padding: 10,
               borderRadius: 5,
               width: 150,
@@ -174,7 +160,7 @@ export default function CreateAttributes({
               alignItems: "center",
             }}
             onPress={() => {
-              handlePicker("APARTMENT");
+              setAttrs((a) => ({ ...a, homeType: "APARTMENT" }));
             }}
           >
             <Text
@@ -346,11 +332,13 @@ export default function CreateAttributes({
 
               <TouchableOpacity
                 style={{ margin: 2 }}
-                onPress={() => setSecurityAlarm(!securityAlarm)}
+                onPress={() =>
+                  setAttrs({ ...attrs, securityAlarm: !attrs.securityAlarm })
+                }
               >
                 <AttributeBtn
                   name="Security alarm"
-                  status={securityAlarm}
+                  status={attrs.securityAlarm}
                   iconName="security"
                 />
               </TouchableOpacity>
@@ -364,11 +352,13 @@ export default function CreateAttributes({
             >
               <TouchableOpacity
                 style={{ margin: 2 }}
-                onPress={() => setInternetFiber(!internetFiber)}
+                onPress={() =>
+                  setAttrs({ ...attrs, internetFiber: !attrs.internetFiber })
+                }
               >
                 <AttributeBtn
                   name="Internet fiber"
-                  status={internetFiber}
+                  status={attrs.internetFiber}
                   iconName="wifi"
                 />
               </TouchableOpacity>

@@ -56,7 +56,7 @@ export default function EditProfile() {
     onSuccess() {
       if (!showAttrs) {
         LocalStorage.setItem("refreshProfile", true);
-        navigation.navigate("Profile", { userId });
+        navigation.navigate("ViewProfile", { userId });
       }
     },
     onError(error, variables, context) {
@@ -67,7 +67,7 @@ export default function EditProfile() {
   const attributesMutation = trpc.attribute.updateUserAttributes.useMutation({
     onSuccess() {
       LocalStorage.setItem("refreshProfile", true);
-      navigation.navigate("Profile", { userId });
+      navigation.navigate("ViewProfile", { userId });
     },
     onError(error, variables, context) {
       console.log({ error, variables, context });
@@ -150,88 +150,90 @@ export default function EditProfile() {
       setShowLastNameError(false);
     }
 
-    if (!attrs?.location) {
-      isValid = false;
-      setShowLocationError(true);
-    } else {
-      setShowLocationError(false);
-    }
+    if (user1?.role === "TENANT") {
+      if (!attrs?.location) {
+        isValid = false;
+        setShowLocationError(true);
+      } else {
+        setShowLocationError(false);
+      }
 
-    if (
-      attrs?.minPrice === undefined ||
-      isNaN(attrs?.minPrice as number) ||
-      attrs.minPrice <= 0
-    ) {
-      isValid = false;
-      setShowMinPriceError(true);
-    } else {
-      setShowMinPriceError(false);
-    }
+      if (
+        attrs?.minPrice === undefined ||
+        isNaN(attrs?.minPrice as number) ||
+        attrs.minPrice <= 0
+      ) {
+        isValid = false;
+        setShowMinPriceError(true);
+      } else {
+        setShowMinPriceError(false);
+      }
 
-    if (
-      attrs?.maxPrice === undefined ||
-      isNaN(attrs?.maxPrice as number) ||
-      attrs.maxPrice <= 0
-    ) {
-      isValid = false;
-      setShowMaxPriceError(true);
-    } else {
-      setShowMaxPriceError(false);
-    }
+      if (
+        attrs?.maxPrice === undefined ||
+        isNaN(attrs?.maxPrice as number) ||
+        attrs.maxPrice <= 0
+      ) {
+        isValid = false;
+        setShowMaxPriceError(true);
+      } else {
+        setShowMaxPriceError(false);
+      }
 
-    if (
-      attrs?.minSize === undefined ||
-      isNaN(attrs.minSize as number) ||
-      attrs.minSize <= 0
-    ) {
-      isValid = false;
-      setShowMinSizeError(true);
-    } else {
-      setShowMinSizeError(false);
-    }
+      if (
+        attrs?.minSize === undefined ||
+        isNaN(attrs.minSize as number) ||
+        attrs.minSize <= 0
+      ) {
+        isValid = false;
+        setShowMinSizeError(true);
+      } else {
+        setShowMinSizeError(false);
+      }
 
-    if (
-      attrs?.maxSize === undefined ||
-      isNaN(attrs.maxSize as number) ||
-      attrs.maxSize <= 0
-    ) {
-      isValid = false;
-      setShowMaxSizeError(true);
-    } else {
-      setShowMaxSizeError(false);
-    }
+      if (
+        attrs?.maxSize === undefined ||
+        isNaN(attrs.maxSize as number) ||
+        attrs.maxSize <= 0
+      ) {
+        isValid = false;
+        setShowMaxSizeError(true);
+      } else {
+        setShowMaxSizeError(false);
+      }
 
-    if (
-      attrs?.rentStartDate &&
-      attrs?.rentEndDate &&
-      attrs.rentStartDate.getTime() >= attrs.rentEndDate.getTime()
-    ) {
-      isValid = false;
-      setShowRentDateError(true);
-    } else {
-      setShowRentDateError(false);
-    }
+      if (
+        attrs?.rentStartDate &&
+        attrs?.rentEndDate &&
+        attrs.rentStartDate.getTime() >= attrs.rentEndDate.getTime()
+      ) {
+        isValid = false;
+        setShowRentDateError(true);
+      } else {
+        setShowRentDateError(false);
+      }
 
-    if (
-      attrs?.minPrice !== undefined &&
-      attrs?.maxPrice !== undefined &&
-      attrs.minPrice >= attrs.maxPrice
-    ) {
-      isValid = false;
-      setShowPriceError(true);
-    } else {
-      setShowPriceError(false);
-    }
+      if (
+        attrs?.minPrice !== undefined &&
+        attrs?.maxPrice !== undefined &&
+        attrs.minPrice >= attrs.maxPrice
+      ) {
+        isValid = false;
+        setShowPriceError(true);
+      } else {
+        setShowPriceError(false);
+      }
 
-    if (
-      attrs?.minSize !== undefined &&
-      attrs?.maxSize !== undefined &&
-      attrs.minSize >= attrs.maxSize
-    ) {
-      isValid = false;
-      setShowSizeError(true);
-    } else {
-      setShowSizeError(false);
+      if (
+        attrs?.minSize !== undefined &&
+        attrs?.maxSize !== undefined &&
+        attrs.minSize >= attrs.maxSize
+      ) {
+        isValid = false;
+        setShowSizeError(true);
+      } else {
+        setShowSizeError(false);
+      }
     }
 
     if (isValid) {
@@ -239,7 +241,7 @@ export default function EditProfile() {
       if (showAttrs && attrs) {
         attributesMutation.mutate(attrs);
       }
-      navigation.navigate("Profile", { userId });
+      // navigation.navigate("ViewProfile", { userId });
     }
   }
 

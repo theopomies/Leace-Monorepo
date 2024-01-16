@@ -73,7 +73,11 @@ export default function EditPost() {
   function handlePost() {
     if (!postInfo || !postAttrs) return;
     editPost.mutate(postInfo);
-    editAttrs.mutate(postAttrs);
+    editAttrs.mutate({
+      ...postAttrs,
+      bedrooms: undefined,
+      bathrooms: undefined,
+    });
   }
 
   // if (!postInfo || !postAttrs) return null;
@@ -85,6 +89,7 @@ export default function EditPost() {
   const [sizeError, setSizeError] = useState("");
 
   const validateAndSetAttrs = () => {
+    setLoading({ status: true, message: "Updating..." });
     let isValid = true;
 
     if (!postInfo?.title || postInfo?.title.trim() === "") {
@@ -186,14 +191,6 @@ export default function EditPost() {
                 setLocationError={setLocationError}
                 setPriceError={setPriceError}
                 setSizeError={setSizeError}
-                securityAlarm={false}
-                internetFiber={false}
-                setSecurityAlarm={function (bool: boolean): void {
-                  throw new Error("Function not implemented.");
-                }}
-                setInternetFiber={function (bool: boolean): void {
-                  throw new Error("Function not implemented.");
-                }}
               />
             </View>
             <View className="pt-2">

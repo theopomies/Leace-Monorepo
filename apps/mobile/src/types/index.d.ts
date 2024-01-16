@@ -18,9 +18,9 @@ export interface IDefaultAttributes {
   size?: number;
   rentStartDate?: Date;
   rentEndDate?: Date;
+  homeType?: "HOUSE" | "APARTMENT" | "";
   furnished?: boolean;
   house?: boolean;
-  homeType?: "HOUSE" | "APARTMENT" | "";
   terrace?: boolean;
   pets?: boolean;
   smoker?: boolean;
@@ -29,6 +29,8 @@ export interface IDefaultAttributes {
   parking?: boolean;
   elevator?: boolean;
   pool?: boolean;
+  securityAlarm?: boolean;
+  internetFiber?: boolean;
 }
 
 export interface IUserAttrs {

@@ -62,6 +62,8 @@ export default function CreatePost() {
     parking: false,
     elevator: false,
     pool: false,
+    securityAlarm: false,
+    internetFiber: false,
   });
 
   const [titleError, setTitleError] = useState("");
@@ -314,14 +316,14 @@ export default function CreatePost() {
                   setLocationError={setLocationError}
                   setPriceError={setPriceError}
                   setSizeError={setSizeError}
-                  securityAlarm={postInfo.securityAlarm}
-                  internetFiber={postInfo.internetFiber}
-                  setSecurityAlarm={(value) =>
-                    setPostInfo({ ...postInfo, securityAlarm: value })
-                  }
-                  setInternetFiber={(value) =>
-                    setPostInfo({ ...postInfo, internetFiber: value })
-                  }
+                  // securityAlarm={postInfo.securityAlarm}
+                  // internetFiber={postInfo.internetFiber}
+                  // setSecurityAlarm={(value) =>
+                  //   setPostInfo({ ...postInfo, securityAlarm: value })
+                  // }
+                  // setInternetFiber={(value) =>
+                  //   setPostInfo({ ...postInfo, internetFiber: value })
+                  // }
                 />
               </View>
               <View
