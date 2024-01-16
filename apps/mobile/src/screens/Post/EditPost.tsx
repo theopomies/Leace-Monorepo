@@ -75,8 +75,6 @@ export default function EditPost() {
     editPost.mutate(postInfo);
     editAttrs.mutate({
       ...postAttrs,
-      bedrooms: undefined,
-      bathrooms: undefined,
     });
   }
 

@@ -56,7 +56,7 @@ export default function PostCard({ data, userId }: IPostCard) {
             Bedrooms: {data.attribute?.bedrooms}
           </Text>
           <Text className="font-light">
-            Bathrooms: {data.attribute?.bedrooms}
+            Bathrooms: {data.attribute?.bathrooms}
           </Text>
           <Text className="font-light">
             Type:{" "}
