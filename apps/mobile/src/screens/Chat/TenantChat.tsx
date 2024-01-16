@@ -322,7 +322,7 @@ export default function TenantChat() {
                   </TouchableOpacity>
                 </View>
                 <View className="mt-3 flex space-y-1">
-                  {role !== "TENANT" && (
+                  {role !== "TENANT" && !lease.isSigned && (
                     <View>
                       <Btn
                         title={!lease.id ? "Create lease" : "Update Lease"}
@@ -337,6 +337,15 @@ export default function TenantChat() {
                         title={!lease.isSigned ? "Sign Lease" : "Signed"}
                         bgColor={!lease.isSigned ? "#38a169" : "#73bd96"}
                         onPress={!lease.isSigned ? handleLease : undefined}
+                      ></Btn>
+                    </View>
+                  )}
+                  {role !== "TENANT" && lease.isSigned && (
+                    <View>
+                      <Btn
+                        title={"Signed"}
+                        bgColor={"#73bd96"}
+                        onPress={undefined}
                       ></Btn>
                     </View>
                   )}
