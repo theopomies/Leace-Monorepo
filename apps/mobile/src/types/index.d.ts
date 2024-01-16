@@ -55,4 +55,13 @@ export interface IUserAttrs {
   parking?: boolean;
   elevator?: boolean;
   pool?: boolean;
+
+  securityAlarm?: boolean;
+  internetFiber?: boolean;
+
+  maxBedrooms?: number;
+  minBedrooms?: number;
+
+  maxBathrooms?: number;
+  minBathrooms?: number;
 }

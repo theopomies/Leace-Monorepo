@@ -11,7 +11,10 @@ export default function ChooseAttributes({
   setStep,
   setProgress,
 }: IStep) {
-  const [attrs, setAttrs] = useState<IUserAttrs | undefined>({ userId });
+  const [attrs, setAttrs] = useState<IUserAttrs | undefined>({
+    userId,
+    homeType: "HOUSE",
+  });
   const userAttributes = trpc.attribute.updateUserAttributes.useMutation();
 
   const [showLocationError, setShowLocationError] = useState(false);
@@ -22,6 +25,14 @@ export default function ChooseAttributes({
   const [showSizeError, setShowSizeError] = useState(false);
   const [showPriceError, setShowPriceError] = useState(false);
   const [showRentDateError, setShowRentDateError] = useState(false);
+
+  const [showMinBedError, setShowMinBedError] = useState(false);
+  const [showMaxBedError, setShowMaxBedError] = useState(false);
+  const [showBedError, setShowBedError] = useState(false);
+
+  const [showMinBathError, setShowMinBathError] = useState(false);
+  const [showMaxBathError, setShowMaxBathError] = useState(false);
+  const [showBathError, setShowBathError] = useState(false);
 
   const handleFinishSettingUp = async () => {
     let isValid = true;
@@ -78,6 +89,50 @@ export default function ChooseAttributes({
     }
 
     if (
+      attrs?.minBedrooms === undefined ||
+      isNaN(attrs?.minBedrooms as number) ||
+      attrs.minBedrooms <= 0
+    ) {
+      isValid = false;
+      setShowMinBedError(true);
+    } else {
+      setShowMinBedError(false);
+    }
+
+    if (
+      attrs?.maxBedrooms === undefined ||
+      isNaN(attrs?.maxBedrooms as number) ||
+      attrs.maxBedrooms <= 0
+    ) {
+      isValid = false;
+      setShowMaxBedError(true);
+    } else {
+      setShowMaxBedError(false);
+    }
+
+    if (
+      attrs?.minBathrooms === undefined ||
+      isNaN(attrs?.minBathrooms as number) ||
+      attrs.minBathrooms <= 0
+    ) {
+      isValid = false;
+      setShowMinBathError(true);
+    } else {
+      setShowMinBathError(false);
+    }
+
+    if (
+      attrs?.maxBathrooms === undefined ||
+      isNaN(attrs?.maxBathrooms as number) ||
+      attrs.maxBathrooms <= 0
+    ) {
+      isValid = false;
+      setShowMaxBathError(true);
+    } else {
+      setShowMaxBathError(false);
+    }
+
+    if (
       attrs?.rentStartDate === undefined ||
       attrs?.rentEndDate === undefined ||
       (attrs?.rentStartDate &&
@@ -112,6 +167,28 @@ export default function ChooseAttributes({
       setShowSizeError(false);
     }
 
+    if (
+      attrs?.minBedrooms !== undefined &&
+      attrs?.maxBedrooms !== undefined &&
+      attrs.minBedrooms >= attrs.maxBedrooms
+    ) {
+      isValid = false;
+      setShowBedError(true);
+    } else {
+      setShowBedError(false);
+    }
+
+    if (
+      attrs?.minBathrooms !== undefined &&
+      attrs?.maxBathrooms !== undefined &&
+      attrs.minBathrooms >= attrs.maxBathrooms
+    ) {
+      isValid = false;
+      setShowBathError(true);
+    } else {
+      setShowBathError(false);
+    }
+
     if (isValid) {
       userAttributes.mutate({ userId, ...attrs });
 
@@ -142,6 +219,12 @@ export default function ChooseAttributes({
             showPriceErrorCallback={showPriceError}
             showRentDateErrorCallback={showRentDateError}
             showSizeErrorCallback={showSizeError}
+            showMinBedErrorCallback={showMinBedError}
+            showMaxBedErrorCallback={showMaxBedError}
+            showMinBathErrorCallback={showMinBathError}
+            showMaxBathErrorCallback={showMaxBathError}
+            showBedErrorCallback={showBedError}
+            showBathErrorCallback={showBathError}
           />
         </View>
         <View className="flex flex-row justify-between px-8 pb-4">
@@ -157,7 +240,7 @@ export default function ChooseAttributes({
             title="Finish setting me up"
             bgColor="#6C47FF"
             onPress={() => {
-              if (!attrs?.homeType) attrs!.homeType = "HOUSE";
+              if (!attrs?.homeType) attrs?.homeType === "HOUSE";
               handleFinishSettingUp();
             }}
           />

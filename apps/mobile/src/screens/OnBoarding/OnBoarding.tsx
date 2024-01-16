@@ -41,7 +41,7 @@ export default function OnBoarding({
     description: "",
     birthDate: new Date(),
   });
-  const { refetch } = trpc.user.getUserById.useQuery(
+  const { refetch, isLoading: userLoading } = trpc.user.getUserById.useQuery(
     { userId },
     {
       enabled: !!userId,
@@ -92,6 +92,7 @@ export default function OnBoarding({
             userId={userId}
             account={account}
             setAccount={setAccount}
+            userLoading={userLoading}
           />
         )}
         {step === "PREFERENCES_COMPLETION" && (

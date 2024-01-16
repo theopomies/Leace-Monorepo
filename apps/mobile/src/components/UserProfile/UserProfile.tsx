@@ -35,18 +35,6 @@ export default function UserProfile({
     <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
       <View className="flex flex-col px-3 py-2">
         <View className="relative flex items-center">
-          {/* {showLogout && (
-            <View className="absolute right-0 top-0">
-              <TouchableOpacity onPress={() => signOut()}>
-                <Icon
-                  name="logout"
-                  color="#6C47FF"
-                  size={35}
-                  type="material-icons"
-                ></Icon>
-              </TouchableOpacity>
-            </View>
-          )} */}
           {editable && (
             <View className="absolute right-0 top-0">
               <TouchableOpacity onPress={() => signOut()}>
@@ -83,7 +71,7 @@ export default function UserProfile({
           ></Icon>
         )}
       </View>
-      <View className="relative flex w-full flex-col items-center space-x-2 space-y-1 bg-[#6C47FF] py-3">
+      <View className="bg-indigo relative flex w-full flex-col items-center space-x-2 space-y-1 py-3">
         {editable && (
           <View className="absolute right-0 top-5 pr-1">
             <TouchableOpacity

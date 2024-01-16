@@ -16,17 +16,15 @@ import {
 } from "@react-navigation/native";
 import { TabStackParamList } from "../../navigation/RootNavigator";
 import { Icon } from "react-native-elements";
-import { EditAttributes } from "../../components/Attribute";
-import Separator from "../../components/Separator";
 import { trpc } from "../../utils/trpc";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { LocalStorage } from "../../utils/cache";
 import { IUserAttrs } from "../../types";
-import { EditInfo } from "../../components/UserProfile";
 import { Btn } from "../../components/Btn";
 import { useAuth } from "@clerk/clerk-expo";
 import EditInfoRefacto from "../../components/UserProfile/EditInfoRefacto";
 import EditAttributesRefacto from "../../components/Attribute/EditAttributesRefacto";
+import Separator from "../../components/Separator";
 
 export default function EditProfile() {
   const { signOut } = useAuth();
@@ -51,7 +49,10 @@ export default function EditProfile() {
     email: string;
   }>();
   const [attrs, setAttrs] = useState<IUserAttrs>();
-
+  const [loading, setLoading] = useState({
+    status: false,
+    message: "Save",
+  });
   const userMutation = trpc.user.updateUserById.useMutation({
     onSuccess() {
       if (!showAttrs) {
@@ -237,6 +238,7 @@ export default function EditProfile() {
     }
 
     if (isValid) {
+      setLoading({ status: true, message: "Updating..." });
       userMutation.mutate({ ...user });
       if (showAttrs && attrs) {
         attributesMutation.mutate(attrs);
@@ -301,7 +303,7 @@ export default function EditProfile() {
           </View>
         </View>
       </Modal>
-      <View style={{ flex: 1 }}>
+      <View className="flex-1 bg-white">
         <ScrollView
           contentContainerStyle={{ flexGrow: 1 }}
           style={{ backgroundColor: "white" }}
@@ -342,20 +344,15 @@ export default function EditProfile() {
                   {"Enter a valid last name"}
                 </Text>
               )}
-              <View className="w-full bg-[#6C47FF] py-6">
-                <TouchableOpacity
-                  className="mx-32 flex flex-row items-center justify-center space-x-1 rounded-md border bg-[#F1F5F9] px-2 py-2"
-                  style={{ borderColor: "black" }}
-                  onPress={updateUser}
-                >
-                  <Icon
-                    name="save"
-                    color="black"
-                    size={28}
-                    type="material-icons"
-                  ></Icon>
-                  <Text className=" text-lg font-bold text-black">Save</Text>
-                </TouchableOpacity>
+              <View className="bg-indigo w-full items-center justify-center py-4">
+                <Btn
+                  title={loading.message}
+                  className="w-[150px] border-2 border-white"
+                  iconName="save"
+                  iconType="material-icons"
+                  onPress={!loading.status ? updateUser : undefined}
+                  spinner={loading.status}
+                />
               </View>
             </View>
           </View>
@@ -385,7 +382,7 @@ export default function EditProfile() {
         </ScrollView>
         <Btn
           title="Delete account"
-          className="rounded-none"
+          className="mt-2 rounded-none"
           bgColor="#EF4444"
           onPress={() => setOpen(true)}
         ></Btn>

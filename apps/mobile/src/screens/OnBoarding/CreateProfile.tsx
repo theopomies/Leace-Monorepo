@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState } from "react";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
@@ -28,7 +29,8 @@ export default function CreateProfile({
   setProgress,
   account,
   setAccount,
-}: IStep & IAccountState) {
+  userLoading,
+}: IStep & IAccountState & { userLoading: boolean }) {
   const [show, setShow] = useState(false);
   const [open, setOpen] = useState(false);
   const [profile, setProfile] = useState<DocumentPickerAsset>();
@@ -168,154 +170,165 @@ export default function CreateProfile({
           <Text className="text-3xl font-bold">Tell us</Text>
           <Text className="text-3xl font-bold">more about you</Text>
         </View>
-        <View className="flex h-28 items-center justify-center">
-          <TouchableOpacity className="h-28 w-28" onPress={pickImage}>
-            {profile ? (
-              <Image
-                className="h-full w-full rounded-full object-cover"
-                source={{
-                  uri: profile.uri,
-                }}
-              />
-            ) : (
-              <>
-                {account.image ? (
+        {userLoading ? (
+          <View className="flex-1 items-center justify-center">
+            <ActivityIndicator
+              color={"#6366f1"}
+              size={"large"}
+            ></ActivityIndicator>
+          </View>
+        ) : (
+          <>
+            <View className="flex h-28 items-center justify-center">
+              <TouchableOpacity className="h-28 w-28" onPress={pickImage}>
+                {profile ? (
                   <Image
                     className="h-full w-full rounded-full object-cover"
                     source={{
-                      uri: account.image,
+                      uri: profile.uri,
                     }}
                   />
                 ) : (
-                  <View className="flex h-full items-center justify-center rounded-full border border-[#6366f1]">
-                    <Icon
-                      name="add-a-photo"
-                      type="material-icons"
-                      color="#6366f1"
-                    />
+                  <>
+                    {account.image ? (
+                      <Image
+                        className="h-full w-full rounded-full object-cover"
+                        source={{
+                          uri: account.image,
+                        }}
+                      />
+                    ) : (
+                      <View className="flex h-full items-center justify-center rounded-full border border-[#6366f1]">
+                        <Icon
+                          name="add-a-photo"
+                          type="material-icons"
+                          color="#6366f1"
+                        />
+                      </View>
+                    )}
+                  </>
+                )}
+              </TouchableOpacity>
+            </View>
+            <View className="flex-1 px-8">
+              <View className="flex flex-col space-y-4">
+                <View className="flex flex-col space-y-1">
+                  <Text>First Name</Text>
+                  <View className="relative">
+                    <TextInput
+                      className="border-indigo h-10 rounded-lg border pl-2"
+                      value={account.firstName}
+                      onChangeText={(text) =>
+                        setAccount((a) => ({ ...a, firstName: text }))
+                      }
+                    ></TextInput>
+                    {!account.firstName && show && (
+                      <Text
+                        className="text-light-red absolute -bottom-3"
+                        style={{ fontSize: 10 }}
+                      >
+                        Required field.
+                      </Text>
+                    )}
                   </View>
-                )}
-              </>
-            )}
-          </TouchableOpacity>
-        </View>
-        <View className="flex-1 px-8">
-          <View className="flex flex-col gap-3">
-            <View className="flex flex-col gap-1">
-              <Text>First Name</Text>
-              <View className="relative">
-                <TextInput
-                  className="border-indigo h-9 rounded-lg border pl-2"
-                  value={account.firstName}
-                  onChangeText={(text) =>
-                    setAccount((a) => ({ ...a, firstName: text }))
-                  }
-                ></TextInput>
-                {!account.firstName && show && (
-                  <Text
-                    className="text-light-red absolute -bottom-3"
-                    style={{ fontSize: 10 }}
-                  >
-                    Required field.
-                  </Text>
-                )}
-              </View>
-            </View>
-            <View className="flex flex-col gap-1">
-              <Text>Last Name</Text>
-              <View className="relative">
-                <TextInput
-                  className="border-indigo h-9 rounded-lg border pl-2"
-                  value={account.lastName}
-                  onChangeText={(text) =>
-                    setAccount((a) => ({ ...a, lastName: text }))
-                  }
-                ></TextInput>
-                {!account.lastName && show && (
-                  <Text
-                    className="text-light-red absolute -bottom-3"
-                    style={{ fontSize: 10 }}
-                  >
-                    Required field.
-                  </Text>
-                )}
-              </View>
-            </View>
-            <View className="flex flex-col gap-1">
-              <Text>Birthdate</Text>
-              <View className="relative">
-                <TouchableOpacity onPress={() => setOpen(true)}>
-                  <Text className="border-indigo h-9 rounded-lg border pl-2 leading-9">
-                    {account.birthDate.toLocaleDateString()}
-                  </Text>
-                  {!isAdult() && show && (
+                </View>
+                <View className="flex flex-col space-y-1">
+                  <Text>Last Name</Text>
+                  <View className="relative">
+                    <TextInput
+                      className="border-indigo h-10 rounded-lg border pl-2"
+                      value={account.lastName}
+                      onChangeText={(text) =>
+                        setAccount((a) => ({ ...a, lastName: text }))
+                      }
+                    ></TextInput>
+                    {!account.lastName && show && (
+                      <Text
+                        className="text-light-red absolute -bottom-3"
+                        style={{ fontSize: 10 }}
+                      >
+                        Required field.
+                      </Text>
+                    )}
+                  </View>
+                </View>
+                <View className="flex flex-col space-y-1">
+                  <Text>Birthdate</Text>
+                  <View className="relative">
+                    <TouchableOpacity onPress={() => setOpen(true)}>
+                      <Text className="border-indigo h-10 rounded-lg border pl-2 leading-9">
+                        {account.birthDate.toLocaleDateString()}
+                      </Text>
+                      {!isAdult() && show && (
+                        <Text
+                          className="text-light-red absolute -bottom-3"
+                          style={{ fontSize: 10 }}
+                        >
+                          You must be 18 years old.
+                        </Text>
+                      )}
+                    </TouchableOpacity>
+                  </View>
+                </View>
+                <View className="flex flex-col space-y-1">
+                  <Text>Phone Number</Text>
+                  <View className="relative">
+                    <TextInput
+                      className="border-indigo h-10 rounded-lg border pl-2"
+                      value={account.phoneNumber}
+                      inputMode="tel"
+                      onChangeText={(text) =>
+                        setAccount((a) => ({ ...a, phoneNumber: text }))
+                      }
+                    ></TextInput>
+                    {!account.phoneNumber && show && (
+                      <Text
+                        className="text-light-red absolute -bottom-3"
+                        style={{ fontSize: 10 }}
+                      >
+                        Required field.
+                      </Text>
+                    )}
+                  </View>
+                </View>
+                <View className="flex flex-col space-y-1">
+                  <Text>Description</Text>
+                  <TextInput
+                    className="border-indigo rounded-lg border pl-2"
+                    multiline
+                    numberOfLines={4}
+                    value={account.description}
+                    onChangeText={(text) =>
+                      setAccount((a) => ({ ...a, description: text }))
+                    }
+                  ></TextInput>
+                  {!account.description && show && (
                     <Text
                       className="text-light-red absolute -bottom-3"
                       style={{ fontSize: 10 }}
                     >
-                      You must be 18 years old.
+                      Required field.
                     </Text>
                   )}
-                </TouchableOpacity>
+                </View>
               </View>
             </View>
-            <View className="flex flex-col gap-1">
-              <Text>Phone Number</Text>
-              <View className="relative">
-                <TextInput
-                  className="border-indigo h-9 rounded-lg border pl-2"
-                  value={account.phoneNumber}
-                  inputMode="tel"
-                  onChangeText={(text) =>
-                    setAccount((a) => ({ ...a, phoneNumber: text }))
-                  }
-                ></TextInput>
-                {!account.phoneNumber && show && (
-                  <Text
-                    className="text-light-red absolute -bottom-3"
-                    style={{ fontSize: 10 }}
-                  >
-                    Required field.
-                  </Text>
-                )}
-              </View>
+            <View className="flex flex-row justify-between px-8 pb-4 pt-2">
+              <Btn
+                title="Back"
+                onPress={() => {
+                  setProgress(25);
+                  setStep("ROLE_SELECTION");
+                }}
+              />
+              <Btn
+                title={loading.message}
+                onPress={!loading.status ? validate : undefined}
+                spinner={loading.status}
+              />
             </View>
-            <View className="flex flex-col gap-1">
-              <Text>Description</Text>
-              <TextInput
-                className="border-indigo rounded-lg border pl-2"
-                multiline
-                numberOfLines={4}
-                value={account.description}
-                onChangeText={(text) =>
-                  setAccount((a) => ({ ...a, description: text }))
-                }
-              ></TextInput>
-              {!account.description && show && (
-                <Text
-                  className="text-light-red absolute -bottom-3"
-                  style={{ fontSize: 10 }}
-                >
-                  Required field.
-                </Text>
-              )}
-            </View>
-          </View>
-        </View>
-        <View className="flex flex-row justify-between px-8 pb-4 pt-2">
-          <Btn
-            title="Back"
-            onPress={() => {
-              setProgress(25);
-              setStep("ROLE_SELECTION");
-            }}
-          />
-          <Btn
-            title={loading.message}
-            onPress={!loading.status ? validate : undefined}
-            spinner={loading.status}
-          />
-        </View>
+          </>
+        )}
       </ScrollView>
     </>
   );
