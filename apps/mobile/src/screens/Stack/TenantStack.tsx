@@ -19,6 +19,7 @@ import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { TabStackParamList } from "../../navigation/RootNavigator";
 import { Post, Attribute, Image } from "@leace/db";
+import Toast from "react-native-toast-message";
 
 interface IActionButton {
   onPress?: ((event: GestureResponderEvent) => void) | undefined;
@@ -86,12 +87,17 @@ export default function TenantStack() {
   const { userId } = route.params;
   const [idx, setIdx] = useState(0);
   const { data, isLoading, refetch } = trpc.post.getPosts.useQuery();
+  //Un truc du genre const { data, isLoading, refetch } = trpc.post.getPostsToBeSeen.useQuery({ userId });
   const [post, setPost] = useState<
     | Post & {
       attribute: Attribute | null;
       images: Image[];
     }
   >();
+  const [lastPost, setLastPost] = useState<| Post & {
+    attribute: Attribute | null;
+    images: Image[];
+  }>();
   const likePost = trpc.relationship.likePostForTenant.useMutation({
     onSuccess() {
       console.log("post liked !");
@@ -106,6 +112,15 @@ export default function TenantStack() {
     },
     onError() {
       console.error("post disliked error");
+    },
+  });
+
+  const rewindPost = trpc.relationship.rewindPostForTenant.useMutation({
+    onSuccess() {
+      console.log("post rewind!");
+    },
+    onError() {
+      console.error("post rewind error");
     },
   });
 
@@ -135,25 +150,37 @@ export default function TenantStack() {
     );
 
   function swipeHandler(move: "LEFT" | "RIGHT" | "REFRESH") {
-    if (!data || !post) return;
+    if (!data) return;
     if (move === "REFRESH") {
       // missing refresh API call
-      setIdx(0);
-      setPost(data[0]);
+      if (lastPost) {
+        setIdx(() => idx - 1);
+        rewindPost.mutate({ userId, postId: lastPost.id });
+        setPost(lastPost);
+        setLastPost(undefined);
+      }
+      else {
+        Toast.show({
+          type: "error",
+          text1: "You can't rewind yet",
+          text2: "You have to like or dislike a post first.",
+        });
+      }
       return;
     }
+    if (!post) return;
     if (move === "LEFT") {
       dislikePost.mutate({ userId, postId: post.id });
     }
     else likePost.mutate({ userId, postId: post.id });
+    setLastPost(data[idx]);
     if (idx < data.length - 1) {
       setPost(data[idx + 1]);
-      setIdx(() => idx + 1);
     }
     else {
       setPost(undefined);
-      setIdx(-1);
     }
+    setIdx(() => idx + 1);
   }
 
   function capitalize(str: string) {
@@ -170,6 +197,15 @@ export default function TenantStack() {
               <Text className="text-center text-2xl text-black">
                 No more posts available for now
               </Text>
+              <View className="w-full items-center justify-center absolute bottom-2.5">
+
+                <ActionButton
+                  iconName="refresh"
+                  iconType="material-icons"
+                  iconColor="#FFEA00"
+                  onPress={() => swipeHandler("REFRESH")}
+                />
+              </View>
             </View>
           </>}
           {post && (
@@ -325,7 +361,6 @@ export default function TenantStack() {
               </View>
             </>
           )}
-
         </View>
       </View>
     </SafeAreaView >
