@@ -37,7 +37,7 @@ export default function Btn({
       disabled={!onPress}
       style={{ backgroundColor: bgColor }}
     >
-      {iconName && iconType && (
+      {iconName && iconType && !spinner && (
         <Icon size={20} name={iconName} type={iconType} color={"white"}></Icon>
       )}
       {spinner && (

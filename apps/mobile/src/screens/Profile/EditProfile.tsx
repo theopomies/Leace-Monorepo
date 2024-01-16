@@ -16,17 +16,15 @@ import {
 } from "@react-navigation/native";
 import { TabStackParamList } from "../../navigation/RootNavigator";
 import { Icon } from "react-native-elements";
-import { EditAttributes } from "../../components/Attribute";
-import Separator from "../../components/Separator";
 import { trpc } from "../../utils/trpc";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { LocalStorage } from "../../utils/cache";
 import { IUserAttrs } from "../../types";
-import { EditInfo } from "../../components/UserProfile";
 import { Btn } from "../../components/Btn";
 import { useAuth } from "@clerk/clerk-expo";
 import EditInfoRefacto from "../../components/UserProfile/EditInfoRefacto";
 import EditAttributesRefacto from "../../components/Attribute/EditAttributesRefacto";
+import Separator from "../../components/Separator";
 
 export default function EditProfile() {
   const { signOut } = useAuth();
@@ -51,12 +49,15 @@ export default function EditProfile() {
     email: string;
   }>();
   const [attrs, setAttrs] = useState<IUserAttrs>();
-
+  const [loading, setLoading] = useState({
+    status: false,
+    message: "Save",
+  });
   const userMutation = trpc.user.updateUserById.useMutation({
     onSuccess() {
       if (!showAttrs) {
         LocalStorage.setItem("refreshProfile", true);
-        navigation.navigate("Profile", { userId });
+        navigation.navigate("ViewProfile", { userId });
       }
     },
     onError(error, variables, context) {
@@ -67,7 +68,7 @@ export default function EditProfile() {
   const attributesMutation = trpc.attribute.updateUserAttributes.useMutation({
     onSuccess() {
       LocalStorage.setItem("refreshProfile", true);
-      navigation.navigate("Profile", { userId });
+      navigation.navigate("ViewProfile", { userId });
     },
     onError(error, variables, context) {
       console.log({ error, variables, context });
@@ -150,96 +151,99 @@ export default function EditProfile() {
       setShowLastNameError(false);
     }
 
-    if (!attrs?.location) {
-      isValid = false;
-      setShowLocationError(true);
-    } else {
-      setShowLocationError(false);
-    }
+    if (user1?.role === "TENANT") {
+      if (!attrs?.location) {
+        isValid = false;
+        setShowLocationError(true);
+      } else {
+        setShowLocationError(false);
+      }
 
-    if (
-      attrs?.minPrice === undefined ||
-      isNaN(attrs?.minPrice as number) ||
-      attrs.minPrice <= 0
-    ) {
-      isValid = false;
-      setShowMinPriceError(true);
-    } else {
-      setShowMinPriceError(false);
-    }
+      if (
+        attrs?.minPrice === undefined ||
+        isNaN(attrs?.minPrice as number) ||
+        attrs.minPrice <= 0
+      ) {
+        isValid = false;
+        setShowMinPriceError(true);
+      } else {
+        setShowMinPriceError(false);
+      }
 
-    if (
-      attrs?.maxPrice === undefined ||
-      isNaN(attrs?.maxPrice as number) ||
-      attrs.maxPrice <= 0
-    ) {
-      isValid = false;
-      setShowMaxPriceError(true);
-    } else {
-      setShowMaxPriceError(false);
-    }
+      if (
+        attrs?.maxPrice === undefined ||
+        isNaN(attrs?.maxPrice as number) ||
+        attrs.maxPrice <= 0
+      ) {
+        isValid = false;
+        setShowMaxPriceError(true);
+      } else {
+        setShowMaxPriceError(false);
+      }
 
-    if (
-      attrs?.minSize === undefined ||
-      isNaN(attrs.minSize as number) ||
-      attrs.minSize <= 0
-    ) {
-      isValid = false;
-      setShowMinSizeError(true);
-    } else {
-      setShowMinSizeError(false);
-    }
+      if (
+        attrs?.minSize === undefined ||
+        isNaN(attrs.minSize as number) ||
+        attrs.minSize <= 0
+      ) {
+        isValid = false;
+        setShowMinSizeError(true);
+      } else {
+        setShowMinSizeError(false);
+      }
 
-    if (
-      attrs?.maxSize === undefined ||
-      isNaN(attrs.maxSize as number) ||
-      attrs.maxSize <= 0
-    ) {
-      isValid = false;
-      setShowMaxSizeError(true);
-    } else {
-      setShowMaxSizeError(false);
-    }
+      if (
+        attrs?.maxSize === undefined ||
+        isNaN(attrs.maxSize as number) ||
+        attrs.maxSize <= 0
+      ) {
+        isValid = false;
+        setShowMaxSizeError(true);
+      } else {
+        setShowMaxSizeError(false);
+      }
 
-    if (
-      attrs?.rentStartDate &&
-      attrs?.rentEndDate &&
-      attrs.rentStartDate.getTime() >= attrs.rentEndDate.getTime()
-    ) {
-      isValid = false;
-      setShowRentDateError(true);
-    } else {
-      setShowRentDateError(false);
-    }
+      if (
+        attrs?.rentStartDate &&
+        attrs?.rentEndDate &&
+        attrs.rentStartDate.getTime() >= attrs.rentEndDate.getTime()
+      ) {
+        isValid = false;
+        setShowRentDateError(true);
+      } else {
+        setShowRentDateError(false);
+      }
 
-    if (
-      attrs?.minPrice !== undefined &&
-      attrs?.maxPrice !== undefined &&
-      attrs.minPrice >= attrs.maxPrice
-    ) {
-      isValid = false;
-      setShowPriceError(true);
-    } else {
-      setShowPriceError(false);
-    }
+      if (
+        attrs?.minPrice !== undefined &&
+        attrs?.maxPrice !== undefined &&
+        attrs.minPrice >= attrs.maxPrice
+      ) {
+        isValid = false;
+        setShowPriceError(true);
+      } else {
+        setShowPriceError(false);
+      }
 
-    if (
-      attrs?.minSize !== undefined &&
-      attrs?.maxSize !== undefined &&
-      attrs.minSize >= attrs.maxSize
-    ) {
-      isValid = false;
-      setShowSizeError(true);
-    } else {
-      setShowSizeError(false);
+      if (
+        attrs?.minSize !== undefined &&
+        attrs?.maxSize !== undefined &&
+        attrs.minSize >= attrs.maxSize
+      ) {
+        isValid = false;
+        setShowSizeError(true);
+      } else {
+        setShowSizeError(false);
+      }
     }
 
     if (isValid) {
+      setLoading({ status: true, message: "Updating..." });
       userMutation.mutate({ ...user });
       if (showAttrs && attrs) {
         attributesMutation.mutate(attrs);
       }
-      navigation.navigate("Profile", { userId });
+      // navigation.navigate("ViewProfile", { userId });
     }
   }
 
@@ -299,7 +303,7 @@ export default function EditProfile() {
           </View>
         </View>
       </Modal>
-      <View style={{ flex: 1 }}>
+      <View className="flex-1 bg-white">
         <ScrollView
           contentContainerStyle={{ flexGrow: 1 }}
           style={{ backgroundColor: "white" }}
@@ -340,20 +344,15 @@ export default function EditProfile() {
                   {"Enter a valid last name"}
                 </Text>
               )}
-              <View className="w-full bg-[#6C47FF] py-6">
-                <TouchableOpacity
-                  className="mx-32 flex flex-row items-center justify-center space-x-1 rounded-md border bg-[#F1F5F9] px-2 py-2"
-                  style={{ borderColor: "black" }}
-                  onPress={updateUser}
-                >
-                  <Icon
-                    name="save"
-                    color="black"
-                    size={28}
-                    type="material-icons"
-                  ></Icon>
-                  <Text className=" text-lg font-bold text-black">Save</Text>
-                </TouchableOpacity>
+              <View className="bg-indigo w-full items-center justify-center py-4">
+                <Btn
+                  title={loading.message}
+                  className="w-[150px] border-2 border-white"
+                  iconName="save"
+                  iconType="material-icons"
+                  onPress={!loading.status ? updateUser : undefined}
+                  spinner={loading.status}
+                />
               </View>
             </View>
           </View>
@@ -383,7 +382,7 @@ export default function EditProfile() {
         </ScrollView>
         <Btn
           title="Delete account"
-          className="rounded-none"
+          className="mt-2 rounded-none"
           bgColor="#EF4444"
           onPress={() => setOpen(true)}
         ></Btn>

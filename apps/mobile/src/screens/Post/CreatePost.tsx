@@ -41,8 +41,6 @@ export default function CreatePost() {
     constructionDate: new Date(),
     estimatedCost: "",
     nearestShops: "",
-    securityAlarm: false,
-    internetFiber: false,
   });
 
   const [postAttrs, setPostAttrs] = useState<IDefaultAttributes | undefined>({
@@ -50,6 +48,8 @@ export default function CreatePost() {
     location: "",
     price: 0,
     size: 0,
+    bedrooms: 0,
+    bathrooms: 0,
     rentStartDate: new Date(),
     rentEndDate: new Date(),
     furnished: false,
@@ -62,6 +62,8 @@ export default function CreatePost() {
     parking: false,
     elevator: false,
     pool: false,
+    securityAlarm: false,
+    internetFiber: false,
   });
 
   const [titleError, setTitleError] = useState("");
@@ -69,6 +71,8 @@ export default function CreatePost() {
   const [locationError, setLocationError] = useState("");
   const [priceError, setPriceError] = useState("");
   const [sizeError, setSizeError] = useState("");
+  const [bedroomsError, setBedroomsError] = useState("");
+  const [bathroomsError, setBathroomsError] = useState("");
 
   const [images, setImages] = useState<
     { file: DocumentPicker.DocumentPickerAsset; id: string }[]
@@ -112,6 +116,28 @@ export default function CreatePost() {
       isValid = false;
     } else {
       setSizeError("");
+    }
+
+    if (
+      !postAttrs?.bedrooms ||
+      postAttrs.bedrooms <= 0 ||
+      isNaN(postAttrs.bedrooms)
+    ) {
+      setBedroomsError("Please enter a valid number of bedrooms");
+      isValid = false;
+    } else {
+      setBedroomsError("");
+    }
+
+    if (
+      !postAttrs?.bathrooms ||
+      postAttrs.bathrooms <= 0 ||
+      isNaN(postAttrs.bathrooms)
+    ) {
+      setBathroomsError("Please enter a valid number of bathrooms");
+      isValid = false;
+    } else {
+      setBathroomsError("");
     }
 
     if (isValid) {
@@ -218,14 +244,12 @@ export default function CreatePost() {
                 </Text>
                 <TextInput
                   style={{
-                    borderColor: titleError ? "#D84654" : "black",
+                    color: "black",
                     padding: 4,
                     width: "100%",
                     height: 38,
                   }}
-                  className={`rounded-md border p-${
-                    Platform.OS === "ios" ? 4 : 2
-                  } font-light leading-loose focus:border-indigo-500 `}
+                  className={`focus:border-indigo rounded-md border p-2 font-light leading-loose`}
                   placeholder="Enter title..."
                   onChangeText={(text) => {
                     setPostInfo({ ...postInfo, title: text });
@@ -283,16 +307,13 @@ export default function CreatePost() {
                 </Text>
                 <TextInput
                   style={{
-                    borderColor: descriptionError ? "#D84654" : "black",
                     padding: 4,
                     width: "100%",
                     height: 38,
                   }}
-                  className={`rounded-md border
-                p-${
-                  Platform.OS === "ios" ? 4 : 2
-                } font-light leading-loose focus:border-indigo-500`}
+                  className={`focus:border-indigo rounded-md border p-2 font-light leading-loose`}
                   placeholder="Enter description..."
+                  multiline
                   onChangeText={(text) => {
                     setPostInfo({ ...postInfo, desc: text });
                     setDescriptionError("");
@@ -314,14 +335,10 @@ export default function CreatePost() {
                   setLocationError={setLocationError}
                   setPriceError={setPriceError}
                   setSizeError={setSizeError}
-                  securityAlarm={postInfo.securityAlarm}
-                  internetFiber={postInfo.internetFiber}
-                  setSecurityAlarm={(value) =>
-                    setPostInfo({ ...postInfo, securityAlarm: value })
-                  }
-                  setInternetFiber={(value) =>
-                    setPostInfo({ ...postInfo, internetFiber: value })
-                  }
+                  bedroomsError={bedroomsError}
+                  bathroomsError={bathroomsError}
+                  setBedroomsError={setBedroomsError}
+                  setBathroomsError={setBathroomsError}
                 />
               </View>
               <View

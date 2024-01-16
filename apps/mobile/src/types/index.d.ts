@@ -16,11 +16,13 @@ export interface IDefaultAttributes {
   location?: string;
   price?: number;
   size?: number;
+  bedrooms?: number;
+  bathrooms?: number;
   rentStartDate?: Date;
   rentEndDate?: Date;
+  homeType?: "HOUSE" | "APARTMENT" | "";
   furnished?: boolean;
   house?: boolean;
-  homeType?: "HOUSE" | "APARTMENT" | "";
   terrace?: boolean;
   pets?: boolean;
   smoker?: boolean;
@@ -29,6 +31,8 @@ export interface IDefaultAttributes {
   parking?: boolean;
   elevator?: boolean;
   pool?: boolean;
+  securityAlarm?: boolean;
+  internetFiber?: boolean;
 }
 
 export interface IUserAttrs {
@@ -51,4 +55,13 @@ export interface IUserAttrs {
   parking?: boolean;
   elevator?: boolean;
   pool?: boolean;
+
+  securityAlarm?: boolean;
+  internetFiber?: boolean;
+
+  maxBedrooms?: number;
+  minBedrooms?: number;
+
+  maxBathrooms?: number;
+  minBathrooms?: number;
 }

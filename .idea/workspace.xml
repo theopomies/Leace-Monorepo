@@ -5,8 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a05cecb8-778a-4a51-a055-921331174174" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pnpm-lock.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vscode/settings.json" beforeDir="false" afterPath="$PROJECT_DIR$/.vscode/settings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile/src/components/Attribute/EditAttributesRefacto.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile/src/components/Attribute/EditAttributesRefacto.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile/src/screens/OnBoarding/ChooseAttributes.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile/src/screens/OnBoarding/ChooseAttributes.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile/src/screens/Profile/EditProfileRefacto.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile/src/screens/Profile/EditProfileRefacto.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

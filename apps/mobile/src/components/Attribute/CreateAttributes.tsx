@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   Platform,
 } from "react-native";
-import React, { useState } from "react";
+import React from "react";
 import { Icon } from "react-native-elements";
 import { IDefaultAttributes } from "../../types";
 
@@ -17,14 +17,15 @@ interface ICreateAttributes {
   locationError: string;
   priceError: string;
   sizeError: string;
-  securityAlarm: boolean;
-  internetFiber: boolean;
+  bedroomsError: string;
+  bathroomsError: string;
   setLocationError: (error: string) => void;
   setPriceError: (error: string) => void;
   setSizeError: (error: string) => void;
-  setSecurityAlarm: (bool: boolean) => void;
-  setInternetFiber: (bool: boolean) => void;
+  setBedroomsError: (error: string) => void;
+  setBathroomsError: (error: string) => void;
 }
+
 interface IAttributeBtn {
   name: string;
   status: boolean | undefined;
@@ -74,24 +75,15 @@ export default function CreateAttributes({
   locationError,
   priceError,
   sizeError,
-  securityAlarm,
-  internetFiber,
+  bedroomsError,
+  bathroomsError,
   setLocationError,
   setPriceError,
   setSizeError,
-  setSecurityAlarm,
-  setInternetFiber,
+  setBedroomsError,
+  setBathroomsError,
 }: ICreateAttributes) {
-  const [reason, setReason] = useState<"HOUSE" | "APARTMENT">("HOUSE");
-
   if (!attrs) return null;
-
-  function handlePicker(itemValue: "HOUSE" | "APARTMENT") {
-    if (!attrs) return;
-    setReason(itemValue);
-    setAttrs({ ...attrs, homeType: itemValue });
-  }
-
   return (
     <View className={`flex space-y-${Platform.OS === "android" ? 20 : 10}`}>
       <View>
@@ -100,15 +92,12 @@ export default function CreateAttributes({
         </Text>
         <TextInput
           style={{
-            borderColor: locationError ? "#D84654" : "black",
             padding: 4,
             borderRadius: 5,
             width: "100%",
             height: 38,
           }}
-          className={`rounded-md border p-${
-            Platform.OS === "ios" ? 4 : 2
-          } font-light leading-loose focus:border-indigo-500`}
+          className={`rounded-md border p-2 font-light leading-loose focus:border-indigo-500`}
           placeholder="Paris"
           defaultValue={attrs.location}
           onChangeText={(text) => {
@@ -140,7 +129,8 @@ export default function CreateAttributes({
         >
           <TouchableOpacity
             style={{
-              backgroundColor: reason === "HOUSE" ? "#6466f1" : "#c7d2fe",
+              backgroundColor:
+                attrs.homeType === "HOUSE" ? "#6466f1" : "#c7d2fe",
               padding: 10,
               marginRight: 10,
               width: 150,
@@ -150,7 +140,7 @@ export default function CreateAttributes({
               alignItems: "center",
             }}
             onPress={() => {
-              handlePicker("HOUSE");
+              setAttrs((a) => ({ ...a, homeType: "HOUSE" }));
             }}
           >
             <Text
@@ -165,7 +155,8 @@ export default function CreateAttributes({
           </TouchableOpacity>
           <TouchableOpacity
             style={{
-              backgroundColor: reason === "APARTMENT" ? "#6466f1" : "#c7d2fe",
+              backgroundColor:
+                attrs.homeType === "APARTMENT" ? "#6466f1" : "#c7d2fe",
               padding: 10,
               borderRadius: 5,
               width: 150,
@@ -174,7 +165,7 @@ export default function CreateAttributes({
               alignItems: "center",
             }}
             onPress={() => {
-              handlePicker("APARTMENT");
+              setAttrs((a) => ({ ...a, homeType: "APARTMENT" }));
             }}
           >
             <Text
@@ -346,11 +337,13 @@ export default function CreateAttributes({
 
               <TouchableOpacity
                 style={{ margin: 2 }}
-                onPress={() => setSecurityAlarm(!securityAlarm)}
+                onPress={() =>
+                  setAttrs({ ...attrs, securityAlarm: !attrs.securityAlarm })
+                }
               >
                 <AttributeBtn
                   name="Security alarm"
-                  status={securityAlarm}
+                  status={attrs.securityAlarm}
                   iconName="security"
                 />
               </TouchableOpacity>
@@ -364,11 +357,13 @@ export default function CreateAttributes({
             >
               <TouchableOpacity
                 style={{ margin: 2 }}
-                onPress={() => setInternetFiber(!internetFiber)}
+                onPress={() =>
+                  setAttrs({ ...attrs, internetFiber: !attrs.internetFiber })
+                }
               >
                 <AttributeBtn
                   name="Internet fiber"
-                  status={internetFiber}
+                  status={attrs.internetFiber}
                   iconName="wifi"
                 />
               </TouchableOpacity>
@@ -376,65 +371,161 @@ export default function CreateAttributes({
           </View>
 
           <View
-            className={`flex w-full flex-row justify-between ${
-              Platform.OS === "android" ? "" : "mt-14"
-            }`}
+            style={{
+              marginBottom: 50,
+              flexDirection: "column",
+              justifyContent: "space-between",
+            }}
           >
-            <View className="w-36">
-              <Text className="mb-1 text-lg font-semibold text-[#666666]">
-                Price
-              </Text>
-              <TextInput
-                style={{
-                  width: 150,
-                  height: 38,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  borderColor: priceError ? "#D84654" : "black",
-                }}
-                className={`rounded-xl border p-${
-                  Platform.OS === "android" ? 2 : 2
-                } font-light leading-loose focus:border-[#6466f1]`}
-                inputMode="numeric"
-                placeholder="0 €"
-                defaultValue={attrs.price?.toString() ?? ""}
-                onChangeText={(text) => {
-                  if (isNaN(parseInt(text))) return;
-                  setAttrs({ ...attrs, price: parseInt(text) });
-                  setPriceError("");
-                }}
-              />
-              {priceError ? (
-                <Text className="text-xs text-[#D84654]">{priceError}</Text>
-              ) : null}
+            <View
+              style={{
+                flexDirection: "row",
+                marginBottom: Platform.OS === "android" ? 0 : 50,
+              }}
+            >
+              <View style={{ width: 150, marginRight: 10 }}>
+                <Text
+                  style={{
+                    marginBottom: 1,
+                    fontSize: 16,
+                    fontWeight: "bold",
+                    color: "#666666",
+                  }}
+                >
+                  Price
+                </Text>
+                <TextInput
+                  style={{
+                    width: 150,
+                    height: 38,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    borderWidth: 1,
+                    borderRadius: 8,
+                    padding: Platform.OS === "android" ? 2 : 2,
+                    fontSize: 16,
+                  }}
+                  inputMode="numeric"
+                  placeholder="0 €"
+                  onChangeText={(text) => {
+                    setAttrs({ ...attrs, price: parseInt(text) });
+                    setPriceError("");
+                  }}
+                />
+                {priceError ? (
+                  <Text style={{ fontSize: 12, color: "#D84654" }}>
+                    {priceError}
+                  </Text>
+                ) : null}
+              </View>
+              <View style={{ width: 150 }}>
+                <Text
+                  style={{
+                    marginBottom: 1,
+                    fontSize: 16,
+                    fontWeight: "bold",
+                    color: "#666666",
+                  }}
+                >
+                  Size
+                </Text>
+                <TextInput
+                  style={{
+                    width: 150,
+                    height: 38,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    borderWidth: 1,
+                    borderRadius: 8,
+                    padding: Platform.OS === "android" ? 2 : 2,
+                    fontSize: 16,
+                  }}
+                  inputMode="numeric"
+                  placeholder="0 m²"
+                  onChangeText={(text) => {
+                    setAttrs({ ...attrs, size: parseInt(text) });
+                    setSizeError("");
+                  }}
+                />
+                {sizeError ? (
+                  <Text style={{ fontSize: 12, color: "#D84654" }}>
+                    {sizeError}
+                  </Text>
+                ) : null}
+              </View>
             </View>
-            <View className="w-36">
-              <Text className="mb-1 text-lg font-semibold text-[#666666]">
-                Size
-              </Text>
-              <TextInput
-                style={{
-                  width: 150,
-                  height: 38,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  borderColor: sizeError ? "#D84654" : "black",
-                }}
-                className={`rounded-xl border p-${
-                  Platform.OS === "android" ? 2 : 2
-                } font-light leading-loose focus:border-[#6466f1]`}
-                inputMode="numeric"
-                placeholder="0 m²"
-                defaultValue={attrs.size?.toString() ?? ""}
-                onChangeText={(text) => {
-                  if (isNaN(parseInt(text))) return;
-                  setAttrs({ ...attrs, size: parseInt(text) });
-                  setSizeError("");
-                }}
-              />
-              {sizeError ? (
-                <Text className="text-xs text-[#D84654]">{sizeError}</Text>
-              ) : null}
+
+            <View style={{ flexDirection: "row" }}>
+              <View style={{ width: 150, marginRight: 10 }}>
+                <Text
+                  style={{
+                    marginBottom: 1,
+                    fontSize: 16,
+                    fontWeight: "bold",
+                    color: "#666666",
+                  }}
+                >
+                  Bedroom(s)
+                </Text>
+                <TextInput
+                  style={{
+                    width: 150,
+                    height: 38,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    borderWidth: 1,
+                    borderRadius: 8,
+                    padding: Platform.OS === "android" ? 2 : 2,
+                    fontSize: 16,
+                  }}
+                  inputMode="numeric"
+                  placeholder="0"
+                  onChangeText={(text) => {
+                    setAttrs({ ...attrs, bedrooms: parseInt(text) });
+                    setBedroomsError("");
+                  }}
+                />
+                {bedroomsError ? (
+                  <Text style={{ fontSize: 12, color: "#D84654" }}>
+                    {bedroomsError}
+                  </Text>
+                ) : null}
+              </View>
+              <View style={{ width: 150 }}>
+                <Text
+                  style={{
+                    marginBottom: 1,
+                    fontSize: 16,
+                    fontWeight: "bold",
+                    color: "#666666",
+                  }}
+                >
+                  Bathroom(s)
+                </Text>
+                <TextInput
+                  style={{
+                    width: 150,
+                    height: 38,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    borderWidth: 1,
+                    borderRadius: 8,
+                    padding: Platform.OS === "android" ? 2 : 2,
+                    fontSize: 16,
+                  }}
+                  inputMode="numeric"
+                  placeholder="0"
+                  onChangeText={(text) => {
+                    setAttrs({ ...attrs, bathrooms: parseInt(text) });
+                    setBathroomsError("");
+                  }}
+                />
+                {bathroomsError ? (
+                  <Text style={{ fontSize: 12, color: "#D84654" }}>
+                    {bathroomsError}
+                  </Text>
+                ) : null}
+              </View>
             </View>
           </View>
         </View>

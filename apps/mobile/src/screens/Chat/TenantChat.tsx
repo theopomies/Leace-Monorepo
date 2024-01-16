@@ -220,178 +220,178 @@ export default function TenantChat() {
 
   return (
     <><DateTimePickerModal
-    isVisible={open}
-    date={lease.startDate}
-    mode={"date"}
-    onConfirm={(date) => {
-      setOpen(false);
-      setLease({ ...lease, startDate: date });
-    }}
-    onCancel={() => setOpen(false)}
-  />
-    <DateTimePickerModal
-      isVisible={open1}
-      date={lease.endDate}
+      isVisible={open}
+      date={lease.startDate}
       mode={"date"}
       onConfirm={(date) => {
-        setOpen1(false);
-        setLease({ ...lease, endDate: date });
+        setOpen(false);
+        setLease({ ...lease, startDate: date });
       }}
-      onCancel={() => setOpen1(false)}
+      onCancel={() => setOpen(false)}
     />
-    <SafeAreaView
-      className="flex-1 bg-white pb-1"
-      style={{ borderTopWidth: 1, borderColor: "#D3D3D3" }}
-    >
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={show}
-        onRequestClose={() => setShow(false)}
+      <DateTimePickerModal
+        isVisible={open1}
+        date={lease.endDate}
+        mode={"date"}
+        onConfirm={(date) => {
+          setOpen1(false);
+          setLease({ ...lease, endDate: date });
+        }}
+        onCancel={() => setOpen1(false)}
+      />
+      <SafeAreaView
+        className="flex-1 bg-white pb-1"
+        style={{ borderTopWidth: 1, borderColor: "#D3D3D3" }}
       >
-        <View className="flex-1 items-center justify-center">
-          <View
-            className="w-3/4 rounded-md bg-white p-4"
-            style={{
-              shadowColor: "#000",
-              shadowOffset: {
-                width: 0,
-                height: 2,
-              },
-              shadowOpacity: 0.25,
-              shadowRadius: 4,
-              elevation: 5,
-            }}
-          >
-            <View className="flex space-y-2">
-              <Text className="text-center text-lg font-bold">Lease</Text>
-              <View className="flex flex-row items-center justify-between px-2">
-                <Text className="text-base font-bold text-[#394867]">
-                  Rent Cost:
-                </Text>
-                <TextInput
-                  editable={role !== "TENANT"}
-                  className="font-light text-black"
-                  inputMode="decimal"
-                  placeholder="0123456789"
-                  defaultValue={lease.rentCost.toString()}
-                  onChangeText={(text) =>
-                    setLease({ ...lease, rentCost: parseInt(text) })
-                  }
-                />
-              </View>
-              <View className="flex flex-row items-center justify-between px-2">
-                <Text className="text-base font-bold text-[#394867]">
-                  Utilities Cost:
-                </Text>
-                <TextInput
-                  editable={role !== "TENANT"}
-                  className="font-light text-black"
-                  inputMode="decimal"
-                  placeholder="0123456789"
-                  defaultValue={lease.utilitiesCost.toString()}
-                  onChangeText={(text) =>
-                    setLease({ ...lease, utilitiesCost: parseInt(text) })
-                  }
-                />
-              </View>
-              <View className="flex flex-row items-center justify-between px-2">
-                <Text className="text-base font-bold text-[#394867]">
-                  Start date:
-                </Text>
-                <TouchableOpacity
-                  disabled={role === "TENANT"}
-                  onPress={() => setOpen(true)}
-                >
-                  <Text className="font-light">
-                    {lease.startDate.toLocaleDateString()}
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={show}
+          onRequestClose={() => setShow(false)}
+        >
+          <View className="flex-1 items-center justify-center">
+            <View
+              className="w-3/4 rounded-md bg-white p-4"
+              style={{
+                shadowColor: "#000",
+                shadowOffset: {
+                  width: 0,
+                  height: 2,
+                },
+                shadowOpacity: 0.25,
+                shadowRadius: 4,
+                elevation: 5,
+              }}
+            >
+              <View className="flex space-y-2">
+                <Text className="text-center text-lg font-bold">Lease</Text>
+                <View className="flex flex-row items-center justify-between px-2">
+                  <Text className="text-base font-bold text-[#394867]">
+                    Rent Cost:
                   </Text>
-                </TouchableOpacity>
-              </View>
-              <View className="flex flex-row items-center justify-between px-2">
-                <Text className="text-base font-bold text-[#394867]">
-                  End date:
-                </Text>
-                <TouchableOpacity
-                  disabled={role === "TENANT"}
-                  onPress={() => setOpen1(true)}
-                >
-                  <Text className="font-light">
-                    {lease.endDate.toLocaleDateString()}
+                  <TextInput
+                    editable={role !== "TENANT"}
+                    className="font-light text-black"
+                    inputMode="decimal"
+                    placeholder="0123456789"
+                    defaultValue={lease.rentCost.toString()}
+                    onChangeText={(text) =>
+                      setLease({ ...lease, rentCost: parseInt(text) })
+                    }
+                  />
+                </View>
+                <View className="flex flex-row items-center justify-between px-2">
+                  <Text className="text-base font-bold text-[#394867]">
+                    Utilities Cost:
                   </Text>
-                </TouchableOpacity>
-              </View>
-              <View className="mt-3 flex space-y-1">
-                {role !== "TENANT" && (
+                  <TextInput
+                    editable={role !== "TENANT"}
+                    className="font-light text-black"
+                    inputMode="decimal"
+                    placeholder="0123456789"
+                    defaultValue={lease.utilitiesCost.toString()}
+                    onChangeText={(text) =>
+                      setLease({ ...lease, utilitiesCost: parseInt(text) })
+                    }
+                  />
+                </View>
+                <View className="flex flex-row items-center justify-between px-2">
+                  <Text className="text-base font-bold text-[#394867]">
+                    Start date:
+                  </Text>
+                  <TouchableOpacity
+                    disabled={role === "TENANT"}
+                    onPress={() => setOpen(true)}
+                  >
+                    <Text className="font-light">
+                      {lease.startDate.toLocaleDateString()}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                <View className="flex flex-row items-center justify-between px-2">
+                  <Text className="text-base font-bold text-[#394867]">
+                    End date:
+                  </Text>
+                  <TouchableOpacity
+                    disabled={role === "TENANT"}
+                    onPress={() => setOpen1(true)}
+                  >
+                    <Text className="font-light">
+                      {lease.endDate.toLocaleDateString()}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                <View className="mt-3 flex space-y-1">
+                  {role !== "TENANT" && (
+                    <View>
+                      <Btn
+                        title={!lease.id ? "Create lease" : "Update Lease"}
+                        bgColor="#38a169"
+                        onPress={handleLease}
+                      ></Btn>
+                    </View>
+                  )}
+                  {role === "TENANT" && (
+                    <View>
+                      <Btn
+                        title={!lease.isSigned ? "Sign Lease" : "Signed"}
+                        bgColor={!lease.isSigned ? "#38a169" : "#73bd96"}
+                        onPress={!lease.isSigned ? handleLease : undefined}
+                      ></Btn>
+                    </View>
+                  )}
                   <View>
                     <Btn
-                      title={!lease.id ? "Create lease" : "Update Lease"}
-                      bgColor="#38a169"
-                      onPress={handleLease}
+                      title="Close"
+                      bgColor="#F2F7FF"
+                      textColor="#0A2472"
+                      onPress={() => setShow(false)}
                     ></Btn>
                   </View>
-                )}
-                {role === "TENANT" && (
-                  <View>
-                    <Btn
-                      title={!lease.isSigned ? "Sign Lease" : "Signed"}
-                      bgColor={!lease.isSigned ? "#38a169" : "#73bd96"}
-                      onPress={!lease.isSigned ? handleLease : undefined}
-                    ></Btn>
-                  </View>
-                )}
-                <View>
-                  <Btn
-                    title="Close"
-                    bgColor="#F2F7FF"
-                    textColor="#0A2472"
-                    onPress={() => setShow(false)}
-                  ></Btn>
                 </View>
               </View>
             </View>
           </View>
-        </View>
-      </Modal>
+        </Modal>
 
-      <ScrollView className="mb-3 px-4" contentContainerStyle={{ flexGrow: 1 }}>
-        {data.messages.map((message, key) => (
-          <MessageCard data={message} key={key} userId={userId} />
-        ))}
-      </ScrollView>
-      <View
-        style={styles.input}
-        className="flex h-12 flex-row items-center space-x-1 px-4"
-      >
-        <View className="flex-1">
-          <TextInput
-            className="rounded-full bg-[#ececec] py-2 pl-4"
-            placeholder="Message..."
-            value={msg}
-            onChangeText={(text) => setMsg(text)}
-            onSubmitEditing={sendMessage}
-          ></TextInput>
+        <ScrollView className="mb-3 px-4" contentContainerStyle={{ flexGrow: 1 }}>
+          {data.messages.map((message, key) => (
+            <MessageCard data={message} key={key} userId={userId} />
+          ))}
+        </ScrollView>
+        <View
+          style={styles.input}
+          className="flex h-12 flex-row items-center space-x-1 px-4"
+        >
+          <View className="flex-1">
+            <TextInput
+              className="rounded-full bg-[#ececec] py-2 pl-4"
+              placeholder="Message..."
+              value={msg}
+              onChangeText={(text) => setMsg(text)}
+              onSubmitEditing={sendMessage}
+            ></TextInput>
+          </View>
+          <View>
+            <Report
+              type="USER"
+              className="rounded-full bg-red-500 p-2.5"
+              userId={role === "OWNER" ? tenantId : ownerId}
+            />
+          </View>
+          <View>
+            <Btn
+              iconName="description"
+              iconType="material"
+              bgColor="#6366f1"
+              className="rounded-full"
+              onPress={() => {
+                canSignContract();
+              }}
+            ></Btn>
+          </View>
         </View>
-        <View>
-          <Report
-            type="USER"
-            className="rounded-full bg-red-500 p-2.5"
-            userId={role === "OWNER" ? tenantId : ownerId}
-          />
-        </View>
-        <View>
-          <Btn
-            iconName="description"
-            iconType="material"
-            bgColor="#0A2472"
-            className="rounded-full"
-            onPress={() => {
-              canSignContract();
-            }}
-          ></Btn>
-        </View>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
     </>
   );
 }

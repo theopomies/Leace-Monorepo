@@ -45,7 +45,7 @@ function TenantStackScreens() {
             >
               <Icon
                 name="arrow-back"
-                color="#0A2472"
+                color="#6366f1"
                 size={30}
                 type="material-icons"
               ></Icon>
@@ -70,7 +70,7 @@ function TenantStackScreens() {
             >
               <Icon
                 name="arrow-back"
-                color="#0A2472"
+                color="#6366f1"
                 size={30}
                 type="material-icons"
               ></Icon>

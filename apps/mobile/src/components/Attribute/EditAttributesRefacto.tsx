@@ -1,8 +1,13 @@
-import { View, Text, TouchableOpacity, TextInput } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  TextInput,
+  Platform,
+} from "react-native";
 import React, { useState } from "react";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { Divider, Icon } from "react-native-elements";
-import { StyleSheet } from "react-native";
 import { IUserAttrs } from "../../types";
 
 interface IAttributeBtn {
@@ -25,52 +30,47 @@ interface ICreateUserAttrs {
   showPriceErrorCallback?: boolean;
   showSizeErrorCallback?: boolean;
   showRentDateErrorCallback?: boolean;
-}
 
-function AttributeBtn({ name, status, iconName }: IAttributeBtn) {
-  return (
-    <View
-      className="flex min-h-[50px] min-w-[150px] flex-row items-center justify-center space-x-1 rounded-lg px-2 py-1"
-      style={{
-        margin: 6,
-        backgroundColor: "#6366f1",
-        opacity: status ? 1 : 0.5,
-      }}
-    >
-      <Icon
-        name={iconName}
-        color={"white"}
-        size={25}
-        type="material-icons"
-      ></Icon>
-      <Text className="text-lg font-light text-white">{name}</Text>
-    </View>
-  );
+  showMinBedErrorCallback?: boolean;
+  showMaxBedErrorCallback?: boolean;
+  showMinBathErrorCallback?: boolean;
+  showMaxBathErrorCallback?: boolean;
+
+  showBedErrorCallback?: boolean;
+  showBathErrorCallback?: boolean;
 }
 
 function HouseTypeBtn({ name, iconName, disabled }: IAttributeBtn) {
   return (
     <View
-      className="flex min-h-[50px] min-w-[150px] flex-row items-center justify-center space-x-1 rounded-lg px-2 py-1"
       style={{
-        margin: 6,
-        backgroundColor: !disabled ? "gray" : "#6366f1",
-        opacity: disabled ? 1 : 0.5,
+        margin: Platform.OS === "android" ? 2 : 3,
       }}
     >
-      <Icon
-        name={iconName}
-        color={"white"}
-        size={25}
-        type="material-icons"
-      ></Icon>
-      <Text className="text-lg font-light text-white">{name}</Text>
+      <View
+        className="flex h-[38px] w-[150px] flex-row items-center justify-center rounded-md"
+        style={{
+          backgroundColor: disabled ? "#6466f1" : "#c7d2fe",
+        }}
+      >
+        <Icon name={iconName} color={"white"} size={20} type="material-icons" />
+        <Text
+          style={{
+            fontWeight: "bold",
+            fontSize: 13,
+            opacity: 1,
+            color: "white",
+            marginLeft: 10,
+          }}
+        >
+          {name}
+        </Text>
+      </View>
     </View>
   );
 }
 
 export default function EditAttributesRefacto({
-  userId,
   attrs,
   setAttrs,
   onBoarding,
@@ -82,359 +82,498 @@ export default function EditAttributesRefacto({
   showPriceErrorCallback,
   showSizeErrorCallback,
   showRentDateErrorCallback,
+
+  showMinBedErrorCallback,
+  showMaxBedErrorCallback,
+  showMinBathErrorCallback,
+  showMaxBathErrorCallback,
+  showBedErrorCallback,
+  showBathErrorCallback,
 }: ICreateUserAttrs) {
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(false);
   if (!attrs) return null;
 
-  const styles = StyleSheet.create({
-    input: {
-      paddingLeft: 10,
-      textAlignVertical: "center",
-      height: 50,
-      width: "100%",
-      borderWidth: 1,
-      borderRadius: 5,
-    },
-    small_input: {
-      paddingLeft: 10,
-      textAlignVertical: "center",
-      height: 40,
-      width: "100%",
-    },
-  });
-
   return (
-    <View className={`flex ${onBoarding ? "" : "mx-5"}`}>
-      <View>
-        <DateTimePickerModal
-          isVisible={open}
-          mode="date"
-          date={attrs.rentStartDate ?? new Date()}
-          onConfirm={(date) => {
-            setOpen(false);
-            setAttrs({ ...attrs, rentStartDate: date });
-          }}
-          onCancel={() => setOpen(false)}
-        />
-        <DateTimePickerModal
-          isVisible={open1}
-          mode="date"
-          date={attrs.rentEndDate ?? new Date()}
-          onConfirm={(date) => {
-            setOpen1(false);
-            setAttrs({ ...attrs, rentEndDate: date });
-          }}
-          onCancel={() => setOpen1(false)}
-        />
-      </View>
-      <Text className="text-xl font-bold text-[#111827]">Location:</Text>
-      <View>
-        <TextInput
-          className={`${
-            attrs.location ? "mb-9" : ""
-          } h-full w-full text-lg font-light `}
-          style={styles.input}
-          multiline={true}
-          placeholder="Paris"
-          defaultValue={attrs.location ?? ""}
-          onChangeText={(text) => setAttrs({ ...attrs, location: text })}
-        />
-        {!attrs.location && showErrorCallback && (
-          <Text className="mb-9 text-red-500">
-            {"Please select a valid location"}
-          </Text>
-        )}
-      </View>
-      {!onBoarding && (
-        <Divider width={1.5} color="black" className="mb-6"></Divider>
-      )}
-
-      <Text className="text-xl font-bold text-[#111827]">Type:</Text>
-
-      <View className="mb-6 flex flex-row justify-center">
-        <TouchableOpacity
-          disabled={attrs.homeType == "HOUSE"}
-          onPress={() => {
-            if (attrs.homeType == "APARTMENT" || !attrs.homeType)
-              setAttrs({ ...attrs, homeType: "HOUSE" });
-          }}
-        >
-          <HouseTypeBtn
-            name="House"
-            iconName="house"
-            disabled={attrs.homeType == "HOUSE"}
-          />
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          disabled={attrs.homeType == "APARTMENT"}
-          onPress={() => {
-            if (attrs.homeType == "HOUSE" || !attrs.homeType)
-              setAttrs({ ...attrs, homeType: "APARTMENT" });
-          }}
-        >
-          <HouseTypeBtn
-            name="Appartment"
-            iconName="apartment"
-            disabled={attrs.homeType == "APARTMENT"}
-          />
-        </TouchableOpacity>
-      </View>
-
-      <Text className="text-start text-xl font-bold text-[#111827]">
-        Rent dates:
-      </Text>
-      <View className="mb-10 flex h-16 w-full flex-row items-center justify-center space-x-4 px-2">
-        <View className="flex h-16 w-1/2 flex-col items-start rounded-xl align-middle">
-          <Text className="text-base font-bold text-black">Rent start</Text>
-
-          <TouchableOpacity onPress={() => setOpen(true)} className="w-[95%]">
-            <View className="w-full rounded-lg border-[1px] border-black py-1.5 pl-2">
-              <Text className="font-base text-lg leading-loose text-black focus:border-blue-500">
-                {attrs.rentStartDate?.toLocaleDateString() ??
-                  new Date().toLocaleDateString()}
+    <>
+      <DateTimePickerModal
+        isVisible={open}
+        mode="date"
+        date={attrs.rentStartDate ?? new Date()}
+        onConfirm={(date) => {
+          setOpen(false);
+          setAttrs({ ...attrs, rentStartDate: date });
+        }}
+        onCancel={() => setOpen(false)}
+      />
+      <DateTimePickerModal
+        isVisible={open1}
+        mode="date"
+        date={attrs.rentEndDate ?? new Date()}
+        onConfirm={(date) => {
+          setOpen1(false);
+          setAttrs({ ...attrs, rentEndDate: date });
+        }}
+        onCancel={() => setOpen1(false)}
+      />
+      <View className={`flex space-y-4 ${onBoarding ? "" : "mx-5"}`}>
+        <View className="flex flex-col space-y-1">
+          <Text className="font-bold">Location</Text>
+          <View className="relative">
+            <TextInput
+              className="border-indigo h-10 rounded-lg border pl-2"
+              placeholder="Paris"
+              defaultValue={attrs.location ?? ""}
+              onChangeText={(text) => setAttrs({ ...attrs, location: text })}
+            />
+            {!attrs.location && showErrorCallback && (
+              <Text
+                className="text-light-red absolute -bottom-3"
+                style={{ fontSize: 10 }}
+              >
+                Please select a valid location
               </Text>
+            )}
+          </View>
+        </View>
+        <View className="flex flex-col space-y-1">
+          <Text className="font-bold">Type</Text>
+          <View className="flex flex-row justify-between">
+            <TouchableOpacity
+              disabled={attrs.homeType == "HOUSE"}
+              onPress={() => {
+                if (attrs.homeType == "APARTMENT" || !attrs.homeType)
+                  setAttrs({ ...attrs, homeType: "HOUSE" });
+              }}
+            >
+              <HouseTypeBtn
+                name="House"
+                iconName="house"
+                disabled={attrs.homeType == "HOUSE"}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              disabled={attrs.homeType == "APARTMENT"}
+              onPress={() => {
+                if (attrs.homeType == "HOUSE" || !attrs.homeType)
+                  setAttrs({ ...attrs, homeType: "APARTMENT" });
+              }}
+            >
+              <HouseTypeBtn
+                name="Apartment"
+                iconName="apartment"
+                disabled={attrs.homeType == "APARTMENT"}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <View className="flex flex-row justify-between">
+          <View className="flex min-w-[150px] flex-col space-y-1">
+            <Text className="font-bold">Rent start</Text>
+            <View className="relative">
+              <TouchableOpacity onPress={() => setOpen(true)}>
+                <TextInput
+                  className="border-indigo h-10 rounded-lg border pl-2 text-black"
+                  editable={false}
+                >
+                  {attrs.rentStartDate?.toLocaleDateString() ??
+                    new Date().toLocaleDateString()}
+                </TextInput>
+              </TouchableOpacity>
+              {showRentDateErrorCallback && (
+                <Text
+                  className="absolute -bottom-3 text-red-500"
+                  style={{ fontSize: 10 }}
+                >
+                  Invalid rent dates
+                </Text>
+              )}
             </View>
-          </TouchableOpacity>
-          {showRentDateErrorCallback && (
-            <Text className="text-red-500">{"Invalid rent dates"}</Text>
+          </View>
+          <View className="flex min-w-[150px] flex-col space-y-1">
+            <Text className="font-bold">Rent end</Text>
+            <View className="relative">
+              <TouchableOpacity onPress={() => setOpen1(true)}>
+                <TextInput
+                  className="border-indigo h-10 rounded-lg border pl-2 text-black"
+                  editable={false}
+                >
+                  {attrs.rentEndDate?.toLocaleDateString() ??
+                    new Date().toLocaleDateString()}
+                </TextInput>
+              </TouchableOpacity>
+              {showRentDateErrorCallback && (
+                <Text
+                  className="absolute -bottom-3 text-red-500"
+                  style={{ fontSize: 10 }}
+                >
+                  {"Invalid rent dates"}
+                </Text>
+              )}
+            </View>
+          </View>
+        </View>
+
+        <View className="flex flex-row justify-between">
+          <View className="flex min-w-[150px] flex-col space-y-1">
+            <Text className="font-bold">Minimum (€)</Text>
+            <View className="relative">
+              <TextInput
+                className="border-indigo h-10 rounded-lg border pl-2 text-black"
+                inputMode="numeric"
+                placeholder="0"
+                onChangeText={(text) => {
+                  setAttrs({ ...attrs, minPrice: parseInt(text) ?? 0 });
+                }}
+                defaultValue={attrs.minPrice ? attrs.minPrice.toString() : ""}
+              ></TextInput>
+
+              {isNaN(attrs.minPrice as number) && showMinPriceErrorCallback && (
+                <Text
+                  className="absolute -bottom-3 text-red-500"
+                  style={{ fontSize: 10 }}
+                >
+                  {"Min price is required"}
+                </Text>
+              )}
+            </View>
+          </View>
+          <View className="flex min-w-[150px] flex-col space-y-1">
+            <Text className="font-bold">Maximum (€)</Text>
+            <View className="relative">
+              <TextInput
+                className="border-indigo h-10 rounded-lg border pl-2 text-black"
+                inputMode="numeric"
+                placeholder="0"
+                onChangeText={(text) => {
+                  setAttrs({ ...attrs, maxPrice: parseInt(text) ?? 0 });
+                }}
+                defaultValue={attrs.maxPrice ? attrs.maxPrice.toString() : ""}
+              ></TextInput>
+              {isNaN(attrs.maxPrice as number) && showMaxPriceErrorCallback && (
+                <Text
+                  className="absolute -bottom-3 text-red-500"
+                  style={{ fontSize: 10 }}
+                >
+                  {"Max price is required"}
+                </Text>
+              )}
+            </View>
+          </View>
+          {showPriceErrorCallback && (
+            <Text
+              className="absolute -bottom-3 text-red-500"
+              style={{ fontSize: 10 }}
+            >
+              {"Min price can't be higher than max price"}
+            </Text>
           )}
         </View>
-        <View className="flex h-16 w-1/2 flex-col items-start rounded-xl">
-          <Text className="ml-1 text-base font-bold text-black">Rent end</Text>
-          <TouchableOpacity
-            onPress={() => setOpen1(true)}
-            className="ml-1 w-[100%]"
-          >
-            <View className="w-full rounded-lg border-[1px] border-black py-1.5 pl-2">
-              <Text className="font-base text-lg leading-loose text-black focus:border-blue-500">
-                {attrs.rentEndDate?.toLocaleDateString() ??
-                  new Date().toLocaleDateString()}
-              </Text>
+
+        <View className="flex flex-row justify-between">
+          <View className="flex min-w-[150px] flex-col space-y-1">
+            <Text className="font-bold">Minimum (m²)</Text>
+            <View className="relative">
+              <TextInput
+                className="border-indigo h-10 rounded-lg border pl-2 text-black"
+                inputMode="numeric"
+                placeholder="0"
+                onChangeText={(text) => {
+                  setAttrs({ ...attrs, minSize: parseInt(text) ?? 0 });
+                }}
+                defaultValue={attrs.minSize ? attrs.minSize.toString() : ""}
+              ></TextInput>
+              {isNaN(attrs.minSize as number) && showMinSizeErrorCallback && (
+                <Text
+                  className="absolute -bottom-3 text-red-500"
+                  style={{ fontSize: 10 }}
+                >
+                  {"Min size is required"}
+                </Text>
+              )}
             </View>
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      <View>
-        <Text className="text-start  text-xl font-bold">Price range:</Text>
-        <View className="mb-8 flex h-16 w-full flex-row items-center space-x-8">
-          <View className="flex h-16 w-[45%] flex-col items-start rounded-xl py-1">
-            <Text className="align-center text-center text-base font-bold text-black">
-              Minimum (€)
+          </View>
+          <View className="flex min-w-[150px] flex-col space-y-1">
+            <Text className="font-bold">Maximum (m²)</Text>
+            <View className="relative">
+              <TextInput
+                className="border-indigo h-10 rounded-lg border pl-2 text-black"
+                inputMode="numeric"
+                placeholder="0"
+                onChangeText={(text) => {
+                  setAttrs({ ...attrs, maxSize: parseInt(text) ?? 0 });
+                }}
+                defaultValue={attrs.maxSize ? attrs.maxSize.toString() : ""}
+              ></TextInput>
+              {isNaN(attrs.maxSize as number) && showMaxSizeErrorCallback && (
+                <Text
+                  className="absolute -bottom-3 text-red-500"
+                  style={{ fontSize: 10 }}
+                >
+                  {"Max size is required"}
+                </Text>
+              )}
+            </View>
+          </View>
+          {showSizeErrorCallback && (
+            <Text
+              className="absolute -bottom-3 text-red-500"
+              style={{ fontSize: 10 }}
+            >
+              {"Min size can't be higher than max size"}
             </Text>
+          )}
+        </View>
 
-            <View className="flex h-10 w-full flex-row justify-start rounded-md border">
-              <View className="h-10 w-full">
-                <TextInput
-                  inputMode="numeric"
-                  placeholder="0"
-                  className="w-full font-light text-black"
-                  placeholderTextColor={"black"}
-                  style={styles.small_input}
-                  onChangeText={(text) => {
-                    setAttrs({ ...attrs, minPrice: parseInt(text) ?? 0 });
-                  }}
-                  defaultValue={attrs.minPrice ?? ""}
-                />
-                {isNaN(attrs.minPrice as number) &&
-                  showMinPriceErrorCallback && (
-                    <Text className="text-red-500">
-                      {"Min price is required"}
-                    </Text>
-                  )}
-                {showPriceErrorCallback && (
-                  <Text className=" text-red-500">
-                    {"Min price can't be higher than max price"}
+        <View className="flex flex-row justify-between">
+          <View className="flex min-w-[150px] flex-col space-y-1">
+            <Text className="font-bold">Min bedrooms</Text>
+            <View className="relative">
+              <TextInput
+                className="border-indigo h-10 rounded-lg border pl-2 text-black"
+                inputMode="numeric"
+                placeholder="0"
+                onChangeText={(text) => {
+                  setAttrs({ ...attrs, minBedrooms: parseInt(text) ?? 0 });
+                }}
+                defaultValue={
+                  attrs.minBedrooms ? attrs.minBedrooms.toString() : ""
+                }
+              ></TextInput>
+              {isNaN(attrs.minBedrooms as number) &&
+                showMinBedErrorCallback && (
+                  <Text
+                    className="absolute -bottom-3 text-red-500"
+                    style={{ fontSize: 10 }}
+                  >
+                    {"Min bedrooms is required"}
                   </Text>
                 )}
-              </View>
-              {/* <Text className="font-light text-black"> €</Text> */}
             </View>
           </View>
-          <View className="flex h-16 w-[45%] flex-col items-start rounded-xl py-1">
-            <Text className="text-center text-base font-bold text-black">
-              Maximum (€)
-            </Text>
-            <View className="flex h-10 w-full flex-row justify-start rounded-md border">
-              <View className="h-10 w-full">
-                <TextInput
-                  inputMode="numeric"
-                  placeholder="0"
-                  className="w-full font-light text-black"
-                  placeholderTextColor={"black"}
-                  style={styles.small_input}
-                  onChangeText={(text) => {
-                    setAttrs({ ...attrs, maxPrice: parseInt(text) ?? 0 });
-                  }}
-                  defaultValue={attrs.maxPrice ?? ""}
-                />
-                {isNaN(attrs.maxPrice as number) &&
-                  showMaxPriceErrorCallback && (
-                    <Text className="text-red-500">
-                      {"Max price is required"}
-                    </Text>
-                  )}
-              </View>
-            </View>
-          </View>
-        </View>
-      </View>
-
-      <View className="pt-2">
-        <Text className="mb-2 text-start text-xl font-bold">Size range:</Text>
-        <View className="flex h-16 w-full flex-row items-center space-x-8">
-          <View className="flex h-16 w-[45%] flex-col items-start rounded-xl py-1">
-            <Text className="align-center text-center text-base font-bold text-black">
-              Minimum (m²)
-            </Text>
-            <View className="flex h-10 w-full flex-row justify-start rounded-md border">
-              <View className="h-10 w-full">
-                <TextInput
-                  inputMode="numeric"
-                  placeholder="0"
-                  className="w-full font-light text-black"
-                  placeholderTextColor={"black"}
-                  style={styles.small_input}
-                  onChangeText={(text) => {
-                    setAttrs({ ...attrs, minSize: parseInt(text) ?? 0 });
-                  }}
-                  defaultValue={attrs.minSize ?? ""}
-                />
-                {isNaN(attrs.minSize as number) && showMinSizeErrorCallback && (
-                  <Text className="text-red-500">{"Min size is required"}</Text>
-                )}
-                {showSizeErrorCallback && (
-                  <Text className="text-red-500">
-                    {"Min size can't be higher than max size"}
+          <View className="flex min-w-[150px] flex-col space-y-1">
+            <Text className="font-bold">Max bedrooms</Text>
+            <View className="relative">
+              <TextInput
+                className="border-indigo h-10 rounded-lg border pl-2 text-black"
+                inputMode="numeric"
+                placeholder="0"
+                onChangeText={(text) => {
+                  setAttrs({ ...attrs, maxBedrooms: parseInt(text) ?? 0 });
+                }}
+                defaultValue={
+                  attrs.maxBedrooms ? attrs.maxBedrooms.toString() : ""
+                }
+              ></TextInput>
+              {isNaN(attrs.maxBedrooms as number) &&
+                showMaxBedErrorCallback && (
+                  <Text
+                    className="absolute -bottom-3 text-red-500"
+                    style={{ fontSize: 10 }}
+                  >
+                    {"Max bedrooms is required"}
                   </Text>
                 )}
-              </View>
             </View>
           </View>
-          <View className="flex h-16 w-[45%] flex-col items-start rounded-xl py-1">
-            <Text className="text-center text-base font-bold text-black">
-              Maximum (m²)
+          {showBedErrorCallback && (
+            <Text
+              className="absolute -bottom-3 text-red-500"
+              style={{ fontSize: 10 }}
+            >
+              {"Min bedrooms can't be higher than max bedroooms"}
             </Text>
-            <View className="flex h-10 w-full flex-row justify-start rounded-md border">
-              <View className="h-10 w-full">
-                <TextInput
-                  inputMode="numeric"
-                  placeholder="0"
-                  className="w-full font-light text-black"
-                  placeholderTextColor={"black"}
-                  style={styles.small_input}
-                  onChangeText={(text) => {
-                    setAttrs({ ...attrs, maxSize: parseInt(text) ?? 0 });
-                  }}
-                  defaultValue={attrs.maxSize ?? ""}
-                />
-                {isNaN(attrs.maxSize as number) && showMaxSizeErrorCallback && (
-                  <Text className="text-red-500">{"Max size is required"}</Text>
+          )}
+        </View>
+
+        <View className="flex flex-row justify-between">
+          <View className="flex min-w-[150px] flex-col space-y-1">
+            <Text className="font-bold">Min bathrooms</Text>
+            <View className="relative">
+              <TextInput
+                className="border-indigo h-10 rounded-lg border pl-2 text-black"
+                inputMode="numeric"
+                placeholder="0"
+                onChangeText={(text) => {
+                  setAttrs({ ...attrs, minBathrooms: parseInt(text) ?? 0 });
+                }}
+                defaultValue={
+                  attrs.minBathrooms ? attrs.minBathrooms.toString() : ""
+                }
+              ></TextInput>
+              {isNaN(attrs.minBathrooms as number) &&
+                showMinBathErrorCallback && (
+                  <Text
+                    className="absolute -bottom-3 text-red-500"
+                    style={{ fontSize: 10 }}
+                  >
+                    {"Min bathrooms is required"}
+                  </Text>
                 )}
-              </View>
             </View>
+          </View>
+          <View className="flex min-w-[150px] flex-col space-y-1">
+            <Text className="font-bold">Max bathrooms</Text>
+            <View className="relative">
+              <TextInput
+                className="border-indigo h-10 rounded-lg border pl-2 text-black"
+                inputMode="numeric"
+                placeholder="0"
+                onChangeText={(text) => {
+                  setAttrs({ ...attrs, maxBathrooms: parseInt(text) ?? 0 });
+                }}
+                defaultValue={
+                  attrs.maxBathrooms ? attrs.maxBathrooms.toString() : ""
+                }
+              ></TextInput>
+              {isNaN(attrs.maxBathrooms as number) &&
+                showMaxBathErrorCallback && (
+                  <Text
+                    className="absolute -bottom-3 text-red-500"
+                    style={{ fontSize: 10 }}
+                  >
+                    {"Max bathrooms is required"}
+                  </Text>
+                )}
+            </View>
+          </View>
+          {showBathErrorCallback && (
+            <Text
+              className="absolute -bottom-3 text-red-500"
+              style={{ fontSize: 10 }}
+            >
+              {"Min bathrooms can't be higher than max bathrooms"}
+            </Text>
+          )}
+        </View>
+
+        <View className="">
+          <Text className="font-bold">Attributes</Text>
+          <View className="flex flex-row flex-wrap justify-center gap-2">
+            <TouchableOpacity
+              onPress={() => {
+                setAttrs({ ...attrs, furnished: !attrs.furnished ?? true });
+              }}
+            >
+              <HouseTypeBtn
+                name="Furnished"
+                disabled={attrs.furnished}
+                iconName="king-bed"
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                setAttrs({ ...attrs, terrace: !attrs.terrace ?? true });
+              }}
+            >
+              <HouseTypeBtn
+                name="Terrace"
+                disabled={attrs.terrace}
+                iconName="deck"
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                setAttrs({ ...attrs, pets: !attrs.pets ?? true });
+              }}
+            >
+              <HouseTypeBtn name="Pets" disabled={attrs.pets} iconName="pets" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                setAttrs({ ...attrs, smoker: !attrs.smoker ?? true });
+              }}
+            >
+              <HouseTypeBtn
+                name="Smoker"
+                disabled={attrs.smoker}
+                iconName="smoking-rooms"
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                setAttrs({ ...attrs, disability: !attrs.disability ?? true });
+              }}
+            >
+              <HouseTypeBtn
+                name="Disability"
+                disabled={attrs.disability}
+                iconName="accessible"
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                setAttrs({ ...attrs, garden: !attrs.garden ?? true });
+              }}
+            >
+              <HouseTypeBtn
+                name="Garden"
+                disabled={attrs.garden}
+                iconName="local-florist"
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                setAttrs({ ...attrs, parking: !attrs.parking ?? true });
+              }}
+            >
+              <HouseTypeBtn
+                name="Parking"
+                disabled={attrs.parking}
+                iconName="local-parking"
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                setAttrs({ ...attrs, elevator: !attrs.elevator ?? true });
+              }}
+            >
+              <HouseTypeBtn
+                name="Elevator"
+                disabled={attrs.elevator}
+                iconName="elevator"
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                setAttrs({ ...attrs, pool: !attrs.pool ?? true });
+              }}
+            >
+              <HouseTypeBtn name="Pool" disabled={attrs.pool} iconName="pool" />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => {
+                setAttrs({
+                  ...attrs,
+                  securityAlarm: !attrs.securityAlarm ?? true,
+                });
+              }}
+            >
+              <HouseTypeBtn
+                name="Security Alarm"
+                disabled={attrs.securityAlarm}
+                iconName="security"
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                setAttrs({
+                  ...attrs,
+                  internetFiber: !attrs.internetFiber ?? true,
+                });
+              }}
+            >
+              <HouseTypeBtn
+                name="Internet fiber"
+                disabled={attrs.internetFiber}
+                iconName="wifi"
+              />
+            </TouchableOpacity>
           </View>
         </View>
       </View>
-
-      <View className="pb-4 pt-9">
-        <Text className="mb-3 text-xl font-bold text-black">Attributes:</Text>
-        <View className="flex flex-row flex-wrap justify-center gap-2">
-          <TouchableOpacity
-            onPress={() => {
-              setAttrs({ ...attrs, furnished: !attrs.furnished ?? true });
-            }}
-          >
-            <AttributeBtn
-              name="Furnished"
-              status={attrs.furnished}
-              iconName="king-bed"
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              setAttrs({ ...attrs, terrace: !attrs.terrace ?? true });
-            }}
-          >
-            <AttributeBtn
-              name="Terrace"
-              status={attrs.terrace}
-              iconName="deck"
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              setAttrs({ ...attrs, pets: !attrs.pets ?? true });
-            }}
-          >
-            <AttributeBtn name="Pets" status={attrs.pets} iconName="pets" />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              setAttrs({ ...attrs, smoker: !attrs.smoker ?? true });
-            }}
-          >
-            <AttributeBtn
-              name="Smoker"
-              status={attrs.smoker}
-              iconName="smoking-rooms"
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              setAttrs({ ...attrs, disability: !attrs.disability ?? true });
-            }}
-          >
-            <AttributeBtn
-              name="Disability"
-              status={attrs.disability}
-              iconName="accessible"
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              setAttrs({ ...attrs, garden: !attrs.garden ?? true });
-            }}
-          >
-            <AttributeBtn
-              name="Garden"
-              status={attrs.garden}
-              iconName="local-florist"
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              setAttrs({ ...attrs, parking: !attrs.parking ?? true });
-            }}
-          >
-            <AttributeBtn
-              name="Parking"
-              status={attrs.parking}
-              iconName="local-parking"
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              setAttrs({ ...attrs, elevator: !attrs.elevator ?? true });
-            }}
-          >
-            <AttributeBtn
-              name="Elevator"
-              status={attrs.elevator}
-              iconName="elevator"
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              setAttrs({ ...attrs, pool: !attrs.pool ?? true });
-            }}
-          >
-            <AttributeBtn name="Pool" status={attrs.pool} iconName="pool" />
-          </TouchableOpacity>
-        </View>
-      </View>
-    </View>
+    </>
   );
 }

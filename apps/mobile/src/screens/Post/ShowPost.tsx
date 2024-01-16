@@ -361,7 +361,6 @@ export default function ShowPost() {
                 {AttributesList(post.attribute, "white", "#6C47FF")}
               </>
             )}
-            <Separator color="black" />
             {!editable && (
               <>
                 <View className="mt-3 flex flex-row justify-between">
