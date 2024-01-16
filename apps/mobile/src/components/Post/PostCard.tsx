@@ -53,6 +53,12 @@ export default function PostCard({ data, userId }: IPostCard) {
         <View>
           <Text className="font-light">Price: {data.attribute?.price} €</Text>
           <Text className="font-light">
+            Bedrooms: {data.attribute?.bedrooms}
+          </Text>
+          <Text className="font-light">
+            Bathrooms: {data.attribute?.bedrooms}
+          </Text>
+          <Text className="font-light">
             Type:{" "}
             {data.attribute?.homeType === "APARTMENT" ? "Apartment" : "House"}
           </Text>

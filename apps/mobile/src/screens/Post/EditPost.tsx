@@ -3,7 +3,6 @@ import {
   Text,
   SafeAreaView,
   StyleSheet,
-  Platform,
   ScrollView,
   TextInput,
 } from "react-native";
@@ -33,6 +32,7 @@ export default function EditPost() {
     content: string;
     desc: string;
   }>();
+
   const [postAttrs, setPostAttrs] = useState<IDefaultAttributes>();
   const editPost = trpc.post.updatePostById.useMutation();
 
@@ -80,13 +80,13 @@ export default function EditPost() {
     });
   }
 
-  // if (!postInfo || !postAttrs) return null;
-
   const [titleError, setTitleError] = useState("");
   const [descriptionError, setDescriptionError] = useState("");
   const [locationError, setLocationError] = useState("");
   const [priceError, setPriceError] = useState("");
   const [sizeError, setSizeError] = useState("");
+  const [bedroomsError, setBedroomsError] = useState("");
+  const [bathroomsError, setBathroomsError] = useState("");
 
   const validateAndSetAttrs = () => {
     setLoading({ status: true, message: "Updating..." });
@@ -127,6 +127,28 @@ export default function EditPost() {
       setSizeError("");
     }
 
+    if (
+      !postAttrs?.bedrooms ||
+      postAttrs.bedrooms <= 0 ||
+      isNaN(postAttrs.bedrooms)
+    ) {
+      setBedroomsError("Please enter a valid number of bedrooms");
+      isValid = false;
+    } else {
+      setBedroomsError("");
+    }
+
+    if (
+      !postAttrs?.bathrooms ||
+      postAttrs.bathrooms <= 0 ||
+      isNaN(postAttrs.bathrooms)
+    ) {
+      setBathroomsError("Please enter a valid number of bathrooms");
+      isValid = false;
+    } else {
+      setBathroomsError("");
+    }
+
     if (isValid) {
       handlePost();
     }
@@ -145,10 +167,14 @@ export default function EditPost() {
                 Title
               </Text>
               <TextInput
-                className={`rounded-xl border border-black
-                   p-${
-                     Platform.OS === "ios" ? 4 : 2
-                   } font-light leading-loose focus:border-[#6466f1]`}
+                style={{
+                  color: "black",
+                  padding: 4,
+                  width: "100%",
+                  height: 38,
+                }}
+                className={`focus:border-indigo rounded-md
+                   border p-2 font-light leading-loose`}
                 placeholder="Enter title..."
                 defaultValue={postInfo?.title}
                 onChangeText={(text) =>
@@ -165,10 +191,8 @@ export default function EditPost() {
               </Text>
               <TextInput
                 multiline
-                className={`rounded-xl border border-black
-                  p-${
-                    Platform.OS === "ios" ? 4 : 2
-                  } font-light leading-loose focus:border-[#6466f1]`}
+                className={`focus:border-indigo rounded-md border
+                  border-black p-2 font-light leading-loose`}
                 placeholder="Enter description..."
                 defaultValue={postInfo?.desc}
                 onChangeText={(text) =>
@@ -191,6 +215,10 @@ export default function EditPost() {
                 setLocationError={setLocationError}
                 setPriceError={setPriceError}
                 setSizeError={setSizeError}
+                bedroomsError={bedroomsError}
+                bathroomsError={bathroomsError}
+                setBedroomsError={setBedroomsError}
+                setBathroomsError={setBathroomsError}
               />
             </View>
             <View className="pt-2">

@@ -16,6 +16,8 @@ export interface IDefaultAttributes {
   location?: string;
   price?: number;
   size?: number;
+  bedrooms?: number;
+  bathrooms?: number;
   rentStartDate?: Date;
   rentEndDate?: Date;
   homeType?: "HOUSE" | "APARTMENT" | "";
