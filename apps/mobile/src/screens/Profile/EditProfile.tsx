@@ -251,7 +251,34 @@ export default function EditProfile() {
       setLoading({ status: true, message: "Updating..." });
       userMutation.mutate({ ...user });
       if (showAttrs && attrs) {
-        attributesMutation.mutate(attrs);
+        attributesMutation.mutate({
+          userId: attrs.userId,
+          location: attrs.location ?? undefined,
+          range: attrs.range ?? undefined,
+          maxPrice: attrs.maxPrice ?? undefined,
+          minPrice: attrs.minPrice ?? undefined,
+          maxSize: attrs.maxSize ?? undefined,
+          minSize: attrs.minSize ?? undefined,
+          maxBedrooms: attrs.maxBedrooms ?? undefined,
+          minBedrooms: attrs.minBedrooms ?? undefined,
+          maxBathrooms: attrs.maxBathrooms ?? undefined,
+          minBathrooms: attrs.minBathrooms ?? undefined,
+          rentStartDate: attrs.rentStartDate ?? undefined,
+          rentEndDate: attrs.rentEndDate ?? undefined,
+          furnished: attrs.furnished ?? undefined,
+
+          homeType: attrs.homeType ?? undefined,
+          terrace: attrs.terrace ?? undefined,
+          pets: attrs.pets ?? undefined,
+          smoker: attrs.smoker ?? undefined,
+          disability: attrs.disability ?? undefined,
+          garden: attrs.garden ?? undefined,
+          parking: attrs.parking ?? undefined,
+          elevator: attrs.elevator ?? undefined,
+          pool: attrs.pool ?? undefined,
+          internetFiber: attrs.internetFiber ?? undefined,
+          securityAlarm: attrs.securityAlarm ?? undefined,
+        });
       }
       // navigation.navigate("ViewProfile", { userId });
     }
