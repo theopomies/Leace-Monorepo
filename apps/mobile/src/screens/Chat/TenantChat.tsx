@@ -278,9 +278,10 @@ export default function TenantChat() {
                     inputMode="decimal"
                     placeholder="0123456789"
                     defaultValue={lease.rentCost.toString()}
-                    onChangeText={(text) =>
-                      setLease({ ...lease, rentCost: parseInt(text) })
-                    }
+                    onChangeText={(text) => {
+                      if (isNaN(parseInt(text))) return;
+                      setLease({ ...lease, rentCost: parseInt(text) });
+                    }}
                   />
                 </View>
                 <View className="flex flex-row items-center justify-between px-2">
@@ -293,9 +294,10 @@ export default function TenantChat() {
                     inputMode="decimal"
                     placeholder="0123456789"
                     defaultValue={lease.utilitiesCost.toString()}
-                    onChangeText={(text) =>
-                      setLease({ ...lease, utilitiesCost: parseInt(text) })
-                    }
+                    onChangeText={(text) => {
+                      if (isNaN(parseInt(text))) return;
+                      setLease({ ...lease, utilitiesCost: parseInt(text) });
+                    }}
                   />
                 </View>
                 <View className="flex flex-row items-center justify-between px-2">
