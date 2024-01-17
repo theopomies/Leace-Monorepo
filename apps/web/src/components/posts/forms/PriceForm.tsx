@@ -3,15 +3,15 @@ import { NumberInput } from "../../shared/forms/NumberInput";
 
 export interface PriceFormProps {
   price: number | undefined;
-  onPriceChange: (price: number) => void;
+  onPriceChange: (price: number | undefined) => void;
   size: number | undefined;
-  onSizeChange: (size: number) => void;
+  onSizeChange: (size: number | undefined) => void;
   bedrooms: number | undefined;
-  onBedroomsChange: (bedrooms: number) => void;
+  onBedroomsChange: (bedrooms: number | undefined) => void;
   bathrooms: number | undefined;
-  onBathroomsChange: (bathrooms: number) => void;
+  onBathroomsChange: (bathrooms: number | undefined) => void;
   charges: number | undefined;
-  onChargesChange: (charges: number) => void;
+  onChargesChange: (charges: number | undefined) => void;
   onSubmit: () => void;
   isValid: boolean;
 }
@@ -43,7 +43,9 @@ export function PriceForm({
           <p>Price</p>
           <NumberInput
             value={price}
-            onChange={(e) => onPriceChange(+(e.target.value ?? 0))}
+            onChange={(e) =>
+              onPriceChange(e.target.value ? +e.target.value : undefined)
+            }
             placeholder="Enter a price"
             className="w-full"
             unit="€"
@@ -54,10 +56,12 @@ export function PriceForm({
           <p>Charges</p>
           <NumberInput
             value={charges}
-            onChange={(e) => onChargesChange(+(e.target.value ?? 0))}
+            onChange={(e) =>
+              onChargesChange(e.target.value ? +e.target.value : undefined)
+            }
             placeholder="Enter an amount of charges"
             className="w-full"
-            unit="m²"
+            unit="€"
             required
           />
         </label>
@@ -67,7 +71,9 @@ export function PriceForm({
           <p>Size</p>
           <NumberInput
             value={size}
-            onChange={(e) => onSizeChange(+(e.target.value ?? 0))}
+            onChange={(e) =>
+              onSizeChange(e.target.value ? +e.target.value : undefined)
+            }
             placeholder="Enter a size"
             className="w-full"
             unit="m²"
@@ -80,7 +86,9 @@ export function PriceForm({
           <p>Number of bedrooms</p>
           <NumberInput
             value={bedrooms}
-            onChange={(e) => onBedroomsChange(+(e.target.value ?? 0))}
+            onChange={(e) =>
+              onBedroomsChange(e.target.value ? +e.target.value : undefined)
+            }
             placeholder="Enter a number of bedrooms"
             className="w-full"
             required
@@ -90,7 +98,9 @@ export function PriceForm({
           <p>Number of bathrooms</p>
           <NumberInput
             value={bathrooms}
-            onChange={(e) => onBathroomsChange(+(e.target.value ?? 0))}
+            onChange={(e) =>
+              onBathroomsChange(e.target.value ? +e.target.value : undefined)
+            }
             placeholder="Enter a number of bathrooms"
             className="w-full"
             required

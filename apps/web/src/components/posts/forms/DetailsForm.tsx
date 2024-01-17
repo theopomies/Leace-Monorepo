@@ -180,7 +180,7 @@ export function DetailsForm({
                   if (e.target.value.length > 1) {
                     return;
                   }
-                  if (!"ABCDEF".includes(e.target.value.toUpperCase())) {
+                  if (!"ABCD".includes(e.target.value.toUpperCase())) {
                     return;
                   }
                   onEnergyClassChange(
