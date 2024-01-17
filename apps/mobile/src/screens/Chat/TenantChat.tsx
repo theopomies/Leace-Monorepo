@@ -5,7 +5,6 @@ import {
   StyleSheet,
   TextInput,
   SafeAreaView,
-  Modal,
   TouchableOpacity,
   Alert,
 } from "react-native";
@@ -124,7 +123,6 @@ export default function TenantChat() {
   const updateLease = trpc.lease.updateLeaseById.useMutation({
     onSuccess() {
       LocalStorage.setItem("refreshMatches", true);
-
       setShow(false);
     },
   });
@@ -196,6 +194,13 @@ export default function TenantChat() {
   }
 
   async function handleLease() {
+    if (lease.startDate > lease.endDate) {
+      setDateError(true);
+      return;
+    } else {
+      setDateError(false);
+    }
+
     if (role === "TENANT" && lease && !lease.isSigned) {
       console.log(lease);
       signLease.mutate({ leaseId: lease.id });
@@ -221,6 +226,8 @@ export default function TenantChat() {
 
     setShow(false);
   }
+
+  const [dateError, setDateError] = useState(false);
 
   if (show === true) {
     return (
@@ -319,6 +326,13 @@ export default function TenantChat() {
                   </Text>
                 </TouchableOpacity>
               </View>
+              {dateError && (
+                <View className="items-center justify-center">
+                  <Text style={{ color: "red", alignItems: "center" }}>
+                    Invalid dates.
+                  </Text>
+                </View>
+              )}
               <View className="mt-3 flex space-y-1">
                 {role !== "TENANT" && !lease.isSigned && (
                   <View>
