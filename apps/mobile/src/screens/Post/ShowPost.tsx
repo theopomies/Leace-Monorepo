@@ -157,6 +157,8 @@ export default function ShowPost() {
       parking?: any;
       elevator?: any;
       pool?: any;
+      internetFiber?: any;
+      securityAlarm?: any;
     },
     iconTextColor: string | undefined,
     iconBGColor: string | undefined,
@@ -223,6 +225,20 @@ export default function ShowPost() {
           name="Pool"
           status={attribute.pool}
           iconName="pool"
+          iconTextColor={iconTextColor}
+          iconBGColor={iconBGColor}
+        />
+        <AttributeBtn
+          name="Internet fiber"
+          status={attribute.internetFiber}
+          iconName="wifi"
+          iconTextColor={iconTextColor}
+          iconBGColor={iconBGColor}
+        />
+        <AttributeBtn
+          name="Security alarm"
+          status={attribute.securityAlarm}
+          iconName="security"
           iconTextColor={iconTextColor}
           iconBGColor={iconBGColor}
         />

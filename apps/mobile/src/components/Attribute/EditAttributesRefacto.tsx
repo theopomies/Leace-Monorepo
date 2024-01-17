@@ -173,13 +173,10 @@ export default function EditAttributesRefacto({
             <Text className="font-bold">Rent start</Text>
             <View className="relative">
               <TouchableOpacity onPress={() => setOpen(true)}>
-                <TextInput
-                  className="border-indigo h-10 rounded-lg border pl-2 text-black"
-                  editable={false}
-                >
+                <Text className="border-indigo h-10 rounded-lg border pl-2 text-black">
                   {attrs.rentStartDate?.toLocaleDateString() ??
                     new Date().toLocaleDateString()}
-                </TextInput>
+                </Text>
               </TouchableOpacity>
               {showRentDateErrorCallback && (
                 <Text
@@ -195,13 +192,10 @@ export default function EditAttributesRefacto({
             <Text className="font-bold">Rent end</Text>
             <View className="relative">
               <TouchableOpacity onPress={() => setOpen1(true)}>
-                <TextInput
-                  className="border-indigo h-10 rounded-lg border pl-2 text-black"
-                  editable={false}
-                >
+                <Text className="border-indigo h-10 rounded-lg border pl-2 text-black">
                   {attrs.rentEndDate?.toLocaleDateString() ??
                     new Date().toLocaleDateString()}
-                </TextInput>
+                </Text>
               </TouchableOpacity>
               {showRentDateErrorCallback && (
                 <Text

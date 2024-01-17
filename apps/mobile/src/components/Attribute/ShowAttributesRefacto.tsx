@@ -136,6 +136,48 @@ export default function ShowAttributes({
               </Text>
             </View>
           </View>
+
+          <Text className="text-lg font-semibold text-black">Bedrooms:</Text>
+          <View className="my-4 flex flex-row justify-evenly">
+            <View className="flex min-w-[350px] items-center justify-center rounded-xl bg-[#6C47FF] px-2 py-2">
+              <Text className="font-md text-lg text-white">
+                <Text className="text-xl  text-white">
+                  {attribute.minBedrooms ?? "_"}
+                </Text>
+                <Icon
+                  className="w-32"
+                  name={"arrow-right-alt"}
+                  color={"white"}
+                  size={32}
+                  type="material-icons"
+                ></Icon>
+                <Text className="text-xl  text-white">
+                  {attribute.maxBedrooms ?? "_"}
+                </Text>
+              </Text>
+            </View>
+          </View>
+
+          <Text className="text-lg font-semibold text-black">Bathrooms:</Text>
+          <View className="my-4 flex flex-row justify-evenly">
+            <View className="flex min-w-[350px] items-center justify-center rounded-xl bg-[#6C47FF] px-2 py-2">
+              <Text className="font-md text-lg text-white">
+                <Text className="text-xl  text-white">
+                  {attribute.minBathrooms ?? "_"}
+                </Text>
+                <Icon
+                  className="w-32"
+                  name={"arrow-right-alt"}
+                  color={"white"}
+                  size={32}
+                  type="material-icons"
+                ></Icon>
+                <Text className="text-xl  text-white">
+                  {attribute.maxBathrooms ?? "_"}
+                </Text>
+              </Text>
+            </View>
+          </View>
           <Text className="text-lg font-semibold text-black">Attributes:</Text>
 
           {!attribute.furnished &&
@@ -146,7 +188,9 @@ export default function ShowAttributes({
             !attribute.garden &&
             !attribute.parking &&
             !attribute.elevator &&
-            !attribute.pool && (
+            !attribute.pool &&
+            !attribute.internetFiber &&
+            !attribute.securityAlarm && (
               <Text className="text-md my-2 font-semibold text-black">
                 No attribute selected
               </Text>
@@ -213,6 +257,20 @@ export default function ShowAttributes({
               name="Pool"
               status={attribute.pool}
               iconName="pool"
+              iconTextColor={iconTextColor}
+              iconBGColor={iconBGColor}
+            />
+            <AttributeBtn
+              name="Internet fiber"
+              status={attribute.internetFiber}
+              iconName="wifi"
+              iconTextColor={iconTextColor}
+              iconBGColor={iconBGColor}
+            />
+            <AttributeBtn
+              name="Security alarm"
+              status={attribute.securityAlarm}
+              iconName="security"
               iconTextColor={iconTextColor}
               iconBGColor={iconBGColor}
             />

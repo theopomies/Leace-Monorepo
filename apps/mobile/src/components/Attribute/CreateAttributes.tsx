@@ -8,9 +8,10 @@ import {
   Dimensions,
   StatusBar,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { Icon } from "react-native-elements";
 import { IDefaultAttributes } from "../../types";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 interface ICreateAttributes {
   attrs: IDefaultAttributes | undefined;
@@ -86,9 +87,31 @@ export default function CreateAttributes({
   setBedroomsError,
   setBathroomsError,
 }: ICreateAttributes) {
+  const [open, setOpen] = useState(false);
+  const [open1, setOpen1] = useState(false);
   if (!attrs) return null;
   return (
     <View className={`flex space-y-${Platform.OS === "android" ? 20 : 10}`}>
+      <DateTimePickerModal
+        isVisible={open}
+        mode="date"
+        date={attrs.rentStartDate ?? new Date()}
+        onConfirm={(date) => {
+          setOpen(false);
+          setAttrs({ ...attrs, rentStartDate: date });
+        }}
+        onCancel={() => setOpen(false)}
+      />
+      <DateTimePickerModal
+        isVisible={open1}
+        mode="date"
+        date={attrs.rentEndDate ?? new Date()}
+        onConfirm={(date) => {
+          setOpen1(false);
+          setAttrs({ ...attrs, rentEndDate: date });
+        }}
+        onCancel={() => setOpen1(false)}
+      />
       <View>
         <Text className="mb-1 text-lg font-semibold	 text-slate-500">
           Location
@@ -121,6 +144,46 @@ export default function CreateAttributes({
             justifyContent: "center",
           }}
         >
+          <View className="flex flex-row justify-between">
+            <View className="flex min-w-[150px] flex-col space-y-1">
+              <Text className="font-bold">Rent start</Text>
+              <View className="relative">
+                <TouchableOpacity onPress={() => setOpen(true)}>
+                  <Text className="border-indigo h-10 rounded-lg border pl-2 text-black">
+                    {attrs.rentStartDate?.toLocaleDateString() ??
+                      new Date().toLocaleDateString()}
+                  </Text>
+                </TouchableOpacity>
+                {/* {showRentDateErrorCallback && (
+                <Text
+                  className="absolute -bottom-3 text-red-500"
+                  style={{ fontSize: 10 }}
+                >
+                  Invalid rent dates
+                </Text>
+              )} */}
+              </View>
+            </View>
+            <View className="flex min-w-[150px] flex-col space-y-1">
+              <Text className="font-bold">Rent end</Text>
+              <View className="relative">
+                <TouchableOpacity onPress={() => setOpen1(true)}>
+                  <Text className="border-indigo h-10 rounded-lg border pl-2 text-black">
+                    {attrs.rentEndDate?.toLocaleDateString() ??
+                      new Date().toLocaleDateString()}
+                  </Text>
+                </TouchableOpacity>
+                {/* {showRentDateErrorCallback && (
+                <Text
+                  className="absolute -bottom-3 text-red-500"
+                  style={{ fontSize: 10 }}
+                >
+                  {"Invalid rent dates"}
+                </Text>
+              )} */}
+              </View>
+            </View>
+          </View>
           <Text className="text-base font-bold text-slate-500">Home Type</Text>
         </View>
         <View
