@@ -7,7 +7,7 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { Divider, Icon } from "react-native-elements";
+import { Icon } from "react-native-elements";
 import { IUserAttrs } from "../../types";
 
 interface IAttributeBtn {
