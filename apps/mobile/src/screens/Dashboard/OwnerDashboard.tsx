@@ -13,7 +13,6 @@ import { useRoute, RouteProp, useNavigation } from "@react-navigation/native";
 import { TabStackParamList } from "../../navigation/RootNavigator";
 
 import { BarChart } from "react-native-chart-kit";
-import { Icon } from "react-native-elements";
 import { Picker } from "@react-native-picker/picker";
 
 import { Post, Attribute, Image } from "@leace/db";
@@ -35,7 +34,7 @@ export default function OwnerDashboard() {
   const utils = trpc.useContext();
   const navigation =
     useNavigation<NativeStackNavigationProp<TabStackParamList>>();
-  const route = useRoute<RouteProp<TabStackParamList, "MyPosts">>();
+  const route = useRoute<RouteProp<TabStackParamList, "OwnerDashboard">>();
   const { userId } = route.params;
 
   const [selectedPost, setSelectedPost] = useState<
@@ -45,24 +44,26 @@ export default function OwnerDashboard() {
     }
   >();
 
-  const { data: posts } = trpc.post.getPostsByUserId.useQuery(
-    { userId },
-    {
-      onSuccess(data) {
-        if (data.length > 0) {
-          setSelectedPost(data[0]);
-        }
+  const { data: posts, refetch: postsRefetch } =
+    trpc.post.getPostsByUserId.useQuery(
+      { userId },
+      {
+        onSuccess(data) {
+          if (data.length > 0) {
+            setSelectedPost(data[0]);
+          }
+        },
       },
-    },
-  );
+    );
 
-  const { data: leases } = trpc.lease.getLeasesByUserId.useQuery({ userId });
+  const { data: leases, refetch: leasesRefetch } =
+    trpc.lease.getLeasesByUserId.useQuery({ userId });
 
-  const { data: relationships } = trpc.relationship.getMatchesForOwner.useQuery(
-    { userId },
-  );
+  const { data: relationships, refetch: relationshipsRefetch } =
+    trpc.relationship.getMatchesForOwner.useQuery({ userId });
 
-  const { data: metrics } = trpc.metrics.graphsByUserId.useQuery({ userId });
+  const { data: metrics, refetch: metricsRefetch } =
+    trpc.metrics.graphsByUserId.useQuery({ userId });
 
   /*const { data: rented } = trpc.metrics.getRented.useQuery({
     userId,
@@ -108,9 +109,16 @@ export default function OwnerDashboard() {
     dislikeHandler({ postId: selectedPost.id, userId });
   };
 
+  function callback() {
+    postsRefetch();
+    leasesRefetch();
+    relationshipsRefetch();
+    metricsRefetch();
+  }
+
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <Header />
+      <Header callback={callback} />
       <ScrollView
         className="space-y-4 py-3"
         contentContainerStyle={{ flexGrow: 1 }}
@@ -164,8 +172,6 @@ export default function OwnerDashboard() {
               </Picker>
               <View>
                 {tenants && tenants?.length > 0 ? (
-                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                  // @ts-ignore
                   <Carousel
                     layout={"default"}
                     data={tenants}

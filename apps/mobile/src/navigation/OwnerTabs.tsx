@@ -77,7 +77,7 @@ export function OwnerChatScreens() {
 }
 
 function OwnerStackScreens() {
-  const route = useRoute<RouteProp<TabStackParamList, "OwnerChatScreens">>();
+  const route = useRoute<RouteProp<TabStackParamList, "OwnerStackScreens">>();
   const { userId, role } = route.params;
 
   return (
@@ -169,7 +169,7 @@ function OwnerStackScreens() {
 }
 
 export function OwnerProfileScreens() {
-  const route = useRoute<RouteProp<TabStackParamList, "OwnerChatScreens">>();
+  const route = useRoute<RouteProp<TabStackParamList, "OwnerProfileScreens">>();
   const { userId } = route.params;
 
   return (

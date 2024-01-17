@@ -1,12 +1,4 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
-  TextInput,
-  ScrollView,
-  Modal,
-} from "react-native";
+import { View, Text, Image, TextInput, ScrollView, Modal } from "react-native";
 import React, { useCallback, useState } from "react";
 import {
   useRoute,
@@ -15,7 +7,6 @@ import {
   useNavigation,
 } from "@react-navigation/native";
 import { TabStackParamList } from "../../navigation/RootNavigator";
-import { Icon } from "react-native-elements";
 import { trpc } from "../../utils/trpc";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { LocalStorage } from "../../utils/cache";
@@ -24,7 +15,6 @@ import { Btn } from "../../components/Btn";
 import { useAuth } from "@clerk/clerk-expo";
 import EditInfoRefacto from "../../components/UserProfile/EditInfoRefacto";
 import EditAttributesRefacto from "../../components/Attribute/EditAttributesRefacto";
-import Separator from "../../components/Separator";
 
 export default function EditProfile() {
   const { signOut } = useAuth();
@@ -137,14 +127,14 @@ export default function EditProfile() {
 
     let isValid = true;
 
-    if (!user.firstName || /\d/.test(user.firstName)) {
+    if (!user.firstName || !/^[a-zA-Z\s\-]+$/.test(user.firstName.trim())) {
       isValid = false;
       setShowFirstNameError(true);
     } else {
       setShowFirstNameError(false);
     }
 
-    if (!user.lastName || /\d/.test(user.lastName)) {
+    if (!user.lastName || !/^[a-zA-Z\s\-]+$/.test(user.lastName.trim())) {
       isValid = false;
       setShowLastNameError(true);
     } else {
