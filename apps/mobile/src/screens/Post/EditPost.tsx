@@ -163,9 +163,13 @@ export default function EditPost() {
     } else {
       setShowRentDateError("");
     }
-
     if (isValid) {
       handlePost();
+    } else {
+      setLoading({
+        status: false,
+        message: "Update",
+      });
     }
   };
 

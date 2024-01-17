@@ -137,22 +137,23 @@ export default function CreateAttributes({
           <Text className="text-xs text-[#D84654]">{locationError}</Text>
         ) : null}
       </View>
-      <View>
-        <View
-          style={{
-            alignItems: "center",
-            marginBottom: 10,
-            marginTop: 30,
-            justifyContent: "center",
-          }}
-        >
-          <View className="flex flex-row justify-between">
-            <View className="flex min-w-[150px] flex-col">
-              <Text className="font-bold">Rent start</Text>
+      <View className="flex flex-col space-y-4 pt-4">
+        <View style={{ alignItems: "center", justifyContent: "center" }}>
+          <View className="flex flex-row justify-between space-x-2">
+            <View className="flex min-w-[150px] flex-col space-y-1">
+              <Text
+                style={{
+                  marginBottom: 1,
+                  fontSize: 16,
+                  fontWeight: "bold",
+                  color: "#666666",
+                }}
+              >
+                Rent start
+              </Text>
               <View className=" ">
                 <TouchableOpacity
                   style={{
-                    width: 120,
                     height: 38,
                     justifyContent: "center",
                     borderWidth: 1,
@@ -161,7 +162,7 @@ export default function CreateAttributes({
                   }}
                   onPress={() => setOpen(true)}
                 >
-                  <Text className=" rounded-lg border text-black">
+                  <Text className="pl-1">
                     {attrs.rentStartDate?.toLocaleDateString() ??
                       new Date().toLocaleDateString()}
                   </Text>
@@ -171,7 +172,6 @@ export default function CreateAttributes({
                     {rentDateError}
                   </Text>
                 ) : null}
-
                 {/* {showRentDateErrorCallback && (
                 <Text
                   className="absolute -bottom-3 text-red-500"
@@ -183,11 +183,19 @@ export default function CreateAttributes({
               </View>
             </View>
             <View className="flex min-w-[150px] flex-col space-y-1">
-              <Text className="font-bold">Rent end</Text>
+              <Text
+                style={{
+                  marginBottom: 1,
+                  fontSize: 16,
+                  fontWeight: "bold",
+                  color: "#666666",
+                }}
+              >
+                Rent end
+              </Text>
               <View className="">
                 <TouchableOpacity
                   style={{
-                    width: 120,
                     height: 38,
                     justifyContent: "center",
                     borderWidth: 1,
@@ -196,7 +204,7 @@ export default function CreateAttributes({
                   }}
                   onPress={() => setOpen1(true)}
                 >
-                  <Text className="rounded-lg border  text-black">
+                  <Text className="pl-1">
                     {attrs.rentEndDate?.toLocaleDateString() ??
                       new Date().toLocaleDateString()}
                   </Text>
@@ -212,15 +220,11 @@ export default function CreateAttributes({
               </View>
             </View>
           </View>
-          <Text className="text-base font-bold text-slate-500">Home Type</Text>
         </View>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "center",
-            marginBottom: Platform.OS === "android" ? 10 : 20,
-          }}
-        >
+        <Text className="text-center text-base font-bold text-slate-500">
+          Home Type
+        </Text>
+        <View style={{ flexDirection: "row", justifyContent: "center" }}>
           <TouchableOpacity
             style={{
               backgroundColor:
@@ -273,22 +277,13 @@ export default function CreateAttributes({
             </Text>
           </TouchableOpacity>
         </View>
-      </View>
-      <View>
-        <View
-          style={{
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Text className="text-base font-bold text-slate-500">Criteria</Text>
-        </View>
+        <Text className="text-center text-base font-bold text-slate-500">
+          Criteria
+        </Text>
         <View className="flex flex-row flex-wrap items-center justify-center">
           <View
             style={{
               flexDirection: "column",
-              marginBottom: 30,
-
               justifyContent: "space-between",
             }}
           >
@@ -489,6 +484,7 @@ export default function CreateAttributes({
                   Price
                 </Text>
                 <TextInput
+                  className="pl-2"
                   style={{
                     width: 150,
                     height: 38,
@@ -525,6 +521,7 @@ export default function CreateAttributes({
                   Size
                 </Text>
                 <TextInput
+                  className="pl-2"
                   style={{
                     width: 150,
                     height: 38,
@@ -565,6 +562,7 @@ export default function CreateAttributes({
                   Bedroom(s)
                 </Text>
                 <TextInput
+                  className="pl-2"
                   style={{
                     width: 150,
                     height: 38,
@@ -601,6 +599,7 @@ export default function CreateAttributes({
                   Bathroom(s)
                 </Text>
                 <TextInput
+                  className="pl-2"
                   style={{
                     width: 150,
                     height: 38,
