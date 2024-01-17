@@ -122,6 +122,14 @@ export default function EditProfile() {
   const [showPriceError, setShowPriceError] = useState(false);
   const [showRentDateError, setShowRentDateError] = useState(false);
 
+  function isAdult() {
+    if (!user || !user.birthDate) return false;
+    const eighteenYearsAgo = new Date();
+    const currentDate = new Date();
+    eighteenYearsAgo.setFullYear(currentDate.getFullYear() - 18);
+    return user.birthDate < eighteenYearsAgo;
+  }
+
   function updateUser() {
     if (!user) return;
 
@@ -139,6 +147,18 @@ export default function EditProfile() {
       setShowLastNameError(true);
     } else {
       setShowLastNameError(false);
+    }
+
+    if (!user.description) {
+      isValid = false;
+    }
+
+    if (!user.phoneNumber) {
+      isValid = false;
+    }
+
+    if (!isAdult()) {
+      isValid = false;
     }
 
     if (user1?.role === "TENANT") {
