@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { useMemo } from "react";
-import { trpc } from "../../utils/trpc";
-import { Loader } from "../shared/Loader";
-import { TenantList } from "./stack/TenantList";
+import { trpc } from "../../../utils/trpc";
+import { Loader } from "../../shared/Loader";
+import { TenantList } from "../stack/TenantList";
+import { VisitsCalendar } from "./VisitsCalendar";
 
 export interface AgencyOwnerHomeProps {
   userId: string;
@@ -116,14 +117,9 @@ export const AgencyOwnerHome = ({ userId }: AgencyOwnerHomeProps) => {
           )}
         </Link>
 
-        <div className="flex h-96 w-full flex-col rounded-md bg-white p-4 duration-500 hover:shadow-md hover:shadow-indigo-300 hover:duration-500">
+        <div className="flex w-full flex-col rounded-md bg-white p-4 duration-500 hover:shadow-md hover:shadow-indigo-300 hover:duration-500">
           <p>Upcoming visits :</p>
-          <div className="flex h-full w-full items-center justify-center bg-white">
-            <h4 className="text-xl text-indigo-500">Feature coming soon...</h4>
-          </div>
-        </div>
-        <div className="flex h-16 w-full flex-col items-center justify-center rounded-md bg-white duration-500 hover:shadow-md hover:shadow-indigo-300 hover:duration-500">
-          <p>Manage client file template</p>
+          <VisitsCalendar userId={userId} />
         </div>
       </div>
       <TenantList userId={userId} />

@@ -18,4 +18,14 @@
   p {
     font-family: "Inter", sans-serif;
   }
+
+  /* disable underline under abbreviations */
+  abbr {
+    text-decoration: none;
+  }
+
+  /* add space between children element in react-calendar__month-view__days class */
+  .react-calendar__month-view__days {
+    justify-content: space-between;
+  }
 }

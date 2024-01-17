@@ -1,3 +1,4 @@
+import { Attribute, Document, MaritalStatus, Role, User } from "@prisma/client";
 import {
   ChangeEvent,
   Dispatch,
@@ -8,19 +9,18 @@ import {
   useRef,
   useState,
 } from "react";
-import { User, Attribute, Document, Role, MaritalStatus } from "@prisma/client";
 import { HomeType } from "../../../types/homeType";
 import { UserAttributesForm } from "../../attributes/UserAttributesForm";
+import { Button } from "../button/Button";
+import { FileUploadSection } from "../button/FileUploadSection";
 import { DocumentList } from "../document/DocumentList";
 import { DateInput } from "../forms/DateInput";
+import { FileInput } from "../forms/FileInput";
+import { NumberInput } from "../forms/NumberInput";
 import { TextArea } from "../forms/TextArea";
 import { TextInput } from "../forms/TextInput";
-import { NumberInput } from "../forms/NumberInput";
-import { FileUploadSection } from "../button/FileUploadSection";
-import { FileInput } from "../forms/FileInput";
-import { UserLayout } from "./UserLayout";
-import { Button } from "../button/Button";
 import { UserImage } from "./UserImage";
+import { UserLayout } from "./UserLayout";
 
 export type UserFormData = {
   birthDate: string;
@@ -183,7 +183,6 @@ export const UserForm = ({
   const handleNumberChange =
     (setter: Dispatch<SetStateAction<number | undefined>>) =>
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      console.log(event.target.valueAsNumber);
       setter(
         isNaN(event.target.valueAsNumber)
           ? undefined
@@ -207,7 +206,6 @@ export const UserForm = ({
     e.preventDefault();
     setIsSubmitting(true);
 
-    console.log("INCOME " + income);
     const data: UserFormData = {
       birthDate,
       firstName,
