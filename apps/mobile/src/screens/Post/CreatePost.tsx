@@ -183,9 +183,9 @@ export default function CreatePost() {
       ),
     )
       .then(() => {
-        setLoading(() => ({ status: false, message: "Submit" }));
         LocalStorage.setItem("refreshPosts", true);
         navigation.navigate("MyPosts", { userId });
+        setLoading(() => ({ status: false, message: "Submit" }));
       })
       .catch((e) => {
         console.error(e);
@@ -342,9 +342,8 @@ export default function CreatePost() {
                 />
               </View>
               <View
-                className={`items-center justify-center p-${
-                  Platform.OS === "android" ? 2 : 10
-                } ${Platform.OS === "android" ? "mt-20" : "mt-8"}`}
+                className={`items-center justify-center p-${Platform.OS === "android" ? 2 : 10
+                  } ${Platform.OS === "android" ? "mt-20" : "mt-8"}`}
               >
                 <Btn
                   className="w-full"

@@ -86,18 +86,40 @@ export default function TenantStack() {
   const route = useRoute<RouteProp<TabStackParamList, "Stack">>();
   const { userId } = route.params;
   const [idx, setIdx] = useState(0);
-  const { data, isLoading, refetch } = trpc.post.getPosts.useQuery();
-  //Un truc du genre const { data, isLoading, refetch } = trpc.post.getPostsToBeSeen.useQuery({ userId });
+
+  const { data, isLoading, refetch } = trpc.post.getPostsToBeSeen.useQuery({ userId });
+
   const [post, setPost] = useState<
     | Post & {
       attribute: Attribute | null;
-      images: Image[];
+      images:
+      | {
+        url: string;
+        id: string;
+        ext: string;
+        postId: string | null;
+        createdAt: Date;
+        updatedAt: Date;
+      }[]
+      | null;
     }
   >();
-  const [lastPost, setLastPost] = useState<| Post & {
-    attribute: Attribute | null;
-    images: Image[];
-  }>();
+
+  const [lastPost, setLastPost] = useState<
+    | Post & {
+      attribute: Attribute | null;
+      images:
+      | {
+        url: string;
+        id: string;
+        ext: string;
+        postId: string | null;
+        createdAt: Date;
+        updatedAt: Date;
+      }[]
+      | null;
+
+    }>();
   const likePost = trpc.relationship.likePostForTenant.useMutation({
     onSuccess() {
       console.log("post liked !");
@@ -152,7 +174,6 @@ export default function TenantStack() {
   function swipeHandler(move: "LEFT" | "RIGHT" | "REFRESH") {
     if (!data) return;
     if (move === "REFRESH") {
-      // missing refresh API call
       if (lastPost) {
         setIdx(() => idx - 1);
         rewindPost.mutate({ userId, postId: lastPost.id });
@@ -214,7 +235,6 @@ export default function TenantStack() {
                 className="flex flex-1 rounded-2xl bg-white shadow shadow-sm shadow-gray-400 mb-2"
                 onSwipeLeft={() => swipeHandler("LEFT")}
                 onSwipeRight={() => swipeHandler("RIGHT")}
-              /* onSwipeDown={() => swipeHandler("REFRESH")} */
               >
                 <TouchableOpacity className="flex flex-1" onPress={() => {
                   navigation.navigate("PostInfo", {
@@ -228,8 +248,8 @@ export default function TenantStack() {
                       className="rounded-t-2xl"
                       source={{
                         uri:
-                          post.images[0]?.ext ??
-                          "https://montverde.org/wp-content/themes/eikra/assets/img/noimage-420x273.jpg",
+                          post.images !== null ? post.images[0]?.ext ??
+                            "https://montverde.org/wp-content/themes/eikra/assets/img/noimage-420x273.jpg" : "https://montverde.org/wp-content/themes/eikra/assets/img/noimage-420x273.jpg",
                       }}
                       style={{ flex: 1, resizeMode: "cover" }}
                     ></RCImage>
@@ -248,33 +268,7 @@ export default function TenantStack() {
                       {(post.attribute?.location ?? "No location") + " - " + capitalize(post.attribute?.homeType?.toLowerCase() ?? "No type")}
                     </Text>
                     <View style={{ flex: 1 }}>
-                      {
-                        /* <Text className="mt-2 text-xs font-light text-white">
-                        {post.content}
-                        </Text> */
-                      }
-                      {
-                        /* <View className="flex flex-row">
-                        <Text className="min-w-[68px] font-bold text-white">
-                        Type:
-                        </Text>
-                        <Text className="font-light text-white">
-                        {post.attribute?.homeType === "APARTMENT"
-                        ? "Apartment"
-                        : "House"}
-                        </Text>
-                        </View> */
-                      }
-                      {
-                        /* <View className="flex flex-row">
-                        <Text className=" min-w-[68px] font-bold text-white">
-                        Size:
-                        </Text>
-                        <Text className="font-light text-white">
-                        {post.attribute?.size} m²
-                        </Text>
-                        </View> */
-                      }
+
                       <View className="flex flex-row mt-5">
 
                         <Text className="text-xl font-light text-black">
@@ -324,18 +318,7 @@ export default function TenantStack() {
                         Created: {post.attribute?.createdAt?.toDateString()}
                       </Text>
                     </View>
-                    {/* <Btn
-                    title="More"
-                    bgColor="#F2F7FF"
-                    textColor="#0A2472"
-                    onPress={() =>
-                      navigation.navigate("PostInfo", {
-                        userId,
-                        postId: post.id,
-                        editable: false,
-                      })
-                    }
-                  ></Btn> */}
+
                   </View>
                 </TouchableOpacity>
               </GestureRecognizer>
