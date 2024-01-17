@@ -47,7 +47,7 @@ export default function UserProfile({
               </TouchableOpacity>
             </View>
           )}
-          <View className="h-24 w-24">
+          <View className="relative h-24 w-24 items-center">
             <Image
               source={{
                 uri: data.image ?? "https://www.gravatar.com/avatar/?d=mp",
@@ -55,10 +55,21 @@ export default function UserProfile({
               className="h-full w-full rounded-full"
               style={{ borderWidth: 1.5, borderColor: "#111827" }}
             />
+            {data.isPremium && (
+              <View className="absolute -bottom-3 flex flex-row items-center rounded-md border-2 border-[#fde047] bg-white px-2">
+                <Icon
+                  name="star"
+                  color="#fde047"
+                  size={15}
+                  type="material-icons"
+                ></Icon>
+                <Text className="text-xs text-[#fde047]">Premium</Text>
+              </View>
+            )}
           </View>
         </View>
       </View>
-      <View className="flex flex-row items-center justify-center space-x-2 px-4 text-center">
+      <View className="flex flex-row items-center justify-center space-x-2 px-4 pt-2 text-center">
         <Text className="text-3xl font-bold">{data.firstName}</Text>
         <Text className="text-3xl ">{data.lastName}</Text>
         {data.emailVerified && (
@@ -109,9 +120,7 @@ export default function UserProfile({
             </TouchableOpacity>
           </View>
         )}
-        <Text className="text-xl font-bold text-white">
-          {data.isPremium ? "Premium " + data.role : "Not premium " + data.role}
-        </Text>
+        <Text className="text-xl font-bold text-white">{data.role}</Text>
         <Text className="text-sm text-white">
           {"Member since: " + data.createdAt.toLocaleDateString("fr-FR")}
         </Text>

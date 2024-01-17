@@ -273,7 +273,7 @@ export default function TenantChat() {
                     Rent Cost:
                   </Text>
                   <TextInput
-                    editable={role !== "TENANT"}
+                    editable={lease.isSigned ? false : role !== "TENANT"}
                     className="font-light text-black"
                     inputMode="decimal"
                     placeholder="0123456789"
@@ -289,7 +289,7 @@ export default function TenantChat() {
                     Utilities Cost:
                   </Text>
                   <TextInput
-                    editable={role !== "TENANT"}
+                    editable={lease.isSigned ? false : role !== "TENANT"}
                     className="font-light text-black"
                     inputMode="decimal"
                     placeholder="0123456789"
@@ -305,7 +305,7 @@ export default function TenantChat() {
                     Start date:
                   </Text>
                   <TouchableOpacity
-                    disabled={role === "TENANT"}
+                    disabled={lease.isSigned ? true : role === "TENANT"}
                     onPress={() => setOpen(true)}
                   >
                     <Text className="font-light">
@@ -318,7 +318,7 @@ export default function TenantChat() {
                     End date:
                   </Text>
                   <TouchableOpacity
-                    disabled={role === "TENANT"}
+                    disabled={lease.isSigned ? true : role === "TENANT"}
                     onPress={() => setOpen1(true)}
                   >
                     <Text className="font-light">
