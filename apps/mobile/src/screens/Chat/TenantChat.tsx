@@ -31,24 +31,28 @@ interface IMessageCard {
 function MessageCard({ data, userId }: IMessageCard) {
   return (
     <View
-      className={`flex h-fit ${userId !== data.senderId ? "items-start" : "items-end"
-        } pt-1`}
+      className={`flex h-fit ${
+        userId !== data.senderId ? "items-start" : "items-end"
+      } pt-1`}
     >
       <View
-        className={`flex ${userId !== data.senderId
-          ? "items-start bg-[#ececec]"
-          : "items-end bg-[#10316B]"
-          } rounded-2xl`}
+        className={`flex ${
+          userId !== data.senderId
+            ? "items-start bg-[#ececec]"
+            : "items-end bg-[#10316B]"
+        } rounded-2xl`}
       >
         <Text
-          className={`max-w-[90%] p-2 pb-0 ${userId !== data.senderId ? "" : "text-white"
-            }`}
+          className={`max-w-[90%] p-2 pb-0 ${
+            userId !== data.senderId ? "" : "text-white"
+          }`}
         >
           {data.content}
         </Text>
         <Text
-          className={`px-2 pb-2 ${userId !== data.senderId ? "pl-2" : "pr-2 text-white"
-            } pt-1 text-xs font-light italic `}
+          className={`px-2 pb-2 ${
+            userId !== data.senderId ? "pl-2" : "pr-2 text-white"
+          } pt-1 text-xs font-light italic `}
         >
           {data.createdAt.toLocaleDateString()} - {data.createdAt.getHours()}:
           {data.createdAt.getMinutes()}
@@ -79,7 +83,7 @@ export default function TenantChat() {
 
   const [lease, setLease] = useState<Lease>({
     id: "",
-    relationshipId: '',
+    relationshipId: "",
     isSigned: false,
     rentCost: 0,
     utilitiesCost: 0,
@@ -95,12 +99,15 @@ export default function TenantChat() {
       conversationId,
     });
 
-  const { refetch: leaseRefetch } =
-    trpc.lease.getLeaseById.useQuery({ leaseId: oldLease?.id ?? "" }, {
-      enabled: false, onSuccess(data) {
+  const { refetch: leaseRefetch } = trpc.lease.getLeaseById.useQuery(
+    { leaseId: oldLease?.id ?? "" },
+    {
+      enabled: false,
+      onSuccess(data) {
         setLease(data);
-      }
-    }); // !!oldLease?.id ??""
+      },
+    },
+  ); // !!oldLease?.id ??""
 
   const message = trpc.conversation.sendMessage.useMutation({
     onSuccess() {
@@ -123,24 +130,20 @@ export default function TenantChat() {
   });
   const signLease = trpc.lease.signLeaseById.useMutation({
     onSuccess() {
-
       setShow(false);
     },
   });
 
   const canSignContract = () => {
-
     if (role === "TENANT" && lease?.id !== "") {
       setShow(true);
     } else {
       if (role === "TENANT") {
-
         Alert.alert(
           "No lease created yet",
           "Please wait for the owner to create the lease.",
         );
-      }
-      else {
+      } else {
         setShow(true);
       }
     }
@@ -207,8 +210,7 @@ export default function TenantChat() {
         startDate: lease.startDate,
         endDate: lease.endDate,
       });
-    }
-    else
+    } else
       updateLease.mutate({
         leaseId: lease.id,
         rentCost: lease.rentCost,
@@ -219,16 +221,17 @@ export default function TenantChat() {
   }
 
   return (
-    <><DateTimePickerModal
-      isVisible={open}
-      date={lease.startDate}
-      mode={"date"}
-      onConfirm={(date) => {
-        setOpen(false);
-        setLease({ ...lease, startDate: date });
-      }}
-      onCancel={() => setOpen(false)}
-    />
+    <>
+      <DateTimePickerModal
+        isVisible={open}
+        date={lease.startDate}
+        mode={"date"}
+        onConfirm={(date) => {
+          setOpen(false);
+          setLease({ ...lease, startDate: date });
+        }}
+        onCancel={() => setOpen(false)}
+      />
       <DateTimePickerModal
         isVisible={open1}
         date={lease.endDate}
@@ -363,7 +366,10 @@ export default function TenantChat() {
           </View>
         </Modal>
 
-        <ScrollView className="mb-3 px-4" contentContainerStyle={{ flexGrow: 1 }}>
+        <ScrollView
+          className="mb-3 px-4"
+          contentContainerStyle={{ flexGrow: 1 }}
+        >
           {data.messages.map((message, key) => (
             <MessageCard data={message} key={key} userId={userId} />
           ))}
@@ -381,13 +387,15 @@ export default function TenantChat() {
               onSubmitEditing={sendMessage}
             ></TextInput>
           </View>
-          <View>
-            <Report
-              type="USER"
-              className="rounded-full bg-red-500 p-2.5"
-              userId={role === "OWNER" ? tenantId : ownerId}
-            />
-          </View>
+          {role !== "TENANT" && (
+            <View>
+              <Report
+                type="USER"
+                className="rounded-full bg-red-500 p-2.5"
+                userId={role === "OWNER" ? tenantId : ownerId}
+              />
+            </View>
+          )}
           <View>
             <Btn
               iconName="description"
