@@ -43,6 +43,7 @@ export default function Documents() {
   const uploadDocument = trpc.document.putSignedUrl.useMutation();
   const { mutate: deleteDocument } = trpc.document.deleteSignedUrl.useMutation({
     onSuccess() {
+      setLoading({ status: false, message: "" });
       refetch();
       setOpen(false);
     },
@@ -51,9 +52,15 @@ export default function Documents() {
     DocumentPicker.DocumentPickerAsset | undefined
   >();
 
+  const [loading, setLoading] = useState({
+    status: false,
+    message: "",
+  });
+
   function uploadHandler() {
     if (!tmpDocument) return;
     if (!tmpDocument.mimeType) return;
+    setLoading({ status: true, message: "Uploading..." });
     uploadDocument
       .mutateAsync({
         userId,
@@ -77,7 +84,10 @@ export default function Documents() {
         })
           .then(() => refetch())
           .catch((e) => console.error(e))
-          .finally(() => setOpen2(false));
+          .finally(() => {
+            setLoading({ status: false, message: "Uploading..." });
+            setOpen2(false);
+          });
       });
   }
 
@@ -164,7 +174,11 @@ export default function Documents() {
       <DocumentModal
         open={open}
         setOpen={setOpen}
-        callback={() => deleteDocument({ userId, documentId: selected.id })}
+        callback={() => {
+          setLoading({ status: true, message: "Deleting..." });
+          deleteDocument({ userId, documentId: selected.id });
+        }}
+        buttonStatus={loading}
       />
       <ConfirmUpload
         open={open2}
@@ -172,6 +186,7 @@ export default function Documents() {
         document={tmpDocument}
         setDocument={setTmpDocument}
         callback={uploadHandler}
+        buttonStatus={loading}
       />
       {open1 && (
         <ZoomImageModal image={selected} callback={() => setOpen1(false)} />
@@ -206,7 +221,7 @@ export default function Documents() {
               </TouchableOpacity>
               <View className="flex flex-row items-center gap-1 pt-2">
                 <View className="flex-1">
-                  <Text>{"doc.name"}</Text>
+                  <Text>{doc.name}</Text>
                 </View>
                 <View className="flex flex-row space-x-1">
                   <View>

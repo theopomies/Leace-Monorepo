@@ -276,7 +276,10 @@ export default function UploadDocuments({
       </View>
       <View className="flex flex-1 flex-col gap-3 px-8">
         <View className="flex flex-col">
-          <Text className="font-bold">Identity document</Text>
+          <View className="flex flex-row items-center space-x-4">
+            <Text className="font-bold">Identity document</Text>
+            <Text className="text-xs text-red-500">Required</Text>
+          </View>
           <View className="flex flex-row items-center justify-between">
             <Text>{getDocument(0).name}</Text>
             <Btn
@@ -289,7 +292,12 @@ export default function UploadDocuments({
           </View>
         </View>
         <View className="flex flex-col">
-          <Text className="font-bold">Proof of residence</Text>
+          <View className="flex flex-row items-center space-x-4">
+            <Text className="font-bold">Proof of residence</Text>
+            {/*account.role !== "TENANT" && (
+              <Text className="text-xs text-red-500">Required</Text>
+            )*/}
+          </View>
           <View className="flex flex-row items-center justify-between">
             <Text>{getDocument(1).name}</Text>
             <Btn

@@ -12,6 +12,7 @@ type DocumentModalType = {
     React.SetStateAction<DocumentPicker.DocumentPickerAsset | undefined>
   >;
   callback: () => void;
+  buttonStatus: { status: boolean; message: string };
 };
 export default function ConfirmUpload({
   open,
@@ -19,6 +20,7 @@ export default function ConfirmUpload({
   callback,
   document,
   setDocument,
+  buttonStatus,
 }: DocumentModalType) {
   return (
     <Modal
@@ -68,21 +70,32 @@ export default function ConfirmUpload({
             ></TextInput>
           </View>
           <View className="flex flex-row gap-2 pt-2">
-            <View className="flex-1">
-              <Btn
-                title="Close"
-                bgColor="#6366f1"
-                onPress={() => setOpen(false)}
-              ></Btn>
-            </View>
-            <View className="flex-1">
-              <Btn
-                title="Upload"
-                bgColor="#38a169"
-                textColor="#FFFFFF"
-                onPress={callback}
-              ></Btn>
-            </View>
+            {buttonStatus.status ? (
+              <View className="flex-1 items-center justify-center">
+                <Btn
+                  title={buttonStatus.message}
+                  spinner={buttonStatus.status}
+                />
+              </View>
+            ) : (
+              <>
+                <View className="flex-1">
+                  <Btn
+                    title="Close"
+                    bgColor="#6366f1"
+                    onPress={() => setOpen(false)}
+                  ></Btn>
+                </View>
+                <View className="flex-1">
+                  <Btn
+                    title="Upload"
+                    bgColor="#38a169"
+                    textColor="#FFFFFF"
+                    onPress={callback}
+                  ></Btn>
+                </View>
+              </>
+            )}
           </View>
         </View>
       </View>

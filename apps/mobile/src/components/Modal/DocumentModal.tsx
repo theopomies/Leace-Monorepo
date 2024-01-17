@@ -6,12 +6,14 @@ type DocumentModalType = {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   callback: () => void;
+  buttonStatus: { status: boolean; message: string };
 };
 
 export default function DocumentModal({
   open,
   setOpen,
   callback,
+  buttonStatus,
 }: DocumentModalType) {
   return (
     <Modal
@@ -44,22 +46,33 @@ export default function DocumentModal({
             </Text>
           </View>
           <View className="flex flex-row gap-1 pt-2">
-            <View className="flex-1">
-              <Btn
-                title="Close"
-                bgColor="#F2F7FF"
-                textColor="#0A2472"
-                onPress={() => setOpen(false)}
-              ></Btn>
-            </View>
-            <View className="flex-1">
-              <Btn
-                title="Delete"
-                bgColor="#ef4444"
-                textColor="#FFFFFF"
-                onPress={callback}
-              ></Btn>
-            </View>
+            {buttonStatus.status ? (
+              <View className="flex-1 items-center justify-center">
+                <Btn
+                  title={buttonStatus.message}
+                  spinner={buttonStatus.status}
+                />
+              </View>
+            ) : (
+              <>
+                <View className="flex-1">
+                  <Btn
+                    title="Close"
+                    bgColor="#F2F7FF"
+                    textColor="#0A2472"
+                    onPress={() => setOpen(false)}
+                  ></Btn>
+                </View>
+                <View className="flex-1">
+                  <Btn
+                    title="Delete"
+                    bgColor="#ef4444"
+                    textColor="#FFFFFF"
+                    onPress={callback}
+                  ></Btn>
+                </View>
+              </>
+            )}
           </View>
         </View>
       </View>

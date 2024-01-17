@@ -70,6 +70,7 @@ export const documentRouter = router({
             userId: ctx.auth.userId,
             ext: ext,
             type: input.docType,
+            name: input.fileName,
           },
         });
         if (!created) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
