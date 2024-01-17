@@ -34,7 +34,7 @@ export function TenantList({ userId }: TenantListProps) {
 
     if (id) {
       setCacheValue("postId", id);
-    } else {
+    } else if (postId && !id) {
       deleteCacheValue("postId");
     }
   }, [posts, postId, setCacheValue, deleteCacheValue]);

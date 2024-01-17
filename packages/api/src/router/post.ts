@@ -92,6 +92,7 @@ export const postRouter = router({
           estimatedCosts: input.estimatedCosts,
           nearestShops: input.nearedShops,
           managedById: input.managedBy,
+          energyClass: input.energyClass,
         },
       });
 
