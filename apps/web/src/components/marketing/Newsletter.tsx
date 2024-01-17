@@ -8,7 +8,6 @@ export function Newsletter() {
   const handleSumbit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     // TODO
-    console.log(`submited user email: ${email}`);
     setEmail("");
   };
 

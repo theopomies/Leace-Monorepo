@@ -1,11 +1,11 @@
-import { useSignUp, useSignIn } from "@clerk/clerk-expo";
+import { useSignIn, useSignUp } from "@clerk/clerk-expo";
 import React from "react";
 import {
   Image,
-  Pressable,
-  View,
-  Text,
   ImageSourcePropType,
+  Pressable,
+  Text,
+  View,
 } from "react-native";
 
 import * as AuthSession from "expo-auth-session";
@@ -69,10 +69,6 @@ const OAuth = ({ provider, title, icon }: OAuthProps) => {
           throw "Something went wrong during the Sign up OAuth flow. Please ensure that all sign up requirements are met.";
         }
 
-        console.log(
-          "Didn't have an account transferring, following through with new account sign up",
-        );
-
         // Create user
         await signUp.create({ transfer: true });
         await signUp.reload({
@@ -80,10 +76,7 @@ const OAuth = ({ provider, title, icon }: OAuthProps) => {
         });
         await setSession(signUp.createdSessionId);
       }
-    } catch (err) {
-      console.log(JSON.stringify(err, null, 2));
-      console.log("error signing in", err);
-    }
+    } catch (err) {}
   };
 
   return (
