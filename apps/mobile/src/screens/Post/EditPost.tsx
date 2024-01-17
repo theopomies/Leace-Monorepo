@@ -83,11 +83,15 @@ export default function EditPost() {
   const [locationError, setLocationError] = useState("");
   const [priceError, setPriceError] = useState("");
   const [sizeError, setSizeError] = useState("");
+
+  const [showRentDateError, setShowRentDateError] = useState("");
+
   const [bedroomsError, setBedroomsError] = useState("");
   const [bathroomsError, setBathroomsError] = useState("");
 
   const validateAndSetAttrs = () => {
     setLoading({ status: true, message: "Updating..." });
+    const currentDate = new Date();
     let isValid = true;
 
     if (!postInfo?.title || postInfo?.title.trim() === "") {
@@ -145,6 +149,19 @@ export default function EditPost() {
       isValid = false;
     } else {
       setBathroomsError("");
+    }
+
+    if (
+      postAttrs?.rentStartDate === undefined ||
+      postAttrs?.rentEndDate === undefined ||
+      postAttrs.rentStartDate < currentDate ||
+      (postAttrs?.rentStartDate &&
+        postAttrs.rentStartDate.getTime() >= postAttrs.rentEndDate.getTime())
+    ) {
+      isValid = false;
+      setShowRentDateError("Invalid dates");
+    } else {
+      setShowRentDateError("");
     }
 
     if (isValid) {
@@ -217,6 +234,7 @@ export default function EditPost() {
                 bathroomsError={bathroomsError}
                 setBedroomsError={setBedroomsError}
                 setBathroomsError={setBathroomsError}
+                rentDateError={showRentDateError}
               />
             </View>
             <View className="pt-2">

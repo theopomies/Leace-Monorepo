@@ -37,6 +37,8 @@ export default function ChooseAttributes({
   const handleFinishSettingUp = async () => {
     let isValid = true;
 
+    const currentDate = new Date();
+
     if (!attrs?.location) {
       isValid = false;
       setShowLocationError(true);
@@ -135,6 +137,7 @@ export default function ChooseAttributes({
     if (
       attrs?.rentStartDate === undefined ||
       attrs?.rentEndDate === undefined ||
+      attrs.rentStartDate < currentDate ||
       (attrs?.rentStartDate &&
         attrs?.rentEndDate &&
         attrs.rentStartDate.getTime() >= attrs.rentEndDate.getTime())

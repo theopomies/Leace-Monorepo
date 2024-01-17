@@ -73,6 +73,7 @@ export default function CreatePost() {
   const [sizeError, setSizeError] = useState("");
   const [bedroomsError, setBedroomsError] = useState("");
   const [bathroomsError, setBathroomsError] = useState("");
+  const [showRentDateError, setShowRentDateError] = useState("");
 
   const [images, setImages] = useState<
     { file: DocumentPicker.DocumentPickerAsset; id: string }[]
@@ -81,6 +82,8 @@ export default function CreatePost() {
   const [selected, setSelected] = useState({ id: "", url: "" });
 
   const validateAndSetAttrs = () => {
+    const currentDate = new Date();
+
     let isValid = true;
 
     if (!postInfo?.title || postInfo?.title.trim() === "") {
@@ -138,6 +141,19 @@ export default function CreatePost() {
       isValid = false;
     } else {
       setBathroomsError("");
+    }
+
+    if (
+      postAttrs?.rentStartDate === undefined ||
+      postAttrs?.rentEndDate === undefined ||
+      postAttrs.rentStartDate < currentDate ||
+      (postAttrs?.rentStartDate &&
+        postAttrs.rentStartDate.getTime() >= postAttrs.rentEndDate.getTime())
+    ) {
+      setShowRentDateError("Invalid dates");
+      isValid = false;
+    } else {
+      setShowRentDateError("");
     }
 
     if (isValid) {
@@ -339,11 +355,13 @@ export default function CreatePost() {
                   bathroomsError={bathroomsError}
                   setBedroomsError={setBedroomsError}
                   setBathroomsError={setBathroomsError}
+                  rentDateError={showRentDateError}
                 />
               </View>
               <View
-                className={`items-center justify-center p-${Platform.OS === "android" ? 2 : 10
-                  } ${Platform.OS === "android" ? "mt-20" : "mt-8"}`}
+                className={`items-center justify-center p-${
+                  Platform.OS === "android" ? 2 : 10
+                } ${Platform.OS === "android" ? "mt-20" : "mt-8"}`}
               >
                 <Btn
                   className="w-full"

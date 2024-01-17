@@ -68,6 +68,7 @@ export default function TenantChat() {
   const [show, setShow] = useState(false);
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(false);
+  const [dateError, setDateError] = useState(false);
 
   const route = useRoute<RouteProp<TabStackParamList, "ChatTenant">>();
   const {
@@ -194,7 +195,9 @@ export default function TenantChat() {
   }
 
   async function handleLease() {
-    if (lease.startDate > lease.endDate) {
+    const currentDate = new Date();
+
+    if (lease.startDate > lease.endDate || lease.startDate < currentDate) {
       setDateError(true);
       return;
     } else {
@@ -226,8 +229,6 @@ export default function TenantChat() {
 
     setShow(false);
   }
-
-  const [dateError, setDateError] = useState(false);
 
   if (show === true) {
     return (

@@ -23,6 +23,7 @@ interface ICreateAttributes {
   sizeError: string;
   bedroomsError: string;
   bathroomsError: string;
+  rentDateError: string;
   setLocationError: (error: string) => void;
   setPriceError: (error: string) => void;
   setSizeError: (error: string) => void;
@@ -81,6 +82,7 @@ export default function CreateAttributes({
   sizeError,
   bedroomsError,
   bathroomsError,
+  rentDateError,
   setLocationError,
   setPriceError,
   setSizeError,
@@ -145,15 +147,31 @@ export default function CreateAttributes({
           }}
         >
           <View className="flex flex-row justify-between">
-            <View className="flex min-w-[150px] flex-col space-y-1">
+            <View className="flex min-w-[150px] flex-col">
               <Text className="font-bold">Rent start</Text>
-              <View className="relative">
-                <TouchableOpacity onPress={() => setOpen(true)}>
-                  <Text className="border-indigo h-10 rounded-lg border pl-2 text-black">
+              <View className=" ">
+                <TouchableOpacity
+                  style={{
+                    width: 120,
+                    height: 38,
+                    justifyContent: "center",
+                    borderWidth: 1,
+                    borderRadius: 8,
+                    padding: Platform.OS === "android" ? 2 : 2,
+                  }}
+                  onPress={() => setOpen(true)}
+                >
+                  <Text className=" rounded-lg border text-black">
                     {attrs.rentStartDate?.toLocaleDateString() ??
                       new Date().toLocaleDateString()}
                   </Text>
                 </TouchableOpacity>
+                {rentDateError ? (
+                  <Text className="text-xs text-[#D84654]">
+                    {rentDateError}
+                  </Text>
+                ) : null}
+
                 {/* {showRentDateErrorCallback && (
                 <Text
                   className="absolute -bottom-3 text-red-500"
@@ -166,9 +184,19 @@ export default function CreateAttributes({
             </View>
             <View className="flex min-w-[150px] flex-col space-y-1">
               <Text className="font-bold">Rent end</Text>
-              <View className="relative">
-                <TouchableOpacity onPress={() => setOpen1(true)}>
-                  <Text className="border-indigo h-10 rounded-lg border pl-2 text-black">
+              <View className="">
+                <TouchableOpacity
+                  style={{
+                    width: 120,
+                    height: 38,
+                    justifyContent: "center",
+                    borderWidth: 1,
+                    borderRadius: 8,
+                    padding: Platform.OS === "android" ? 2 : 2,
+                  }}
+                  onPress={() => setOpen1(true)}
+                >
+                  <Text className="rounded-lg border  text-black">
                     {attrs.rentEndDate?.toLocaleDateString() ??
                       new Date().toLocaleDateString()}
                   </Text>

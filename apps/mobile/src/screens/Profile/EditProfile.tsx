@@ -133,6 +133,8 @@ export default function EditProfile() {
   function updateUser() {
     if (!user) return;
 
+    const currentDate = new Date();
+
     let isValid = true;
 
     if (!user.firstName || !/^[a-zA-Z\s\-]+$/.test(user.firstName.trim())) {
@@ -214,9 +216,12 @@ export default function EditProfile() {
       }
 
       if (
-        attrs?.rentStartDate &&
-        attrs?.rentEndDate &&
-        attrs.rentStartDate.getTime() >= attrs.rentEndDate.getTime()
+        attrs?.rentStartDate === undefined ||
+        attrs?.rentEndDate === undefined ||
+        attrs.rentStartDate < currentDate ||
+        (attrs?.rentStartDate &&
+          attrs?.rentEndDate &&
+          attrs.rentStartDate.getTime() >= attrs.rentEndDate.getTime())
       ) {
         isValid = false;
         setShowRentDateError(true);
