@@ -109,6 +109,9 @@ export function PostStack({ userId }: PostStackProps) {
             {data?.postsIfPremium && data?.postsIfPremium > 1 ? "s" : ""} vous
             correspond
             {data?.postsIfPremium && data?.postsIfPremium > 1 ? "ent" : ""} mais
+            {data?.postsIfPremium && data?.postsIfPremium > 1
+              ? "ont été postées"
+              : "a été posté"}
             ont été postées dans les 24 dernières heures, devenez premium pour
             pouvoir matcher en avance
           </p>
