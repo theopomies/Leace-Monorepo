@@ -48,7 +48,7 @@ export function PriceForm({
             }
             placeholder="Enter a price"
             className="w-full"
-            unit="€"
+            unit="$"
             required
           />
         </label>
@@ -61,7 +61,7 @@ export function PriceForm({
             }
             placeholder="Enter an amount of charges"
             className="w-full"
-            unit="€"
+            unit="$"
             required
           />
         </label>

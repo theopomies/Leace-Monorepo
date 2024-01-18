@@ -215,13 +215,6 @@ export function UserCard({
                   </div>
                   <p>{user.email}</p>
                 </li>
-                <li className="flex-grow">
-                  <h3 className="text-xl font-medium">Phone</h3>
-                  <p className={user.phoneNumber ? "" : " text-indigo-600"}>
-                    {user.phoneNumber ??
-                      "Please add a phone number by updating your profile"}
-                  </p>
-                </li>
               </ul>
             </section>
           )}
@@ -243,7 +236,7 @@ export function UserCard({
                             ? "Please add your job by updating your profile"
                             : "Not specified"}
                           {value.toLowerCase().includes("salary") && attribute
-                            ? "€"
+                            ? "$"
                             : ""}
                         </p>
                       )}
@@ -287,7 +280,7 @@ export function UserCard({
                         <p className="text-lg">
                           {displayValue ?? "Whatever"}
                           {cleanValue.toLowerCase().includes("price")
-                            ? "€"
+                            ? "$"
                             : cleanValue.toLowerCase().includes("size")
                             ? "m²"
                             : cleanValue.toLowerCase().includes("range") &&

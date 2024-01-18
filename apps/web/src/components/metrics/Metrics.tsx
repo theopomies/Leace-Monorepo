@@ -121,7 +121,6 @@ export function Metrics({ userId }: MetricsProps) {
                   fontSize={12}
                   tickLine={false}
                   axisLine={false}
-                  tickFormatter={(value) => `${value / 100}`}
                 />
                 <Tooltip />
                 <Bar dataKey="count" fill="#6366f1" radius={[4, 4, 0, 0]} />
@@ -146,7 +145,6 @@ export function Metrics({ userId }: MetricsProps) {
                   fontSize={12}
                   tickLine={false}
                   axisLine={false}
-                  tickFormatter={(value) => `${Math.floor(value / 1_000)}`}
                 />
                 <Tooltip />
                 <Bar dataKey="count" fill="#6366f1" radius={[4, 4, 0, 0]} />

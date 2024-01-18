@@ -171,7 +171,7 @@ export function PostAttributesForm({ ...attributes }: PostAttributesFormProps) {
               name="price"
               onChange={attributes.handlePriceChange}
               value={attributes.price}
-              unit="€"
+              unit="$"
               required
             />
           </label>

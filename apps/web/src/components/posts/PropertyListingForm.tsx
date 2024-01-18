@@ -90,11 +90,25 @@ export function PropertyListingForm({
       securityAlarm,
       internetFiber,
     };
-    const post = await onSubmit(data);
-    await Promise.all([
-      onImgsUpload(selectedImages, post.id),
-      onDocsUpload(selectedDocuments, post.id),
-    ]);
+    let post: Post;
+    try {
+      post = await onSubmit(data);
+      await Promise.all([
+        onImgsUpload(selectedImages, post.id),
+        onDocsUpload(selectedDocuments, post.id),
+      ]);
+    } catch (e) {
+      setStep("basic");
+      renderToast(
+        <>
+          <ToastTitle>Error</ToastTitle>
+          <ToastDescription>
+            Something went wrong, please try again later
+          </ToastDescription>
+        </>,
+      );
+      return;
+    }
     router.push(`/users/${post.createdById}/posts/${post.id}`);
     setTimeout(() => {
       renderToast(
@@ -117,12 +131,28 @@ export function PropertyListingForm({
   );
 
   const priceValid = useMemo(
-    () => !!(size && price && estimatedCosts && bedrooms && bathrooms),
+    () =>
+      !!(
+        size &&
+        size > 0 &&
+        price &&
+        price > 0 &&
+        estimatedCosts !== undefined &&
+        bedrooms !== undefined &&
+        bathrooms !== undefined
+      ),
     [size, price, bedrooms, bathrooms, estimatedCosts],
   );
 
   const detailsValid = useMemo(
-    () => !!(homeType && energyClass && constructionDate && nearestShops),
+    () =>
+      !!(
+        homeType &&
+        energyClass &&
+        constructionDate &&
+        nearestShops !== undefined &&
+        nearestShops >= 0
+      ),
     [constructionDate, energyClass, homeType, nearestShops],
   );
 

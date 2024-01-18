@@ -61,8 +61,9 @@ export function PreferencesForm({ userId }: { userId: string }) {
 
   const attributeNames = Object.keys(attributes).filter(
     (value) =>
-      !value.toLowerCase().includes("price") &&
-      !value.toLowerCase().includes("size") &&
+      !value.toLowerCase().includes("max") &&
+      !value.toLowerCase().includes("min") &&
+      !value.toLowerCase().includes("range") &&
       value !== "location" &&
       value !== "homeType",
   );
@@ -240,7 +241,9 @@ export function PreferencesForm({ userId }: { userId: string }) {
           </section>
           <section className="flex gap-8">
             <label className="flex flex-grow flex-col gap-2">
-              <h3 className="text-xl">Location</h3>
+              <h3 className="text-xl">
+                Location<span className="text-indigo-600">*</span>
+              </h3>
               <div className="flex">
                 <AddressAutocomplete
                   required

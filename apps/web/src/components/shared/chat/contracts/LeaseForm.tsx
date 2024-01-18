@@ -52,7 +52,7 @@ export function LeaseForm({
     >
       <div className="flex gap-4">
         <label>
-          <div className="text-lg font-medium">Rent Cost</div>
+          <div className="text-lg font-medium">Rent</div>
           <NumberInput
             required
             aria-valuemin={10}
@@ -62,7 +62,7 @@ export function LeaseForm({
           />
         </label>
         <label>
-          <div className="text-lg font-medium">Utilities Cost</div>
+          <div className="text-lg font-medium">Charges</div>
           <NumberInput
             required
             name="utilitiesCost"
