@@ -105,15 +105,10 @@ export function PostStack({ userId }: PostStackProps) {
       ) : (
         <div className="flex flex-col items-center gap-3">
           <p className="text-gray-500">
-            {data?.postsIfPremium} propriété
-            {data?.postsIfPremium && data?.postsIfPremium > 1 ? "s" : ""} vous
-            correspond
-            {data?.postsIfPremium && data?.postsIfPremium > 1 ? "ent" : ""} mais
-            {data?.postsIfPremium && data?.postsIfPremium > 1
-              ? "ont été postées"
-              : "a été posté"}
-            ont été postées dans les 24 dernières heures, devenez premium pour
-            pouvoir matcher en avance
+            {data?.postsIfPremium} propert
+            {data?.postsIfPremium && data?.postsIfPremium > 1 ? "ies" : "y"}{" "}
+            match with your criterias but have been posted in the last 24 hours.
+            Subscribe to premium to see them in advance!
           </p>
           <Link href="/premium">
             <Button>Devenir premium</Button>
