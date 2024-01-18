@@ -405,6 +405,17 @@ export const UserForm = ({
                   onChange={handleChange(setBirthDate)}
                   value={birthDate}
                   className="w-full"
+                  // minus 18 years
+                  max={
+                    new Date(
+                      new Date().getFullYear() - 18,
+                      new Date().getMonth(),
+                      new Date().getDate(),
+                    )
+                      .toISOString()
+                      .split("T")[0]
+                  }
+                  min="1900-01-01"
                 />
               </li>
             </ul>
