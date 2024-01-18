@@ -243,7 +243,7 @@ export function UserCard({
                             ? "Please add your job by updating your profile"
                             : "Not specified"}
                           {value.toLowerCase().includes("salary") && attribute
-                            ? "€"
+                            ? "$"
                             : ""}
                         </p>
                       )}
@@ -287,7 +287,7 @@ export function UserCard({
                         <p className="text-lg">
                           {displayValue ?? "Whatever"}
                           {cleanValue.toLowerCase().includes("price")
-                            ? "€"
+                            ? "$"
                             : cleanValue.toLowerCase().includes("size")
                             ? "m²"
                             : cleanValue.toLowerCase().includes("range") &&
