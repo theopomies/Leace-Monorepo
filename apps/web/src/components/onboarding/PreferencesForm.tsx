@@ -61,8 +61,9 @@ export function PreferencesForm({ userId }: { userId: string }) {
 
   const attributeNames = Object.keys(attributes).filter(
     (value) =>
-      !value.toLowerCase().includes("price") &&
-      !value.toLowerCase().includes("size") &&
+      !value.toLowerCase().includes("max") &&
+      !value.toLowerCase().includes("min") &&
+      !value.toLowerCase().includes("range") &&
       value !== "location" &&
       value !== "homeType",
   );
