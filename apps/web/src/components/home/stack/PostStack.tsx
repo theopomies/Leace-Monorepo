@@ -85,7 +85,7 @@ export function PostStack({ userId }: PostStackProps) {
     <div className="flex w-full flex-col items-center justify-center">
       <h1 className="text-2xl font-bold text-gray-700">No results :(</h1>
 
-      {user?.isPremium || data?.postsIfPremium == 0 ? (
+      {user?.isPremium || !data?.postsIfPremium ? (
         <div className="mt-4 flex flex-col items-center justify-center">
           <p className="text-gray-500">
             It seems that no one matches your current criterias ...
@@ -106,7 +106,9 @@ export function PostStack({ userId }: PostStackProps) {
         <div className="flex flex-col items-center gap-3">
           <p className="text-gray-500">
             {data?.postsIfPremium} propert
-            {data?.postsIfPremium && data?.postsIfPremium > 1 ? "ies" : "y"}{" "}
+            {data?.postsIfPremium && data?.postsIfPremium > 1
+              ? "ies"
+              : "y"}{" "}
             match with your criterias but have been posted in the last 24 hours.
             Subscribe to premium to see them in advance!
           </p>
