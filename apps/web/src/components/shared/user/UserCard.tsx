@@ -215,13 +215,6 @@ export function UserCard({
                   </div>
                   <p>{user.email}</p>
                 </li>
-                <li className="flex-grow">
-                  <h3 className="text-xl font-medium">Phone</h3>
-                  <p className={user.phoneNumber ? "" : " text-indigo-600"}>
-                    {user.phoneNumber ??
-                      "Please add a phone number by updating your profile"}
-                  </p>
-                </li>
               </ul>
             </section>
           )}
