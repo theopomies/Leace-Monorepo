@@ -465,11 +465,9 @@ export const UserForm = ({
                     <option value="" disabled>
                       Select one
                     </option>
-                    <option value={MaritalStatus.SINGLE}>SINGLE</option>
-                    <option value={MaritalStatus.MARRIED}>MARRIED</option>
-                    <option value={MaritalStatus.ONE_CHILD}>ONE_CHILD</option>
-                    <option value={MaritalStatus.TWO_CHILD}>TWO_CHILD</option>
-                    <option value={MaritalStatus.OTHER}>OTHER</option>
+                    <option value={MaritalStatus.SINGLE}>Single</option>
+                    <option value={MaritalStatus.MARRIED}>Married</option>
+                    <option value={MaritalStatus.OTHER}>Other</option>
                   </select>
                 </li>
               </ul>
