@@ -346,6 +346,8 @@ export const postRouter = router({
         },
       });
 
+      const postsIfPremium = await getPostsWithAttribute(user.id, true);
+
       // Remove hidden and inactive posts
       user.postsToBeSeen = user.postsToBeSeen.filter(
         (post) => post.type === PostType.TO_BE_RENTED,
@@ -362,7 +364,10 @@ export const postRouter = router({
             ctx,
             user.postsToBeSeen,
           );
-          return postsToBeSeen.sort((p) => (p.certified ? -1 : 1));
+          return {
+            postsIfPremium: postsIfPremium.length,
+            postsToBeSeen: postsToBeSeen.sort((p) => (p.certified ? -1 : 1)),
+          };
         }
 
         const updatedUser = await ctx.prisma.user.update({
@@ -381,7 +386,10 @@ export const postRouter = router({
           ctx,
           updatedUser.postsToBeSeen,
         );
-        return postsToBeSeen.sort((p) => (p.certified ? -1 : 1));
+        return {
+          postsIfPremium: postsIfPremium.length,
+          postsToBeSeen: postsToBeSeen.sort((p) => (p.certified ? -1 : 1)),
+        };
       }
 
       // If more than 3 posts, return the list with certified posts first
@@ -389,7 +397,10 @@ export const postRouter = router({
         ctx,
         user.postsToBeSeen,
       );
-      return postsToBeSeen.sort((p) => (p.certified ? -1 : 1));
+      return {
+        postsIfPremium: postsIfPremium.length,
+        postsToBeSeen: postsToBeSeen.sort((p) => (p.certified ? -1 : 1)),
+      };
     }),
   getUsersToBeSeen: protectedProcedure([Role.AGENCY, Role.OWNER])
     .input(z.object({ postId: z.string() }))
