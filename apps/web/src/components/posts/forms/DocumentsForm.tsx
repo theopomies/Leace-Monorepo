@@ -32,6 +32,7 @@ export function DocumentsForm({
       <FileUploadSection
         selectedFiles={documents}
         setSelectedFiles={onDocumentsChange}
+        accept=".pdf"
       />
       <Button theme="primary" disabled={!isValid}>
         Submit property listing
