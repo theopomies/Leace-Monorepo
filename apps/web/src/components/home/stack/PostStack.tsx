@@ -2,14 +2,17 @@ import { useRouter } from "next/router";
 import { Stack } from "./Stack";
 import { trpc } from "../../../utils/trpc";
 import { useEffect, useState } from "react";
-import { Post, Attribute, Image } from "@prisma/client";
+import { Post, Attribute, Image as ImagePrisma } from "@prisma/client";
 import { Loader } from "../../shared/Loader";
 import Link from "next/link";
 import { Button } from "../../shared/button/Button";
+import { StackButton } from "./StackButton";
+import Image from "next/image";
+import RewindSvg from "../../../../public/iconsButton/rewind.svg";
 
 export type PostType = Post & {
   attribute: Attribute | null;
-  images: (Image & { url: string })[] | null;
+  images: (ImagePrisma & { url: string })[] | null;
 };
 export interface PostStackProps {
   userId: string;
@@ -84,7 +87,6 @@ export function PostStack({ userId }: PostStackProps) {
   return (
     <div className="flex w-full flex-col items-center justify-center">
       <h1 className="text-2xl font-bold text-gray-700">No results :(</h1>
-
       {user?.isPremium || !data?.postsIfPremium ? (
         <div className="mt-4 flex flex-col items-center justify-center">
           <p className="text-gray-500">
@@ -116,6 +118,14 @@ export function PostStack({ userId }: PostStackProps) {
             <Button>Devenir premium</Button>
           </Link>
         </div>
+      )}
+      {lastPost && (
+        <StackButton
+          onClick={onRewind}
+          className="hover:drop-shadow-rewind flex h-fit transform border-[#F7D332] transition-all duration-300 ease-in-out hover:scale-105"
+        >
+          <Image src={RewindSvg} alt="Rewind" width="40" height="40" />
+        </StackButton>
       )}
     </div>
   );
