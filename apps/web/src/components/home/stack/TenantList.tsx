@@ -20,6 +20,7 @@ export function TenantList({ userId }: TenantListProps) {
   const { data: posts, isLoading: postsIsLoading } =
     trpc.post.getPostsByUserId.useQuery({
       userId,
+      postType: PostType.TO_BE_RENTED,
     });
   const { data: tenants, isLoading: tenantsIsLoading } =
     trpc.post.getUsersToBeSeen.useQuery(
@@ -83,12 +84,10 @@ export function TenantList({ userId }: TenantListProps) {
         <div>
           <Select
             options={
-              posts
-                .filter((post) => post.type === PostType.TO_BE_RENTED)
-                .map((post) => ({
-                  label: post.title ?? "title",
-                  value: post.id,
-                })) ?? []
+              posts.map((post) => ({
+                label: post.title ?? "title",
+                value: post.id,
+              })) ?? []
             }
             value={postId}
             onChange={handleSelect}
