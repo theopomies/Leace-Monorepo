@@ -21,26 +21,26 @@ export const VisitPopover = ({
   postId,
   role,
 }: VisitPopoverProps) => {
-  const { data: visit } = trpc.visit.getVisit.useQuery({
+  const { data: visit, refetch: refetchVisit } = trpc.visit.getVisit.useQuery({
     userId,
     postId,
   });
 
   const createVisit = trpc.visit.createVisit.useMutation({
     onSuccess() {
-      window.location.reload();
+      refetchVisit();
     },
   });
 
   const acceptVisit = trpc.visit.acceptVisit.useMutation({
     onSuccess() {
-      window.location.reload();
+      refetchVisit();
     },
   });
 
   const declineVisit = trpc.visit.declineVisit.useMutation({
     onSuccess() {
-      window.location.reload();
+      refetchVisit();
     },
   });
 
