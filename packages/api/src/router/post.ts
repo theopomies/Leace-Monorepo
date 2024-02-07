@@ -229,7 +229,7 @@ export const postRouter = router({
     .query(async ({ ctx, input }) => {
       const post = await ctx.prisma.post.findUnique({
         where: { id: input.postId },
-        include: { attribute: true },
+        include: { attribute: true, createdBy: true, images: true },
       });
 
       if (!post) throw new TRPCError({ code: "NOT_FOUND" });
@@ -260,7 +260,7 @@ export const postRouter = router({
       if (!input.postType) {
         const posts = await ctx.prisma.post.findMany({
           where: { createdById: userId },
-          include: { attribute: true },
+          include: { attribute: true, images: true },
         });
 
         if (!posts) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
@@ -270,7 +270,7 @@ export const postRouter = router({
 
       const posts = await ctx.prisma.post.findMany({
         where: { createdById: userId, type: input.postType },
-        include: { attribute: true },
+        include: { attribute: true, images: true },
       });
 
       if (!posts) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });

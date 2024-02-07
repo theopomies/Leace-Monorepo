@@ -10,6 +10,7 @@ import { leaseRouter } from "./lease";
 import { metricsRouter } from "./metrics";
 import { moderationRouter } from "./moderation";
 import { onboardingRouter } from "./onboarding";
+import { stripeRouter } from "./stripe";
 import { postRouter } from "./post";
 import { relationshipRouter } from "./relationship";
 import { reportRouter } from "./report";
@@ -33,8 +34,9 @@ export const appRouter = router({
   geocoder: geocoderRouter,
   cron: cronRouter,
   onboarding: onboardingRouter,
+  stripe: stripeRouter,
   metrics: metricsRouter,
-  visit: visitRouter
+  visit: visitRouter,
 });
 
 // export type definition of API

@@ -1,28 +1,37 @@
-import { StatusBar } from "expo-status-bar";
+import "react-native-gesture-handler";
+
 import React from "react";
-import { SafeAreaProvider } from "react-native-safe-area-context";
-import { TRPCProvider } from "./utils/trpc";
-import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-expo";
-import { HomeScreen } from "./screens/home";
-import AuthScreen from "./screens/auth";
+import { Logs } from "expo";
+import { Auth } from "./screens/Auth";
+import Constants from "expo-constants";
+import { LogBox, StatusBar } from "react-native";
 import { tokenCache } from "./utils/cache";
+import { TRPCProvider } from "./utils/trpc";
+import { RootNavigator } from "./navigation";
+import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-expo";
+
+import { SafeAreaProvider } from "react-native-safe-area-context";
+
+LogBox.ignoreAllLogs();
+
+Logs.disableExpoCliLogging();
 
 export const App = () => {
   return (
     <ClerkProvider
-      publishableKey="pk_test_Y2VydGFpbi1jcmFiLTU0LmNsZXJrLmFjY291bnRzLmRldiQ"
+      publishableKey={Constants.expoConfig?.extra?.CLERK_PUBLISHABLE_KEY}
       tokenCache={tokenCache}
     >
+      <StatusBar backgroundColor={"white"} barStyle={"dark-content"} />
       <SignedIn>
         <TRPCProvider>
           <SafeAreaProvider>
-            <HomeScreen />
-            <StatusBar />
+            <RootNavigator />
           </SafeAreaProvider>
         </TRPCProvider>
       </SignedIn>
       <SignedOut>
-        <AuthScreen />
+        <Auth />
       </SignedOut>
     </ClerkProvider>
   );

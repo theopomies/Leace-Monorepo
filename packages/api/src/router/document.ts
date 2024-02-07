@@ -17,6 +17,7 @@ export const documentRouter = router({
         userId: z.string().optional(),
         postId: z.string().optional(),
         leaseId: z.string().optional(),
+        fileName: z.string().optional(),
         fileType: z.string(),
         docType: z
           .enum([
@@ -69,6 +70,7 @@ export const documentRouter = router({
             userId: ctx.auth.userId,
             ext: ext,
             type: input.docType,
+            name: input.fileName,
           },
         });
         if (!created) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
