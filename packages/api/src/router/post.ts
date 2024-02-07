@@ -236,27 +236,6 @@ export const postRouter = router({
 
       return post;
     }),
-  getPosts: protectedProcedure([
-    Role.TENANT,
-    Role.OWNER,
-    Role.AGENCY,
-    Role.ADMIN,
-    Role.MODERATOR,
-  ])
-    // .input(z.object({ postId: z.string() }))
-    .query(async ({ ctx, input }) => {
-      const post = await ctx.prisma.post.findMany({
-        include: {
-          images: true,
-          attribute: true,
-        },
-        where: {
-          type: "TO_BE_RENTED",
-        },
-      });
-      if (!post) throw new TRPCError({ code: "NOT_FOUND" });
-      return post;
-    }),
   getPostsByUserId: protectedProcedure([Role.AGENCY, Role.OWNER])
     .input(
       z.object({
