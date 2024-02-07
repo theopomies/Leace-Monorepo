@@ -13,8 +13,6 @@ const Result = () => {
     userId: session?.userId as string,
   });
 
-  const updateUser = trpc.user.updateUserById.useMutation();
-
   const route = useRoute<RouteProp<TabStackParamList, "PaymentResults">>();
 
   const { userId } = route.params;
@@ -25,15 +23,8 @@ const Result = () => {
   const isValidPayment = route.params?.isValidPayment;
 
   const updateStatus = async () => {
-    updateUser
-      .mutateAsync({
-        isPremium: true,
-        userId: session?.userId as string,
-      })
-      .then(() => {
-        LocalStorage.setItem("refresh_premium", true);
-        navigation.navigate("Premium", { userId });
-      });
+    LocalStorage.setItem("refresh_premium", true);
+    navigation.navigate("Premium", { userId });
   };
 
   return (
@@ -44,7 +35,6 @@ const Result = () => {
       product={route.params.product}
       firstName={user?.firstName}
       lastName={user?.lastName}
-      userId={""}
       updateStatus={updateStatus}
     />
   );

@@ -18,7 +18,6 @@ const PaymentResult = ({
   product: string | null | undefined;
   firstName: string | null | undefined;
   lastName: string | null | undefined;
-  userId: string;
   updateStatus: () => void;
 }) => {
   const checkmarkScale = new Animated.Value(0);

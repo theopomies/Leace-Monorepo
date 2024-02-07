@@ -95,6 +95,15 @@ export const stripeRouter = router({
         },
       });
 
+      await ctx.prisma.user.update({
+        where: {
+          id: input.userId,
+        },
+        data: {
+          isPremium: true,
+        },
+      });
+
       return {
         subscriptionId: subscription.id,
       };
@@ -119,6 +128,15 @@ export const stripeRouter = router({
 
       await stripe.subscriptions.update(sub.subscriptionId, {
         cancel_at_period_end: true,
+      });
+
+      await ctx.prisma.user.update({
+        where: {
+          id: input.userId,
+        },
+        data: {
+          isPremium: false,
+        },
       });
 
       await ctx.prisma?.stripe.delete({

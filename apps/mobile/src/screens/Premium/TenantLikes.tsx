@@ -7,22 +7,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 const TenantLikes = ({ callback }: { callback: () => void }) => {
   const { data: session } = trpc.auth.getSession.useQuery();
 
-  const { data: user } = trpc.user.getUserById.useQuery({
-    userId: session?.userId as string,
-  });
-
-  const updateUser = trpc.user.updateUserById.useMutation();
-
   const payment = trpc.stripe.cancelPayment.useMutation();
 
   const updateStatus = async () => {
-    payment.mutateAsync({
-      userId: session?.userId as string,
-    });
-    updateUser
+    payment
       .mutateAsync({
-        isPremium: false,
-        userId: user?.id as string,
+        userId: session?.userId as string,
       })
       .then(() => {
         callback();

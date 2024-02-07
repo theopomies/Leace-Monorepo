@@ -103,7 +103,6 @@ export const userRouter = router({
             MaritalStatus.OTHER,
           ])
           .optional(),
-        isPremium: z.boolean().optional(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
@@ -133,7 +132,6 @@ export const userRouter = router({
             phoneNumber: input.phoneNumber,
             description: input.description,
             birthDate,
-            isPremium: input.isPremium,
             status: UserStatus.ACTIVE,
             country: input.country,
           },
@@ -163,7 +161,6 @@ export const userRouter = router({
           income: input.income ?? null,
           creditScore: input.creditScore ?? null,
           maritalStatus: input.maritalStatus,
-          isPremium: input.isPremium,
         },
       });
 
