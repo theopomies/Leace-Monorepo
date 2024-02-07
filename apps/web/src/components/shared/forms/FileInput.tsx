@@ -9,7 +9,7 @@ export function FileInput({ children, ...props }: FileInputProps) {
       <Input
         {...props}
         hidden
-        accept={`.pdf,.png,.jpeg,${props.accept}`}
+        accept={`.png,.jpeg,.jpg,${props.accept}`}
         type="file"
       />
     </label>
