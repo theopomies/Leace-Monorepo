@@ -45,7 +45,6 @@ export default function EditInfo({ user, setUser }: IEditInfo) {
         <Text className="text-base font-bold text-[#394867]">Phone:</Text>
         <TextInput
           className="font-light"
-          // @ts-ignore
           inputMode="tel"
           placeholder="0123456789"
           defaultValue={user.phoneNumber ?? ""}

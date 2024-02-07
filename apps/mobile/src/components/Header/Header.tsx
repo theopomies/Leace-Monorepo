@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Image, Platform } from "react-native";
+import { View, Image } from "react-native";
 import GestureRecognizer from "react-native-swipe-gestures";
 
 export default function Header({ callback }: { callback?: () => void }) {

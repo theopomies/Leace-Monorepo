@@ -4,9 +4,6 @@ import {
   TextInput,
   TouchableOpacity,
   Platform,
-  KeyboardAvoidingView,
-  Dimensions,
-  StatusBar,
 } from "react-native";
 import React, { useState } from "react";
 import { Icon } from "react-native-elements";

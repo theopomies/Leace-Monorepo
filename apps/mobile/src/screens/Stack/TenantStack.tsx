@@ -308,21 +308,21 @@ export default function TenantStack() {
                       <View className="mt-[-4] flex w-full flex-row justify-evenly">
                         <AttributeCard
                           name="Furnished"
-                          status={post.attribute?.furnished!}
+                          status={post.attribute?.furnished ?? false}
                           iconName="king-bed"
                           iconTextColor={"white"}
                           iconBGColor={"#6C47FF"}
                         />
                         <AttributeCard
                           name="Parking"
-                          status={post.attribute?.parking!}
+                          status={post.attribute?.parking ?? false}
                           iconName="local-parking"
                           iconTextColor={"white"}
                           iconBGColor={"#6C47FF"}
                         />
                         <AttributeCard
                           name="Disability"
-                          status={post.attribute?.disability!}
+                          status={post.attribute?.disability ?? false}
                           iconName="accessible"
                           iconTextColor={"white"}
                           iconBGColor={"#6C47FF"}

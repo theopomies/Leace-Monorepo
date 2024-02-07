@@ -108,7 +108,7 @@ export default function ShowPost() {
 
   interface IAttributeBtn {
     name: string;
-    status: boolean | null;
+    status: boolean | null | undefined;
     iconName: string;
     iconTextColor?: string;
     iconBGColor?: string;
@@ -148,17 +148,17 @@ export default function ShowPost() {
       attribute?: Attribute;
       iconBGColor?: string;
       iconTextColor?: string;
-      furnished?: any;
-      terrace?: any;
-      pets?: any;
-      smoker?: any;
-      disability?: any;
-      garden?: any;
-      parking?: any;
-      elevator?: any;
-      pool?: any;
-      internetFiber?: any;
-      securityAlarm?: any;
+      furnished?: boolean | null;
+      terrace?: boolean | null;
+      pets?: boolean | null;
+      smoker?: boolean | null;
+      disability?: boolean | null;
+      garden?: boolean | null;
+      parking?: boolean | null;
+      elevator?: boolean | null;
+      pool?: boolean | null;
+      internetFiber?: boolean | null;
+      securityAlarm?: boolean | null;
     },
     iconTextColor: string | undefined,
     iconBGColor: string | undefined,

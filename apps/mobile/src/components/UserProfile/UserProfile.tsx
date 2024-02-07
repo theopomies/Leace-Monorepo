@@ -1,13 +1,12 @@
 import { View, Text, Image, ScrollView, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
+import React from "react";
 import { User } from "@leace/db";
 import { Attribute } from "@prisma/client";
 import Separator from "../Separator";
-import { Divider, Icon } from "react-native-elements";
+import { Icon } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { TabStackParamList } from "../../navigation/RootNavigator";
-import { Btn } from "../Btn";
 import { useAuth } from "@clerk/clerk-expo";
 import ShowAttributes from "../Attribute/ShowAttributesRefacto";
 
@@ -24,7 +23,6 @@ export default function UserProfile({
   data,
   editable = false,
   showAttrs = true,
-  showLogout,
 }: IUserProfile) {
   const navigation =
     useNavigation<NativeStackNavigationProp<TabStackParamList>>();

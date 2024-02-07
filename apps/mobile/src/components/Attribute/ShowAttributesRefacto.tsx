@@ -51,7 +51,6 @@ export default function ShowAttributes({
   attribute,
   iconTextColor = "#FFFFFF",
   iconBGColor = "#6C47FF",
-  titleColor = "#10316B",
   show = true,
 }: IShowAttributes) {
   return (
