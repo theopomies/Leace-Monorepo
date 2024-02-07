@@ -121,7 +121,7 @@ export const PostCard = ({
       case "nearestShops":
         return "km";
       case "estimatedCosts":
-        return "€";
+        return "$";
       default:
         return "";
     }
@@ -188,7 +188,7 @@ export const PostCard = ({
             <div>
               <p className="text-slate-500">Rent</p>
               <p className="text-lg font-medium">
-                {post.attribute.price} €
+                {post.attribute.price} $
                 <span className="text-sm font-light text-slate-400"> /mo</span>
               </p>
             </div>

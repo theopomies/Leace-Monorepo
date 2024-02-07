@@ -134,6 +134,7 @@ model User {
   documents     Document[]
   relationships Relationship[]
   messages      Message[]
+  visits        Visit[]
 
   bans        Ban[] @relation("banned")
   bansCreated Ban[] @relation("bans_created")
@@ -182,6 +183,7 @@ model Post {
 
   images    Image[]
   documents Document[]
+  visits    Visit[]
 
   reports       Report[]
   relationships Relationship[]
@@ -418,6 +420,7 @@ model Message {
 
   content String
   read    Boolean @default(false)
+  informative Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -454,4 +457,24 @@ model Stripe {
 
   user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String? @unique
+}
+
+model Visit {
+  id String @id @default(cuid())
+
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId String
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+
+  scheduledAt DateTime
+  accepted    Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([postId])
+  @@index([userId])
+  @@map("visits")
 }

@@ -34,7 +34,7 @@ export function TenantList({ userId }: TenantListProps) {
 
     if (id) {
       setCacheValue("postId", id);
-    } else {
+    } else if (postId && !id) {
       deleteCacheValue("postId");
     }
   }, [posts, postId, setCacheValue, deleteCacheValue]);
@@ -78,20 +78,23 @@ export function TenantList({ userId }: TenantListProps) {
       <div className="flex h-28 w-1/3 items-center justify-center text-center">
         <h2 className="text-2xl">Here are your potential tenants:</h2>
       </div>
-      <div className="w-full">
-        <Select
-          options={
-            posts
-              .filter((post) => post.type === PostType.TO_BE_RENTED)
-              .map((post) => ({
-                label: post.title ?? "title",
-                value: post.id,
-              })) ?? []
-          }
-          value={postId}
-          onChange={handleSelect}
-          placeholder="Select a post"
-        />
+      <div className="flex w-full flex-col gap-2">
+        <p>Viewing candidates for:</p>
+        <div>
+          <Select
+            options={
+              posts
+                .filter((post) => post.type === PostType.TO_BE_RENTED)
+                .map((post) => ({
+                  label: post.title ?? "title",
+                  value: post.id,
+                })) ?? []
+            }
+            value={postId}
+            onChange={handleSelect}
+            placeholder="Select a post"
+          />
+        </div>
       </div>
       {tenants && tenants.length > 0 ? (
         <div className="w-full flex-grow flex-col">

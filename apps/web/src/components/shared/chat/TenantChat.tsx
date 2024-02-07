@@ -5,6 +5,7 @@ import { trpc } from "../../../utils/trpc";
 import { Loader } from "../Loader";
 import { Chat } from "./Chat";
 import { MatchActions } from "./MatchActions";
+import { VisitPopover } from "./VisitPopover";
 import { TenantContractPopover } from "./contracts/TenantContractPopover";
 
 export function TenantChat({
@@ -88,6 +89,12 @@ export function TenantChat({
       contact={contact}
       additionnalBarComponent={
         <div className="flex items-center gap-8">
+          <VisitPopover
+            userId={relationship?.userId ?? ""}
+            postId={relationship?.postId ?? ""}
+            role={role}
+            conversationId={conversationId ?? ""}
+          />
           <TenantContractPopover relationship={relationship} />
           {relationship && (
             <MatchActions

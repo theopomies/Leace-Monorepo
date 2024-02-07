@@ -376,7 +376,7 @@ export const relationshipRouter = router({
           },
         },
         include: {
-          post: { include: { createdBy: true } },
+          post: { include: { createdBy: true, attribute: true } },
           conversation: true,
           user: true,
           lease: true,

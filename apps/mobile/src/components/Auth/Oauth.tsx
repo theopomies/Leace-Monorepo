@@ -1,4 +1,4 @@
-import { useSignUp, useSignIn } from "@clerk/clerk-expo";
+import { useSignIn, useSignUp } from "@clerk/clerk-expo";
 import React from "react";
 import {
   Image,
@@ -55,10 +55,7 @@ const OAuth = ({ provider, title, icon }: OAuthProps) => {
         });
         await setSession(signUp.createdSessionId);
       }
-    } catch (err) {
-      console.log(JSON.stringify(err, null, 2));
-      console.log("error signing in", err);
-    }
+    } catch (err) {}
   };
 
   return (

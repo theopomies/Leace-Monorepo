@@ -57,7 +57,7 @@ export const metricsRouter = router({
       const relationships = await ctx.prisma.relationship.findMany({
         where: {
           post: { createdById: userId },
-          relationType: { in: ["POST", "MATCH"] },
+          relationType: { in: ["TENANT", "MATCH"] },
         },
         select: { createdAt: true },
       });

@@ -323,7 +323,7 @@ export const PostForm = (props: PostFormProps) => {
               onChange={handleNumberChange(setEstimatedCosts)}
               value={estimatedCosts}
               className="w-full"
-              unit="€"
+              unit="$"
             />
           </li>
         </ul>

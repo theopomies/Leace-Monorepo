@@ -129,7 +129,7 @@ export function DocumentsForm({
                         <FileInput
                           id="identity"
                           name="identity"
-                          accept="image/*"
+                          accept=".pdf,.png,.jpeg"
                           onChange={(event) => {
                             if (event.target.files) {
                               const uploadedFile = event.target.files[0];

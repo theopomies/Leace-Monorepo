@@ -11,6 +11,18 @@ export interface ChatMessageProps {
 }
 
 export const ChatMessage = ({ userId, message }: ChatMessageProps) => {
+  if (message.informative) {
+    return (
+      <div className="col-start-1 col-end-13 rounded-lg p-3">
+        <div className="flex flex-row items-center justify-center">
+          <div className="flex w-fit break-words rounded-xl bg-gray-200 py-2 px-4 text-sm italic shadow">
+            {message.content}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="grid grid-cols-12 gap-y-2">
       {message.senderId === userId ? (

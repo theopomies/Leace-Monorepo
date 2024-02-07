@@ -47,6 +47,12 @@ export function OwnerContractPopover({
               ...data,
             });
           }}
+          defaultValues={{
+            rentCost: relationship.post.attribute?.price ?? 0,
+            utilitiesCost: relationship.post.estimatedCosts ?? 0,
+            startDate: new Date(),
+            endDate: new Date(),
+          }}
         />
       </Popover>
     );

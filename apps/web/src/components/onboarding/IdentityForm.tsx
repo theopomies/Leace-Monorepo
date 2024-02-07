@@ -9,10 +9,10 @@ import { cropImage } from "../../utils/cropImage";
 import axios from "axios";
 import { UserImage } from "../shared/user/UserImage";
 import { FileInput } from "../shared/forms/FileInput";
-
-// TODO: Make the picture required
+import { ToastDescription, ToastTitle, useToast } from "../shared/toast/Toast";
 
 export function IdentityForm({ userId }: { userId: string }) {
+  const { renderToast } = useToast();
   const utils = trpc.useContext();
   const {
     data: user,
@@ -25,7 +25,7 @@ export function IdentityForm({ userId }: { userId: string }) {
     firstName?: string;
     lastName?: string;
     description?: string;
-    birthDate?: Date;
+    birthDate?: string;
   }>({
     firstName: undefined,
     lastName: undefined,
@@ -39,7 +39,7 @@ export function IdentityForm({ userId }: { userId: string }) {
         firstName: user.firstName || undefined,
         lastName: user.lastName || undefined,
         description: user.description || undefined,
-        birthDate: user.birthDate || undefined,
+        birthDate: user.birthDate?.toISOString().split("T")[0] || undefined,
       });
     }
   }, [user]);
@@ -97,15 +97,36 @@ export function IdentityForm({ userId }: { userId: string }) {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await updateUser.mutateAsync({
-      userId,
-      firstName: userInfo.firstName,
-      lastName: userInfo.lastName,
-      description: userInfo.description,
-      birthDate: userInfo.birthDate,
-    });
-    handleUploadImg(selectedImage);
-    utils.onboarding.getUserOnboardingStatus.invalidate();
+    if (!selectedImage && !user?.image) {
+      renderToast(
+        <>
+          <ToastTitle>Missing Profile Picture</ToastTitle>
+          <ToastDescription>Please upload a picture</ToastDescription>
+        </>,
+      );
+      return;
+    }
+    try {
+      await updateUser.mutateAsync({
+        userId,
+        firstName: userInfo.firstName,
+        lastName: userInfo.lastName,
+        description: userInfo.description,
+        birthDate: new Date(userInfo.birthDate + "T00:00:00.000Z"),
+      });
+      handleUploadImg(selectedImage);
+      utils.onboarding.getUserOnboardingStatus.invalidate();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e: any) {
+      renderToast(
+        <>
+          <ToastTitle>Oops, something went wrong</ToastTitle>
+          <ToastDescription>
+            {e.message ?? "Please try again later"}
+          </ToastDescription>
+        </>,
+      );
+    }
   };
 
   if (isLoading) return <Loader />;
@@ -170,16 +191,28 @@ export function IdentityForm({ userId }: { userId: string }) {
             <div className="flex-grow">
               <label>
                 <h3 className="pb-2 text-xl font-medium">Birthdate</h3>
+
                 <DateInput
                   required
                   onChange={(e) => {
                     setUserInfo((userInfo) => ({
                       ...userInfo,
-                      birthDate: new Date(e.target.value + "T00:00:00.000Z"),
+                      birthDate: e.target.value,
                     }));
                   }}
-                  value={userInfo.birthDate?.toISOString().split("T")[0]}
+                  value={userInfo.birthDate}
                   className="w-full"
+                  // minus 18 years
+                  max={
+                    new Date(
+                      new Date().getFullYear() - 18,
+                      new Date().getMonth(),
+                      new Date().getDate(),
+                    )
+                      .toISOString()
+                      .split("T")[0]
+                  }
+                  min="1900-01-01"
                 />
               </label>
             </div>

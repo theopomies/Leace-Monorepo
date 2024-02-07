@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { RouterOutputs } from "../../utils/trpc";
 import { ModerationReportPage } from "../moderation/moderation/ModerationReportPage";
 import { Loader } from "../shared/Loader";
-import { AgencyOwnerHome } from "./AgencyOwnerHome";
+import { AgencyOwnerHome } from "./agency-owner-home/AgencyOwnerHome";
 import { PostStack } from "./stack/PostStack";
 
 export interface HomeProps {

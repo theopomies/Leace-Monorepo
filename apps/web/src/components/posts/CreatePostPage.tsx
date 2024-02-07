@@ -1,12 +1,10 @@
-import React, { MouseEventHandler } from "react";
-import { Header } from "../shared/Header";
-import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
-import { PostForm, PostFormData } from "../shared/post/PostForm";
+import { PostFormData } from "../shared/post/PostForm";
 import axios from "axios";
+import { PropertyListingForm } from "./PropertyListingForm";
+import { DocType } from "@prisma/client";
 
 export const CreatePostPage = () => {
-  const router = useRouter();
   const post = trpc.post.createPost.useMutation();
 
   const updatePost = trpc.attribute.updatePostAttributes.useMutation();
@@ -48,50 +46,53 @@ export const CreatePostPage = () => {
     return postCreated;
   };
 
-  const handleUploadImages = (files: File[], postId?: string) => {
+  const handleUploadImages = async (files: File[], postId?: string) => {
     if (files && files.length > 0 && postId) {
-      Array.from(files).map(async (image) => {
-        await uploadImage
-          .mutateAsync({ postId, fileType: image.type })
-          .then(async (url) => {
-            if (url) {
-              await axios.put(url, image);
-            }
-          });
-      });
+      await Promise.all(
+        Array.from(files).map(async (image) => {
+          uploadImage
+            .mutateAsync({ postId, fileType: image.type })
+            .then(async (url) => {
+              if (url) {
+                await axios.put(url, image);
+              }
+            });
+        }),
+      );
     }
   };
 
-  const handleUploadDocs = (files: File[], postId?: string) => {
+  const handleUploadDocs = async (files: File[], postId?: string) => {
     if (files && files.length > 0 && postId) {
-      Array.from(files).map(async (document) => {
-        await uploadDocument
-          .mutateAsync({ postId, fileType: document.type })
-          .then(async (url) => {
-            if (url) {
-              await axios.put(url, document, {
-                headers: { "Content-Type": document.type },
-              });
-            }
-          });
-      });
+      await Promise.all(
+        Array.from(files).map(async (document) => {
+          uploadDocument
+            .mutateAsync({
+              postId,
+              fileType: document.type,
+              docType: DocType.PROPERTY_TITLE,
+            })
+            .then(async (url) => {
+              if (url) {
+                await axios.put(url, document, {
+                  headers: { "Content-Type": document.type },
+                });
+              }
+            });
+        }),
+      );
     }
-  };
-
-  const handleCancel: MouseEventHandler<HTMLButtonElement> = (e) => {
-    e.preventDefault();
-    router.push(router.asPath.replace(/\/[^/]+$/, ""));
   };
 
   return (
-    <div className="flex w-full flex-grow flex-col">
-      <Header heading={"Create Post"} />
-      <PostForm
-        onSubmitNew={handleSubmit}
-        onCancel={handleCancel}
-        onImgsUpload={handleUploadImages}
-        onDocsUpload={handleUploadDocs}
-      />
+    <div className="flex flex-grow bg-white p-3">
+      <div className="flex flex-grow items-center justify-center rounded-md bg-gray-100 p-4">
+        <PropertyListingForm
+          onSubmit={handleSubmit}
+          onImgsUpload={handleUploadImages}
+          onDocsUpload={handleUploadDocs}
+        />
+      </div>
     </div>
   );
 };

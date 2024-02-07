@@ -4,6 +4,8 @@ import { trpc } from "../../../utils/trpc";
 import { useEffect, useState } from "react";
 import { Post, Attribute, Image } from "@prisma/client";
 import { Loader } from "../../shared/Loader";
+import Link from "next/link";
+import { Button } from "../../shared/button/Button";
 
 export type PostType = Post & {
   attribute: Attribute | null;
@@ -21,6 +23,8 @@ export function PostStack({ userId }: PostStackProps) {
     { userId },
     { enabled: posts.length <= 3, retry: false },
   );
+  const { data: user, isLoading: userIsLoading } =
+    trpc.user.getUserById.useQuery({ userId });
 
   const { mutateAsync: likeHandler } =
     trpc.relationship.likePostForTenant.useMutation();
@@ -58,11 +62,11 @@ export function PostStack({ userId }: PostStackProps) {
 
   useEffect(() => {
     if (status === "success") {
-      setPosts(data);
+      setPosts(data.postsToBeSeen);
     }
   }, [data, status]);
 
-  if (isLoading) {
+  if (isLoading || userIsLoading) {
     return <Loader />;
   }
 
@@ -81,22 +85,38 @@ export function PostStack({ userId }: PostStackProps) {
     <div className="flex w-full flex-col items-center justify-center">
       <h1 className="text-2xl font-bold text-gray-700">No results :(</h1>
 
-      <div className="mt-4 flex flex-col items-center justify-center">
-        <p className="text-gray-500">
-          It seems that no one matches your current criterias ...
-        </p>
-        <p className="text-gray-500">
-          Try to{" "}
-          <a
-            className="font-bold text-blue-500"
-            onClick={() => router.push(`/users/${userId}/update`)}
-            href="#"
-          >
-            modify
-          </a>{" "}
-          them or come back later !
-        </p>
-      </div>
+      {user?.isPremium || !data?.postsIfPremium ? (
+        <div className="mt-4 flex flex-col items-center justify-center">
+          <p className="text-gray-500">
+            It seems that no one matches your current criterias ...
+          </p>
+          <p className="text-gray-500">
+            Try to{" "}
+            <a
+              className="font-bold text-blue-500"
+              onClick={() => router.push(`/users/${userId}/update`)}
+              href="#"
+            >
+              modify
+            </a>{" "}
+            them or come back later !
+          </p>
+        </div>
+      ) : (
+        <div className="flex flex-col items-center gap-3">
+          <p className="text-gray-500">
+            {data?.postsIfPremium} propert
+            {data?.postsIfPremium && data?.postsIfPremium > 1
+              ? "ies"
+              : "y"}{" "}
+            match with your criterias but have been posted in the last 24 hours.
+            Subscribe to premium to see them in advance!
+          </p>
+          <Link href="/premium">
+            <Button>Devenir premium</Button>
+          </Link>
+        </div>
+      )}
     </div>
   );
 }
