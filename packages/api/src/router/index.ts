@@ -16,6 +16,7 @@ import { reportRouter } from "./report";
 import { supportRouter } from "./support";
 import { userRouter } from "./user";
 import { visitRouter } from "./visit";
+import { stripeRouter } from "./stripe";
 
 export const appRouter = router({
   auth: authRouter,
@@ -34,7 +35,8 @@ export const appRouter = router({
   cron: cronRouter,
   onboarding: onboardingRouter,
   metrics: metricsRouter,
-  visit: visitRouter
+  visit: visitRouter,
+  stripe: stripeRouter,
 });
 
 // export type definition of API
