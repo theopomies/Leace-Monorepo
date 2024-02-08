@@ -147,6 +147,8 @@ model User {
   supportedBy SupportRelationship[] @relation("supportedBy")
   supporting  SupportRelationship[] @relation("supporting")
 
+  stripe    Stripe?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -464,4 +466,12 @@ model Visit {
   @@index([postId])
   @@index([userId])
   @@map("visits")
+}
+
+model Stripe {
+  id             String @id @default(cuid())
+  subscriptionId String
+
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String? @unique
 }
