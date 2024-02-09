@@ -36,6 +36,14 @@ export default function ShowPost() {
     isLoading,
     refetch,
   } = trpc.post.getPostById.useQuery({ postId });
+
+  const { data: owner } = trpc.user.getUserById.useQuery(
+    { userId: post?.createdById || "" },
+    {
+      enabled: !!post?.createdById,
+    },
+  );
+
   const { data: images } = trpc.image.getSignedPostUrl.useQuery({
     postId,
   });
@@ -304,28 +312,6 @@ export default function ShowPost() {
             </Text>
 
             <View>
-              {/* <View className="flex flex-row">
-                <Text className="min-w-[68px] font-bold text-white">Type:</Text>
-                <Text className="font-light text-white">
-                  {capitalize(post.attribute?.homeType?.toLowerCase() ?? "No type")}
-                </Text>
-              </View> */}
-              {/* <View className="flex flex-row">
-                <Text className=" min-w-[68px] font-bold text-white">
-                Size:
-                </Text>
-                <Text className="font-light text-white">
-                {post.attribute?.size} m²
-                </Text>
-              </View> */}
-              {/* <View className="flex flex-row">
-                <Text className=" min-w-[68px] font-bold text-white">
-                Price:
-                </Text>
-                <Text className="font-light text-white">
-                {post.attribute?.price} €
-                </Text>
-              </View> */}
               <Text className="text-xl font-light text-black">
                 <Text className="text-xl font-bold">
                   {post.attribute?.price} €
@@ -346,36 +332,13 @@ export default function ShowPost() {
                   {post.createdAt.toDateString()}
                 </Text>
               </View>
-
-              {/* <View className="flex flex-row">
-                <Text className="min-w-[68px] font-bold text-white">
-                Available:
-                </Text>
-                <Text className="font-light text-white">
-                {post.attribute?.rentStartDate?.toDateString()}
-                </Text>
-              </View> */}
             </View>
-
-            {/* <Text className=" text-lg font-light text-white">
-              {post.desc}
-            </Text> */}
-
             <View className="border-gray my-3 mt-6 h-24 w-full rounded-xl  border-2 p-2">
               <Text className="font-base text-lg">{post.desc}</Text>
             </View>
 
             {post.attribute && (
-              <>
-                {/* <ShowAttributes
-                  attribute={post.attribute}
-                  iconBGColor="#6C47FF"
-                  iconTextColor="#F2F7FF"
-                  titleColor="#FFFFFF"
-                  show={true}
-                ></ShowAttributes> */}
-                {AttributesList(post.attribute, "white", "#6C47FF")}
-              </>
+              <>{AttributesList(post.attribute, "white", "#6C47FF")}</>
             )}
             {!editable && (
               <>
@@ -384,7 +347,7 @@ export default function ShowPost() {
                     <Image
                       source={{
                         uri:
-                          post.createdBy.image ??
+                          owner?.image ??
                           "https://www.gravatar.com/avatar/?d=mp",
                       }}
                       className=" h-16 w-16 rounded-full"
@@ -392,11 +355,9 @@ export default function ShowPost() {
                     />
                     <View className="flex justify-center pl-3">
                       <Text className="text-xl font-bold text-black">
-                        {post.createdBy.firstName}
+                        {owner?.firstName}
                       </Text>
-                      <Text className="text-black ">
-                        {post.createdBy.lastName}
-                      </Text>
+                      <Text className="text-black ">{owner?.lastName}</Text>
                     </View>
                   </View>
                   <View className="flex items-center justify-center">
@@ -406,7 +367,7 @@ export default function ShowPost() {
                       textColor="#F2F7FF"
                       onPress={() => {
                         navigation.navigate("ViewProfile", {
-                          userId: post.createdBy.id,
+                          userId: post.createdById,
                           editable: false,
                         });
                       }}
