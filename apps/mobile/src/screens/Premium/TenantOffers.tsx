@@ -165,7 +165,7 @@ const TenantOffers = () => {
   if (!user?.isPremium) {
     return (
       <StripeProvider
-        publishableKey="pk_test_51NNNqUKqsAbQAwatETMGlUoLBiwWN5ZP27fCOs3YQbC76Sk5FNHN3xpdyrdD2gGIfTFFho7F5a8x8RCw8rWJXYb800BBEbzKLo"
+        publishableKey="pk_test_51MW4eUChNGYmKUwvrzku5ORxQsj2I0czUzuIzCgFKQyWmS3tCDeeOKJzqvDaMVViOgehcDWCg4Nd9k90FjNEwlJ800McMK6MO6"
         merchantIdentifier="merchant.identifier"
       >
         <SafeAreaView className="bg-white">

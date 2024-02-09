@@ -8,7 +8,7 @@ import {
   GestureResponderEvent,
   ActivityIndicator,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Header from "../../components/Header";
 import { Icon } from "react-native-elements";
 import GestureRecognizer from "react-native-swipe-gestures";
@@ -18,8 +18,9 @@ import { Report } from "../../components/Report";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { TabStackParamList } from "../../navigation/RootNavigator";
-import { Post, Attribute } from "@leace/db";
 import Toast from "react-native-toast-message";
+import { AppRouter } from "@leace/api";
+import { inferRouterOutputs } from "@trpc/server";
 
 interface IActionButton {
   onPress?: ((event: GestureResponderEvent) => void) | undefined;
@@ -73,6 +74,11 @@ function AttributeCard({ name, status, iconName }: IAttributeCard) {
   );
 }
 
+type RouterOutput = inferRouterOutputs<AppRouter>;
+
+type Posts = RouterOutput["post"]["getPostsToBeSeen"]["postsToBeSeen"];
+type PostItem = Posts[0];
+
 export default function TenantStack() {
   const navigation =
     useNavigation<NativeStackNavigationProp<TabStackParamList>>();
@@ -80,46 +86,26 @@ export default function TenantStack() {
   const { userId } = route.params;
   const [idx, setIdx] = useState(0);
 
-  const { data, isLoading, refetch } = trpc.post.getPostsToBeSeen.useQuery({
-    userId,
-  });
+  const [post, setPost] = useState<PostItem>();
+  const [lastPost, setLastPost] = useState<PostItem>();
 
-  const [post, setPost] = useState<
-    | Post & {
-        attribute: Attribute | null;
-        images:
-          | {
-              url: string;
-              id: string;
-              ext: string;
-              postId: string | null;
-              createdAt: Date;
-              updatedAt: Date;
-            }[]
-          | null;
-      }
-  >();
+  const { data, isLoading, refetch } = trpc.post.getPostsToBeSeen.useQuery(
+    {
+      userId,
+    },
+    {
+      onSuccess(data) {
+        setPost(data.postsToBeSeen[0]);
+      },
+    },
+  );
+
   const { data: images, isLoading: imagesLoading } =
     trpc.image.getSignedPostUrl.useQuery(
       { postId: post?.id ?? "" },
       { enabled: !!post?.id },
     );
 
-  const [lastPost, setLastPost] = useState<
-    | Post & {
-        attribute: Attribute | null;
-        images:
-          | {
-              url: string;
-              id: string;
-              ext: string;
-              postId: string | null;
-              createdAt: Date;
-              updatedAt: Date;
-            }[]
-          | null;
-      }
-  >();
   const likePost = trpc.relationship.likePostForTenant.useMutation({
     onSuccess() {
       console.log("post liked !");
@@ -146,11 +132,6 @@ export default function TenantStack() {
     },
   });
 
-  useEffect(() => {
-    if (!data || !data[0]) return;
-    setPost(data[0]);
-  }, [data]);
-
   if (isLoading)
     return (
       <View style={styles.container}>
@@ -173,28 +154,29 @@ export default function TenantStack() {
 
   function swipeHandler(move: "LEFT" | "RIGHT" | "REFRESH") {
     if (!data) return;
-    if (move === "REFRESH") {
-      if (lastPost) {
-        setIdx(() => idx - 1);
-        rewindPost.mutate({ userId, postId: lastPost.id });
-        setPost(lastPost);
-        setLastPost(undefined);
-      } else {
-        Toast.show({
-          type: "error",
-          text1: "You can't rewind yet",
-          text2: "You have to like or dislike a post first.",
-        });
+    if (data.postsToBeSeen)
+      if (move === "REFRESH") {
+        if (lastPost) {
+          setIdx(() => idx - 1);
+          rewindPost.mutate({ userId, postId: lastPost.id });
+          setPost(lastPost);
+          setLastPost(undefined);
+        } else {
+          Toast.show({
+            type: "error",
+            text1: "You can't rewind yet",
+            text2: "You have to like or dislike a post first.",
+          });
+        }
+        return;
       }
-      return;
-    }
     if (!post) return;
     if (move === "LEFT") {
       dislikePost.mutate({ userId, postId: post.id });
     } else likePost.mutate({ userId, postId: post.id });
-    setLastPost(data[idx]);
-    if (idx < data.length - 1) {
-      setPost(data[idx + 1]);
+    setLastPost(data.postsToBeSeen[idx]);
+    if (idx < data.postsToBeSeen.length - 1) {
+      setPost(data.postsToBeSeen[idx + 1]);
     } else {
       setPost(undefined);
     }
